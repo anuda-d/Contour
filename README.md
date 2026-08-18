@@ -1,33 +1,40 @@
-# Book Platform MVP
+# Thought Map Product
 
-Margin is a local prototype for the book platform MVP described in `drafts/`.
+This repository is the planning foundation for a web-first social product where people map how books and films shape their thinking.
 
-The MVP proves the core loop: seeded discovery, three defining books, expressive reactions, a book-to-book connection, and a profile that becomes richer as the user adds taste signals.
+The product is not a review site, a rating database, a generic social feed, or a personal knowledge-management tool. Its central artifact is a person's public Thought Map: an authored graph of compact Thoughts, the media that prompted them, the Themes that emerge across them, and the understated links between different people's interpretations.
 
-## Run
+## North star
 
-```sh
-npm test
-npm run dev
-```
+> My Map looks like me, and I want other people to explore it.
 
-Open `http://127.0.0.1:4173/`.
+Media provides the aesthetic invitation. Thoughts provide the substance. The Map is the identity.
 
-## Acceptance Walkthrough
+## Start here
 
-1. Open the app as a fresh prototype user.
-2. Browse People and identify one aspirational profile.
-3. Browse Books and open a book with reactions, readers, connections, and collections.
-4. React to that book with an expressive label and short note.
-5. Open onboarding and save exactly three defining books.
-6. Open Profile and confirm the profile shows defining books, reactions, collections, connections, recurring ideas, and unfinished shelf texture.
-7. Create one book-to-book connection with an idea label and one-sentence explanation.
-8. Open the created connection share page.
-9. Open a Thought Collection share page.
-10. Confirm the MVP does not require a global feed, follower counts, XP, comments, long reviews, AI writing, or a productivity dashboard.
+1. [Product foundation](docs/00-product-foundation.md)
+2. [Product model](docs/01-product-model.md)
+3. [Experience architecture](docs/02-experience-architecture.md)
+4. [Social contract](docs/03-social-contract.md)
+5. [Web MVP plan](docs/04-web-mvp-plan.md)
+6. [Open questions](docs/05-open-questions.md)
 
-## Implementation Notes
+## Current status
 
-- The app is intentionally local-first: seeded data plus `localStorage` for prototype user edits.
-- There is no real authentication, external book database, backend, deployment, or social graph yet.
-- Domain behavior is tested through public commands in `src/domain.js`.
+The previous book-only prototype and its implementation plans have been removed. The repository is documentation-first while the new product is specified from the ground up.
+
+The foundation is settled. The next work is to resolve the explicitly listed open questions, turn the MVP plan into build slices, and then implement the web prototype.
+
+## Settled boundaries
+
+- Web first; native mobile may follow after the core behaviour is proven.
+- Books and films only in the first version.
+- No ratings, aggregate scores, reading goals, watch statistics, or conventional reviews.
+- No global feed as the primary experience.
+- No public follower counts as status signals.
+- No AI-authored identity or automatically published interpretation.
+- A public Thought must be anchored to created media.
+- A personal Map contains only its owner's authored Thoughts.
+- Comments enable conversation but never become Map nodes.
+- Themes are personal, named clusters rather than global tags.
+- Collections are not a core object. Paths may later guide visitors through an ordered part of a Map.
