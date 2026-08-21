@@ -42,10 +42,12 @@ for shared_field in \
   'Active goal id' \
   'Owner authorization' \
   'Authorization scope' \
+  'Authorization source' \
+  'Autonomous window' \
+  'Graph foundation' \
   'Current run' \
   'Incomplete run' \
   'Pending owner review' \
-  'Approved implementation runs since alignment' \
   'Alignment due'
 do
   assert_same_field "$shared_field"
@@ -53,31 +55,23 @@ done
 
 owner_authorization=$(read_field 'Owner authorization' "$state_file")
 authorization_scope=$(read_field 'Authorization scope' "$state_file")
+authorization_source=$(read_field 'Authorization source' "$state_file")
+autonomous_window=$(read_field 'Autonomous window' "$state_file")
+graph_foundation=$(read_field 'Graph foundation' "$state_file")
 active_goal_id=$(read_field 'Active goal id' "$state_file")
 current_run=$(read_field 'Current run' "$state_file")
 incomplete_run=$(read_field 'Incomplete run' "$state_file")
 pending_review=$(read_field 'Pending owner review' "$state_file")
-approved_runs=$(read_field 'Approved implementation runs since alignment' "$state_file")
 alignment_due=$(read_field 'Alignment due' "$state_file")
 
 test "$active_goal_id" = identity-map-prototype
-
-case "$approved_runs" in
-  ''|*[!0-9]*)
-    echo "Invalid approved-run count: $approved_runs" >&2
-    exit 1
-    ;;
-esac
-
-test "$approved_runs" -le 3
-
-if test "$approved_runs" -ge 3; then
-  test "$alignment_due" = yes
-fi
+test "$graph_foundation" = open -o "$graph_foundation" = approved
+test "$autonomous_window" = 'daily 18:00-19:00 America/Toronto'
 
 case "$owner_authorization" in
   pending)
     test "$authorization_scope" = none
+    test "$authorization_source" = none
     test "$current_run" = none
     test "$incomplete_run" = none
     test "$pending_review" = none
@@ -86,13 +80,20 @@ case "$owner_authorization" in
     test "$current_run" = none
     test "$incomplete_run" = none
     test "$pending_review" = none
-    if test "$alignment_due" = yes; then
+    test "$authorization_source" = owner -o \
+      "$authorization_source" = scheduled-autonomous-window
+    if test "$authorization_source" = scheduled-autonomous-window; then
+      test "$authorization_scope" = implementation
+      test "$alignment_due" = no
+    elif test "$alignment_due" = yes; then
       test "$authorization_scope" = alignment
     else
       test "$authorization_scope" = implementation
     fi
     ;;
   consumed)
+    test "$authorization_source" = owner -o \
+      "$authorization_source" = scheduled-autonomous-window
     if test "$alignment_due" = yes; then
       test "$authorization_scope" = alignment
     else

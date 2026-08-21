@@ -166,15 +166,21 @@ No candidate should be promoted merely because it is technically easy.
 
 ## Stage 0 dependency direction
 
-The graph and the creation experience must be developed in tandem rather than as a data layer followed by a visualization. The owner-approved implementation goal will define completion criteria, and the development loop will select one bounded gap at a time rather than treating this document as a task queue.
+Stage 0 begins with a visible, interactive graph foundation rather than a
+profile shell or an abstract data layer. After that foundation is accepted,
+the graph and the creation experience must be developed in
+tandem. The owner-approved implementation goal defines completion criteria,
+and the development loop selects one bounded gap at a time rather than treating
+this document as a task queue.
 
 The conceptual dependency is:
 
-1. A desirable seeded public profile establishes the destination.
-2. Thought lifecycle and Media anchoring supply authentic content.
-3. The Map changes visibly through the same interface after every creation action.
-4. Spatial interaction and authored connection make the graph feel personal rather than decorative.
-5. Responsive profile preview proves the resulting identity artifact.
+1. A desirable seeded Map establishes the first visible product foundation.
+2. Generated layout and direct spatial interaction make the graph explorable
+   rather than decorative.
+3. Thought lifecycle and Media anchoring supply authentic content.
+4. The Map changes visibly through the same interface after every creation action.
+5. A responsive public profile is layered over the proven Map.
 6. The complete walkthrough and target-user sessions test whether it is worth continuing.
 
 ## Validation standard

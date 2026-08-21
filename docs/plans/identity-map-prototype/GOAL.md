@@ -1,25 +1,27 @@
 # Identity Map Prototype
 
-Status: active; owner-approved on 2026-08-20. Implementation has not been
-authorized to begin.
+Status: active; owner-approved on 2026-08-20. A standing scheduled autonomous
+window for bounded graph-first implementation was conditionally pre-approved on
+2026-08-21.
 
 ## Question
 
-Can someone create a small, media-grounded Thought Map, shape it intuitively,
-and arrive at a public profile that feels like an aesthetic display of their
-mind rather than a review page, media log, or technical graph?
+Can someone encounter a small, media-grounded Thought Map that already feels
+coherent, explore and shape it intuitively, and then grow it through authored
+Thoughts until it becomes a public identity artifact rather than a review
+page, media log, or technical graph?
 
 ## Goal Result
 
 Build a responsive, locally persistent interaction prototype in which one User
 can:
 
-1. encounter a compelling seeded profile that creates the desire to make one;
-2. choose three Books or Films;
-3. write a Thought about each without following a review template;
-4. see every Thought appear immediately as a private Draft node;
-5. publish those Thoughts into the public version of the Map;
-6. move through and spatially shape the automatically generated graph;
+1. encounter a compelling seeded Map that creates the desire to make one;
+2. move through and spatially shape its automatically generated graph;
+3. choose three Books or Films;
+4. write a Thought about each without following a review template;
+5. see every Thought appear immediately as a private Draft node;
+6. publish those Thoughts into the public version of the Map;
 7. create one meaningful cross-media bridge Thought;
 8. feature selected Media; and
 9. preview the profile exactly as a visitor would encounter it.
@@ -32,13 +34,14 @@ itself prove retention, market demand, or product viability.
 
 This goal owns the smallest end-to-end identity experience:
 
-- a desirable seeded public profile as the destination;
+- a desirable seeded Map as the first visible product surface;
+- a readable generated graph and direct spatial interaction;
 - a bounded Book and Film catalogue sufficient for the walkthrough;
 - non-review Thought capture;
 - private Draft and public Published states;
 - a generated graph projection of Media, Thoughts, and authored relationships;
-- direct spatial graph interaction;
 - one cross-media bridge Thought;
+- a public profile layered over the proven Map;
 - lightweight profile curation through featured Media;
 - local persistence; and
 - responsive owner and visitor views.
@@ -65,15 +68,17 @@ later Theme and discovery systems.
 - Themes are not graph nodes or manual categories in this goal.
 - The graph and its surrounding creation experience evolve together; neither
   may be treated as a decorative afterthought.
+- The first implementation foundation is the visible, interactive Map. It is
+  built with the smallest application and data substrate required to evaluate
+  real graph behavior, before profile or creation-flow work begins.
 - The profile must feel expressive and socially presentable rather than like
   graph-analysis or productivity software.
 - No engagement-ranked feed or public popularity score is introduced.
 
 ## Completion Criteria
 
-- **IM-1 Desirable destination:** A seeded mature profile immediately
-  communicates that its Map is an authored display of a person and creates a
-  credible desire to make one.
+- **IM-1 Desirable Map:** A seeded mature Map immediately communicates an
+  authored display of a person and creates a credible desire to make one.
 - **IM-2 Non-review expression:** Thought capture invites what a work caused
   the User to notice, feel, question, connect, or believe without ratings or
   conventional review prompts.
@@ -103,6 +108,27 @@ later Theme and discovery systems.
   complete walkthrough passes through visible interface actions; focused and
   full repository checks pass; independent review has no unresolved blocking
   findings; and the owner approves the resulting experience.
+
+## Graph-First Entry Gate
+
+Before work may be selected for profile, onboarding, Thought capture,
+publishing, or production infrastructure, the implementation must establish an
+accepted graph foundation that advances IM-1, IM-4, or IM-5 through visible
+evidence. Acceptance may come from explicit owner approval or the valid
+scheduled conditional pre-approval policy.
+
+The first graph work unit must produce a running 2D Map surface using seeded
+Books, Films, Thoughts, and explicit authored relationships. It must combine
+the smallest necessary application substrate with generated layout and direct
+interaction so the result can be rendered and evaluated. A data model without
+a visible graph, a decorative graph without meaningful node types, and a
+profile shell that merely reserves space for a future graph do not satisfy the
+gate.
+
+The bounded unit does not need to implement profiles, onboarding, capture,
+Draft or Published flows, authentication, or a production backend. It also
+does not settle the final graph visual language or the lasting persistence
+behavior unless the owner explicitly approves one of those decisions.
 
 ## Owner Decisions Inside the Goal
 
@@ -152,12 +178,14 @@ anti-popularity invariants.
 
 ## Completion Boundary
 
-Complete IM-1 through IM-10 through owner-gated, single-work-unit runs selected
-from current verified evidence. Every implementation or alignment unit must
-pass focused and full validation, receive fresh independent review, and then
-stop for owner review before it may be committed.
+Complete IM-1 through IM-10 through single-work-unit runs selected from current
+verified evidence. Every implementation unit must pass focused and full
+validation and receive fresh independent review. Normal units then stop for
+owner review; valid scheduled-window units may use the owner's conditional
+pre-approval to create one local commit. Alignment always stops for owner
+review.
 
-The owner is the final reviewer. Independent review cannot approve on the
-owner's behalf. After the owner approves the final evidence, mark the goal
-complete, commit the final state update, and stop before selecting another
-goal.
+The owner remains the final reviewer for product decisions, alignment, and goal
+completion. Independent review cannot settle those outcomes. After the owner
+approves the final evidence, mark the goal complete, commit the final state
+update, and stop before selecting another goal.

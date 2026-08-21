@@ -29,7 +29,7 @@ check the owner gate, and follow its just-in-time read order.
 
 The previous book-only prototype and its implementation plans have been removed. The repository is documentation-first while the new product is specified from the ground up.
 
-The core concept and philosophy have been revised around identity, self-presentation, and the Map. The Identity Map Prototype is the active owner-approved goal. Its first implementation work unit remains blocked behind an explicit owner authorization gate.
+The core concept and philosophy have been revised around identity, self-presentation, and the Map. The Identity Map Prototype is the active owner-approved goal. Bounded graph-first work may run through explicit owner instructions or the conditionally pre-approved daily 6:00-7:00 PM America/Toronto automation window; profile and creation-flow work remain deferred until the graph foundation is accepted.
 
 ## Settled boundaries
 

@@ -1,24 +1,27 @@
 # Current Development Index
 
 Status: Identity Map Prototype is the active owner-approved goal as of
-2026-08-20. No implementation work unit is authorized.
+2026-08-20. A standing scheduled-autonomous-window authorization was granted on
+2026-08-21 for bounded graph-first implementation runs.
 
 ## Active Work
 
 - Goal: [Identity Map Prototype](identity-map-prototype/GOAL.md)
 - Shared implementation state: [Implementation Plan](identity-map-prototype/IMPLEMENTATION_PLAN.md)
-- Active work: none; stop at **OWNER AUTHORIZATION REQUIRED** until the owner
-  explicitly authorizes the first work unit
+- Active work: none; a manual owner-authorized run or valid scheduled trigger
+  may select only a graph-first work unit
 
 ## Run State Snapshot
 
 - Active goal id: identity-map-prototype
-- Owner authorization: pending
-- Authorization scope: none
+- Owner authorization: granted
+- Authorization scope: implementation
+- Authorization source: scheduled-autonomous-window
+- Autonomous window: daily 18:00-19:00 America/Toronto
+- Graph foundation: open
 - Current run: none
 - Incomplete run: none
 - Pending owner review: none
-- Approved implementation runs since alignment: 0
 - Alignment due: no
 
 These fields mirror the active implementation state and are checked by
@@ -35,32 +38,42 @@ These fields mirror the active implementation state and are checked by
 
 If this index reports no active goal, no owner authorization, a pending owner
 review, or an incomplete conflicting run, stop at the corresponding terminal
-state. Do not turn an open question, later direction, or improvement idea into
-active work.
+state. While `Graph foundation` is `open`, the only selectable implementation
+work is a visible graph foundation allowed by the active goal. Do not turn an
+open question, later direction, or improvement idea into active work.
 
 ## Owner Gate
 
 - Goal approval and work-unit authorization are separate.
-- The current gate is `pending`; therefore no implementation may begin.
-- The owner must explicitly authorize one bounded run in conversation.
+- The current gate is `granted` for one graph-first implementation run.
+- The standing scheduled authorization is usable only by configured triggers
+  inside the recorded autonomous window.
 - Authorization permits the orchestrator to select exactly one smallest useful
   gap inside the approved goal. It is not approval for work outside that goal.
 - The token is consumed only after a valid progress claim is selected and
   recorded, immediately before implementation edits.
 - After implementation, validation, and independent review, the work unit must
   stop at **AWAITING OWNER APPROVAL** without committing.
-- Only the owner can approve the reviewed work.
+- During a valid autonomous trigger, full validation and clean independent
+  review satisfy the owner's conditional pre-approval and permit one local
+  commit without waiting.
+- Reviewed work may be accepted through explicit owner approval or valid
+  scheduled conditional pre-approval.
 - Approval finalizes that unit and, unless the owner says otherwise, authorizes
   the orchestrator to select exactly one next unit inside the same goal. It
   never authorizes an unlimited run.
 - When alignment is due, the next token applies to alignment only and cannot be
   consumed by an implementation unit.
+- Alignment and goal completion always require explicit owner review and cannot
+  be accepted by the autonomous-window policy.
 
 ## Commands
 
 - Full check: `./scripts/check.sh`
 - Repository state: `git status --short`
 - Diff review: `git diff --check`
+- Scheduled loop: `Bproject autonomous graph loop`, active at 18:00, 18:15,
+  18:30, and 18:45 America/Toronto
 
 Browser and visual validation commands must be added to this index after the
 application baseline selects them and the owner approves that work unit.
@@ -72,6 +85,8 @@ application baseline selects them and the owner approves that work unit.
 - If alignment is due, an available authorization token applies to alignment
   only; do not select implementation.
 - Otherwise select one smallest useful gap from the goal and current evidence.
+- While `Graph foundation` is `open`, select only a bounded visible graph claim
+  allowed by the graph-first entry gate.
 - State one criterion, one behavior, and one evidence claim before editing.
 - Load implementation just in time; the state file prescribes no task sequence.
 - Run focused validation before the full check.
@@ -81,15 +96,20 @@ application baseline selects them and the owner approves that work unit.
 - Resolve blocking findings and repeat review after material corrections.
 - Append the factual review result, then stop for owner review without
   committing.
-- Commit only after explicit owner approval.
+- During a valid autonomous trigger, apply conditional pre-approval only after
+  every recorded guard passes, commit one unit, and stop.
+- Outside the autonomous window, commit only after explicit owner approval.
+  Inside it, a commit requires valid scheduled conditional pre-approval.
 - Never select a new goal, push, merge, publish, or disturb unrelated user work.
 
 ## Stop Conditions
 
-- Owner authorization is absent or already consumed.
+- Owner authorization is absent, consumed, or invalid for the current time and
+  trigger source.
 - Owner review is pending.
 - A consumed work unit is blocked and awaiting owner direction.
-- Another project run or subagent is active.
+- Another project run or unrelated or orphaned subagent is active before task
+  selection.
 - Baseline repository state is unsafe.
 - The task exceeds one fresh context window.
 - Owner authority is required.

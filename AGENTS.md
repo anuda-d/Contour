@@ -7,10 +7,10 @@ repository. Product direction belongs to the owner.
 
 - Start with `docs/plans/CURRENT.md`; it is the compact operational index.
 - Confirm that exactly one owner-approved goal is active.
-- Confirm explicit owner authorization for exactly one bounded run before
-  reading implementation or making implementation changes. That authorization
-  permits the orchestrator to select one smallest gap inside the approved goal;
-  it does not authorize work outside the goal.
+- Confirm either explicit owner authorization for one bounded run or a valid
+  scheduled-autonomous-window trigger before reading implementation or making
+  implementation changes. Either source permits the orchestrator to select one
+  smallest gap inside the approved goal; neither authorizes work outside it.
 - Read the active goal and implementation state, then locate only enough code
   and tests to select one smallest useful goal gap.
 - Read only the product specification relevant to that selected task.
@@ -25,6 +25,12 @@ repository. Product direction belongs to the owner.
 - The User is the center, Thoughts are authored expression, Media is grounding,
   and the Map is the identity artifact.
 - Build the graph and the surrounding user experience in tandem.
+- The first implementation foundation is the visible, interactive Map. Until
+  that foundation is accepted through explicit owner approval or valid
+  scheduled conditional pre-approval, do not select profile, onboarding,
+  publishing, or production-infrastructure work.
+- Build only the thin application and data substrate required by the current
+  visible graph behavior. An architecture-only layer is not progress.
 - Keep the Map generated but shapeable. Do not present a blank manual canvas.
 - Drafts belong visibly to the private owner Map and never to visitor mode.
 - Public Thoughts require a Book or Film anchor.
@@ -38,6 +44,10 @@ repository. Product direction belongs to the owner.
 ## While Implementing
 
 - State the criterion, intended behavior, and evidence before editing.
+- Use one to three read-only explorer subagents for independent investigation
+  before implementation. They return concise evidence and never edit files.
+- The orchestrator is the sole implementation writer and owns selection,
+  integration, validation, and completion judgment.
 - Prefer the smallest end-to-end behavior that can be seen and evaluated.
 - Keep spatial graph movement distinct from semantic authorship.
 - Preserve clear private Draft and public Published boundaries.
@@ -62,24 +72,32 @@ repository. Product direction belongs to the owner.
 
 - Use `docs/main/DEVELOPMENT_LOOP.md` as the complete operating contract.
 - One owner authorization permits exactly one bounded work unit.
-- Independent review is required but cannot approve work.
+- One scheduled trigger during the approved autonomous window also permits
+  exactly one bounded work unit under the conditional pre-approval rules.
+- Independent review is required. A reviewer reports findings but does not make
+  product decisions.
 - Record candidate evidence before independent review so the reviewer inspects
   the claim as well as the implementation. After review, append only the
   factual review result and stop without committing at **AWAITING OWNER
   APPROVAL**.
-- The owner is the final reviewer.
-- Only explicit owner approval permits the coherent work unit to be committed.
+- Outside the autonomous window, the owner is the final reviewer and only
+  explicit owner approval permits a commit.
+- During the autonomous window, full validation plus a clean fresh independent
+  review satisfies the owner's conditional pre-approval and permits one local
+  commit without waiting for the owner.
 - Unless the owner explicitly pauses, stops, or approves only, approval grants
   exactly one authorization for the orchestrator to select and complete the
   next bounded work unit inside the approved goal.
-- Never continue autonomously across an owner gate.
+- Autonomous continuation is allowed only through scheduled triggers between
+  18:00 and 19:00 America/Toronto. Each trigger attempts at most one work unit.
 - Never select, broaden, or replace the active goal.
 - Never create a future task queue.
 - Stop when the goal is complete or continuing requires an owner decision.
 
 ## Model Routing
 
-- Orchestration and implementation use `gpt-5.6-terra` with high reasoning.
+- The sole-writer orchestrator uses `gpt-5.6-terra` with high reasoning.
+- Explorer subagents use `gpt-5.6-terra` with high reasoning and are read-only.
 - Fresh independent review uses `gpt-5.6-sol` with high reasoning.
 - Review agents are read-only and must return findings to the orchestrator.
 
