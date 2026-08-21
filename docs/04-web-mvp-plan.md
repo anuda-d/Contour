@@ -11,9 +11,9 @@ The first build must test whether target users:
 1. Want a public identity built from Thoughts about books and films.
 2. Enjoy looking at and exploring their own Map.
 3. Can create useful Thoughts without academic friction.
-4. Understand the difference between a Thought, Comment, Theme, and private Save.
-5. Find other people through interpretation rather than ratings or popularity.
-6. Value cross-media and cross-person connections.
+4. Understand the difference between private Drafts and their public Map.
+5. Find the generated graph intuitive to move through and shape.
+6. Value cross-media connections as part of how the profile represents them.
 
 The strongest qualitative signal is:
 
@@ -25,7 +25,7 @@ Start with a responsive web product.
 
 Web is the right first surface because:
 
-- Profiles, Thoughts, Media, and Themes need public URLs.
+- Profiles, Thoughts, and Media need public URLs; named Theme-region URLs may follow later.
 - Graph exploration benefits from desktop space.
 - Visitors can explore without installing an app.
 - The model can be iterated quickly.
@@ -33,66 +33,58 @@ Web is the right first surface because:
 
 Native mobile is deferred until capture and repeat behaviour are proven. A browser extension or bookmarklet may precede it.
 
-## Stage 0: interaction prototype
+## Stage 0: identity and Map interaction prototype
 
 ### Goal
 
-Prove the identity and Map experience before production infrastructure.
+Prove that the generated-but-shapeable Map and resulting public profile create a desirable identity experience before production infrastructure or the wider social system.
 
 ### Data
 
 - One editable prototype User.
-- Several seeded public Users with distinct Maps.
 - A curated catalogue of Books and Films.
-- Seeded Thoughts, Themes, Comments, cross-media bridges, and cross-person references.
+- Enough seeded content to demonstrate a compelling mature profile and Map before creation begins.
 - Local persistence is acceptable.
 
 ### Required surfaces
 
 - Discovery-led landing and onboarding.
 - My Map.
-- Public profile.
-- Thought creation and correction.
-- Thought detail with Comments.
-- Book and Film pages.
-- Personal Theme view.
-- Public Theme space.
-- Private Library.
-- People discovery and Follow state.
+- Public-profile preview and visitor view.
+- Thought creation and detail.
+- A minimal Book and Film chooser sufficient to anchor Thoughts.
 
 ### Required actions
 
 - Search and choose a Book or Film.
-- Add a provisional missing work with minimal metadata.
 - Create a Draft Thought.
+- See the Draft appear distinctly and immediately on the private Map.
 - Anchor and publish a Thought.
+- See the published Thought enter the public Map without losing its recognizable place.
 - Attach another work to create a bridge Thought.
-- Connect two authored Thoughts.
-- Create a new Thought referencing a seeded person's Thought.
-- Accept, rename, or reject a suggested Theme.
+- Move through and spatially shape the generated graph.
+- Exercise the first bounded form of authored connection selected in the owner-approved goal.
 - Feature Media already present in the Map.
-- Save privately.
-- Appreciate.
-- Comment and reply once.
-- Follow a person.
 
 ### Map requirements
 
 - Automatically generated and visually stable.
-- Readable Books, Films, Thoughts, and Themes.
+- Readable Books, Films, Draft Thoughts, and Published Thoughts.
 - Immediate growth after creation.
-- Whole-map and cluster focus.
+- Intuitive movement with a clear distinction between spatial placement and semantic connection.
+- Whole-map and focused-region exploration.
 - Thought detail from a node.
-- Search and basic filters.
-- Quiet reference indicator with an optional social layer.
+- A way to preview the same graph as a visitor will encounter it.
 - Usable focused navigation on mobile.
 
 ### Prototype exclusions
 
 - Real multi-user authentication.
+- Follow, Save, Appreciate, Comment, activity, and notification systems.
+- Cross-person references and similar-Map discovery.
+- Theme naming, Theme spaces, and manual Theme membership.
+- Full Media pages and external catalogue synchronization.
 - Production moderation systems.
-- Notifications and email.
-- External catalogue synchronization beyond what is needed for the demo.
 - Native applications.
 - Browser extension.
 - Paths authoring unless core work finishes early.
@@ -100,22 +92,32 @@ Prove the identity and Map experience before production infrastructure.
 
 ## Stage 0 acceptance walkthrough
 
-In roughly fifteen minutes, a target user can:
+In roughly ten minutes, a target user can:
 
-1. Explore a seeded profile and one meaningful Theme cluster.
+1. Explore a compelling seeded profile and understand that its Map represents the person's displayed mind.
 2. Choose three Books or Films.
 3. Add a compact Thought to each.
-4. See the Map change after every Thought.
+4. See each Draft appear on the private Map immediately and distinctly.
 5. Connect two works through a bridge Thought.
-6. Accept or rename a suggested Theme.
-7. Feature Media above the Map.
-8. Preview the public profile.
-9. Open another person's Thought.
-10. Save it privately, Appreciate it, and leave a Comment.
-11. Author a new Thought that quietly references it.
-12. Return to My Map and understand what changed.
+6. Publish the Thoughts and understand what changed on the public Map.
+7. Move through and shape the graph without needing graph-analysis knowledge.
+8. Feature Media above the Map.
+9. Preview the public profile as another person would encounter it.
+10. Want to keep refining or share the result.
 
-The walkthrough fails if users focus mainly on counts, cannot understand the Map, mistake Comments for Thoughts, or do not care about revisiting their profile.
+The walkthrough fails if the Map feels decorative or technical, Draft and public state are confused, creation feels like writing reviews, or users do not care about revisiting or showing the profile.
+
+## Later prototype expansion
+
+Only after the identity and Map artifact shows promise should a later owner-approved goal choose among:
+
+- Emergent Theme-region recognition and optional naming.
+- Discovery through similar Map regions and distinctive people.
+- Media pages organized around interpretation.
+- Save, Appreciate, Comment, Follow, and activity behavior.
+- Cross-person Thought references and backlinks.
+
+These are directions, not a committed implementation sequence. Social activity remains intentionally unresolved until the personal profile works.
 
 ## Stage 1: closed web alpha
 
@@ -142,7 +144,7 @@ Test the behaviour with real people and durable shared state.
 - Do users return to inspect their own Map without a notification prompt?
 - Which creation prompts produce specific Thoughts rather than generic reviews?
 - Does selecting featured Media improve pride in the profile?
-- Do suggested Themes feel insightful or invasive?
+- Do emergent Theme regions feel revealing, arbitrary, or invasive?
 - Are cross-person references understandable when visually understated?
 - Do Comments create connection without overwhelming durable Thoughts?
 - Does Follow improve discovery without a feed?
@@ -162,20 +164,18 @@ Candidates, not commitments:
 
 No candidate should be promoted merely because it is technically easy.
 
-## Build order for Stage 0
+## Stage 0 dependency direction
 
-1. Shared Book and Film catalogue with niche-work fallback.
-2. Thought lifecycle and Media anchoring.
-3. Graph projection and stable layout.
-4. My Map and Thought detail.
-5. Public profile and featured Media.
-6. Seeded People and discovery-first onboarding.
-7. Themes and Theme suggestions requiring confirmation.
-8. Media pages and followed-person prioritization.
-9. Save, Appreciate, Comment, and Follow interactions.
-10. Cross-person Thought reference and quiet backlink presentation.
-11. Responsive focused Map navigation.
-12. Full acceptance walkthrough and target-user sessions.
+The graph and the creation experience must be developed in tandem rather than as a data layer followed by a visualization. The owner-approved implementation goal will define completion criteria, and the development loop will select one bounded gap at a time rather than treating this document as a task queue.
+
+The conceptual dependency is:
+
+1. A desirable seeded public profile establishes the destination.
+2. Thought lifecycle and Media anchoring supply authentic content.
+3. The Map changes visibly through the same interface after every creation action.
+4. Spatial interaction and authored connection make the graph feel personal rather than decorative.
+5. Responsive profile preview proves the resulting identity artifact.
+6. The complete walkthrough and target-user sessions test whether it is worth continuing.
 
 ## Validation standard
 
@@ -185,6 +185,6 @@ The prototype is not done because every screen exists. It is done when:
 - The Map remains readable on desktop and navigable on mobile.
 - All creation visibly improves the profile.
 - No core flow requires ratings, reviews, counts, or a feed.
-- The distinction between authored Map content and social conversation remains clear.
+- The distinction between private Drafts and public identity remains clear.
+- Spatial graph customization does not silently create confusing semantic claims.
 - Target users demonstrate desire to continue shaping their own Map.
-
