@@ -1,3 +1,5 @@
+import { mediaCatalogue } from "./catalog.js";
+
 export const profile = Object.freeze({
   id: "mira-vale",
   displayName: "Mira Vale",
@@ -13,54 +15,7 @@ export const nodes = Object.freeze([
     label: "Mira Vale",
     note: "A map of what stayed with me",
   },
-  {
-    id: "left-hand",
-    type: "media",
-    format: "book",
-    title: "The Left Hand of Darkness",
-    creator: "Ursula K. Le Guin",
-    year: 1969,
-  },
-  {
-    id: "dispossessed",
-    type: "media",
-    format: "book",
-    title: "The Dispossessed",
-    creator: "Ursula K. Le Guin",
-    year: 1974,
-  },
-  {
-    id: "bluets",
-    type: "media",
-    format: "book",
-    title: "Bluets",
-    creator: "Maggie Nelson",
-    year: 2009,
-  },
-  {
-    id: "arrival",
-    type: "media",
-    format: "film",
-    title: "Arrival",
-    creator: "Denis Villeneuve",
-    year: 2016,
-  },
-  {
-    id: "mood-for-love",
-    type: "media",
-    format: "film",
-    title: "In the Mood for Love",
-    creator: "Wong Kar-wai",
-    year: 2000,
-  },
-  {
-    id: "aftersun",
-    type: "media",
-    format: "film",
-    title: "Aftersun",
-    creator: "Charlotte Wells",
-    year: 2022,
-  },
+  ...mediaCatalogue.map((item) => Object.freeze({ ...item, type: "media" })),
   {
     id: "thought-language",
     type: "thought",

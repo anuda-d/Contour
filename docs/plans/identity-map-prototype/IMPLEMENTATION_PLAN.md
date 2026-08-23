@@ -15,13 +15,13 @@ goal-bounded autonomous authorization granted on 2026-08-22 until completion.
 - Incomplete run: none
 - Run status: selecting
 - Pending owner decision: none
-- Last accepted run: graph-first seeded interactive Map foundation, 2026-08-22
+- Last accepted run: Map-led three-work chooser, 2026-08-22
 - Alignment due: no
 
-The graph-foundation correction was accepted under standing authorization on
-2026-08-22 after full validation and clean fresh independent review against the
-owner-approved [Map Design Foundation](MAP_DESIGN_FOUNDATION.md). No bounded
-unit is active while the loop selects the next smallest goal gap.
+The graph foundation and Map-led three-work chooser were accepted under
+standing authorization on 2026-08-22 after full validation and clean fresh
+independent review. No bounded unit is active while the loop selects the next
+smallest goal gap.
 
 ## Goal Progress
 
@@ -34,9 +34,9 @@ unit is active while the loop selects the next smallest goal gap.
 | IM-5 Intuitive spatial control | in progress | Accepted foundation evidence: pan, zoom, thresholded temporary node movement, keyboard movement, explicit Focus, and reset; durable Pin behavior remains open. |
 | IM-6 Authored bridge | open | None yet. |
 | IM-7 Public identity boundary | open | None yet. |
-| IM-8 Integrated creation | open | None yet. |
-| IM-9 Responsive experience | in progress | Accepted foundation evidence: coherent desktop and mobile overview, selection, detail, Focus, movement, and controls; the complete walkthrough remains open. |
-| IM-10 Durable acceptance walkthrough | open | None yet. |
+| IM-8 Integrated creation | in progress | Accepted chooser evidence: exactly three Books or Films can be selected through a Map-led editorial layer and confirmation returns to the unchanged Map; authored creation remains open. |
+| IM-9 Responsive experience | in progress | Accepted foundation and chooser evidence: coherent desktop and mobile Map interaction plus overflow-free chooser layouts across mobile, responsive seam, and desktop; the complete walkthrough remains open. |
+| IM-10 Durable acceptance walkthrough | in progress | Accepted chooser evidence: versioned selected-work state survives reload with safe recovery and session-only fallback; the complete end-to-end walkthrough remains open. |
 
 This table records only evidence accepted after validation, fresh independent
 review, and local commit under standing authorization. It is not a task backlog
@@ -79,41 +79,7 @@ claim is chosen just in time from the verified repository baseline.
 
 ## Current Run
 
-### Graph-first seeded interactive Map foundation
-
-- Criterion: IM-1 Desirable Map and IM-4 Generated living Map, with bounded
-  foundational evidence for IM-5 Intuitive spatial control
-- Progress claim: produce a running seeded 2D identity Map whose Books, Films,
-  authored Thoughts, and explicit authored relationships are readable; use a
-  deterministic generated layout; and support pan, zoom, and node movement
-  without changing semantic relationships.
-- Intended behavior: the Map opens as a coherent displayed mind rather than a
-  blank canvas, catalogue, or technical graph. Direct spatial interaction is
-  visible and responsive, while authored meaning remains unchanged by node
-  placement.
-- Evidence target: focused seed and layout tests; full repository check;
-  representative desktop and mobile renders; pan, zoom, node-drag, focus, and
-  reset click-through; layout and console inspection; fresh independent review.
-- Design Read: an overhaul of an experimental social identity artifact for
-  design-conscious users, with a restrained Editorial Constellation language
-  implemented in native CSS.
-- Design dials: `DESIGN_VARIANCE: 6`, `MOTION_INTENSITY: 4`, and
-  `VISUAL_DENSITY: 4`.
-- Redesign audit: preserve the deterministic graph, seed semantics, one camera,
-  keyboard access, dark mode, and reduced-motion behavior. Retire permanent
-  Thought cards, the visible owner hub and spokes, the duplicate focus-pill
-  dock, uniformly visible relationships, and the large always-on detail panel.
-- Pre-flight target: one cool-mineral theme family in matched light and dark
-  modes, one coral interaction accent, no ornamental glow or flowchart cards,
-  motivated state-transition motion only, explicit mobile collapse, readable
-  button contrast, zero visible em dashes, and rendered interaction checks.
-- Authorization: standing owner authorization for the active goal, granted on
-  2026-08-22.
-- Scope boundary: no profile, onboarding, capture, publishing, persistence,
-  authentication, production infrastructure, or Theme nodes. The run may not
-  independently settle lasting visual or placement policy. Its correction must
-  follow the owner's 2026-08-22 decisions in the
-  [Map Design Foundation](MAP_DESIGN_FOUNDATION.md).
+- State: none; selecting the next bounded unit.
 
 ## Standing Goal Authorization
 
@@ -130,6 +96,82 @@ claim is chosen just in time from the verified repository baseline.
   publication, and unrelated external side effects
 
 ## Current Unit Evidence
+
+### Map-led three-work chooser
+
+- Criterion and claim: advances IM-8 and establishes bounded IM-10 persistence
+  evidence by letting the owner choose exactly three Books or Films through an
+  integrated Map-led flow, return to the same Map, and resume the choice after
+  reload without creating Drafts or changing the graph.
+- Base commit: `317d920` (`mvp`)
+- Owned diff: `docs/plans/CURRENT.md`, this implementation state, `index.html`,
+  `scripts/check.sh`, `src/app.js`, `src/catalog.js`, `src/map.js`,
+  `src/seed.js`, `src/selection-state.js`, `src/styles.css`,
+  `src/work-chooser.js`, `tests/catalog.test.mjs`, and
+  `tests/selection-state.test.mjs`, plus `tests/styles.test.mjs`.
+- Observed behavior: the existing Map exposes one quiet chooser entry. The
+  overlay starts from zero through three selections, searches the six-work
+  curated Book and Film catalogue, permits removal and correction, disables
+  confirmation before three, and makes a fourth work unavailable when full.
+  Confirming closes to the unchanged ten-node Map with `3 works ready`; reload
+  restored the exact three selected ids. Removing Arrival returned the flow to
+  `2 of 3 chosen` with confirmation disabled, and reselecting it restored the
+  ready state. Escape closed the dialog and restored focus to the Map entry.
+- Interpretation: this is a private starting-set decision layered over the Map,
+  not a store, dashboard, second graph, or implied semantic relationship. In
+  this forced mature-seed prototype, all six works already appear on the Map;
+  selection changes neither graph membership nor existing relationships.
+- Focused validation: `npm test` passes twenty checks. Eight new checks cover
+  a unique mixed-format catalogue, fresh catalogue copies, exactly-three
+  selection and fourth-choice refusal, confirmation, corrupt and unknown id
+  recovery, persistence round trips, storage-unavailable fallback, and readable
+  primary-action contrast in both themes. The prior twelve graph, layout, seed,
+  interaction, and style checks remain clean.
+- Browser and visual validation: the chooser was exercised in the live app at
+  `1440x1000`, the narrower desktop default, and `390x844`. Search, select,
+  deselect, full, confirm, return, reload/resume, Escape, focus restoration,
+  disabled states, and continued ten-node Map integrity were observed. Large
+  desktop fits in one view; mobile uses one intentional vertical reading flow;
+  neither has horizontal overflow. Matched light and dark renders were
+  inspected, the normal system-theme rule was restored, and the console
+  reported zero warnings or errors. The review-reported filtered-removal case
+  was replayed: removing a shelf item excluded by the active search now leaves
+  focus on the search input inside the dialog. The responsive seam was replayed
+  at `721x844` and `761x844`: the compact and two-column layouts respectively
+  had equal client and scroll widths with no clipped catalogue content.
+- Design pre-flight: the chooser extends the cool-mineral Editorial
+  Constellation with one coral interaction accent, asymmetric editorial
+  composition, and Book/Film silhouettes. It contains no generic card grid,
+  filter pills, ratings, scoring, ornamental gradients, multi-step wizard,
+  visible em/en dashes, or second Map. Actions do not wrap, reduced-motion and
+  backdrop fallbacks remain present, and the existing accessible focus and
+  theme tokens are reused.
+- Scope and unresolved behavior: the catalogue is deliberately local and
+  bounded to the six seeded works. In-progress and confirmed ids use versioned
+  local storage with a quiet session-only fallback. Choices do not add Media to
+  the graph, reset Map placement, create a Draft, choose a Draft/Published
+  visual treatment, or settle Pin behavior. Those actions remain later bounded
+  work or owner-gated decisions.
+- Full validation: `./scripts/check.sh` passes, including governance-state
+  consistency, JavaScript syntax, diff checks, and all twenty tests.
+- Independent-review status: the first fresh review found four blockers: dark
+  CTA contrast, filtered-removal focus escaping the dialog, inaccurate seeded
+  graph interpretation, and misleading storage-read failure copy. It also
+  reported restored-ready styling and accessible copy as a P3 gap. The CTA now
+  uses a theme-specific contrast token measuring `4.51:1` in light and `5.28:1`
+  in dark, filtered removal falls back to the search input, storage failure has
+  a distinct session-only state and message, the evidence describes the forced
+  mature seed accurately, and restored ready state is styled and labelled on
+  first render. A fresh re-review confirmed those fixes and found one responsive
+  seam: the desktop chooser overflowed between `721px` and roughly `755px`.
+  The compact single-column breakpoint now begins at `760px`. A final fresh
+  review reproduced equal client and scroll widths at `721x844` and `761x844`,
+  rechecked all earlier corrections, the complete bounded flow, a clean console,
+  the exact owned diff, and all twenty tests, and found no blocker. One P3
+  residual remains: if saved ids require recovery and the immediate cleanup
+  write alone fails, the first chooser message reports removed unavailable works
+  without also saying the corrected state is visit-only. State remains safe and
+  later interaction reports the persistence fallback.
 
 ### Graph-first seeded interactive Map foundation
 
@@ -329,6 +371,12 @@ choice, stop at `NEEDS OWNER DECISION`.
 
 ## Accepted Run Log
 
+- 2026-08-22: Map-led three-work chooser accepted under standing owner
+  authorization after `./scripts/check.sh`, twenty passing tests, responsive
+  desktop/mobile/light/dark rendering, the complete chooser click-through,
+  reload persistence, zero console warnings/errors, blocker correction, and a
+  clean final fresh independent review. Accepted evidence advances IM-8, IM-9,
+  and IM-10; authored Thought creation and the complete walkthrough remain open.
 - 2026-08-22: graph-first seeded interactive Map foundation accepted under
   standing owner authorization after `./scripts/check.sh`, twelve passing tests,
   representative desktop/mobile and light/dark rendering, complete bounded

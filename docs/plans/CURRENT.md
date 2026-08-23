@@ -9,7 +9,7 @@ successive independently reviewed work units until the goal is complete.
 - Goal: [Identity Map Prototype](identity-map-prototype/GOAL.md)
 - Shared implementation state: [Implementation Plan](identity-map-prototype/IMPLEMENTATION_PLAN.md)
 - Map design foundation: [Editorial Constellation](identity-map-prototype/MAP_DESIGN_FOUNDATION.md)
-- Active work: none; selecting the next smallest gap inside the active goal
+- Active work: select the next smallest justified gap inside the active goal
 
 ## Run State Snapshot
 

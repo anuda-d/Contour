@@ -1,10 +1,82 @@
-import { ThoughtMap } from "./map.js?v=editorial-constellation-5";
+import { getCatalogue } from "./catalog.js";
+import { ThoughtMap } from "./map.js?v=editorial-constellation-7";
+import {
+  confirmSelection,
+  loadSelection,
+  saveSelection,
+  toggleMediaSelection,
+} from "./selection-state.js";
 import { getSeedGraph } from "./seed.js";
+import { WorkChooser } from "./work-chooser.js";
 
 const root = document.querySelector("#app");
 
 try {
   const graph = getSeedGraph();
+  const catalogue = getCatalogue();
+  const validCatalogueIds = new Set(catalogue.map((item) => item.id));
+  let storage = null;
+  try {
+    storage = window.localStorage;
+  } catch {
+    storage = null;
+  }
+
+  const loaded = loadSelection(storage, validCatalogueIds);
+  let selectionState = loaded.state;
+  let persistent = loaded.persistent;
+  let initialChooserMessage = loaded.storageError
+    ? "Selections will last for this visit."
+    : loaded.recovered
+      ? "Unavailable saved works were removed."
+      : "";
+  let chooser = null;
+  let map = null;
+
+  if (loaded.recovered && loaded.persistent) {
+    persistent = saveSelection(storage, selectionState);
+  }
+
+  const persistSelection = () => {
+    persistent = saveSelection(storage, selectionState);
+    map?.updateSelectionState(selectionState);
+    return persistent;
+  };
+
+  const openChooser = () => {
+    if (chooser) return;
+    chooser = new WorkChooser(root.querySelector(".app-shell"), catalogue, selectionState, {
+      persistent,
+      initialMessage: initialChooserMessage,
+      onToggle: (id) => {
+        const result = toggleMediaSelection(selectionState, id, validCatalogueIds);
+        selectionState = result.state;
+        const saved = !result.changed || persistSelection();
+        return {
+          ...result,
+          state: selectionState,
+          message: saved ? result.message : "Selection saved for this visit only.",
+        };
+      },
+      onConfirm: () => {
+        const result = confirmSelection(selectionState);
+        selectionState = result.state;
+        const saved = !result.confirmed || persistSelection();
+        return {
+          ...result,
+          state: selectionState,
+          message: saved ? result.message : "Three works are ready for this visit.",
+        };
+      },
+      onClose: () => {
+        chooser = null;
+        map.updateSelectionState(selectionState);
+      },
+      restoreFocus: () => map.focusChooserEntry(),
+    });
+    initialChooserMessage = "";
+  };
+
   if (!graph.nodes.length) {
     root.innerHTML = `
       <main class="empty-state">
@@ -13,7 +85,11 @@ try {
       </main>
     `;
   } else {
-    window.thoughtMap = new ThoughtMap(root, graph);
+    map = new ThoughtMap(root, graph, {
+      selectionState,
+      onOpenChooser: openChooser,
+    });
+    window.thoughtMap = map;
   }
 } catch (error) {
   console.error("The Map could not start.", error);

@@ -37,9 +37,10 @@ export function positionFromDrag(start, screenDelta, scale, world = WORLD) {
 }
 
 export class ThoughtMap {
-  constructor(root, graph) {
+  constructor(root, graph, options = {}) {
     this.root = root;
     this.graph = graph;
+    this.options = options;
     this.nodeById = new Map(graph.nodes.map((node) => [node.id, node]));
     this.generatedPositions = layoutGraph(graph.nodes, graph.edges, WORLD);
     this.positions = structuredClone(this.generatedPositions);
@@ -76,6 +77,9 @@ export class ThoughtMap {
           <section class="map-intro" aria-labelledby="map-title">
             <h1 id="map-title">Mira's map</h1>
             <p>${escapeHtml(this.graph.profile.identityLine)}</p>
+            <button class="chooser-entry" type="button" data-open-chooser>
+              ${escapeHtml(this.selectionEntryLabel())}
+            </button>
           </section>
 
           <section class="map-frame" aria-label="Interactive identity Map">
@@ -107,6 +111,7 @@ export class ThoughtMap {
       </div>
     `;
 
+    this.updateSelectionState(this.options.selectionState);
     this.canvas = this.root.querySelector(".map-canvas");
     this.world = this.root.querySelector(".map-world");
     this.regionLayer = this.root.querySelector(".region-layer");
@@ -277,6 +282,9 @@ export class ThoughtMap {
 
   bindEvents() {
     this.rebindNodeEvents();
+    this.root.querySelector("[data-open-chooser]").addEventListener("click", () => {
+      this.options.onOpenChooser?.();
+    });
     this.root.querySelector('[data-control="zoom-in"]').addEventListener("click", () => this.zoomBy(1.18));
     this.root.querySelector('[data-control="zoom-out"]').addEventListener("click", () => this.zoomBy(0.84));
     this.root.querySelector('[data-control="reset"]').addEventListener("click", () => {
@@ -312,6 +320,29 @@ export class ThoughtMap {
       element.addEventListener("pointerdown", (event) => this.startNodeDrag(event, element));
       element.addEventListener("keydown", (event) => this.moveNodeByKeyboard(event, element));
     });
+  }
+
+  selectionEntryLabel() {
+    const state = this.options.selectionState;
+    if (state?.confirmed) return "3 works ready";
+    const count = state?.selectedMediaIds?.length ?? 0;
+    return count > 0 ? `${count} of 3 chosen` : "Choose 3 works";
+  }
+
+  updateSelectionState(state) {
+    this.options.selectionState = state;
+    const entry = this.root.querySelector("[data-open-chooser]");
+    if (!entry) return;
+    entry.textContent = this.selectionEntryLabel();
+    entry.classList.toggle("is-ready", state.confirmed);
+    entry.setAttribute(
+      "aria-label",
+      state.confirmed ? "Three works ready. Edit selection" : `${entry.textContent}. Open chooser`,
+    );
+  }
+
+  focusChooserEntry() {
+    this.root.querySelector("[data-open-chooser]")?.focus();
   }
 
   handleNodeClick(event, element) {
