@@ -1,8 +1,7 @@
 # Identity Map Prototype
 
-Status: active; owner-approved on 2026-08-20. A standing scheduled autonomous
-window for bounded graph-first implementation was conditionally pre-approved on
-2026-08-21.
+Status: active; owner-approved on 2026-08-20. Standing goal-bounded autonomous
+implementation was authorized on 2026-08-22 until this goal is complete.
 
 ## Question
 
@@ -107,15 +106,16 @@ later Theme and discovery systems.
 - **IM-10 Durable acceptance walkthrough:** Local state survives reloads; the
   complete walkthrough passes through visible interface actions; focused and
   full repository checks pass; independent review has no unresolved blocking
-  findings; and the owner approves the resulting experience.
+  findings; and every criterion has proportionate accepted evidence under the
+  standing goal authorization.
 
 ## Graph-First Entry Gate
 
 Before work may be selected for profile, onboarding, Thought capture,
 publishing, or production infrastructure, the implementation must establish an
 accepted graph foundation that advances IM-1, IM-4, or IM-5 through visible
-evidence. Acceptance may come from explicit owner approval or the valid
-scheduled conditional pre-approval policy.
+evidence. Acceptance requires full validation, clean fresh independent review,
+and a local commit under the standing goal authorization.
 
 The first graph work unit must produce a running 2D Map surface using seeded
 Books, Films, Thoughts, and explicit authored relationships. It must combine
@@ -126,21 +126,29 @@ profile shell that merely reserves space for a future graph do not satisfy the
 gate.
 
 The bounded unit does not need to implement profiles, onboarding, capture,
-Draft or Published flows, authentication, or a production backend. It also
-does not settle the final graph visual language or the lasting persistence
-behavior unless the owner explicitly approves one of those decisions.
+Draft or Published flows, authentication, or a production backend. The owner
+approved the core graph visual language and lasting placement policy on
+2026-08-22 after reviewing the first candidate. Those decisions are recorded
+in the [Map Design Foundation](MAP_DESIGN_FOUNDATION.md).
 
 ## Owner Decisions Inside the Goal
 
-The following may be explored through bounded alternatives, but the loop may
-not settle them without owner approval:
+The owner selected these lasting foundations on 2026-08-22:
 
-- whether ordinary node movement persists automatically or durable placement
-  requires explicit pinning; and
-- the final visual language for Media, Draft Thoughts, Published Thoughts,
-  relationships, and focused regions.
+- ordinary node movement is temporary, while durable placement requires an
+  explicit **Pin position** action; and
+- the Map uses the semantic-zoom Editorial Constellation language recorded in
+  the [Map Design Foundation](MAP_DESIGN_FOUNDATION.md), including recognizable
+  Media anchors, floating Thought typography, selective relationship
+  visibility, subtle unlabeled regions, and a shared owner/visitor composition.
 
-If either decision blocks a work unit, stop at **NEEDS OWNER DECISION** with a
+The following visual decision remains owner-gated and may not be settled by the
+loop:
+
+- the exact visual treatment that distinguishes private Draft Thoughts from
+  Published Thoughts without detaching either from the shared Map language.
+
+If that decision blocks a work unit, stop at **NEEDS OWNER DECISION** with a
 concrete comparison. Do not silently choose a lasting product direction.
 
 ## Out of Scope
@@ -162,6 +170,11 @@ concrete comparison. Do not silently choose a lasting product direction.
 
 After selecting one smallest useful goal gap, read only the relevant parts of:
 
+- [Map Design Foundation](MAP_DESIGN_FOUNDATION.md) for every change affecting
+  Map presentation, interaction, visibility, or reusable UI foundations;
+- the `design-taste-frontend` skill for every relevant Map UI implementation,
+  including its Design Read, dials, redesign audit, and applicable pre-flight
+  checks;
 - [Product Foundation](../../00-product-foundation.md) for philosophy, pillars,
   and protected product boundaries;
 - [Product Model](../../01-product-model.md) for User, Media, Thought, Draft,
@@ -180,12 +193,12 @@ anti-popularity invariants.
 
 Complete IM-1 through IM-10 through single-work-unit runs selected from current
 verified evidence. Every implementation unit must pass focused and full
-validation and receive fresh independent review. Normal units then stop for
-owner review; valid scheduled-window units may use the owner's conditional
-pre-approval to create one local commit. Alignment always stops for owner
-review.
+validation and receive fresh independent review. A clean unit is accepted and
+committed locally under the standing goal authorization, then the loop continues
+with the next smallest justified gap.
 
-The owner remains the final reviewer for product decisions, alignment, and goal
-completion. Independent review cannot settle those outcomes. After the owner
-approves the final evidence, mark the goal complete, commit the final state
-update, and stop before selecting another goal.
+The owner remains the authority for unresolved material product, visual, scope,
+and lasting architecture decisions and for any later goal. Routine alignment
+and final completion do not require owner review when the documented criteria,
+validation, and fresh independent review are all satisfied. Mark the goal
+complete, commit the final state update, and stop before selecting another goal.

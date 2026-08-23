@@ -19,8 +19,11 @@ These decisions are intentionally unresolved. They should be tested or discussed
 
 ## Map
 
+- The owner-approved semantic-zoom visual direction and explicit durable
+  pinning policy are recorded in the active goal's
+  [Map Design Foundation](plans/identity-map-prototype/MAP_DESIGN_FOUNDATION.md).
+  The questions below remain unresolved implementation or owner boundaries.
 - Which automatic layout best balances stability, legibility, and visual character.
-- Whether casual node movement persists automatically or only explicitly pinned positions are durable.
 - Which light controls ship first beyond direct movement: pinning or featuring regions.
 - The exact visual treatment that makes private Drafts distinct from Published Thoughts without making them feel detached from the Map.
 - Which semantic connections require new authored text, a relationship label, or another lightweight expression of meaning.

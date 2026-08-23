@@ -7,15 +7,15 @@ repository. Product direction belongs to the owner.
 
 - Start with `docs/plans/CURRENT.md`; it is the compact operational index.
 - Confirm that exactly one owner-approved goal is active.
-- Confirm either explicit owner authorization for one bounded run or a valid
-  scheduled-autonomous-window trigger before reading implementation or making
-  implementation changes. Either source permits the orchestrator to select one
-  smallest gap inside the approved goal; neither authorizes work outside it.
+- Confirm that the active goal has standing owner authorization and that no
+  owner decision, pause, unsafe baseline, or overlapping run blocks work.
+- Standing authorization permits successive bounded units only inside the
+  approved goal. It does not authorize a new goal or broader product direction.
 - Read the active goal and implementation state, then locate only enough code
   and tests to select one smallest useful goal gap.
 - Read only the product specification relevant to that selected task.
 - Treat `docs/05-open-questions.md` as owner decision boundaries, not a backlog.
-- If owner review is pending, do not select or begin another work unit.
+- If an owner decision is pending, do not select or begin another work unit.
 
 ## Product Direction
 
@@ -26,9 +26,9 @@ repository. Product direction belongs to the owner.
   and the Map is the identity artifact.
 - Build the graph and the surrounding user experience in tandem.
 - The first implementation foundation is the visible, interactive Map. Until
-  that foundation is accepted through explicit owner approval or valid
-  scheduled conditional pre-approval, do not select profile, onboarding,
-  publishing, or production-infrastructure work.
+  that foundation is accepted through full validation, clean fresh independent
+  review, and local commit under standing authorization, do not select profile,
+  onboarding, publishing, or production-infrastructure work.
 - Build only the thin application and data substrate required by the current
   visible graph behavior. An architecture-only layer is not progress.
 - Keep the Map generated but shapeable. Do not present a blank manual canvas.
@@ -46,6 +46,11 @@ repository. Product direction belongs to the owner.
 - State the criterion, intended behavior, and evidence before editing.
 - Use one to three read-only explorer subagents for independent investigation
   before implementation. They return concise evidence and never edit files.
+- For Map presentation, interaction, visibility, responsive layout, design
+  tokens, or reusable frontend foundations, use the `design-taste-frontend`
+  skill. Record its Design Read, design dials, relevant redesign audit, and
+  applicable pre-flight results. Apply its product-UI rules contextually rather
+  than mechanically importing landing-page patterns.
 - The orchestrator is the sole implementation writer and owns selection,
   integration, validation, and completion judgment.
 - Prefer the smallest end-to-end behavior that can be seen and evaluated.
@@ -68,31 +73,28 @@ repository. Product direction belongs to the owner.
 - Use a fresh independent read-only review agent after implementation and after
   every material correction.
 
-## Owner-Gated Development Loop
+## Goal-Bounded Autonomous Development Loop
 
 - Use `docs/main/DEVELOPMENT_LOOP.md` as the complete operating contract.
-- One owner authorization permits exactly one bounded work unit.
-- One scheduled trigger during the approved autonomous window also permits
-  exactly one bounded work unit under the conditional pre-approval rules.
+- The owner has granted standing authorization to advance the active goal
+  through successive bounded work units until the goal is complete.
+- Work remains one bounded unit at a time. Do not create a future task queue.
 - Independent review is required. A reviewer reports findings but does not make
   product decisions.
 - Record candidate evidence before independent review so the reviewer inspects
-  the claim as well as the implementation. After review, append only the
-  factual review result and stop without committing at **AWAITING OWNER
-  APPROVAL**.
-- Outside the autonomous window, the owner is the final reviewer and only
-  explicit owner approval permits a commit.
-- During the autonomous window, full validation plus a clean fresh independent
-  review satisfies the owner's conditional pre-approval and permits one local
-  commit without waiting for the owner.
-- Unless the owner explicitly pauses, stops, or approves only, approval grants
-  exactly one authorization for the orchestrator to select and complete the
-  next bounded work unit inside the approved goal.
-- Autonomous continuation is allowed only through scheduled triggers between
-  18:00 and 19:00 America/Toronto. Each trigger attempts at most one work unit.
+  the claim as well as the implementation. Full validation and a clean fresh
+  independent review permit local acceptance and commit under the standing
+  authorization.
+- After a unit is committed, immediately re-orient and select the next smallest
+  justified gap inside the same goal.
+- The owner remains the decision-maker for new goals and unresolved material
+  product, visual, scope, or lasting architecture choices. Stop at **NEEDS
+  OWNER DECISION** when one is required.
 - Never select, broaden, or replace the active goal.
-- Never create a future task queue.
-- Stop when the goal is complete or continuing requires an owner decision.
+- Never push, merge, deploy, publish, destructively clean up, or absorb
+  unrelated user work without explicit direction.
+- Stop when the goal is complete, the owner pauses, or continuing requires an
+  owner decision or unsafe external action.
 
 ## Model Routing
 
@@ -108,5 +110,6 @@ repository. Product direction belongs to the owner.
 - State validation and independent-review results plainly.
 - Call out forced prototype behavior, special cases, risks, and unresolved
   assumptions.
-- At the owner gate, clearly ask for approval, changes, pause, or rejection.
+- At an owner-decision gate, ask only for the smallest product, visual, scope,
+  architecture, pause, or new-goal decision needed to continue.
 - Do not imply that a prototype proves demand, retention, or product viability.

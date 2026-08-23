@@ -19,17 +19,25 @@ Media provides the aesthetic invitation. Thoughts provide the substance. The Map
 5. [Web MVP plan](docs/04-web-mvp-plan.md)
 6. [Open questions](docs/05-open-questions.md)
 7. [Active development goal](docs/plans/identity-map-prototype/GOAL.md)
-8. [Owner-gated development loop](docs/main/DEVELOPMENT_LOOP.md)
+8. [Goal-bounded autonomous development loop](docs/main/DEVELOPMENT_LOOP.md)
 
 Coding agents do not use this reading list as their operational entry point.
 They must begin with the [Current Development Index](docs/plans/CURRENT.md),
-check the owner gate, and follow its just-in-time read order.
+check the standing authorization and owner-decision gates, and follow its
+just-in-time read order.
 
 ## Current status
 
-The previous book-only prototype and its implementation plans have been removed. The repository is documentation-first while the new product is specified from the ground up.
+The core concept and philosophy have been revised around identity,
+self-presentation, and the Map. The Identity Map Prototype is the active
+owner-approved goal. It advances through bounded, validated, independently
+reviewed autonomous units. The first graph-first foundation is being corrected
+against the owner-approved Map design foundation; profile and creation-flow work
+remain deferred until that foundation is accepted and committed.
 
-The core concept and philosophy have been revised around identity, self-presentation, and the Map. The Identity Map Prototype is the active owner-approved goal. Bounded graph-first work may run through explicit owner instructions or the conditionally pre-approved daily 6:00-7:00 PM America/Toronto automation window; profile and creation-flow work remain deferred until the graph foundation is accepted.
+For local review, run `npm run serve` and open `http://localhost:4173`. Run the
+focused checks with `npm test` or the complete repository check with
+`./scripts/check.sh`.
 
 ## Settled boundaries
 
