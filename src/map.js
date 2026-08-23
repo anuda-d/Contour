@@ -1,4 +1,10 @@
 import { layoutGraph } from "./layout.js";
+import {
+  MAP_MODES,
+  getModeCapabilities,
+  normalizeMapMode,
+  projectGraphForMode,
+} from "./graph-projection.js";
 
 const WORLD = { width: 1080, height: 720 };
 const MIN_SCALE = 0.3;
@@ -39,9 +45,12 @@ export function positionFromDrag(start, screenDelta, scale, world = WORLD) {
 export class ThoughtMap {
   constructor(root, graph, options = {}) {
     this.root = root;
-    this.graph = graph;
+    this.fullGraph = graph;
     this.options = options;
-    this.nodeById = new Map(graph.nodes.map((node) => [node.id, node]));
+    this.mode = normalizeMapMode(options.mode);
+    this.capabilities = getModeCapabilities(this.mode);
+    this.graph = projectGraphForMode(this.fullGraph, this.mode);
+    this.nodeById = new Map(this.graph.nodes.map((node) => [node.id, node]));
     this.generatedPositions = layoutGraph(graph.nodes, graph.edges, WORLD);
     this.positions = structuredClone(this.generatedPositions);
     this.view = { x: 0, y: 0, scale: 0.8 };
@@ -51,6 +60,7 @@ export class ThoughtMap {
     this.panGesture = null;
     this.pinchGesture = null;
     this.suppressedClick = null;
+    this.onWindowResize = () => this.applyTransform();
     this.render();
     this.bindEvents();
     requestAnimationFrame(() => this.resetView());
@@ -58,18 +68,21 @@ export class ThoughtMap {
 
   render() {
     this.root.innerHTML = `
-      <div class="app-shell">
+      <div class="app-shell" data-map-mode="${this.mode}">
         <header class="topbar">
           <a class="brand" href="#map" aria-label="Thought Map home">
             <span class="brand-mark" aria-hidden="true">T</span>
             <span>Thought Map</span>
           </a>
-          <div class="identity" aria-label="Map owner">
-            <span class="identity-copy">
-              <strong>${escapeHtml(this.graph.profile.displayName)}</strong>
-              <small>${escapeHtml(this.graph.profile.handle)}</small>
-            </span>
-            <span class="avatar" aria-hidden="true">${escapeHtml(this.graph.profile.initials)}</span>
+          <div class="topbar-actions">
+            ${this.modeControl()}
+            <div class="identity" aria-label="Map owner">
+              <span class="identity-copy">
+                <strong>${escapeHtml(this.graph.profile.displayName)}</strong>
+                <small>${escapeHtml(this.graph.profile.handle)}</small>
+              </span>
+              <span class="avatar" aria-hidden="true">${escapeHtml(this.graph.profile.initials)}</span>
+            </div>
           </div>
         </header>
 
@@ -77,9 +90,13 @@ export class ThoughtMap {
           <section class="map-intro" aria-labelledby="map-title">
             <h1 id="map-title">Mira's map</h1>
             <p>${escapeHtml(this.graph.profile.identityLine)}</p>
-            <button class="chooser-entry" type="button" data-open-chooser>
-              ${escapeHtml(this.selectionEntryLabel())}
-            </button>
+            ${
+              this.capabilities.canChooseWorks
+                ? `<button class="chooser-entry" type="button" data-open-chooser>
+                    ${escapeHtml(this.selectionEntryLabel())}
+                  </button>`
+                : ""
+            }
           </section>
 
           <section class="map-frame" aria-label="Interactive identity Map">
@@ -88,7 +105,7 @@ export class ThoughtMap {
               data-zoom-band="middle"
               tabindex="0"
               role="application"
-              aria-label="Mira's Map. Drag open space to move through it, scroll or pinch to zoom, select an item for context, and drag an item to temporarily reshape the Map."
+              aria-label="${escapeHtml(this.canvasInstructions())}"
             >
               <div class="map-world" style="width: ${WORLD.width}px; height: ${WORLD.height}px">
                 <div class="region-layer" aria-hidden="true"></div>
@@ -103,7 +120,11 @@ export class ThoughtMap {
               <div class="map-controls" aria-label="Map controls">
                 <button type="button" data-control="zoom-out" aria-label="Zoom out">−</button>
                 <button type="button" data-control="zoom-in" aria-label="Zoom in">+</button>
-                <button class="reset-control" type="button" data-control="reset">Reset</button>
+                ${
+                  this.capabilities.canResetPositions
+                    ? '<button class="reset-control" type="button" data-control="reset">Reset</button>'
+                    : ""
+                }
               </div>
             </div>
           </section>
@@ -122,6 +143,23 @@ export class ThoughtMap {
     this.renderNodes();
     this.renderEdges();
     this.renderDetails();
+  }
+
+  modeControl() {
+    if (this.mode === MAP_MODES.visitor) {
+      return `
+        <span class="mode-state" role="status">Visitor preview</span>
+        <button class="mode-action" type="button" data-mode-exit>Back to my Map</button>
+      `;
+    }
+    return '<button class="mode-action" type="button" data-mode-enter>Preview as visitor</button>';
+  }
+
+  canvasInstructions() {
+    if (this.mode === MAP_MODES.visitor) {
+      return "Mira's public Map preview. Drag open space to move through it, scroll or pinch to zoom, and select an item for context.";
+    }
+    return "Mira's Map. Drag open space to move through it, scroll or pinch to zoom, select an item for context, and drag an item to temporarily reshape the Map.";
   }
 
   renderRegions() {
@@ -178,7 +216,11 @@ export class ThoughtMap {
             style="--node-x: ${point.x}px; --node-y: ${point.y}px"
             aria-label="${escapeHtml(ariaLabel)}"
             aria-pressed="${node.id === this.selectedId}"
-            aria-keyshortcuts="ArrowUp ArrowDown ArrowLeft ArrowRight"
+            ${
+              this.capabilities.canShapeNodes
+                ? 'aria-keyshortcuts="ArrowUp ArrowDown ArrowLeft ArrowRight"'
+                : ""
+            }
             ${moved}
           >
             ${content}
@@ -282,12 +324,18 @@ export class ThoughtMap {
 
   bindEvents() {
     this.rebindNodeEvents();
-    this.root.querySelector("[data-open-chooser]").addEventListener("click", () => {
+    this.root.querySelector("[data-open-chooser]")?.addEventListener("click", () => {
       this.options.onOpenChooser?.();
+    });
+    this.root.querySelector("[data-mode-enter]")?.addEventListener("click", () => {
+      this.requestMode(MAP_MODES.visitor);
+    });
+    this.root.querySelector("[data-mode-exit]")?.addEventListener("click", () => {
+      this.requestMode(MAP_MODES.owner);
     });
     this.root.querySelector('[data-control="zoom-in"]').addEventListener("click", () => this.zoomBy(1.18));
     this.root.querySelector('[data-control="zoom-out"]').addEventListener("click", () => this.zoomBy(0.84));
-    this.root.querySelector('[data-control="reset"]').addEventListener("click", () => {
+    this.root.querySelector('[data-control="reset"]')?.addEventListener("click", () => {
       this.positions = structuredClone(this.generatedPositions);
       this.movedNodes.clear();
       this.renderRegions();
@@ -311,7 +359,8 @@ export class ThoughtMap {
     this.canvas.addEventListener("pointerup", (event) => this.endCanvasGesture(event));
     this.canvas.addEventListener("pointercancel", (event) => this.endCanvasGesture(event));
     this.canvas.addEventListener("keydown", (event) => this.handleKeyboard(event));
-    window.addEventListener("resize", () => this.applyTransform(), { passive: true });
+    window.removeEventListener("resize", this.onWindowResize);
+    window.addEventListener("resize", this.onWindowResize, { passive: true });
   }
 
   rebindNodeEvents() {
@@ -345,6 +394,32 @@ export class ThoughtMap {
     this.root.querySelector("[data-open-chooser]")?.focus();
   }
 
+  requestMode(mode) {
+    if (this.options.onModeChange) this.options.onModeChange(mode);
+    else this.setMode(mode);
+  }
+
+  setMode(mode) {
+    const nextMode = normalizeMapMode(mode);
+    if (nextMode === this.mode) return;
+    this.mode = nextMode;
+    this.capabilities = getModeCapabilities(nextMode);
+    this.graph = projectGraphForMode(this.fullGraph, nextMode);
+    this.nodeById = new Map(this.graph.nodes.map((node) => [node.id, node]));
+    if (!this.nodeById.has(this.selectedId)) this.selectedId = null;
+    this.activePointers.clear();
+    this.panGesture = null;
+    this.pinchGesture = null;
+    this.render();
+    this.bindEvents();
+    this.applyTransform();
+    requestAnimationFrame(() => {
+      this.root
+        .querySelector(nextMode === MAP_MODES.visitor ? "[data-mode-exit]" : "[data-mode-enter]")
+        ?.focus();
+    });
+  }
+
   handleNodeClick(event, element) {
     const id = element.dataset.nodeId;
     if (this.suppressedClick?.id === id && Date.now() <= this.suppressedClick.until) {
@@ -370,6 +445,7 @@ export class ThoughtMap {
   focusNode(id) {
     this.selectNode(id);
     const node = this.nodeById.get(id);
+    if (!node) return;
     const neighborIds = node.type === "thought"
       ? node.anchors
       : this.graph.edges
@@ -521,6 +597,7 @@ export class ThoughtMap {
   }
 
   startNodeDrag(event, element) {
+    if (!this.capabilities.canShapeNodes) return;
     if (event.pointerType === "mouse" && event.button !== 0) return;
     event.stopPropagation();
     const id = element.dataset.nodeId;
@@ -567,6 +644,7 @@ export class ThoughtMap {
   }
 
   moveNodeByKeyboard(event, element) {
+    if (!this.capabilities.canShapeNodes) return;
     const directions = {
       ArrowLeft: [-1, 0],
       ArrowRight: [1, 0],

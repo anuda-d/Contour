@@ -15,13 +15,13 @@ goal-bounded autonomous authorization granted on 2026-08-22 until completion.
 - Incomplete run: none
 - Run status: selecting
 - Pending owner decision: none
-- Last accepted run: Map-led three-work chooser, 2026-08-22
+- Last accepted run: shared published-only visitor preview, 2026-08-22
 - Alignment due: no
 
-The graph foundation and Map-led three-work chooser were accepted under
-standing authorization on 2026-08-22 after full validation and clean fresh
-independent review. No bounded unit is active while the loop selects the next
-smallest goal gap.
+The graph foundation, Map-led three-work chooser, and shared published-only
+visitor preview were accepted under standing authorization on 2026-08-22 after
+full validation and clean fresh independent review. No bounded unit is active
+while the loop selects the next smallest goal gap.
 
 ## Goal Progress
 
@@ -33,9 +33,9 @@ smallest goal gap.
 | IM-4 Generated living Map | in progress | Accepted foundation evidence: deterministic relationship-sensitive layout, semantic zoom, and stable seeded regions; creation-driven changes remain open. |
 | IM-5 Intuitive spatial control | in progress | Accepted foundation evidence: pan, zoom, thresholded temporary node movement, keyboard movement, explicit Focus, and reset; durable Pin behavior remains open. |
 | IM-6 Authored bridge | open | None yet. |
-| IM-7 Public identity boundary | open | None yet. |
+| IM-7 Public identity boundary | in progress | Accepted preview evidence: a shared published-only projection excludes synthetic Draft content and owner shaping controls while preserving public Map exploration; live publishing, featuring, and the complete profile remain open. |
 | IM-8 Integrated creation | in progress | Accepted chooser evidence: exactly three Books or Films can be selected through a Map-led editorial layer and confirmation returns to the unchanged Map; authored creation remains open. |
-| IM-9 Responsive experience | in progress | Accepted foundation and chooser evidence: coherent desktop and mobile Map interaction plus overflow-free chooser layouts across mobile, responsive seam, and desktop; the complete walkthrough remains open. |
+| IM-9 Responsive experience | in progress | Accepted foundation, chooser, and preview evidence: coherent Map interaction and overflow-free owner/visitor UI across mobile, responsive seam, and desktop; the complete walkthrough remains open. |
 | IM-10 Durable acceptance walkthrough | in progress | Accepted chooser evidence: versioned selected-work state survives reload with safe recovery and session-only fallback; the complete end-to-end walkthrough remains open. |
 
 This table records only evidence accepted after validation, fresh independent
@@ -96,6 +96,69 @@ claim is chosen just in time from the verified repository baseline.
   publication, and unrelated external side effects
 
 ## Current Unit Evidence
+
+### Shared published-only visitor preview
+
+- Criterion and claim: advances IM-7 with bounded IM-9 evidence by providing an
+  in-place visitor preview of Mira's Published Map through the same Map object,
+  while a reusable projection excludes Draft Thoughts, Draft-only Media, and
+  dangling relationships without choosing a Draft visual treatment.
+- Base commit: `f616736` (`mvp`)
+- Owned diff: this implementation state, `index.html`, `scripts/check.sh`,
+  `src/app.js`, `src/graph-projection.js`, `src/map.js`, `src/styles.css`, and
+  `tests/graph-projection.test.mjs`.
+- Observed behavior: `Preview as visitor` changes the existing Map object from
+  owner to visitor mode and moves focus to `Back to my Map`. The confirmed
+  chooser entry, node movement shortcuts, and position Reset disappear; all ten
+  fully Published seed nodes remain. The camera transform, selected node, and
+  every generated position were byte-for-byte unchanged across entry. Visitor
+  selection opened compact public context, Focus reframed Arrival, and Arrow
+  Right on that node panned the camera by 38 pixels while leaving its position
+  and moved marker unchanged. Returning restored focus to the preview action,
+  the same camera and selection, owner movement shortcuts and Reset, and the
+  persisted `3 works ready` state. Reload from visitor mode returned safely to
+  owner mode with that selection intent preserved.
+- Interpretation: visitor preview is a visibility and capability boundary over
+  the proven identity artifact, not a second Map or a claim that publishing and
+  public profile curation are complete. Synthetic projection evidence proves
+  the private boundary without rendering or styling a Draft.
+- Focused validation: `npm test` passes twenty-four checks. Four new checks
+  cover isolated owner projection, Draft and draft-only-media exclusion without
+  dangling edges, lossless projection of the fully Published seed, and
+  visitor capabilities that preserve exploration while removing chooser,
+  node-shaping, and position-reset authority. The prior twenty chooser, graph,
+  layout, seed, interaction, persistence, contrast, and style checks remain
+  clean.
+- Browser and visual validation: the live app was exercised at `1440x1000`,
+  `761x844`, and `390x844`. Owner-to-visitor-to-owner transition, focus transfer,
+  selection, detail, Focus, visitor keyboard exploration, unchanged positions,
+  camera preservation, private-control exclusion, reload default, responsive
+  fit, and confirmed chooser restoration were observed. Desktop and mobile
+  dark mode plus a temporary light desktop render were inspected with equal
+  client and scroll widths. The normal system-theme rule was restored and the
+  browser console reported zero warnings or errors.
+- Design pre-flight: the shared Editorial Constellation, semantic zoom, one
+  cool-mineral theme family, coral accent, Media silhouettes, responsive seam,
+  accessible focus, reduced motion, and compact contextual surface remain.
+  Preview adds one quiet topbar action and one compact state line; it adds no
+  dashboard shell, mode pills, profile cards, counts, engagement language,
+  gradients, visible em/en dashes, duplicated Map, or competing primary CTA.
+- Scope and unresolved behavior: preview mode is session-only and defaults to
+  owner on reload. It does not create, render, edit, publish, or feature
+  anything; expose chosen work ids; choose Draft/Published treatment; settle
+  Pin/Unpin/Reset-position behavior; persist camera or mode; add a public route;
+  or claim Draft exclusion was exercised through a live authoring flow.
+- Full validation: `./scripts/check.sh` passes, including governance-state
+  consistency, JavaScript syntax, diff checks, and all twenty-four tests.
+- Independent-review status: the final fresh review found no blockers or P3
+  residuals.
+  It reproduced the exact owned diff, all twenty-four tests, Draft and
+  Draft-only-Media projection exclusion, owner-to-visitor-to-owner state
+  preservation, focus transfer, private-control exclusion, blocked pointer and
+  keyboard shaping, visitor exploration, reload default, responsive desktop,
+  seam, and mobile fit, and zero console warnings or errors. It inspected light
+  and dark token definitions; its live browser exposed dark mode only, while the
+  recorded temporary light render remains the direct visual evidence.
 
 ### Map-led three-work chooser
 
@@ -371,6 +434,12 @@ choice, stop at `NEEDS OWNER DECISION`.
 
 ## Accepted Run Log
 
+- 2026-08-22: shared published-only visitor preview accepted under standing
+  owner authorization after `./scripts/check.sh`, twenty-four passing tests,
+  desktop/seam/mobile and light/dark evidence, full mode and exploration
+  click-through, blocked visitor reshaping, zero console warnings/errors, and a
+  clean fresh independent review. Accepted evidence advances IM-7 and IM-9;
+  live publishing, featuring, and the complete public profile remain open.
 - 2026-08-22: Map-led three-work chooser accepted under standing owner
   authorization after `./scripts/check.sh`, twenty passing tests, responsive
   desktop/mobile/light/dark rendering, the complete chooser click-through,

@@ -76,6 +76,40 @@ a:focus-visible,
   align-items: center;
 }
 
+.topbar-actions {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.mode-action {
+  min-height: 30px;
+  padding: 0 2px;
+  border: 0;
+  border-bottom: 1px solid var(--line-strong);
+  background: transparent;
+  color: var(--text);
+  font-size: 0.62rem;
+  font-weight: 760;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.mode-action:hover {
+  border-bottom-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+.mode-state {
+  color: var(--accent-ink);
+  font-size: 0.57rem;
+  font-weight: 780;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
 .brand {
   gap: 8px;
   color: var(--text);
@@ -324,6 +358,10 @@ a:focus-visible,
   z-index: 8;
   cursor: grabbing;
   transition: none;
+}
+
+.app-shell[data-map-mode="visitor"] .map-node {
+  cursor: pointer;
 }
 
 .node-thought {
@@ -1018,6 +1056,14 @@ a:focus-visible,
   }
 
   .identity-copy {
+    display: none;
+  }
+
+  .topbar-actions {
+    gap: 9px;
+  }
+
+  .mode-state {
     display: none;
   }
 

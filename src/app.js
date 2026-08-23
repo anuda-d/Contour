@@ -1,5 +1,5 @@
 import { getCatalogue } from "./catalog.js";
-import { ThoughtMap } from "./map.js?v=editorial-constellation-7";
+import { ThoughtMap } from "./map.js?v=editorial-constellation-9";
 import {
   confirmSelection,
   loadSelection,
@@ -32,6 +32,7 @@ try {
       : "";
   let chooser = null;
   let map = null;
+  let mapMode = "owner";
 
   if (loaded.recovered && loaded.persistent) {
     persistent = saveSelection(storage, selectionState);
@@ -44,7 +45,7 @@ try {
   };
 
   const openChooser = () => {
-    if (chooser) return;
+    if (chooser || mapMode !== "owner") return;
     chooser = new WorkChooser(root.querySelector(".app-shell"), catalogue, selectionState, {
       persistent,
       initialMessage: initialChooserMessage,
@@ -86,8 +87,13 @@ try {
     `;
   } else {
     map = new ThoughtMap(root, graph, {
+      mode: mapMode,
       selectionState,
       onOpenChooser: openChooser,
+      onModeChange: (nextMode) => {
+        mapMode = nextMode;
+        map.setMode(nextMode);
+      },
     });
     window.thoughtMap = map;
   }
