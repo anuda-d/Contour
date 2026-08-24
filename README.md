@@ -1,8 +1,8 @@
 # Thought Map Product
 
-This repository is the planning foundation for a web-first social product where people map how books and films shape their thinking.
+This repository is the planning foundation for a web-first social identity product where people put an authored representation of their mind on display through the Thoughts that books and films provoke in them.
 
-The product is not a review site, a rating database, a generic social feed, or a personal knowledge-management tool. Its central artifact is a person's public Thought Map: an authored graph of compact Thoughts, the media that prompted them, the Themes that emerge across them, and the understated links between different people's interpretations.
+The product is not a review site, a rating database, a generic social feed, or a personal knowledge-management tool. Its central artifact is a person's public Thought Map: a generated but shapeable graph of compact Thoughts, the media that prompted them, the patterns that emerge across them, and eventually the understated links between different people's interpretations.
 
 ## North star
 
@@ -18,12 +18,26 @@ Media provides the aesthetic invitation. Thoughts provide the substance. The Map
 4. [Social contract](docs/03-social-contract.md)
 5. [Web MVP plan](docs/04-web-mvp-plan.md)
 6. [Open questions](docs/05-open-questions.md)
+7. [Active development goal](docs/plans/identity-map-prototype/GOAL.md)
+8. [Goal-bounded autonomous development loop](docs/main/DEVELOPMENT_LOOP.md)
+
+Coding agents do not use this reading list as their operational entry point.
+They must begin with the [Current Development Index](docs/plans/CURRENT.md),
+check the standing authorization and owner-decision gates, and follow its
+just-in-time read order.
 
 ## Current status
 
-The previous book-only prototype and its implementation plans have been removed. The repository is documentation-first while the new product is specified from the ground up.
+The core concept and philosophy have been revised around identity,
+self-presentation, and the Map. The Identity Map Prototype is the active
+owner-approved goal. It advances through bounded, validated, independently
+reviewed autonomous units. The first graph-first foundation is being corrected
+against the owner-approved Map design foundation; profile and creation-flow work
+remain deferred until that foundation is accepted and committed.
 
-The foundation is settled. The next work is to resolve the explicitly listed open questions, turn the MVP plan into build slices, and then implement the web prototype.
+For local review, run `npm run serve` and open `http://localhost:4173`. Run the
+focused checks with `npm test` or the complete repository check with
+`./scripts/check.sh`.
 
 ## Settled boundaries
 
@@ -35,6 +49,8 @@ The foundation is settled. The next work is to resolve the explicitly listed ope
 - No AI-authored identity or automatically published interpretation.
 - A public Thought must be anchored to created media.
 - A personal Map contains only its owner's authored Thoughts.
+- Drafts appear distinctly on the owner's private Map and never on the public Map.
+- The Map supplies an automatic starting layout while allowing intuitive movement and light spatial control.
 - Comments enable conversation but never become Map nodes.
-- Themes are personal, named clusters rather than global tags.
+- Themes, when introduced, emerge from regions of the Map rather than appearing as manually connected graph nodes or global tags.
 - Collections are not a core object. Paths may later guide visitors through an ordered part of a Map.

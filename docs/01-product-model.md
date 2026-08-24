@@ -10,11 +10,9 @@ This document defines the core product objects, their relationships, and the rul
 graph TD
     U[User] -->|authors| T[Thought]
     T -->|anchored to| M[Media]
-    T -->|belongs to| H[Theme]
     T -->|references| OT[Another person's Thought]
     T -->|develops or revises| NT[Another authored Thought]
     P[Path] -->|orders| T
-    U -->|owns| H
     U -->|owns| P
 ```
 
@@ -82,7 +80,6 @@ It represents something a person noticed, questioned, interpreted, or concluded 
 - Expanded body.
 - Precise reference such as chapter, passage description, scene, or timestamp.
 - Additional Media anchors.
-- Theme membership.
 - Reference to another Thought.
 
 ### Size
@@ -108,7 +105,8 @@ A Thought begins with one primary work. Adding another work turns it into a brid
 - Private to the author.
 - Freely editable.
 - May be unattached while in a capture inbox.
-- May appear on the author's private Map layer.
+- Appears distinctly on the author's private Map layer as soon as it is captured.
+- Never appears on the public Map or public profile.
 - Cannot receive public social interaction.
 
 ### Published
@@ -137,9 +135,9 @@ Supported relationships should begin with:
 
 This makes intellectual development visible rather than erasing it.
 
-## Theme
+## Theme region
 
-A Theme is a user-owned, user-named cluster of related Thoughts.
+A Theme is an emergent region of related Thoughts, Media, and authored relationships in one person's Map. It is a way of recognizing and later naming a pattern; it is not a conventional graph node that the user manually creates and connects.
 
 Examples:
 
@@ -147,17 +145,20 @@ Examples:
 - Performance as survival.
 - Memory as an unreliable kindness.
 
-### Theme rules
+### Theme-region rules
 
-- A Theme belongs to one User.
-- It contains that User's authored Thoughts.
+- A Theme region belongs to one User's Map.
+- Its shape arises from that User's authored content and relationships.
 - It is not a global tag.
-- The system may suggest a cluster, but the user must accept, reject, rename, or reshape it.
+- A user does not file a Thought into a Theme as a required creation step.
+- A region may exist visually before it has a name or durable public identity.
+- The system may later surface a possible region, but the user must choose whether to name, rename, dismiss, or eventually reshape it.
+- The system must not automatically publish a Theme name as part of the user's identity.
 - Public similarity does not merge two users' Themes into a canonical concept.
 
 ### Theme spaces
 
-A public Theme space is a generated discovery lens that brings nearby personal Themes together through exact language, shared media, explicit links, and carefully suggested similarity.
+A future public Theme space is a generated discovery lens that brings nearby, user-recognized Map regions together through exact language, shared media, explicit links, and carefully suggested similarity.
 
 The Theme space is not itself a globally owned content node.
 
@@ -171,8 +172,8 @@ A User's Map contains:
 
 - Their authored Thoughts.
 - The Books and Films anchoring those Thoughts.
-- Their named Themes.
-- Relationships among those objects.
+- Authored relationships among Thoughts and Media.
+- Emergent regions and user-approved names when the Map has earned them.
 
 It does not contain another person's Thought as one of the User's own nodes.
 
@@ -192,7 +193,8 @@ When a User publishes a Thought referencing another person's Thought:
 - Generated automatically from actual relationships.
 - Stable enough that the Map feels familiar over time.
 - Supports zooming and cluster focus.
-- Allows light control such as pinning important nodes, naming Themes, and featuring regions.
+- Allows intuitive movement and light control such as pinning important nodes and featuring regions.
+- Distinguishes casual spatial movement from authored semantic relationships.
 - Does not require full manual node placement.
 
 ## Library
@@ -205,7 +207,7 @@ It may contain:
 - Other people's Thoughts saved for later.
 - Unattached Draft Thoughts awaiting a Media anchor.
 
-The Library has no ratings, public counts, or influence on the owner's Map until the owner authors and publishes a Thought.
+The Library has no ratings or public counts. Saved Media and other people's saved Thoughts do not influence the owner's Map. The owner's Draft Thoughts may appear only on the private Map layer; publication is still required before they affect the public Map.
 
 ## Comment
 
@@ -231,7 +233,7 @@ A Path is an optional guided journey through existing Thoughts.
 - Short introduction or thesis.
 - Ordered Thought references.
 - Visibility.
-- Optional featured Theme.
+- Optional featured Map region or Theme when those exist.
 
 A Path does not duplicate its Thoughts or Media. It is linear in its first form. Visitors may leave the Path at any point to explore the surrounding Map.
 
@@ -248,4 +250,3 @@ The foundation does not include:
 - Standalone Post without a Media anchor.
 - Public consumption log.
 - Achievement, streak, or score.
-

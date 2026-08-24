@@ -10,7 +10,7 @@ This document defines the primary web surfaces and how a person moves between se
 2. The public profile is the main identity artifact.
 3. Thoughts are the primary detail and conversation object.
 4. Media pages organize human interpretation around a work.
-5. Theme spaces enable social discovery through ideas.
+5. Emergent Theme regions and similar Maps may later enable social discovery through ideas.
 6. Paths may later provide guided exploration.
 7. The Library remains private utility.
 
@@ -33,7 +33,7 @@ My Map is the default signed-in destination and the product's emotional centre.
 It must help the owner:
 
 - See the whole shape of their thinking.
-- Identify recurring Themes.
+- Identify recurring patterns and regions.
 - Find a previous Thought.
 - Focus on one cluster.
 - Notice recent growth.
@@ -44,7 +44,7 @@ It must help the owner:
 
 #### Whole Map
 
-Shows major Themes, important Thoughts, and recognizable Books and Films.
+Shows important Thoughts, recognizable Books and Films, and any regions that have become legible through their relationships.
 
 #### Cluster
 
@@ -52,7 +52,7 @@ Focuses on one intellectual neighbourhood and the Thoughts and Media that compos
 
 #### Thought
 
-Opens the full statement, optional body, Media anchors, Theme membership, revisions, connected Thoughts, and conversation.
+Opens the full statement, optional body, Media anchors, nearby Map context, revisions, connected Thoughts, and conversation.
 
 #### Social layer
 
@@ -66,7 +66,7 @@ Begin with:
 - Search within My Map.
 - Filter Books or Films.
 - Filter Draft or Published.
-- Focus a Theme.
+- Focus a visible region when one has emerged.
 - Show or hide social references.
 
 Avoid graph-analysis terminology and controls that make the product feel like technical software.
@@ -80,7 +80,7 @@ Recommended order:
 1. Name, handle, image, and identity line.
 2. **Media in my orbit:** three to five featured covers or posters selected from Media already present in the Map.
 3. Interactive public Map.
-4. Named Themes.
+4. Named Map regions or Themes when they have emerged and the owner has chosen to name them.
 5. Featured Thoughts or regions.
 6. Paths when available.
 7. Following relationships as a route to further human discovery, without prominent counts.
@@ -99,7 +99,7 @@ The detail view should show:
 - Core statement and optional body.
 - Primary and additional Media anchors.
 - Precise scene, chapter, passage description, or timestamp when supplied.
-- Theme membership.
+- Nearby Map region when relevant.
 - Correction history when relevant.
 - Newer Thoughts that develop, revise, contradict, or clarify it.
 - Quiet cross-person reference attribution.
@@ -115,7 +115,7 @@ Connecting begins from an existing Thought and may:
 - Link another authored Thought.
 - Create a new Thought referencing another person's Thought.
 
-The user must supply the interpretation. The system should not create unexplained graph edges as the final public action.
+A final public edge must remain understandable as authored meaning rather than unexplained decoration. Whether a particular connection requires new text, a relationship label, or another lightweight expression remains an open design question for the first goal.
 
 ## Comments
 
@@ -162,15 +162,17 @@ Popularity should not be the default ordering principle.
 - Bridge Thoughts connecting it to other Books or Films.
 - Different interpretations with clear authorship.
 
-## Themes and Theme spaces
+## Theme regions and future Theme spaces
 
-### Personal Theme
+### Personal Theme region
 
-Opening a Theme from a profile focuses the owner's related cluster and explains the language they chose for it.
+A Theme first appears as a region in the Map rather than a node connected to individual Thoughts. A region may remain unnamed. If the owner later names it, opening that name from a profile focuses the related part of the Map and explains the language they chose.
+
+The initial profile-and-Map prototype does not require Theme naming or manual Theme membership. It must first prove that meaningful regions can arise from the graph itself.
 
 ### Public Theme space
 
-A public Theme space shows nearby personal Themes rather than a flat tag feed.
+A future public Theme space shows nearby, user-recognized Map regions rather than a flat tag feed.
 
 It should emphasize:
 
@@ -180,7 +182,7 @@ It should emphasize:
 - Related or opposing Theme clusters.
 - Direct routes into the relevant region of each person's Map.
 
-Users may save Theme spaces for later. Following Themes and generating topic feeds are deferred.
+Theme-space discovery, saving, following, and topic activity are deferred until the personal Map and profile are viable.
 
 ## Explore
 
@@ -214,11 +216,11 @@ Onboarding follows discovery before labour.
 
 ### Recommended flow
 
-1. Explore one strong seeded profile, Theme cluster, or Path.
+1. Explore one strong seeded profile and its Map.
 2. Choose three meaningful Books or Films in any mixture.
 3. Add one compact Thought to each.
 4. Connect two Thoughts or attach another work to create a bridge.
-5. Review a suggested cluster and accept, rename, or reject its Theme.
+5. Move through the generated Map and notice any visual region that begins to form.
 6. Watch the Map grow after every action.
 7. Preview the resulting public profile.
 
@@ -233,5 +235,4 @@ The user should never complete several forms and only then see a Map.
 - Desktop emphasizes spatial exploration and a persistent Thought panel.
 - Mobile emphasizes capture, focused cluster navigation, and full-screen Thought detail.
 - The complete graph need not be equally dense on a small screen; progressive focus is preferable to an unreadable miniature.
-- Public URLs for profiles, Thoughts, Media, Themes, and later Paths are essential.
-
+- Public URLs for profiles, Thoughts, Media, and later named Theme regions and Paths are essential.

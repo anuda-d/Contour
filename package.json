@@ -1,0 +1,9 @@
+{
+  "name": "thought-map-prototype",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "serve": "python3 -m http.server 4173",
+    "test": "node --test tests/*.test.mjs"
+  }
+}

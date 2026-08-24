@@ -6,7 +6,7 @@ This document defines how people interact without turning the product into a pop
 
 ## Principle
 
-Art creates human-to-human connection. The product should make recognition and conversation easy while reserving the Map for durable authored interpretation.
+Art creates human-to-human connection. The product should eventually make recognition and conversation easy while reserving the Map for durable authored interpretation. The first product proof remains the person's Map and public profile; the wider social system follows only after that artifact is viable.
 
 ## Social actions
 
@@ -50,7 +50,7 @@ Have contextual conversation inside a Thought.
 
 - Public when the parent Thought is public.
 - Visible only through that Thought.
-- Not included in profiles, search, Themes, Maps, or global discovery.
+- Not included in profiles, search, Theme regions, Maps, or global discovery.
 - Shallow conversation rather than deeply nested debate.
 - May optionally be developed into an anchored Thought.
 
@@ -121,7 +121,7 @@ Prioritize:
 1. The viewer's own work and connections.
 2. People the viewer follows.
 3. Explicit graph relationships.
-4. Nearby personal Themes.
+4. Nearby personal Map regions and, later, user-recognized Themes.
 5. Varied and opposing interpretations.
 
 Avoid default ranking by:
@@ -136,9 +136,8 @@ Avoid default ranking by:
 
 - My Map is the signed-in home.
 - Explore is intentionally composed and finite enough to encourage navigation.
-- Media and Theme pages provide contextual discovery.
+- Media pages and future Theme spaces provide contextual discovery.
 - Comments do not escape their parent Thought.
 - Saves stay private.
 - Appreciations do not produce a visible scoreboard.
 - Following improves relevance without obligating an infinite activity stream.
-

@@ -19,14 +19,25 @@ These decisions are intentionally unresolved. They should be tested or discussed
 
 ## Map
 
+- The owner-approved semantic-zoom visual direction and explicit durable
+  pinning policy are recorded in the active goal's
+  [Map Design Foundation](plans/identity-map-prototype/MAP_DESIGN_FOUNDATION.md).
+  The questions below remain unresolved implementation or owner boundaries.
+- The private Draft treatment was resolved by the owner on 2026-08-23 as a
+  quiet margin note across semantic zoom and is recorded in the same
+  [Map Design Foundation](plans/identity-map-prototype/MAP_DESIGN_FOUNDATION.md).
 - Which automatic layout best balances stability, legibility, and visual character.
-- Which light controls ship first: pinning, featuring regions, manual Theme membership, or all three.
-- How Drafts appear in the private Map without being confused with Published Thoughts.
+- Which light controls ship first beyond direct movement: pinning or featuring regions.
+- Which semantic connections require new authored text, a relationship label, or another lightweight expression of meaning.
+- Whether a broad `relates to` relationship remains meaningful enough for the public Map.
 - The threshold at which large Maps need time, Theme, or density views.
 
-## Themes
+## Emergent Themes
 
-- How cluster suggestions are generated without making AI the author of identity.
+- When a visible Map region has enough evidence to be surfaced as a possible Theme.
+- Whether Theme recognition or naming belongs in the first follow-up after the profile-and-Map proof.
+- How region suggestions are generated without making AI the author of identity.
+- How a User names, dismisses, or eventually reshapes an emergent region without manually filing Thoughts into it.
 - How similar personal Themes are matched for public Theme spaces.
 - How a User understands and corrects an inaccurate similarity suggestion.
 
@@ -47,8 +58,9 @@ These decisions are intentionally unresolved. They should be tested or discussed
 
 ## Scope
 
-- Whether viewing seeded Paths belongs in Stage 0 even though authoring is deferred.
-- Whether a basic activity surface is necessary in the prototype for Appreciations and Comments.
+- Which social or discovery behavior, if any, should enter the goal immediately after the profile-and-Map proof.
+- Whether aesthetic customization should ever extend beyond moving, pinning, connecting, and featuring graph content.
+- Whether viewing seeded Paths belongs in a later prototype even though authoring is deferred.
 - Which analytics are ethically appropriate and useful for evaluating the core loop.
 
 ## Decision rule
@@ -61,4 +73,3 @@ When resolving an open question, prefer the option that:
 4. Preserves clear credit and context.
 5. Avoids rebuilding ratings, feeds, forums, or productivity software.
 6. Can be tested with the smallest honest implementation.
-
