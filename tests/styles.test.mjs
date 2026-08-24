@@ -104,6 +104,40 @@ test("mobile contextual actions keep full-size touch targets", () => {
   assert.match(detailActionRule, /min-height:\s*44px/);
 });
 
+test("pinning stays a quiet contextual action instead of permanent Map chrome", () => {
+  const positionRule =
+    styles.match(/\.detail-actions \[data-position-action\]\s*{([^}]*)}/)?.[1] ?? "";
+  const quietPrimaryRule =
+    styles.match(/\.detail-actions \[data-position-action\]:first-child\s*{([^}]*)}/)?.[1] ?? "";
+  const pinnedNodeRule = styles.match(/\.map-node\.is-pinned\s*{([^}]*)}/)?.[1] ?? "";
+  assert.match(positionRule, /grid-column:\s*1 \/ -1/);
+  assert.match(positionRule, /white-space:\s*nowrap/);
+  assert.match(quietPrimaryRule, /border-color:\s*var\(--line-strong\)/);
+  assert.match(quietPrimaryRule, /color:\s*var\(--text\)/);
+  assert.match(pinnedNodeRule, /cursor:\s*pointer/);
+});
+
+test("Draft publication is a full-width contextual action", () => {
+  const publishAction =
+    styles.match(/\.detail-actions \[data-publish-draft\]\s*{([^}]*)}/s)?.[1] ?? "";
+  assert.match(publishAction, /grid-column:\s*1 \/ -1/);
+  assert.match(publishAction, /white-space:\s*nowrap/);
+});
+
+test("bridge refinement stays contextual and its choices stack on mobile", () => {
+  const connectAction =
+    styles.match(/\.detail-actions \[data-connect-draft\]\s*{([^}]*)}/s)?.[1] ?? "";
+  const bridgeChoices =
+    styles.match(/\.capture-works\.bridge-works\s*{([^}]*)}/s)?.[1] ?? "";
+  const mobileBlock = styles.match(/@media \(max-width: 760px\)\s*{([\s\S]*)\n}/)?.[1] ?? "";
+  const mobileBridge =
+    mobileBlock.match(/\.capture-works\.bridge-works\s*{([^}]*)}/)?.[1] ?? "";
+  assert.match(connectAction, /grid-column:\s*1 \/ -1/);
+  assert.match(connectAction, /white-space:\s*nowrap/);
+  assert.match(bridgeChoices, /repeat\(2, minmax\(0, 1fr\)\)/);
+  assert.match(mobileBridge, /grid-template-columns:\s*1fr/);
+});
+
 test("orbit titles wrap inside their Media silhouettes", () => {
   const titleRule = styles.match(/\.orbit-work strong\s*{([^}]*)}/)?.[1] ?? "";
   const bookRule = styles.match(/\.orbit-book\s*{([^}]*)}/)?.[1] ?? "";
@@ -111,6 +145,25 @@ test("orbit titles wrap inside their Media silhouettes", () => {
   assert.match(titleRule, /overflow-wrap:\s*break-word/);
   assert.match(bookRule, /width:\s*64px/);
   assert.match(bookRule, /height:\s*86px/);
+});
+
+test("visitor profile copy stays readable and return control remains touch sized", () => {
+  const profileRule = styles.match(/\.visitor-profile\s*\{([^}]*)\}/)?.[1] ?? "";
+  const lineRule =
+    styles.match(/\.map-intro \.visitor-profile-line\s*\{([^}]*)\}/)?.[1] ?? "";
+  const mobileBlock = styles.match(/@media \(max-width: 760px\)\s*\{([\s\S]*)\n}/)?.[1] ?? "";
+  const mobileModeAction = mobileBlock.match(/\.mode-action\s*\{([^}]*)\}/)?.[1] ?? "";
+  const mobileProfileCopy =
+    mobileBlock.match(
+      /\.map-intro \.visitor-profile-handle,\s*\.map-intro \.visitor-profile-line\s*\{([^}]*)\}/,
+    )?.[1] ?? "";
+
+  assert.match(profileRule, /display:\s*grid/);
+  assert.match(lineRule, /line-height:\s*1\.42/);
+  assert.match(mobileModeAction, /min-height:\s*44px/);
+  assert.match(mobileProfileCopy, /overflow:\s*visible/);
+  assert.match(mobileProfileCopy, /white-space:\s*normal/);
+  assert.match(mobileProfileCopy, /text-overflow:\s*clip/);
 });
 
 test("private Drafts use the owner-selected semantic zoom treatment", () => {
@@ -127,12 +180,14 @@ test("private Drafts use the owner-selected semantic zoom treatment", () => {
   assert.match(closeDraftRule, /opacity:\s*0/);
 });
 
-test("mobile capture controls keep full-size touch targets", () => {
+test("mobile capture and chooser controls keep full-size touch targets", () => {
   const mobileBlock = styles.match(/@media \(max-width: 760px\)\s*{([\s\S]*)\n}/)?.[1] ?? "";
   const backRule = mobileBlock.match(/\.capture-back\s*{([^}]*)}/)?.[1] ?? "";
+  const chooserBackRule = mobileBlock.match(/\.chooser-back\s*{([^}]*)}/)?.[1] ?? "";
   const actionRule = mobileBlock.match(/\.capture-actions button\s*{([^}]*)}/)?.[1] ?? "";
   const entryRule = mobileBlock.match(/\.capture-entry\s*{([^}]*)}/)?.[1] ?? "";
   assert.match(backRule, /min-height:\s*44px/);
+  assert.match(chooserBackRule, /min-height:\s*44px/);
   assert.match(actionRule, /min-height:\s*44px/);
   assert.match(entryRule, /min-height:\s*44px/);
 });

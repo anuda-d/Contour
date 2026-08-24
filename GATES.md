@@ -1,21 +1,21 @@
-# Gates: Map-led Thought capture and immediate private Draft
+# Gates: Complete acceptance walkthrough hardening
 
-OWNS: GATES.md, docs/05-open-questions.md, docs/plans/CURRENT.md, docs/plans/identity-map-prototype/GOAL.md, docs/plans/identity-map-prototype/IMPLEMENTATION_PLAN.md, docs/plans/identity-map-prototype/MAP_DESIGN_FOUNDATION.md, index.html, scripts/check.sh, src/app.js, src/draft-state.js, src/graph-projection.js, src/map.js, src/styles.css, src/thought-capture.js, tests/draft-state.test.mjs, tests/graph-projection.test.mjs, tests/map.test.mjs, tests/styles.test.mjs
+OWNS: GATES.md, docs/plans/CURRENT.md, docs/plans/identity-map-prototype/IMPLEMENTATION_PLAN.md, scripts/check.sh, src/styles.css, tests/acceptance-walkthrough.test.mjs, tests/styles.test.mjs
 
-Scope: capture and edit a compact Thought anchored to one of the confirmed works, reveal it immediately as a persistent private Draft on the owner Map, and exclude it from visitor mode
+Scope: harden and visibly validate the complete owner-to-public Stage 0 sequence without adding a new product surface or changing accepted behavior
 
-- [x] DC1: Draft state and graph composition are editable, recoverable, persistent, and public-safe
-  CHECK: npm test
+- [x] AW1: one public-API integration regression proves three confirmed works, three private Drafts, one two-work bridge, publication, featuring, pinning, visitor privacy, and durable reload state as one coherent contract
+  CHECK: node --test tests/acceptance-walkthrough.test.mjs
   EXPECT: ℹ fail 0
-  EVIDENCE: exit=0; focused and full suites cover create, edit, recovery, persistence, graph composition, placement preservation, and visitor exclusion
+  EVIDENCE: 1/1 passes through public versioned state, composition, projection, save, and reload APIs
 
-- [x] DC2: governance, syntax, focused behavior, and repository regressions all pass
+- [x] AW2: governance, syntax, focused behavior, and repository regressions all pass
   CHECK: ./scripts/check.sh
   EXPECT: ℹ fail 0
-  EVIDENCE: exit=0; ./scripts/check.sh passed governance, syntax, diff checks, and all 46 tests
+  EVIDENCE: governance consistency, syntax, diff checks, and all 82 tests pass
 
-- [x] DC3: owner capture, validation, edit, reload, semantic zoom, and visitor exclusion render coherently on desktop and mobile in both themes
-  EVIDENCE: Browser replay at 1440x1000, 761x844, and 390x844 covered empty validation, create, edit, reload, visitor exclusion, focus return, exact far/middle/selected Draft disclosure, corrected mobile scrolling, corrected seam overflow, temporary light and restored dark rendering, equal page widths, a 107x44 mobile capture entry, 44px dialog actions, 5.19:1 light placeholder contrast, and zero console warnings or errors.
+- [x] AW3: the complete visible walkthrough passes at representative desktop/mobile viewports and both color schemes, including focus, touch, reload, privacy, and console checks
+  EVIDENCE: isolated WebKit origin completed choose 3 -> capture 3 -> bridge -> move/pin -> publish 3 -> curate orbit -> visitor -> reload; light/dark 1280x820 and 390x844 renders were inspected, visitor had 7 Thoughts/0 Drafts/0 owner actions, reload retained 1 pin and 3 orbit works, mobile width stayed 390 with a 380 canvas and 44px return/control targets, reduced motion and keyboard focus were active, and console reported 0 errors/0 warnings
 
-- [x] DC4: a fresh independent read-only review finds no unresolved blocker in the implementation or candidate evidence
-  EVIDENCE: Final fresh review reproduced all 46 tests, corrected edit messaging, 5.188:1 light placeholder contrast, 107x44 mobile capture entry, desktop/seam/mobile flows, option-B disclosure, visitor exclusion, persistence, responsive fit, and zero console warnings or errors; it found no blocker or residual.
+- [x] AW4: a fresh independent read-only review finds no unresolved blocker in the regression, checkpoint evidence, or completion claims
+  EVIDENCE: initial review found the regression used an empty orbit instead of replacing a seeded work; the corrected regression now loads the seeded three-work orbit, removes Aftersun, features The Left Hand of Darkness, reloads, and asserts all three final works. A different fresh correction reviewer found no findings and independently confirmed focused 1/1, full 82/82, clean diff, public-API composition, privacy boundaries, and the narrow 44px correction

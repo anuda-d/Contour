@@ -203,6 +203,56 @@ a:focus-visible,
   line-height: 1.35;
 }
 
+.app-shell[data-map-mode="visitor"] .map-intro {
+  max-width: 360px;
+}
+
+.visitor-profile {
+  display: grid;
+  gap: 9px;
+}
+
+.visitor-profile-heading {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.visitor-profile-mark {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--text);
+  color: var(--surface-solid);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.visitor-profile-name {
+  min-width: 0;
+}
+
+.visitor-profile-name h1 {
+  margin-bottom: 3px;
+  font-size: 1.55rem;
+}
+
+.map-intro .visitor-profile-handle {
+  color: var(--accent-ink);
+  font-size: 0.62rem;
+  font-weight: 760;
+}
+
+.map-intro .visitor-profile-line {
+  max-width: 34ch;
+  font-size: 0.71rem;
+  line-height: 1.42;
+}
+
 .owner-map-actions {
   display: flex;
   align-items: center;
@@ -496,6 +546,10 @@ a:focus-visible,
   transition: none;
 }
 
+.map-node.is-pinned {
+  cursor: pointer;
+}
+
 .app-shell[data-map-mode="visitor"] .map-node {
   cursor: pointer;
 }
@@ -772,6 +826,11 @@ a:focus-visible,
   line-height: 1.4;
 }
 
+.detail-panel > .detail-placement {
+  margin-top: 7px;
+  color: var(--accent-ink);
+}
+
 .detail-actions {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -808,10 +867,31 @@ a:focus-visible,
   white-space: nowrap;
 }
 
+.detail-actions [data-publish-draft] {
+  grid-column: 1 / -1;
+  white-space: nowrap;
+}
+
+.detail-actions [data-connect-draft] {
+  grid-column: 1 / -1;
+  white-space: nowrap;
+}
+
+.detail-actions [data-position-action] {
+  grid-column: 1 / -1;
+  white-space: nowrap;
+}
+
 .detail-actions button:first-child {
   border-color: var(--accent);
   background: var(--accent);
   color: var(--accent-contrast);
+}
+
+.detail-actions [data-position-action]:first-child {
+  border-color: var(--line-strong);
+  background: color-mix(in srgb, var(--surface-solid) 90%, var(--canvas));
+  color: var(--text);
 }
 
 .detail-actions button:hover,
@@ -948,6 +1028,10 @@ a:focus-visible,
   margin: 0 0 27px;
   padding: 0;
   border: 0;
+}
+
+.capture-works.bridge-works {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .capture-works legend,
@@ -1483,6 +1567,10 @@ a:focus-visible,
     display: none;
   }
 
+  .mode-action {
+    min-height: 44px;
+  }
+
   .map-page {
     padding: 5px;
   }
@@ -1503,6 +1591,34 @@ a:focus-visible,
     font-size: 0.63rem;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  .visitor-profile {
+    gap: 7px;
+  }
+
+  .visitor-profile-heading {
+    gap: 9px;
+  }
+
+  .visitor-profile-mark {
+    width: 40px;
+    height: 40px;
+  }
+
+  .visitor-profile-name h1 {
+    font-size: 1.28rem;
+  }
+
+  .map-intro .visitor-profile-handle,
+  .map-intro .visitor-profile-line {
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+  }
+
+  .map-intro .visitor-profile-line {
+    max-width: min(34ch, calc(100vw - 34px));
   }
 
   .profile-orbit {
@@ -1597,6 +1713,10 @@ a:focus-visible,
     margin-bottom: 22px;
   }
 
+  .capture-works.bridge-works {
+    grid-template-columns: 1fr;
+  }
+
   .capture-work {
     min-height: 62px;
     padding-top: 10px;
@@ -1633,7 +1753,7 @@ a:focus-visible,
   .chooser-back {
     right: 10px;
     top: 10px;
-    min-height: 38px;
+    min-height: 44px;
   }
 
   .chooser-heading h2 {

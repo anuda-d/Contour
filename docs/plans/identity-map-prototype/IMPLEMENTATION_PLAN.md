@@ -6,29 +6,28 @@ goal-bounded autonomous authorization granted on 2026-08-22 until completion.
 ## Run State
 
 - Active goal id: identity-map-prototype
-- Owner authorization: paused
+- Owner authorization: standing
 - Authorization scope: active goal
 - Authorization source: owner
-- Loop cadence: paused
+- Loop cadence: continuous
 - Graph foundation: approved
 - Current run: none
 - Incomplete run: none
-- Run status: paused
-- Pending owner decision: none
-- Last accepted run: Map-led Thought capture and immediate private Draft, 2026-08-23
+- Run status: needs owner decision
+- Pending owner decision: whether the rendered prototype creates credible desire to make one for IM-1, or completion should wait for target-user evaluation
+- Last accepted run: Complete acceptance walkthrough hardening, 2026-08-24
 - Alignment due: no
-- Visual checkpoint: accepted through Map-led Thought capture, 2026-08-23
+- Visual checkpoint: accepted through Complete acceptance walkthrough, 2026-08-24
 - UI units since visual checkpoint: 0
 
 The graph foundation, Map-led three-work chooser, shared published-only visitor
-preview, and Map-led Media featuring were accepted under standing authorization
-after full validation and clean fresh independent review. On 2026-08-23 the
-owner resolved the Draft-treatment gate by selecting the quiet margin-note
-direction. The resulting capture-to-private-Draft unit passed full validation
-and clean fresh independent review and is accepted under standing authorization.
-The owner paused the loop on 2026-08-23 before another product unit was
-selected; accepted evidence remains intact and no implementation may continue
-until the owner explicitly resumes the loop.
+preview, Map-led Media featuring, and private Draft capture were accepted under
+standing authorization after full validation and clean fresh independent
+review. The owner explicitly resumed the loop on 2026-08-24. Durable pinned
+node placement, Map-led Draft publishing, the Map-led cross-media bridge Draft,
+and visitor profile framing are accepted. Complete acceptance walkthrough
+hardening tested the owner-to-public contract and performed the full visual
+checkpoint required before goal completion.
 
 ## Goal Progress
 
@@ -37,13 +36,13 @@ until the owner explicitly resumes the loop.
 | IM-1 Desirable Map | in progress | Accepted foundation evidence: seeded Editorial Constellation renders as authored identity rather than a review log or technical graph. |
 | IM-2 Non-review expression | accepted | Accepted capture evidence: the private prompt asks what a work made the owner notice, feel, question, connect, or believe and explicitly avoids summary, score, verdict, rating, or review structure. |
 | IM-3 Draft boundary | accepted | Accepted capture evidence: a newly saved anchored Draft appears immediately and distinctly on the owner Map, remains editable and persistent, and is absent with its relationship from visitor mode. |
-| IM-4 Generated living Map | in progress | Accepted foundation and capture evidence: deterministic relationship-sensitive layout, semantic zoom, stable seeded regions, and immediate graph growth that preserves existing placement when a Draft joins; publication and complete walkthrough evidence remain open. |
-| IM-5 Intuitive spatial control | in progress | Accepted foundation evidence: pan, zoom, thresholded temporary node movement, keyboard movement, explicit Focus, and reset; durable Pin behavior remains open. |
-| IM-6 Authored bridge | open | None yet. |
-| IM-7 Public identity boundary | in progress | Accepted preview and featuring evidence: the shared published-only Map excludes private content and owner shaping controls, while public Map Media can be curated into a persistent visitor orbit that focuses the same neighborhoods; live publishing and the complete profile remain open. |
-| IM-8 Integrated creation | in progress | Accepted chooser and capture evidence: exactly three works can be selected through a Map-led layer, and saving or editing a Thought returns directly to the Map and reveals the change there; publishing and bridge creation remain open. |
-| IM-9 Responsive experience | in progress | Accepted foundation, chooser, preview, featuring, and capture evidence: coherent, overflow-free Map and creation behavior across mobile, responsive seam, and desktop; the complete walkthrough remains open. |
-| IM-10 Durable acceptance walkthrough | in progress | Accepted chooser, featuring, and capture evidence: separate versioned selected-work, public-curation, and private-Draft state survive reload with safe recovery and session-only fallbacks; the complete end-to-end walkthrough remains open. |
+| IM-4 Generated living Map | accepted | Accepted complete-walkthrough evidence: deterministic relationship-sensitive layout, semantic zoom, stable seeded regions, immediate graph growth, one-anchor-to-bridge lifecycle changes, publication, and explicit shaping visibly preserve one readable displayed mind through the complete three-work sequence. |
+| IM-5 Intuitive spatial control | accepted | Accepted foundation and durable-placement evidence: pan, zoom, thresholded temporary pointer and keyboard movement, explicit Focus, generated-layout Reset, explicit persistent Pin position, and per-node Unpin without semantic changes. |
+| IM-6 Authored bridge | accepted | Accepted bridge evidence: one existing single-anchor private Draft can add exactly one confirmed second work while the owner keeps and may refine the human-authored sentence that makes the connection legible; publication names both works without introducing labels, inferred semantics, or a general relationship system. |
+| IM-7 Public identity boundary | accepted | Accepted preview, featuring, publication, and profile-framing evidence: the shared Published-only Map excludes private content and owner shaping controls; public Media can be curated into a persistent visitor orbit; publication reveals the same anchored Thought; and the existing mark, name, handle, identity line, orbit, and Map form one coherent public profile. |
+| IM-8 Integrated creation | accepted | Accepted complete-walkthrough evidence: exactly three works are selected through the Map-led layer; capture, bridge refinement, shaping, publication, and curation all return to or update the same visible Map rather than becoming disconnected forms. |
+| IM-9 Responsive experience | accepted | Accepted final-checkpoint evidence: the complete public composition and core owner layers are coherent and overflow-free at representative desktop and mobile viewports in rendered light and dark schemes, with visible focus, bounded sheets, reduced motion, and full-size touch targets. |
+| IM-10 Durable acceptance walkthrough | in progress | Accepted technical walkthrough evidence: the isolated-origin visible sequence completes through public actions; separate versioned selection, public-curation, authored-lifecycle, and explicit spatial state survive reload; visitor privacy holds; focused 1/1 and full 82/82 pass; and fresh correction review is clean. Final criterion acceptance remains coupled to proportionate evidence for qualitative IM-1. |
 
 This table records only evidence accepted after validation, fresh independent
 review, and local commit under standing authorization. It is not a task backlog
@@ -86,12 +85,17 @@ claim is chosen just in time from the verified repository baseline.
 
 ## Current Run
 
-- State: none; the owner paused the loop before the next unit was selected.
+- State: none. Complete acceptance walkthrough hardening is accepted in local
+  commit `8368256`.
+- Terminal boundary: the technical prototype and final rendered checkpoint are
+  complete. IM-1 asks whether the seeded mature Map creates credible desire to
+  make one, which is a qualitative owner or target-user judgment rather than a
+  missing implementation seam. No further bounded code change is justified
+  without that decision.
 
 ## Standing Goal Authorization
 
-The terms below are suspended while `Owner authorization` is `paused`. They
-apply again only after the owner explicitly resumes the loop.
+The standing-authorization terms below are active for the resumed loop.
 
 - Authorization basis: owner standing authorization granted 2026-08-22
 - Scope: successive bounded units inside the active Identity Map Prototype goal
@@ -108,7 +112,387 @@ apply again only after the owner explicitly resumes the loop.
 - Always separately authorized: destructive cleanup, deployment, push, merge,
   publication, and unrelated external side effects
 
-## Current Unit Evidence
+## Accepted Unit Evidence
+
+### Complete acceptance walkthrough hardening
+
+- Criterion and claim: advances IM-4, IM-8, IM-9, and the technical portion of
+  IM-10 by proving the accepted owner-to-public actions as one coherent durable
+  sequence rather than only as separately tested features.
+- Base commit: `887ffa6` (`mvp`).
+- Owned diff: `GATES.md`, `docs/plans/CURRENT.md`, this implementation state,
+  `src/styles.css`, `tests/acceptance-walkthrough.test.mjs`, and
+  `tests/styles.test.mjs`.
+- Integration evidence: the new public-API regression confirms exactly three
+  selected works, three private anchored Drafts, one two-work authored bridge,
+  private visitor exclusion, an explicit pin, publication of all three, one
+  orbit replacement, durable reload, seven total visitor Thoughts, no Drafts,
+  the additional bridge edge, and mutation-free visitor capabilities. It
+  composes the same versioned state APIs used by the interface and performs no
+  private storage or source-module shortcut.
+- Browser and visual checkpoint: a fresh isolated WebKit origin at
+  `127.0.0.1:4175` completed `Choose 3 works` with *The Left Hand of Darkness*,
+  *Bluets*, and *Arrival*; captured one private Thought for each; converted the
+  first into a bridge with *Arrival*; used keyboard movement, Pin, later Unpin,
+  further movement, and Pin again; published all three; removed *Aftersun* from
+  the orbit and featured *The Left Hand of Darkness*; entered visitor preview;
+  and reloaded. Reload returned to owner mode as intentionally session-only but
+  retained zero Drafts, seven Published Thoughts, one explicit pin, the three
+  confirmed works, and the three-work orbit. Visitor mode showed the profile,
+  all seven public Thoughts and their grounded Media, exactly three orbit works,
+  and no chooser, capture, publish, edit, connect, feature, move, pin, or Reset
+  actions.
+- Responsive and theme evidence: the full public composition and selected
+  bridge detail were rendered and visually inspected at `1280x820` and
+  `390x844` in both emulated light and dark system schemes with reduced motion
+  active. Desktop preserved the sparse constellation and readable profile;
+  mobile body and document widths equalled the 390-pixel viewport, the canvas
+  measured 380 pixels, the profile/orbit wrapped coherently, selected detail
+  and contextual actions remained visible, and the visitor return control
+  measured 44 pixels. Capture and chooser layers occupied a bounded 380-pixel
+  sheet, restored keyboard focus, and kept primary actions at 44 pixels. The
+  checkpoint caught the chooser's 38-pixel return target; a test-first CSS
+  correction now gives it the same 44-pixel target, confirmed in a fresh
+  browser context. Console output contained zero warnings and zero errors.
+- Spatial interpretation: the first deliberately tiny keyboard move was pinned
+  close enough to overlap its anchor, which is permitted by the explicitly
+  shapeable Map rather than an automatic-layout defect. The owner-visible
+  Unpin, keyboard movement, and repin flow produced a non-overlapping bridge,
+  and that exact placement persisted through visitor mode and reload.
+- Design pre-flight: the existing Editorial Constellation remains one shared
+  full-canvas identity artifact with cool-mineral automatic tokens, one coral
+  authored accent, floating type, semantic zoom, visible focus, reduced-motion
+  support, and contextual owner actions. The only visual correction extends
+  the established 44-pixel mobile target rule to the chooser return action. No
+  route, second Map, landing page, onboarding, share surface, Theme, rating,
+  count, social action, or decorative system was added.
+- Focused validation: `node --test tests/acceptance-walkthrough.test.mjs`
+  passes 1/1; the mobile touch-target regression was observed red at 38 pixels
+  before `node --test tests/styles.test.mjs` passed 13/13 at 44 pixels.
+- Scope and unresolved behavior: the walkthrough establishes technical and
+  visible continuity, not target-user desire, retention, or willingness to
+  share. Visitor preview remains session-only by design. Whether the artifact
+  is desirable enough to complete IM-1 remains an owner/target-user qualitative
+  judgment; no speculative share, onboarding, or profile route is implied.
+- Full validation: `./scripts/check.sh` passes governance consistency, syntax,
+  diff checks, and all eighty-two tests; `git diff --check` is clean.
+- Independent-review status: the initial fresh reviewer found one mismatch
+  between the claimed orbit replacement and a regression that started from an
+  empty orbit. The regression now loads the actual seeded three-work orbit,
+  removes *Aftersun*, features *The Left Hand of Darkness*, reloads, and asserts
+  the exact three-work result. A different fresh correction reviewer reported
+  no findings and independently confirmed focused 1/1, full 82/82, clean diff,
+  public-API composition, privacy boundaries, and the narrow 44-pixel fix.
+
+### Visitor profile framing
+
+- Criterion and claim: advances IM-7 with bounded IM-9 evidence by presenting
+  the accepted public identity fields, featured orbit, and published-only Map
+  as one coherent visitor profile rather than a filtered owner canvas.
+- Base commit: `bb40eb2` (`mvp`).
+- Owned diff: `GATES.md`, `docs/plans/CURRENT.md`, this implementation state,
+  `index.html`, `src/app.js`, `src/map.js`, `src/styles.css`,
+  `tests/graph-projection.test.mjs`, `tests/map.test.mjs`, and
+  `tests/styles.test.mjs`.
+- Observed behavior: `Preview as visitor` removes the duplicate owner identity
+  from the topbar and replaces the owner-oriented Map intro with one compact
+  masthead containing Mira Vale's existing `MV` visual mark, display name,
+  handle, and complete identity line. The existing `Media in Mira's orbit`
+  silhouettes follow directly and continue to focus their Media inside the
+  same interactive public Map. Returning restores the unchanged owner intro,
+  owner identity, controls, selection, and focus.
+- Visibility and continuity evidence: visitor projection still carries only
+  copied profile data, the User, Published Thoughts, their anchored Media, and
+  non-dangling edges. The masthead introduces no state or lifecycle write.
+  Mode switching continues to rerender the same `ThoughtMap` without assigning
+  new camera or position state; an existing public selection remains selected.
+  Draft nodes and owner chooser, capture, feature, publish, connect, movement,
+  pin, and Reset controls remain absent to visitors.
+- Focused validation: `node --test tests/graph-projection.test.mjs
+  tests/map.test.mjs tests/styles.test.mjs` passes thirty-one checks covering copied
+  profile projection, Draft exclusion, capability separation, mode-specific
+  identity markup, dynamic public labels, owner behavior, camera/position
+  continuity seams, responsive wrapping, touch sizing, both theme tokens, and
+  existing Map foundations.
+- Browser and visual validation: targeted active-dark flows at `1280x820` and
+  `390x844` visibly showed the mark, name, handle, complete two-line identity
+  statement, featured orbit, and shared Map as one sparse profile composition.
+  Orbit activation focused *The Dispossessed* and opened its existing detail;
+  visitor mode contained zero Draft nodes and zero owner controls. At mobile,
+  body scroll width equalled the 390-pixel viewport, the identity line used
+  normal wrapping with visible overflow, the return control measured 44 pixels,
+  and the canvas remained 380 pixels wide. Returning focused `Preview as
+  visitor`, retained the public selection, and restored both owner controls.
+  Console warnings and errors were empty. The browser exposed only the active
+  dark system scheme, so light mode is source- and contrast-test-validated
+  rather than claimed as a second rendered observation. This is not the full
+  fifth-unit visual checkpoint; this candidate is UI unit 4.
+- Design pre-flight: Design Read is a responsive public identity artifact for
+  culturally engaged Book and Film visitors, preserving the established
+  Editorial Constellation in native CSS with dials `6 / 2 / 4`. The unit keeps
+  cool-mineral automatic light/dark tokens, one coral accent, the existing
+  radius system, asymmetric floating profile placement, semantic zoom, focus
+  styling, reduced-motion rules, a single public `h1`, wrapped mobile identity
+  copy, 44-pixel mobile return and orbit targets, and one shared Map. It adds no
+  card grid, hero, second canvas, route, automatic motion, decorative effect,
+  Theme, count, rating, social action, or duplicate visitor CTA. New visible
+  copy contains no em dash.
+- Scope and unresolved behavior: the unit deliberately omits profile editing,
+  new profile fields or persistence, a public URL/router, profile image assets,
+  featured Thoughts or regions, named Themes, Paths, follows, social counts,
+  and sharing behavior. Those are later or owner-gated boundaries; no owner
+  decision is required for this exact framing from already specified fields.
+- Full validation: `./scripts/check.sh` passes governance consistency, syntax,
+  diff checks, and all eighty-one tests.
+- Independent-review status: the initial fresh reviewer found one seed-coupled
+  Published detail label (`Mira's Thought`) that contradicted the dynamic public
+  profile claim. The label now derives its possessive first name from the active
+  profile, and an alternate-profile regression passes. A different fresh
+  correction reviewer found no blocking findings and independently confirmed
+  focused 31/31, full 81/81, dynamic profile framing, privacy and capability
+  boundaries, responsive/theme foundations, and a clean diff. Residual risks
+  remain limited to the explicitly documented unrendered light scheme, one
+  representative rendered mobile width, and method-level alternate-profile
+  coverage.
+
+### Map-led cross-media bridge Draft
+
+- Criterion and claim: advances IM-6 with bounded IM-3, IM-4, IM-8, and IM-10
+  evidence by turning one existing single-anchor private Draft into the same
+  human-authored Thought anchored to exactly two confirmed works, with a
+  comprehensible Published visitor result and no general relationship system.
+- Base commit: `cc92060` (`mvp`).
+- Owned diff: `GATES.md`, `docs/plans/CURRENT.md`, this implementation state,
+  `index.html`, `src/app.js`, `src/draft-state.js`, `src/map.js`,
+  `src/styles.css`, `src/thought-capture.js`, `tests/draft-state.test.mjs`,
+  `tests/map.test.mjs`, `tests/styles.test.mjs`, and
+  `tests/thought-capture.test.mjs`.
+- Observed behavior: selecting a single-anchor private Draft exposes one
+  owner-only `Connect another work` action between the separate Publish and
+  Edit actions. Its private refinement layer fixes and names the primary work,
+  presents the other confirmed works as labelled radio choices, asks what
+  the works make visible together, and lets the owner refine the existing
+  sentence. Saving adds one second anchor, returns to and focuses the same Map
+  node, removes the Connect action, keeps Publish separate, and changes detail
+  from `Connected through The Left Hand of Darkness.` to `Connected through
+  The Left Hand of Darkness and Arrival.`
+- State and persistence evidence: lifecycle schema version 2 stores one
+  `primaryMediaId` and at most one distinct `secondaryMediaId`. Current v1 and
+  legacy Draft-only records are read-only migration inputs only when the
+  distinct v2 lifecycle key is absent, and migrate their sole `mediaId` without
+  changing Thought identity, status, statement, or timestamps. Once any v2
+  payload exists, including a corrupt one, stale v1 writes cannot replace it.
+  Invalid primary records
+  are dropped; an invalid or duplicate secondary is stripped without dropping
+  the Thought; malformed publication still becomes private. Field-scoped
+  merging applies only the sentence when intentionally edited and only the
+  secondary anchor when the sentence was unchanged, preserves unrelated
+  concurrent changes, unions new records, and keeps stored Published status and
+  its original timestamp monotonic. Publication applies to the latest stored
+  Draft fields in one write.
+- Focused validation: `node --test tests/draft-state.test.mjs
+  tests/graph-projection.test.mjs tests/map.test.mjs
+  tests/thought-capture.test.mjs` passes thirty-nine checks covering distinct
+  v2-key precedence over stale v1 clients, v1 and legacy migration, corrupt
+  recovery, exact secondary-anchor validation,
+  Published refusal, immutable editing, field-scoped concurrency, stale-tab
+  monotonicity, storage fallback, deterministic primary/additional edges,
+  private visitor exclusion, Published two-anchor projection, preserved Map
+  identity and positioning seams, owner-only action disclosure, labelled radio
+  input, authored prompt, focus trap, and responsive foundations.
+- Browser and visual validation: a targeted live dark-desktop flow created
+  `Freedom changes shape when memory becomes a language.`, selected
+  `Connect another work`, chose Film `Arrival` beside primary Book *The Left
+  Hand of Darkness*, refined the human-authored statement, saved, checked
+  visitor privacy, explicitly published, entered visitor preview, and reloaded.
+  Before and after bridging, id
+  `draft-413a61b3-76b7-49db-9adc-84987890b74e`, node position
+  `159.94px / 297.6px`, and camera transform
+  `translate(-50%, -50%) translate(-213.996px, -311.089px) scale(1.18)` were
+  unchanged, and the updated node held keyboard focus. The private visitor Map
+  contained no bridge; the Published visitor detail named both works and
+  exposed only Focus and Close; reload retained both anchors. The quiet curved
+  additional path remained subordinate to the authored sentence. This is not
+  the complete five-unit visual checkpoint, which is not due for UI unit 3.
+- Design pre-flight: Design Read is incremental owner-only bridge refinement
+  inside the established Editorial Constellation for design-conscious Book and
+  Film users, implemented in native CSS with dials `6 / 4 / 4`. The unit
+  preserves cool-mineral light and dark tokens, one coral authorship accent,
+  fixed primary-work context, visible radio labels, floating Thought geometry,
+  quiet curved additional anchors, semantic zoom, shared owner/visitor canvas,
+  focus trapping and restoration, reduced motion, bounded overlay scrolling,
+  nowrap contextual actions, two-column desktop and one-column mobile choices,
+  and 44-pixel mobile controls. It adds no second Map, wizard, card grid, pill,
+  relationship label, permanent bridge badge, Theme, score, social action, or
+  decorative effect.
+- Scope and unresolved behavior: the unit deliberately omits third or later
+  anchors, unlinking, secondary-anchor replacement UI, post-publication bridge
+  edits, connection labels or types, broad `relates to`, Thought-to-Thought or
+  cross-person links, Themes, and spatially inferred meaning. The authored
+  sentence itself remains the bridge meaning.
+- Full validation: `./scripts/check.sh` passes governance consistency, syntax,
+  diff checks, and all seventy-seven tests.
+- Independent-review status: the initial fresh review found two material
+  lifecycle/UI issues: the v2 schema reused the v1 storage key, and an open
+  detail surface did not remove `Connect another work` when the confirmed
+  selection became invalid. The candidate now uses a distinct v2 key with v1
+  as read-only migration input and rerenders selected detail on selection-state
+  changes. Exact regressions pass. A different fresh correction reviewer found
+  no blocking findings and independently confirmed focused 39/39, full 77/77,
+  and a clean diff. Residual risks are limited to the documented fail-closed
+  corrupt-v2 recovery policy and this non-checkpoint unit's targeted rather than
+  complete browser coverage.
+
+### Map-led Draft publishing
+
+- Criterion and claim: advances IM-7 and IM-8 with bounded IM-4 and IM-10
+  evidence by letting the owner explicitly publish one existing anchored Draft
+  in place; the same authored Thought becomes visitor-visible without gaining
+  a second identity, anchor, or Map position.
+- Base commit: `ea38673` (`mvp`).
+- Owned diff: `GATES.md`, `docs/plans/CURRENT.md`, this implementation state,
+  `index.html`, `src/app.js`, `src/draft-state.js`, `src/map.js`, `src/styles.css`,
+  `tests/draft-state.test.mjs`, `tests/map.test.mjs`, and
+  `tests/styles.test.mjs`.
+- Observed behavior: selecting a private anchored Draft exposes one owner-only
+  `Publish Thought` action beside `Edit Draft`. Activating it immediately
+  changes the open Draft mark and `Private draft` detail into the existing
+  solid Published treatment and `Mira's Thought` detail. The same node id stays
+  selected and keyboard-focused, the camera transform remains unchanged, and
+  no publication or editing action remains on the Published detail. Reload
+  restores the Published Thought. Visitor preview includes the Thought and its
+  Book anchor while excluding chooser, capture, edit, publish, pin, and Reset
+  controls.
+- State and privacy evidence: authored Thoughts now use one versioned lifecycle
+  store. Publication immutably replaces exactly one Draft record with a
+  Published record, preserves id, statement, Media id, and creation timestamp,
+  records an explicit publication timestamp, and uses one storage write. The
+  previous Draft-only key is read only when the lifecycle key is absent and is
+  never deleted; the new key always takes precedence so an old open client
+  cannot overwrite publication state. Every current-version write also merges
+  against the latest stored lifecycle state: Published status and its original
+  timestamp win over a stale Draft, new records are unioned, unrelated Draft
+  edits are retained, and the writing tab immediately adopts the merged state.
+  A storage event synchronizes other open tabs. Corrupt Published records are
+  never inferred to be public, and failed storage leaves the publication
+  visit-only with an explicit message.
+- Focused validation: `node --test tests/draft-state.test.mjs
+  tests/graph-projection.test.mjs tests/map.test.mjs` passes twenty-seven checks
+  covering immutable creation and editing, exact publication, invalid and
+  unanchored refusal, publication timestamps, safe normalization, legacy
+  migration and new-key precedence, storage fallback, two-current-tab
+  publication monotonicity, new-record union, unrelated Draft edit retention,
+  graph identity and edge preservation, Draft visitor exclusion, Published
+  visitor inclusion, shared capabilities, placement continuity, owner-only
+  action exposure, camera preservation, and prior movement and semantic-zoom
+  behavior.
+- Browser and visual validation: a targeted live flow created
+  `Distance can make belonging visible.` against *The Left Hand of Darkness*,
+  observed its private Draft treatment and contextual actions, published it,
+  reloaded, and entered visitor preview. Before and after publication the node
+  id remained `draft-21c0b8b9-b4dc-4942-94f8-9b164e00598c` and the world
+  transform remained `translate(-50%, -50%) translate(-284.719px, -207.668px)
+  scale(1.18)`. The Published node held focus, reload preserved it, visitor mode
+  showed the same Thought and anchor with only `Focus` and `Close`, and the
+  rendered dark desktop composition remained coherent. This targeted evidence
+  is not the complete five-unit visual checkpoint, which is not due for UI
+  unit 2.
+- Design pre-flight: Design Read is a quiet private-to-public authorship
+  transition inside the living Editorial Constellation for design-conscious
+  Book and Film users, implemented in native CSS with dials `6 / 3 / 4`. The
+  unit preserves the cool-mineral light and dark token family, one coral
+  authorship accent, floating Thought typography, semantic disclosure, the
+  shared owner and visitor canvas, visible focus, reduced motion, compact
+  contextual detail, nowrap actions, and 44-pixel mobile targets. It adds no
+  confirmation modal, wizard, second Map, card surface, Theme label, score,
+  social action, or decorative effect.
+- Scope and unresolved behavior: this unit deliberately does not decide or add
+  Published Thought editing, correction history, precise references, optional
+  body copy, lasting statement limits, confirmation policy, bridge creation,
+  Themes, routes, authentication, production storage, or a separate visitor
+  profile. Those remain later or owner-gated boundaries.
+- Full validation: `./scripts/check.sh` passes governance consistency, syntax,
+  diff checks, and all sixty-four tests.
+- Independent-review status: the first fresh read-only review found one P2
+  persistence issue: a stale current-version tab could replace the lifecycle
+  snapshot and undo another tab's publication. Writes now merge against current
+  storage with Published status monotonic, operation-scoped Draft updates, and
+  unique-record union; exact two-tab regressions and all repository checks pass.
+  A different fresh correction reviewer confirmed the P2 resolved and found
+  only one P3 migration inconsistency for array-backed valid Media ids. Legacy
+  migration now normalizes any iterable to a Set, its exact regression passes,
+  and follow-up review confirms no unresolved code, behavior, or evidence
+  finding. Accepted under standing authorization on 2026-08-24.
+
+### Durable pinned node placement
+
+- Criterion and claim: advances IM-5 with bounded IM-9 and IM-10 evidence by
+  preserving ordinary node movement as temporary while an explicit owner-only
+  `Pin position` action keeps one node coordinate through reload, Reset, graph
+  growth, and shared visitor composition without changing graph meaning.
+- Base commit: `7228e87` (`mvp`).
+- Owned diff: `GATES.md`, `docs/plans/CURRENT.md`, this implementation state,
+  `index.html`, `scripts/check.sh`, `src/app.js`, `src/map.js`,
+  `src/pinned-state.js`, `src/styles.css`, `tests/map.test.mjs`,
+  `tests/pinned-state.test.mjs`, and `tests/styles.test.mjs`.
+- Observed behavior: moving a Thought by keyboard changed its x coordinate from
+  `-75.59px` to `-63.59px`, exposed `Pin position`, and changed the contextual
+  action to `Unpin position` after the explicit save. Reload and Reset retained
+  `-63.59px`. Visitor preview used that same coordinate but exposed zero pin
+  actions, no `data-pinned` metadata, and no spoken pin status. Unpin returned
+  the Thought to its generated `-75.59px` coordinate, restored keyboard focus
+  to the node, and remained unpinned after reload.
+- Interpretation: durable position is a separate versioned local state layered
+  over the generated layout. It does not persist camera movement or ordinary
+  drag and keyboard movement, and it does not mutate nodes, edges, Drafts,
+  featured Media, or chooser intent. A pinned node must be explicitly unpinned
+  before it can move again.
+- Focused validation: `node --test tests/pinned-state.test.mjs
+  tests/map.test.mjs` passes twelve checks covering normalization, malformed
+  version-current containers, bounds, immutability, invalid ids, storage round
+  trip, corrupt and unavailable storage, position precedence, graph growth,
+  explicit owner-only disclosure, retained pins on Reset, refreshed placement
+  feedback, and the prior movement and semantic-zoom behavior.
+- Browser and visual validation: a narrow live smoke check at `1280x720` in
+  dark mode exercised keyboard move, pin, reload, Reset, visitor preview,
+  visitor metadata and control exclusion, unpin, focus restoration, and reload
+  recovery. The contextual surface remained readable, actions did not wrap,
+  and the console reported zero warnings or errors. A correction replay also
+  confirmed that moving the same node again after Unpin reports `Temporary
+  position. Pin it to keep this placement.` instead of stale Unpin feedback.
+  This is not the complete
+  five-unit rendered checkpoint, which is not due for UI unit 1.
+- Design pre-flight: Design Read is incremental owner editing inside the living
+  Editorial Constellation for design-conscious Book and Film users, implemented
+  in native CSS with dials `6 / 4 / 4`. The unit preserves the cool-mineral
+  light and dark token family, one coral authorship accent, semantic zoom,
+  shared owner and visitor composition, compact contextual detail, visible
+  focus, reduced motion, the 7-8px shape system, and 44-pixel mobile contextual
+  actions. It adds no toolbar, pin badge field, permanent node card, second Map,
+  decorative gradient, visible em or en dash, graph-analysis language, or
+  relationship mark.
+- Scope and unresolved behavior: the unit deliberately omits a clear-all-pins
+  action, camera persistence, automatic persistence after ordinary movement,
+  editable pin coordinates, placement history, region controls, publication,
+  bridge creation, routes, authentication, and production storage. Reset keeps
+  durable pins and clears only temporary movement; Unpin restores one node to
+  its latest generated position.
+- Full validation: `./scripts/check.sh` passes governance consistency, syntax,
+  diff checks, and all fifty-four tests.
+- Independent-review status: accepted under standing authorization on
+  2026-08-24. The first fresh review found one P3 issue: moving
+  the same node again after Unpin retained stale placement feedback in the live
+  status region. That message now clears when pointer or keyboard movement
+  crosses into a new temporary placement, and malformed version-current
+  position containers now recover explicitly. Focused, full, and targeted
+  browser validation pass after the correction. A different fresh reviewer ran
+  all fifty-four tests, inspected the complete diff and candidate evidence,
+  confirmed storage recovery, Reset and graph-growth precedence, visitor and
+  Draft boundaries, refreshed feedback, focus, theme, mobile, and semantic
+  invariants, and found no implementation issue. It identified only an
+  inaccurate resume date in the two synchronized governance records; the date
+  was corrected to 2026-08-24, the full check remained clean, and reviewer
+  confirmation found no unresolved finding or blocker.
 
 ### Map-led Thought capture and immediate private Draft
 
@@ -612,6 +996,39 @@ choice, stop at `NEEDS OWNER DECISION`.
 
 ## Accepted Run Log
 
+- 2026-08-24: complete acceptance walkthrough hardening accepted in local
+  commit `8368256` after a public-API integration regression, all eighty-two
+  repository tests, an isolated owner-to-public walkthrough, light and dark
+  desktop and mobile rendering, zero console warnings or errors, one corrected
+  44-pixel chooser target, and clean fresh correction review. Accepted evidence
+  completes IM-4, IM-8, and IM-9 and completes the technical portion of IM-10;
+  qualitative IM-1 remains owner or target-user gated.
+- 2026-08-24: visitor profile framing accepted in local commit `887ffa6` after
+  thirty-one focused checks, all eighty-one repository tests, desktop and
+  mobile visitor evidence, one corrected profile-derived authorship label, and
+  clean fresh correction review. Accepted evidence advances IM-7 and IM-9.
+- 2026-08-24: Map-led cross-media bridge Draft accepted in local commit
+  `bb40eb2` after thirty-nine focused checks, all seventy-seven repository
+  tests, a rendered bridge-to-public flow, corrected lifecycle-key and stale
+  action issues, and clean fresh correction review. Accepted evidence completes
+  IM-6 and advances IM-4, IM-8, and IM-10.
+- 2026-08-24: Map-led Draft publishing accepted in local commit `cc92060`
+  after twenty-seven focused checks, all sixty-four repository tests, a rendered
+  private-to-public transition, corrected stale-tab persistence, and clean
+  fresh correction review. Accepted evidence advances IM-7, IM-8, and IM-10.
+- 2026-08-24: durable pinned node placement accepted under standing owner
+  authorization in local commit `ea38673` after twelve focused checks, all
+  fifty-four repository tests, a targeted move, pin, reload, Reset, visitor,
+  unpin, focus, and repeat-move browser smoke check, corrected storage recovery
+  and live status feedback, zero console warnings or errors, and clean final
+  independent review. Accepted evidence completes IM-5 and advances IM-9 and
+  IM-10.
+- 2026-08-23: Map-led private Draft capture accepted in local commit `45911a1`
+  after all forty-six repository tests, desktop, responsive seam, and mobile
+  capture and edit evidence, corrected scrolling, overflow, contrast, touch,
+  and feedback issues, zero console warnings or errors, and clean fresh final
+  review. Accepted evidence completes IM-2 and IM-3 and advances IM-4, IM-8,
+  IM-9, and IM-10.
 - 2026-08-23: Map-led Media featuring and visitor orbit accepted under standing
   owner authorization in local commit `4318bdc` after `./scripts/check.sh`,
   thirty-five passing tests, desktop/seam/mobile and light/dark evidence, full

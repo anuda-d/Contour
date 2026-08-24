@@ -5,6 +5,7 @@ import {
   normalizeMapMode,
   projectGraphForMode,
 } from "./graph-projection.js";
+import { resolvePositions } from "./pinned-state.js";
 
 const WORLD = { width: 1080, height: 720 };
 const MIN_SCALE = 0.3;
@@ -61,7 +62,12 @@ export class ThoughtMap {
     this.graph = projectGraphForMode(this.fullGraph, this.mode);
     this.nodeById = new Map(this.graph.nodes.map((node) => [node.id, node]));
     this.generatedPositions = layoutGraph(graph.nodes, graph.edges, WORLD);
-    this.positions = structuredClone(this.generatedPositions);
+    this.positions = resolvePositions(
+      graph.nodes,
+      this.generatedPositions,
+      {},
+      options.pinnedState?.pinnedPositions ?? {},
+    );
     this.view = { x: 0, y: 0, scale: 0.8 };
     this.selectedId = null;
     this.movedNodes = new Set();
@@ -85,42 +91,19 @@ export class ThoughtMap {
           </a>
           <div class="topbar-actions">
             ${this.modeControl()}
-            <div class="identity" aria-label="Map owner">
-              <span class="identity-copy">
-                <strong>${escapeHtml(this.graph.profile.displayName)}</strong>
-                <small>${escapeHtml(this.graph.profile.handle)}</small>
-              </span>
-              <span class="avatar" aria-hidden="true">${escapeHtml(this.graph.profile.initials)}</span>
-            </div>
+            ${this.topbarIdentity()}
           </div>
         </header>
 
         <main class="map-page" id="map">
           <section class="map-intro" aria-labelledby="map-title">
-            <h1 id="map-title">Mira's map</h1>
-            <p>${escapeHtml(this.graph.profile.identityLine)}</p>
-            ${
-              this.capabilities.canChooseWorks
-                ? `<div class="owner-map-actions">
-                    <button class="chooser-entry" type="button" data-open-chooser>
-                      ${escapeHtml(this.selectionEntryLabel())}
-                    </button>
-                    <button
-                      class="capture-entry"
-                      type="button"
-                      data-open-capture
-                      ${this.options.selectionState?.confirmed ? "" : "hidden"}
-                    >Write a Thought</button>
-                  </div>
-                  <p class="draft-status" role="status" data-draft-status>${escapeHtml(this.options.draftMessage ?? "")}</p>`
-                : ""
-            }
+            ${this.profileIntro()}
             <div class="orbit-root" data-orbit-root>
               ${this.profileOrbit()}
             </div>
           </section>
 
-          <section class="map-frame" aria-label="Interactive identity Map">
+          <section class="map-frame" aria-label="${escapeHtml(this.mapFrameLabel())}">
             <div
               class="map-canvas"
               data-zoom-band="middle"
@@ -177,11 +160,66 @@ export class ThoughtMap {
     return '<button class="mode-action" type="button" data-mode-enter>Preview as visitor</button>';
   }
 
-  canvasInstructions() {
+  topbarIdentity() {
+    if (this.mode === MAP_MODES.visitor) return "";
+    return `
+      <div class="identity" aria-label="Map owner">
+        <span class="identity-copy">
+          <strong>${escapeHtml(this.graph.profile.displayName)}</strong>
+          <small>${escapeHtml(this.graph.profile.handle)}</small>
+        </span>
+        <span class="avatar" aria-hidden="true">${escapeHtml(this.graph.profile.initials)}</span>
+      </div>
+    `;
+  }
+
+  profileIntro() {
+    const profile = this.graph.profile;
+    const firstName = String(profile.displayName).trim().split(/\s+/)[0];
     if (this.mode === MAP_MODES.visitor) {
-      return "Mira's public Map preview. Drag open space to move through it, scroll or pinch to zoom, and select an item for context.";
+      return `
+        <div class="visitor-profile">
+          <div class="visitor-profile-heading">
+            <span class="visitor-profile-mark" aria-hidden="true">${escapeHtml(profile.initials)}</span>
+            <div class="visitor-profile-name">
+              <h1 id="map-title">${escapeHtml(profile.displayName)}</h1>
+              <p class="visitor-profile-handle">${escapeHtml(profile.handle)}</p>
+            </div>
+          </div>
+          <p class="visitor-profile-line">${escapeHtml(profile.identityLine)}</p>
+        </div>
+      `;
     }
-    return "Mira's Map. Drag open space to move through it, scroll or pinch to zoom, select an item for context, and drag an item to temporarily reshape the Map.";
+    return `
+      <h1 id="map-title">${escapeHtml(`${firstName}'s map`)}</h1>
+      <p class="owner-identity-line">${escapeHtml(profile.identityLine)}</p>
+      <div class="owner-map-actions">
+        <button class="chooser-entry" type="button" data-open-chooser>
+          ${escapeHtml(this.selectionEntryLabel())}
+        </button>
+        <button
+          class="capture-entry"
+          type="button"
+          data-open-capture
+          ${this.options.selectionState?.confirmed ? "" : "hidden"}
+        >Write a Thought</button>
+      </div>
+      <p class="draft-status" role="status" data-draft-status>${escapeHtml(this.options.draftMessage ?? "")}</p>
+    `;
+  }
+
+  mapFrameLabel() {
+    return this.mode === MAP_MODES.visitor
+      ? `${this.graph.profile.displayName}'s interactive public Map`
+      : "Interactive identity Map";
+  }
+
+  canvasInstructions() {
+    const name = this.graph.profile.displayName;
+    if (this.mode === MAP_MODES.visitor) {
+      return `${name}'s public Map. Drag open space to move through it, scroll or pinch to zoom, and select an item for context.`;
+    }
+    return `${name}'s Map. Drag open space to move through it, scroll or pinch to zoom, select an item for context, and drag an item to temporarily reshape the Map.`;
   }
 
   featuredIds() {
@@ -193,6 +231,7 @@ export class ThoughtMap {
   }
 
   profileOrbit() {
+    const firstName = String(this.graph.profile.displayName).trim().split(/\s+/)[0];
     const media = this.featuredIds()
       .map((id) => this.nodeById.get(id))
       .filter((node) => node?.type === "media");
@@ -208,7 +247,7 @@ export class ThoughtMap {
                   class="orbit-work orbit-${escapeHtml(node.format)}"
                   type="button"
                   data-orbit-focus="${escapeHtml(node.id)}"
-                  aria-label="${escapeHtml(`${node.format}, ${node.title} by ${node.creator}. Focus in Mira's Map`)}"
+                  aria-label="${escapeHtml(`${node.format}, ${node.title} by ${node.creator}. Focus in ${firstName}'s Map`)}"
                 >
                   <span>${escapeHtml(node.format)}</span>
                   <strong>${escapeHtml(node.title)}</strong>
@@ -225,7 +264,7 @@ export class ThoughtMap {
 
     return `
       <section class="profile-orbit" aria-labelledby="orbit-title">
-        <h2 id="orbit-title">Media in Mira's orbit</h2>
+        <h2 id="orbit-title">Media in ${escapeHtml(firstName)}'s orbit</h2>
         ${works}
         ${status}
       </section>
@@ -268,7 +307,11 @@ export class ThoughtMap {
       .map((node) => {
         const point = this.positions[node.id];
         const selected = node.id === this.selectedId ? " is-selected" : "";
+        const pinned = this.isPinned(node.id);
+        const exposesPinnedState = pinned && this.capabilities.canShapeNodes;
+        const pinnedClass = exposesPinnedState ? " is-pinned" : "";
         const moved = this.movedNodes.has(node.id) ? ' data-moved="true"' : "";
+        const pinnedAttribute = exposesPinnedState ? ' data-pinned="true"' : "";
         const className =
           node.type === "media"
             ? `node-media node-${node.format}`
@@ -284,30 +327,31 @@ export class ThoughtMap {
             ${node.status === "draft" ? '<span class="draft-note" aria-hidden="true">Draft</span>' : ""}
             <strong class="thought-statement">${escapeHtml(node.statement)}</strong>
           `;
-          ariaLabel = `${node.status === "draft" ? "Private draft" : "Thought"}: ${node.statement}`;
+          ariaLabel = `${node.status === "draft" ? "Private draft" : "Thought"}: ${node.statement}${exposesPinnedState ? ", pinned position" : ""}`;
         } else {
           content = `
             <span class="media-format">${escapeHtml(node.format)}</span>
             <strong class="media-title">${escapeHtml(node.title)}</strong>
             <small class="media-meta">${escapeHtml(node.creator)}, ${escapeHtml(node.year)}</small>
           `;
-          ariaLabel = `${node.format}: ${node.title} by ${node.creator}`;
+          ariaLabel = `${node.format}: ${node.title} by ${node.creator}${exposesPinnedState ? ", pinned position" : ""}`;
         }
 
         return `
           <button
             type="button"
-            class="map-node ${className}${selected}"
+            class="map-node ${className}${selected}${pinnedClass}"
             data-node-id="${escapeHtml(node.id)}"
             style="--node-x: ${point.x}px; --node-y: ${point.y}px"
             aria-label="${escapeHtml(ariaLabel)}"
             aria-pressed="${node.id === this.selectedId}"
             ${
-              this.capabilities.canShapeNodes
+              this.capabilities.canShapeNodes && !pinned
                 ? 'aria-keyshortcuts="ArrowUp ArrowDown ArrowLeft ArrowRight"'
                 : ""
             }
             ${moved}
+            ${pinnedAttribute}
           >
             ${content}
           </button>
@@ -369,9 +413,10 @@ export class ThoughtMap {
           ? `Connected through ${anchors.map((anchor) => anchor.title).join(" and ")}.`
           : `Connected through ${anchors[0]?.title ?? "one work"}.`;
       this.detailPanel.innerHTML = `
-        <p class="detail-label">${node.status === "draft" ? "Private draft" : "Mira's Thought"}</p>
+        <p class="detail-label">${escapeHtml(this.thoughtDetailLabel(node))}</p>
         <h2>${escapeHtml(node.statement)}</h2>
         <p>${escapeHtml(connectionCopy)}</p>
+        ${this.placementDetail(node.id)}
         ${this.detailActions(node.id, node)}
       `;
     } else {
@@ -384,16 +429,35 @@ export class ThoughtMap {
         <p class="detail-label">${escapeHtml(node.format)}</p>
         <h2>${escapeHtml(node.title)}</h2>
         <p>${escapeHtml(node.creator)}, ${escapeHtml(node.year)}. ${escapeHtml(relatedCopy)}.</p>
+        ${this.placementDetail(node.id)}
         ${this.detailActions(node.id, node)}
       `;
     }
     this.bindDetailEvents();
   }
 
+  thoughtDetailLabel(node) {
+    if (node.status === "draft") return "Private draft";
+    const firstName = String(this.graph.profile.displayName).trim().split(/\s+/)[0];
+    return `${firstName}${firstName.endsWith("s") ? "'" : "'s"} Thought`;
+  }
+
   detailActions(id, node) {
+    const publishAction =
+      node.type === "thought" && node.status === "draft" && this.capabilities.canCaptureThoughts
+        ? `<button type="button" data-publish-draft="${escapeHtml(id)}">Publish Thought</button>`
+        : "";
     const editAction =
       node.type === "thought" && node.status === "draft" && this.capabilities.canCaptureThoughts
         ? `<button type="button" data-edit-draft="${escapeHtml(id)}">Edit Draft</button>`
+        : "";
+    const connectAction =
+      node.type === "thought" &&
+      node.status === "draft" &&
+      node.anchors.length === 1 &&
+      this.options.selectionState?.confirmed &&
+      this.capabilities.canCaptureThoughts
+        ? `<button type="button" data-connect-draft="${escapeHtml(id)}">Connect another work</button>`
         : "";
     const featureAction =
       node.type === "media" && this.capabilities.canFeatureMedia
@@ -401,25 +465,70 @@ export class ThoughtMap {
             ${this.isFeatured(id) ? "Remove from orbit" : "Feature in orbit"}
           </button>`
         : "";
+    const placementAction =
+      this.capabilities.canShapeNodes && (this.isPinned(id) || this.movedNodes.has(id))
+        ? `<button type="button" data-position-action="${escapeHtml(id)}">
+            ${this.isPinned(id) ? "Unpin position" : "Pin position"}
+          </button>`
+        : "";
     return `
       <div class="detail-actions">
+        ${publishAction}
+        ${connectAction}
         ${editAction}
         ${featureAction}
+        ${placementAction}
         <button type="button" data-detail-focus="${escapeHtml(id)}">Focus</button>
         <button type="button" data-detail-close>Close</button>
       </div>
     `;
   }
 
+  placementDetail(id) {
+    if (!this.capabilities.canShapeNodes) return "";
+    const message = this.options.pinnedMessageId === id ? this.options.pinnedMessage : "";
+    if (this.isPinned(id)) {
+      return `<p class="detail-placement" role="status">${escapeHtml(message || "Pinned position. Unpin it before moving this item again.")}</p>`;
+    }
+    if (this.movedNodes.has(id)) {
+      return `<p class="detail-placement" role="status">${escapeHtml(message || "Temporary position. Pin it to keep this placement.")}</p>`;
+    }
+    return "";
+  }
+
+  isPinned(id) {
+    return Object.hasOwn(this.options.pinnedState?.pinnedPositions ?? {}, id);
+  }
+
+  clearPinnedMessage(id) {
+    if (this.options.pinnedMessageId !== id) return;
+    this.options.pinnedMessage = "";
+    this.options.pinnedMessageId = null;
+  }
+
   bindDetailEvents() {
+    this.detailPanel.querySelector("[data-publish-draft]")?.addEventListener("click", (event) => {
+      this.options.onPublishDraft?.(event.currentTarget.dataset.publishDraft);
+    });
     this.detailPanel.querySelector("[data-edit-draft]")?.addEventListener("click", (event) => {
       this.options.onEditDraft?.(event.currentTarget.dataset.editDraft);
+    });
+    this.detailPanel.querySelector("[data-connect-draft]")?.addEventListener("click", (event) => {
+      this.options.onConnectDraft?.(event.currentTarget.dataset.connectDraft);
     });
     this.detailPanel.querySelector("[data-feature-toggle]")?.addEventListener("click", (event) => {
       const id = event.currentTarget.dataset.featureToggle;
       const result = this.options.onToggleFeatured?.(id);
       if (!result) return;
       this.updateFeaturedState(result.state, result.message, id);
+    });
+    this.detailPanel.querySelector("[data-position-action]")?.addEventListener("click", (event) => {
+      const id = event.currentTarget.dataset.positionAction;
+      const result = this.isPinned(id)
+        ? this.options.onUnpinPosition?.(id)
+        : this.options.onPinPosition?.(id, this.positions[id]);
+      if (!result) return;
+      this.updatePinnedState(result.state, result.message, id);
     });
     this.detailPanel.querySelector("[data-detail-focus]")?.addEventListener("click", (event) => {
       this.focusNode(event.currentTarget.dataset.detailFocus);
@@ -446,7 +555,12 @@ export class ThoughtMap {
     this.root.querySelector('[data-control="zoom-in"]').addEventListener("click", () => this.zoomBy(1.18));
     this.root.querySelector('[data-control="zoom-out"]').addEventListener("click", () => this.zoomBy(0.84));
     this.root.querySelector('[data-control="reset"]')?.addEventListener("click", () => {
-      this.positions = structuredClone(this.generatedPositions);
+      this.positions = resolvePositions(
+        this.fullGraph.nodes,
+        this.generatedPositions,
+        {},
+        this.options.pinnedState?.pinnedPositions ?? {},
+      );
       this.movedNodes.clear();
       this.renderRegions();
       this.renderNodes();
@@ -490,6 +604,7 @@ export class ThoughtMap {
 
   updateSelectionState(state) {
     this.options.selectionState = state;
+    if (this.detailPanel) this.renderDetails();
     const entry = this.root.querySelector("[data-open-chooser]");
     if (!entry) return;
     entry.textContent = this.selectionEntryLabel();
@@ -514,6 +629,29 @@ export class ThoughtMap {
     }
   }
 
+  updatePinnedState(state, message = "", focusId = null) {
+    this.options.pinnedState = state;
+    this.options.pinnedMessage = message;
+    this.options.pinnedMessageId = focusId;
+    const pinnedPosition = state.pinnedPositions[focusId];
+    this.positions[focusId] = pinnedPosition
+      ? { ...pinnedPosition }
+      : { ...this.generatedPositions[focusId] };
+    this.movedNodes.delete(focusId);
+    this.renderRegions();
+    this.renderNodes();
+    this.renderEdges();
+    this.renderDetails();
+    this.rebindNodeEvents();
+    requestAnimationFrame(() => {
+      const action = this.detailPanel.querySelector(
+        `[data-position-action="${CSS.escape(focusId)}"]`,
+      );
+      if (action) action.focus();
+      else this.root.querySelector(`[data-node-id="${CSS.escape(focusId)}"]`)?.focus();
+    });
+  }
+
   focusChooserEntry() {
     this.root.querySelector("[data-open-chooser]")?.focus();
   }
@@ -527,16 +665,29 @@ export class ThoughtMap {
     this.detailPanel.querySelector("[data-edit-draft]")?.focus();
   }
 
-  updateGraph(graph, { focusId = null, message = "" } = {}) {
+  focusDraftConnect(id) {
+    if (this.selectedId !== id) this.selectNode(id);
+    this.detailPanel.querySelector("[data-connect-draft]")?.focus();
+  }
+
+  updateGraph(graph, { focusId = null, selectId = null, message = "" } = {}) {
     const generatedPositions = layoutGraph(graph.nodes, graph.edges, WORLD);
-    const positions = mergeGraphPositions(graph.nodes, this.positions, generatedPositions);
+    const positions = resolvePositions(
+      graph.nodes,
+      generatedPositions,
+      this.positions,
+      this.options.pinnedState?.pinnedPositions ?? {},
+    );
     this.fullGraph = graph;
     this.generatedPositions = generatedPositions;
     this.positions = positions;
     this.options.draftMessage = message;
     this.graph = projectGraphForMode(this.fullGraph, this.mode);
     this.nodeById = new Map(this.graph.nodes.map((node) => [node.id, node]));
-    this.movedNodes = new Set([...this.movedNodes].filter((id) => positions[id]));
+    this.movedNodes = new Set(
+      [...this.movedNodes].filter((id) => positions[id] && !this.isPinned(id)),
+    );
+    if (selectId && this.nodeById.has(selectId)) this.selectedId = selectId;
     if (!this.nodeById.has(this.selectedId)) this.selectedId = null;
     this.render();
     this.bindEvents();
@@ -545,6 +696,10 @@ export class ThoughtMap {
       requestAnimationFrame(() => {
         this.focusNode(focusId);
         this.root.querySelector(`[data-node-id="${CSS.escape(focusId)}"]`)?.focus();
+      });
+    } else if (selectId && this.nodeById.has(selectId)) {
+      requestAnimationFrame(() => {
+        this.root.querySelector(`[data-node-id="${CSS.escape(selectId)}"]`)?.focus();
       });
     }
   }
@@ -752,10 +907,10 @@ export class ThoughtMap {
   }
 
   startNodeDrag(event, element) {
-    if (!this.capabilities.canShapeNodes) return;
+    const id = element.dataset.nodeId;
+    if (!this.capabilities.canShapeNodes || this.isPinned(id)) return;
     if (event.pointerType === "mouse" && event.button !== 0) return;
     event.stopPropagation();
-    const id = element.dataset.nodeId;
     const pointerStart = { x: event.clientX, y: event.clientY };
     const positionStart = { ...this.positions[id] };
     let crossed = false;
@@ -766,6 +921,7 @@ export class ThoughtMap {
       if (!crossed) {
         if (!hasExceededDragThreshold(pointerStart, current)) return;
         crossed = true;
+        this.clearPinnedMessage(id);
         this.selectNode(id);
         element.classList.add("is-dragging");
       }
@@ -790,6 +946,7 @@ export class ThoughtMap {
         this.movedNodes.add(id);
         element.dataset.moved = "true";
         this.suppressedClick = { id, until: Date.now() + 500 };
+        this.renderDetails();
       }
     };
 
@@ -799,7 +956,8 @@ export class ThoughtMap {
   }
 
   moveNodeByKeyboard(event, element) {
-    if (!this.capabilities.canShapeNodes) return;
+    const id = element.dataset.nodeId;
+    if (!this.capabilities.canShapeNodes || this.isPinned(id)) return;
     const directions = {
       ArrowLeft: [-1, 0],
       ArrowRight: [1, 0],
@@ -812,7 +970,7 @@ export class ThoughtMap {
     event.preventDefault();
     event.stopPropagation();
     const distance = event.shiftKey ? 24 : 12;
-    const id = element.dataset.nodeId;
+    this.clearPinnedMessage(id);
     this.positions[id] = positionFromDrag(
       this.positions[id],
       { x: direction[0] * distance * this.view.scale, y: direction[1] * distance * this.view.scale },

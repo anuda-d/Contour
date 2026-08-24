@@ -1,16 +1,61 @@
-# Thought Map Product
+# Thought Map prototype
 
-This repository is the planning foundation for a web-first social identity product where people put an authored representation of their mind on display through the Thoughts that books and films provoke in them.
+Thought Map is a runnable browser prototype for displaying identity through the ideas that books and films provoke. Its central artifact is a generated but shapeable Map of authored Thoughts and the Media that ground them.
 
-The product is not a review site, a rating database, a generic social feed, or a personal knowledge-management tool. Its central artifact is a person's public Thought Map: a generated but shapeable graph of compact Thoughts, the media that prompted them, the patterns that emerge across them, and eventually the understated links between different people's interpretations.
+The prototype tests whether this Map can feel like a public portrait instead of a review page, media log, technical graph, or personal knowledge-management tool. It does not test market demand, retention, or production readiness.
 
-## North star
+## What you can do
+
+The current owner-to-public walkthrough supports:
+
+- Exploring a mature seeded Map with semantic zoom, pan, focus, and direct node movement
+- Choosing exactly three Books or Films from the bounded catalogue
+- Writing one private, editable Draft Thought for each chosen work
+- Connecting two works through one human-authored bridge Thought
+- Pinning an explicit Map position while leaving ordinary movement temporary
+- Publishing anchored Drafts without replacing their identity or placement
+- Curating three public Media in the profile orbit
+- Previewing the Published-only Map and profile as a visitor
+- Reloading durable selection, authored Thoughts, publication state, featured Media, and pinned positions
+
+Visitor preview excludes Drafts and owner controls. Every Published Thought remains anchored to at least one Book or Film.
+
+## Run the prototype locally
+
+You need Node.js for tests and Python 3 for the local static server.
+
+1. Run `npm run serve`.
+2. Open `http://localhost:4173`.
+
+The prototype stores its durable state in this browser’s local storage. Camera position, selected node, temporary movement, and visitor-preview mode last only for the current visit.
+
+Run `npm test` for the test suite. Run `./scripts/check.sh` for governance consistency, syntax checks, tests, and diff validation.
+
+## Prototype limits
+
+This repository does not include:
+
+- Authentication, shared accounts, or a production database
+- A public profile URL, sharing workflow, or deployment configuration
+- Live catalogue integrations or full Media pages
+- Moderation, account recovery, or production privacy and security systems
+- Ratings, popularity scores, a primary engagement-ranked feed, or public follower counts
+- Theme nodes, manual Theme filing, or general-purpose relationship editing
+- AI-authored identity or automatically published interpretation
+
+The technical acceptance walkthrough is implemented, validated across desktop and mobile in light and dark modes, independently reviewed, and committed. The remaining completion boundary is qualitative: the owner or target users must judge whether the seeded Map creates credible desire to make one. See the [Current Development Index](docs/plans/CURRENT.md) for the active decision and accepted evidence.
+
+## Product direction
 
 > My Map looks like me, and I want other people to explore it.
 
 Media provides the aesthetic invitation. Thoughts provide the substance. The Map is the identity.
 
-## Start here
+The product remains web first and supports Books and Films in this prototype. Drafts belong only to the owner Map. Published Thoughts form the public identity artifact. Themes may later emerge from Map regions, but they are not manual graph nodes or global tags.
+
+## Read the product and implementation docs
+
+Product direction:
 
 1. [Product foundation](docs/00-product-foundation.md)
 2. [Product model](docs/01-product-model.md)
@@ -18,39 +63,13 @@ Media provides the aesthetic invitation. Thoughts provide the substance. The Map
 4. [Social contract](docs/03-social-contract.md)
 5. [Web MVP plan](docs/04-web-mvp-plan.md)
 6. [Open questions](docs/05-open-questions.md)
-7. [Active development goal](docs/plans/identity-map-prototype/GOAL.md)
-8. [Goal-bounded autonomous development loop](docs/main/DEVELOPMENT_LOOP.md)
 
-Coding agents do not use this reading list as their operational entry point.
-They must begin with the [Current Development Index](docs/plans/CURRENT.md),
-check the standing authorization and owner-decision gates, and follow its
-just-in-time read order.
+Implementation state:
 
-## Current status
+1. [Current Development Index](docs/plans/CURRENT.md)
+2. [Identity Map Prototype goal](docs/plans/identity-map-prototype/GOAL.md)
+3. [Implementation Plan](docs/plans/identity-map-prototype/IMPLEMENTATION_PLAN.md)
+4. [Editorial Constellation design foundation](docs/plans/identity-map-prototype/MAP_DESIGN_FOUNDATION.md)
+5. [Goal-bounded development loop](docs/main/DEVELOPMENT_LOOP.md)
 
-The core concept and philosophy have been revised around identity,
-self-presentation, and the Map. The Identity Map Prototype is the active
-owner-approved goal. It advances through bounded, validated, independently
-reviewed autonomous units. The first graph-first foundation is being corrected
-against the owner-approved Map design foundation; profile and creation-flow work
-remain deferred until that foundation is accepted and committed.
-
-For local review, run `npm run serve` and open `http://localhost:4173`. Run the
-focused checks with `npm test` or the complete repository check with
-`./scripts/check.sh`.
-
-## Settled boundaries
-
-- Web first; native mobile may follow after the core behaviour is proven.
-- Books and films only in the first version.
-- No ratings, aggregate scores, reading goals, watch statistics, or conventional reviews.
-- No global feed as the primary experience.
-- No public follower counts as status signals.
-- No AI-authored identity or automatically published interpretation.
-- A public Thought must be anchored to created media.
-- A personal Map contains only its owner's authored Thoughts.
-- Drafts appear distinctly on the owner's private Map and never on the public Map.
-- The Map supplies an automatic starting layout while allowing intuitive movement and light spatial control.
-- Comments enable conversation but never become Map nodes.
-- Themes, when introduced, emerge from regions of the Map rather than appearing as manually connected graph nodes or global tags.
-- Collections are not a core object. Paths may later guide visitors through an ordered part of a Map.
+Coding agents must begin with the [Current Development Index](docs/plans/CURRENT.md), confirm authorization and owner-decision gates, and follow its just-in-time read order.

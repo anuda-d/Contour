@@ -220,6 +220,7 @@ node --check src/featured-state.js
 node --check src/graph-projection.js
 node --check src/layout.js
 node --check src/map.js
+node --check src/pinned-state.js
 node --check src/selection-state.js
 node --check src/seed.js
 node --check src/thought-capture.js

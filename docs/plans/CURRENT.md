@@ -9,22 +9,22 @@ successive independently reviewed work units until the goal is complete.
 - Goal: [Identity Map Prototype](identity-map-prototype/GOAL.md)
 - Shared implementation state: [Implementation Plan](identity-map-prototype/IMPLEMENTATION_PLAN.md)
 - Map design foundation: [Editorial Constellation](identity-map-prototype/MAP_DESIGN_FOUNDATION.md)
-- Active work: none; the owner paused the loop before the next unit was selected
+- Active work: owner decision on qualitative IM-1 acceptance
 
 ## Run State Snapshot
 
 - Active goal id: identity-map-prototype
-- Owner authorization: paused
+- Owner authorization: standing
 - Authorization scope: active goal
 - Authorization source: owner
-- Loop cadence: paused
+- Loop cadence: continuous
 - Graph foundation: approved
 - Current run: none
 - Incomplete run: none
-- Run status: paused
-- Pending owner decision: none
+- Run status: needs owner decision
+- Pending owner decision: whether the rendered prototype creates credible desire to make one for IM-1, or completion should wait for target-user evaluation
 - Alignment due: no
-- Visual checkpoint: accepted through Map-led Thought capture, 2026-08-23
+- Visual checkpoint: accepted through Complete acceptance walkthrough, 2026-08-24
 - UI units since visual checkpoint: 0
 
 The graph-first foundation correction was accepted under standing authorization
@@ -43,9 +43,28 @@ per-unit gate to a checkpoint on every fifth UI unit before its acceptance and
 before goal completion. Fresh independent code review and focused/full
 repository checks remain required for every unit.
 
-The owner then paused the autonomous loop before another product unit was
-selected. The active goal and accepted evidence remain intact, but no new unit
-may be selected or implemented until the owner explicitly resumes the loop.
+The owner explicitly resumed the autonomous loop on 2026-08-24. Durable pinned
+node placement was accepted after focused and full validation, targeted browser
+evidence, correction of review findings, and clean fresh independent review.
+Map-led Draft publishing is accepted after focused and full checks, a targeted
+rendered publication flow, correction of a stale-tab persistence issue, and
+clean fresh correction review. The Map-led cross-media bridge Draft is also
+accepted after focused and full checks, a targeted rendered bridge-to-public
+flow, correction of cross-version lifecycle and stale-detail issues, and clean
+fresh correction review. Visitor profile framing is accepted after focused and
+full checks, targeted desktop and mobile visitor evidence, correction of one
+seed-coupled authorship label, and clean fresh correction review. The
+validation-hardening unit added no product surface and did not increment the UI
+counter. It composed the complete durable state contract and ran the full
+desktop/mobile, light/dark acceptance checkpoint required before goal
+completion. The checkpoint found and corrected one existing 38-pixel mobile
+chooser return target so it now follows the established 44-pixel touch rule;
+the complete isolated-origin walkthrough and all four responsive color-mode
+renders are otherwise clean. The unit passed focused and full checks, clean
+fresh correction review, and was accepted in local commit `8368256`. No further
+technical unit can honestly settle IM-1's qualitative desire criterion; the
+loop is stopped at the smallest owner decision rather than inventing sharing,
+onboarding, or another surface.
 
 These fields mirror the active implementation state and are checked by
 `./scripts/check.sh`. Update both files in the same administrative change.
@@ -68,8 +87,7 @@ improvement idea into active work.
 
 ## Standing Goal Authorization
 
-The terms below are suspended while `Owner authorization` is `paused`. They
-apply again only after the owner explicitly resumes the loop.
+The standing-authorization terms below are active for the resumed loop.
 
 - The owner granted standing authorization on 2026-08-22 to advance this one
   active goal through successive bounded units until it is complete.
