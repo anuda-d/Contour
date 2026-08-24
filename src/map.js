@@ -42,6 +42,15 @@ export function positionFromDrag(start, screenDelta, scale, world = WORLD) {
   };
 }
 
+export function mergeGraphPositions(nodes, currentPositions, generatedPositions) {
+  return Object.fromEntries(
+    nodes.map((node) => [
+      node.id,
+      currentPositions[node.id] ?? generatedPositions[node.id],
+    ]),
+  );
+}
+
 export class ThoughtMap {
   constructor(root, graph, options = {}) {
     this.root = root;
@@ -92,9 +101,18 @@ export class ThoughtMap {
             <p>${escapeHtml(this.graph.profile.identityLine)}</p>
             ${
               this.capabilities.canChooseWorks
-                ? `<button class="chooser-entry" type="button" data-open-chooser>
-                    ${escapeHtml(this.selectionEntryLabel())}
-                  </button>`
+                ? `<div class="owner-map-actions">
+                    <button class="chooser-entry" type="button" data-open-chooser>
+                      ${escapeHtml(this.selectionEntryLabel())}
+                    </button>
+                    <button
+                      class="capture-entry"
+                      type="button"
+                      data-open-capture
+                      ${this.options.selectionState?.confirmed ? "" : "hidden"}
+                    >Write a Thought</button>
+                  </div>
+                  <p class="draft-status" role="status" data-draft-status>${escapeHtml(this.options.draftMessage ?? "")}</p>`
                 : ""
             }
             <div class="orbit-root" data-orbit-root>
@@ -252,7 +270,9 @@ export class ThoughtMap {
         const selected = node.id === this.selectedId ? " is-selected" : "";
         const moved = this.movedNodes.has(node.id) ? ' data-moved="true"' : "";
         const className =
-          node.type === "media" ? `node-media node-${node.format}` : "node-thought";
+          node.type === "media"
+            ? `node-media node-${node.format}`
+            : `node-thought${node.status === "draft" ? " is-draft" : ""}`;
         let content;
         let ariaLabel;
 
@@ -261,9 +281,10 @@ export class ThoughtMap {
           content = `
             <span class="thought-mark" aria-hidden="true"></span>
             <span class="thought-fragment" aria-hidden="true">${escapeHtml(fragment)}</span>
+            ${node.status === "draft" ? '<span class="draft-note" aria-hidden="true">Draft</span>' : ""}
             <strong class="thought-statement">${escapeHtml(node.statement)}</strong>
           `;
-          ariaLabel = `Thought: ${node.statement}`;
+          ariaLabel = `${node.status === "draft" ? "Private draft" : "Thought"}: ${node.statement}`;
         } else {
           content = `
             <span class="media-format">${escapeHtml(node.format)}</span>
@@ -348,7 +369,7 @@ export class ThoughtMap {
           ? `Connected through ${anchors.map((anchor) => anchor.title).join(" and ")}.`
           : `Connected through ${anchors[0]?.title ?? "one work"}.`;
       this.detailPanel.innerHTML = `
-        <p class="detail-label">Mira's Thought</p>
+        <p class="detail-label">${node.status === "draft" ? "Private draft" : "Mira's Thought"}</p>
         <h2>${escapeHtml(node.statement)}</h2>
         <p>${escapeHtml(connectionCopy)}</p>
         ${this.detailActions(node.id, node)}
@@ -370,6 +391,10 @@ export class ThoughtMap {
   }
 
   detailActions(id, node) {
+    const editAction =
+      node.type === "thought" && node.status === "draft" && this.capabilities.canCaptureThoughts
+        ? `<button type="button" data-edit-draft="${escapeHtml(id)}">Edit Draft</button>`
+        : "";
     const featureAction =
       node.type === "media" && this.capabilities.canFeatureMedia
         ? `<button type="button" data-feature-toggle="${escapeHtml(id)}">
@@ -378,6 +403,7 @@ export class ThoughtMap {
         : "";
     return `
       <div class="detail-actions">
+        ${editAction}
         ${featureAction}
         <button type="button" data-detail-focus="${escapeHtml(id)}">Focus</button>
         <button type="button" data-detail-close>Close</button>
@@ -386,6 +412,9 @@ export class ThoughtMap {
   }
 
   bindDetailEvents() {
+    this.detailPanel.querySelector("[data-edit-draft]")?.addEventListener("click", (event) => {
+      this.options.onEditDraft?.(event.currentTarget.dataset.editDraft);
+    });
     this.detailPanel.querySelector("[data-feature-toggle]")?.addEventListener("click", (event) => {
       const id = event.currentTarget.dataset.featureToggle;
       const result = this.options.onToggleFeatured?.(id);
@@ -404,6 +433,9 @@ export class ThoughtMap {
     this.rebindNodeEvents();
     this.root.querySelector("[data-open-chooser]")?.addEventListener("click", () => {
       this.options.onOpenChooser?.();
+    });
+    this.root.querySelector("[data-open-capture]")?.addEventListener("click", () => {
+      this.options.onOpenCapture?.();
     });
     this.root.querySelector("[data-mode-enter]")?.addEventListener("click", () => {
       this.requestMode(MAP_MODES.visitor);
@@ -466,6 +498,8 @@ export class ThoughtMap {
       "aria-label",
       state.confirmed ? "Three works ready. Edit selection" : `${entry.textContent}. Open chooser`,
     );
+    const captureEntry = this.root.querySelector("[data-open-capture]");
+    if (captureEntry) captureEntry.hidden = !state.confirmed;
   }
 
   updateFeaturedState(state, message = "", focusId = null) {
@@ -482,6 +516,37 @@ export class ThoughtMap {
 
   focusChooserEntry() {
     this.root.querySelector("[data-open-chooser]")?.focus();
+  }
+
+  focusCaptureEntry() {
+    this.root.querySelector("[data-open-capture]")?.focus();
+  }
+
+  focusDraftEdit(id) {
+    if (this.selectedId !== id) this.selectNode(id);
+    this.detailPanel.querySelector("[data-edit-draft]")?.focus();
+  }
+
+  updateGraph(graph, { focusId = null, message = "" } = {}) {
+    const generatedPositions = layoutGraph(graph.nodes, graph.edges, WORLD);
+    const positions = mergeGraphPositions(graph.nodes, this.positions, generatedPositions);
+    this.fullGraph = graph;
+    this.generatedPositions = generatedPositions;
+    this.positions = positions;
+    this.options.draftMessage = message;
+    this.graph = projectGraphForMode(this.fullGraph, this.mode);
+    this.nodeById = new Map(this.graph.nodes.map((node) => [node.id, node]));
+    this.movedNodes = new Set([...this.movedNodes].filter((id) => positions[id]));
+    if (!this.nodeById.has(this.selectedId)) this.selectedId = null;
+    this.render();
+    this.bindEvents();
+    this.applyTransform();
+    if (focusId && this.nodeById.has(focusId)) {
+      requestAnimationFrame(() => {
+        this.focusNode(focusId);
+        this.root.querySelector(`[data-node-id="${CSS.escape(focusId)}"]`)?.focus();
+      });
+    }
   }
 
   requestMode(mode) {

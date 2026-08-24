@@ -87,6 +87,7 @@ test("visitor capabilities preserve exploration and remove owner mutation", () =
   assert.deepEqual(getModeCapabilities("visitor"), {
     mode: "visitor",
     canChooseWorks: false,
+    canCaptureThoughts: false,
     canFeatureMedia: false,
     canShapeNodes: false,
     canResetPositions: false,
@@ -94,6 +95,7 @@ test("visitor capabilities preserve exploration and remove owner mutation", () =
   assert.deepEqual(getModeCapabilities("owner"), {
     mode: "owner",
     canChooseWorks: true,
+    canCaptureThoughts: true,
     canFeatureMedia: true,
     canShapeNodes: true,
     canResetPositions: true,

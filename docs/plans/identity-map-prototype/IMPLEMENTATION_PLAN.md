@@ -13,30 +13,32 @@ goal-bounded autonomous authorization granted on 2026-08-22 until completion.
 - Graph foundation: approved
 - Current run: none
 - Incomplete run: none
-- Run status: needs owner decision
-- Pending owner decision: choose the private Draft treatment: A open thought mark, B quiet Draft margin note, or C offset underprint
-- Last accepted run: Map-led Media featuring and visitor orbit, 2026-08-23
+- Run status: selecting
+- Pending owner decision: none
+- Last accepted run: Map-led Thought capture and immediate private Draft, 2026-08-23
 - Alignment due: no
 
 The graph foundation, Map-led three-work chooser, shared published-only visitor
 preview, and Map-led Media featuring were accepted under standing authorization
-after full validation and clean fresh independent review. No bounded unit is
-active while the loop awaits the owner decision on the private Draft treatment.
+after full validation and clean fresh independent review. On 2026-08-23 the
+owner resolved the Draft-treatment gate by selecting the quiet margin-note
+direction. The resulting capture-to-private-Draft unit passed full validation
+and clean fresh independent review and is accepted under standing authorization.
 
 ## Goal Progress
 
 | Criterion | Status | Accepted evidence |
 | --- | --- | --- |
 | IM-1 Desirable Map | in progress | Accepted foundation evidence: seeded Editorial Constellation renders as authored identity rather than a review log or technical graph. |
-| IM-2 Non-review expression | open | None yet. |
-| IM-3 Draft boundary | open | None yet. |
-| IM-4 Generated living Map | in progress | Accepted foundation evidence: deterministic relationship-sensitive layout, semantic zoom, and stable seeded regions; creation-driven changes remain open. |
+| IM-2 Non-review expression | accepted | Accepted capture evidence: the private prompt asks what a work made the owner notice, feel, question, connect, or believe and explicitly avoids summary, score, verdict, rating, or review structure. |
+| IM-3 Draft boundary | accepted | Accepted capture evidence: a newly saved anchored Draft appears immediately and distinctly on the owner Map, remains editable and persistent, and is absent with its relationship from visitor mode. |
+| IM-4 Generated living Map | in progress | Accepted foundation and capture evidence: deterministic relationship-sensitive layout, semantic zoom, stable seeded regions, and immediate graph growth that preserves existing placement when a Draft joins; publication and complete walkthrough evidence remain open. |
 | IM-5 Intuitive spatial control | in progress | Accepted foundation evidence: pan, zoom, thresholded temporary node movement, keyboard movement, explicit Focus, and reset; durable Pin behavior remains open. |
 | IM-6 Authored bridge | open | None yet. |
 | IM-7 Public identity boundary | in progress | Accepted preview and featuring evidence: the shared published-only Map excludes private content and owner shaping controls, while public Map Media can be curated into a persistent visitor orbit that focuses the same neighborhoods; live publishing and the complete profile remain open. |
-| IM-8 Integrated creation | in progress | Accepted chooser evidence: exactly three Books or Films can be selected through a Map-led editorial layer and confirmation returns to the unchanged Map; authored creation remains open. |
-| IM-9 Responsive experience | in progress | Accepted foundation, chooser, preview, and featuring evidence: coherent Map interaction and overflow-free owner/visitor UI across mobile, responsive seam, and desktop; the complete walkthrough remains open. |
-| IM-10 Durable acceptance walkthrough | in progress | Accepted chooser and featuring evidence: separate versioned selected-work and public-curation state survive reload with safe recovery and session-only fallbacks; the complete end-to-end walkthrough remains open. |
+| IM-8 Integrated creation | in progress | Accepted chooser and capture evidence: exactly three works can be selected through a Map-led layer, and saving or editing a Thought returns directly to the Map and reveals the change there; publishing and bridge creation remain open. |
+| IM-9 Responsive experience | in progress | Accepted foundation, chooser, preview, featuring, and capture evidence: coherent, overflow-free Map and creation behavior across mobile, responsive seam, and desktop; the complete walkthrough remains open. |
+| IM-10 Durable acceptance walkthrough | in progress | Accepted chooser, featuring, and capture evidence: separate versioned selected-work, public-curation, and private-Draft state survive reload with safe recovery and session-only fallbacks; the complete end-to-end walkthrough remains open. |
 
 This table records only evidence accepted after validation, fresh independent
 review, and local commit under standing authorization. It is not a task backlog
@@ -79,7 +81,7 @@ claim is chosen just in time from the verified repository baseline.
 
 ## Current Run
 
-- State: none; needs owner decision before selecting the next bounded unit.
+- State: none; selecting the next bounded unit inside the active goal.
 
 ## Standing Goal Authorization
 
@@ -96,6 +98,90 @@ claim is chosen just in time from the verified repository baseline.
   publication, and unrelated external side effects
 
 ## Current Unit Evidence
+
+### Map-led Thought capture and immediate private Draft
+
+- Criterion and claim: advances IM-2 and IM-3 with bounded IM-4, IM-8, IM-9,
+  and IM-10 evidence through non-review capture that creates an immediately
+  visible, persistent, editable private Draft on the owner Map and excludes it
+  from visitor mode.
+- Base commit: `a72ae0b` (`mvp`).
+- Owned diff: `GATES.md`, `docs/05-open-questions.md`, `docs/plans/CURRENT.md`,
+  `GOAL.md`, this implementation state, `MAP_DESIGN_FOUNDATION.md`,
+  `index.html`, `scripts/check.sh`, `src/app.js`, `src/draft-state.js`,
+  `src/graph-projection.js`, `src/map.js`, `src/styles.css`,
+  `src/thought-capture.js`, `tests/draft-state.test.mjs`,
+  `tests/graph-projection.test.mjs`, `tests/map.test.mjs`, and
+  `tests/styles.test.mjs`.
+- Observed behavior: after three confirmed works, `Write a Thought` opens one
+  private editorial writing layer over the still-present Map. The prompt asks
+  what the work made the owner notice, feel, question, connect, or believe and
+  explicitly rejects summary, score, and verdict. Empty submission remains in
+  place with `Write the thought you want to keep.` A valid save closes the
+  layer, adds one anchored Draft without moving existing nodes, focuses its
+  neighborhood, and shows `Private draft` detail. `Edit Draft` reopens the same
+  layer with the work fixed and statement editable. The update preserves the
+  Draft id, anchor, and creation timestamp. Reload restores it. Visitor preview
+  removes the Draft, its relationship, capture entry, and edit action.
+- Interpretation: Drafts are owner-authored private graph content rather than a
+  capture inbox detached from the identity artifact. The state is versioned
+  separately from chooser intent, featured Media, and spatial placement. This
+  unit stages publication rather than presenting a disabled or speculative
+  Publish control.
+- Focused validation: pure tests cover required confirmed-work grounding,
+  non-empty authored statements, immutable prior state, editable statements,
+  anchor and timestamp preservation, corrupt and duplicate recovery, storage
+  round trip, session fallback, graph composition, visitor exclusion, and
+  placement preservation when a new Draft joins the graph. Static regressions
+  cover the open Draft mark, middle-scale note, far and close disclosure,
+  bounded capture scrolling, and 44-pixel mobile actions.
+- Browser and visual validation: the live app was exercised at `1440x1000`,
+  `761x844`, and `390x844`. Desktop and mobile create, empty validation, edit,
+  cancel and Escape focus return, reload persistence, and visitor exclusion
+  succeeded. At middle zoom the Draft fragment and `Draft` note had opacity
+  one while the full statement had opacity zero; at far zoom both text layers
+  had opacity zero and the mark remained an open outline; selected contextual
+  detail said `Private draft`. A first mobile run found the save action below a
+  non-scrollable sheet; bounding the sheet to its overlay made it scrollable
+  and the replay saved successfully. A first `761px` run found a 24-pixel
+  internal horizontal overflow; flexible grid minimums removed it and the
+  replay measured equal `731px` client and scroll widths inside the dialog.
+  Final page client and scroll widths were equal at all three viewports.
+  Temporary light desktop rendering and restored dark desktop/mobile rendering
+  were inspected. A later review-found light placeholder contrast miss was
+  corrected by using the full muted-text color; rendered light mobile contrast
+  then measured `5.19:1`. The review-found `34px` mobile capture entry was
+  raised to `44px` and measured `107x44`. The final console contained no
+  warnings or errors.
+- Design pre-flight: Design Read is a quiet private writing layer inside the
+  living Editorial Constellation for design-conscious Book and Film users,
+  implemented in native CSS with dials `6 / 4 / 4`. The result preserves the
+  cool-mineral light/dark system, one coral authorship accent, floating Thought
+  typography, semantic disclosure, visible focus, reduced motion, and the
+  shared owner/visitor Map. It adds no scores, review template, wizard chrome,
+  card-grid prompt, pill filter, second Map, decorative gradient, visible em or
+  en dash, or permanent editor panel. Buttons do not wrap, labels sit above
+  inputs, responsive fit is explicit, and mobile actions measure at least 44
+  pixels.
+- Scope and unresolved behavior: the unit does not publish, create a bridge,
+  add an optional body or precise reference, choose a lasting statement limit,
+  change Pin/Unpin/Reset, persist spatial placement, add routes or
+  authentication, or alter public featured Media. Exact Pin behavior and
+  connection semantics remain unresolved owner or implementation boundaries.
+- Full validation: `./scripts/check.sh` passes governance consistency, syntax,
+  diff checks, and all forty-six tests. Runnable DC1 and DC2 gates pass; DC3
+  has direct rendered evidence in [the unit gate record](../../../GATES.md).
+- Independent-review status: accepted under standing authorization on
+  2026-08-23. Earlier
+  fresh reviews found a stale save-success message in new Edit forms, low light
+  placeholder contrast, and a `34px` mobile capture entry. The message boundary
+  was separated, the placeholder reached `5.19:1`, and the entry reached
+  `44px`; each correction received focused, full, and rendered validation. The
+  final fresh reviewer reproduced all forty-six tests, the three corrections,
+  full desktop/seam/mobile capture and edit behavior, option-B semantic zoom,
+  visitor exclusion, persistence, focus return, light/dark presentation,
+  overflow containment, and zero console warnings or errors, and found no
+  blocker or residual finding.
 
 ### Map-led Media featuring and visitor orbit
 

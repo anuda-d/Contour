@@ -184,11 +184,13 @@ git diff --check -- .
 
 node --check src/app.js
 node --check src/catalog.js
+node --check src/draft-state.js
 node --check src/featured-state.js
 node --check src/graph-projection.js
 node --check src/layout.js
 node --check src/map.js
 node --check src/selection-state.js
 node --check src/seed.js
+node --check src/thought-capture.js
 node --check src/work-chooser.js
 node --test tests/*.test.mjs

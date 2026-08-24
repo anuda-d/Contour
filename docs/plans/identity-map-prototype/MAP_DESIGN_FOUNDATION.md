@@ -161,8 +161,19 @@ featuring, and publishing. It must not become a separate graph editor. The
 owner should feel that they are directly shaping the artifact a visitor will
 encounter.
 
-The exact visual treatment for private Drafts versus Published Thoughts remains
-an owner decision that must preserve the private and public boundary.
+Private Drafts preserve the same floating-typography geometry as Published
+Thoughts while using the owner-selected quiet margin-note distinction:
+
+- at overview scale, a Draft uses an open authored mark rather than the solid
+  Published mark;
+- at middle scale, a small adjacent `Draft` note accompanies the floating
+  fragment; and
+- at close or selected scale, contextual detail identifies it plainly as
+  `Private draft`.
+
+The treatment stays quiet enough to belong to the same constellation but clear
+enough that private and public state cannot be confused. Drafts never render in
+visitor mode.
 
 ## Visual System
 
@@ -219,7 +230,6 @@ canvas, node system, or visibility policy.
 
 - Exact semantic-zoom thresholds and transition timing.
 - The algorithm and evidence threshold for atmospheric regions.
-- The final Draft versus Published Thought treatment.
 - The exact Pin, Unpin, and Reset interactions.
 - Whether pinning or region featuring is introduced first after direct movement.
 - Artwork sourcing, licensing, provenance, and caching.

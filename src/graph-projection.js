@@ -13,6 +13,7 @@ export function getModeCapabilities(mode) {
   return Object.freeze({
     mode: normalizedMode,
     canChooseWorks: owner,
+    canCaptureThoughts: owner,
     canFeatureMedia: owner,
     canShapeNodes: owner,
     canResetPositions: owner,

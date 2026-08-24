@@ -23,9 +23,11 @@ These decisions are intentionally unresolved. They should be tested or discussed
   pinning policy are recorded in the active goal's
   [Map Design Foundation](plans/identity-map-prototype/MAP_DESIGN_FOUNDATION.md).
   The questions below remain unresolved implementation or owner boundaries.
+- The private Draft treatment was resolved by the owner on 2026-08-23 as a
+  quiet margin note across semantic zoom and is recorded in the same
+  [Map Design Foundation](plans/identity-map-prototype/MAP_DESIGN_FOUNDATION.md).
 - Which automatic layout best balances stability, legibility, and visual character.
 - Which light controls ship first beyond direct movement: pinning or featuring regions.
-- The exact visual treatment that makes private Drafts distinct from Published Thoughts without making them feel detached from the Map.
 - Which semantic connections require new authored text, a relationship label, or another lightweight expression of meaning.
 - Whether a broad `relates to` relationship remains meaningful enough for the public Map.
 - The threshold at which large Maps need time, Theme, or density views.

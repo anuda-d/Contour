@@ -9,7 +9,7 @@ successive independently reviewed work units until the goal is complete.
 - Goal: [Identity Map Prototype](identity-map-prototype/GOAL.md)
 - Shared implementation state: [Implementation Plan](identity-map-prototype/IMPLEMENTATION_PLAN.md)
 - Map design foundation: [Editorial Constellation](identity-map-prototype/MAP_DESIGN_FOUNDATION.md)
-- Active work: needs owner decision on the private Draft visual treatment
+- Active work: selecting the next bounded Identity Map unit
 
 ## Run State Snapshot
 
@@ -21,8 +21,8 @@ successive independently reviewed work units until the goal is complete.
 - Graph foundation: approved
 - Current run: none
 - Incomplete run: none
-- Run status: needs owner decision
-- Pending owner decision: choose the private Draft treatment: A open thought mark, B quiet Draft margin note, or C offset underprint
+- Run status: selecting
+- Pending owner decision: none
 - Alignment due: no
 
 The graph-first foundation correction was accepted under standing authorization
@@ -30,6 +30,11 @@ on 2026-08-22 after full validation and clean fresh independent review. Routine
 validation and fresh independent review replace owner work-unit review;
 material product, visual, scope, and lasting architecture decisions remain
 owner-gated.
+
+On 2026-08-23 the owner selected the quiet Draft margin-note treatment. Draft
+Thoughts use an open authored mark at overview scale, add a small `Draft` note
+beside their floating fragment at middle scale, and identify themselves as
+`Private draft` in close contextual detail. Visitor mode excludes them.
 
 These fields mirror the active implementation state and are checked by
 `./scripts/check.sh`. Update both files in the same administrative change.

@@ -1,11 +1,18 @@
 import { getCatalogue } from "./catalog.js";
 import {
+  composeGraphWithDrafts,
+  createDraft,
+  editDraft,
+  loadDraftState,
+  saveDraftState,
+} from "./draft-state.js";
+import {
   loadFeaturedState,
   saveFeaturedState,
   toggleFeaturedMedia,
 } from "./featured-state.js";
 import { getPublicMediaIds } from "./graph-projection.js";
-import { ThoughtMap } from "./map.js?v=editorial-constellation-10";
+import { ThoughtMap } from "./map.js?v=editorial-constellation-11";
 import {
   confirmSelection,
   loadSelection,
@@ -13,15 +20,16 @@ import {
   toggleMediaSelection,
 } from "./selection-state.js";
 import { getSeedGraph } from "./seed.js";
+import { ThoughtCapture } from "./thought-capture.js";
 import { WorkChooser } from "./work-chooser.js";
 
 const root = document.querySelector("#app");
 
 try {
-  const graph = getSeedGraph();
+  const baseGraph = getSeedGraph();
   const catalogue = getCatalogue();
   const validCatalogueIds = new Set(catalogue.map((item) => item.id));
-  const publicMediaIds = getPublicMediaIds(graph);
+  const publicMediaIds = getPublicMediaIds(baseGraph);
   let storage = null;
   try {
     storage = window.localStorage;
@@ -33,10 +41,13 @@ try {
   const loadedFeatured = loadFeaturedState(
     storage,
     publicMediaIds,
-    graph.profile.featuredMediaIds,
+    baseGraph.profile.featuredMediaIds,
   );
+  const loadedDrafts = loadDraftState(storage, validCatalogueIds);
   let selectionState = loaded.state;
   let featuredState = loadedFeatured.state;
+  let draftState = loadedDrafts.state;
+  let graph = composeGraphWithDrafts(baseGraph, draftState);
   let persistent = loaded.persistent;
   let initialChooserMessage = loaded.storageError
     ? "Selections will last for this visit."
@@ -49,7 +60,14 @@ try {
     : loadedFeatured.recovered
       ? "Unavailable featured works were removed."
       : "";
+  let initialDraftMessage = loadedDrafts.storageError
+    ? "Private Drafts will last for this visit."
+    : loadedDrafts.recovered
+      ? "Unavailable private Drafts were removed."
+      : "";
+  let draftMessage = initialDraftMessage;
   let chooser = null;
+  let capture = null;
   let map = null;
   let mapMode = "owner";
 
@@ -62,6 +80,13 @@ try {
       featuredMessage = "Unavailable featured works were removed. Changes will last for this visit.";
     }
   }
+  if (loadedDrafts.recovered && loadedDrafts.persistent) {
+    if (!saveDraftState(storage, draftState)) {
+      initialDraftMessage =
+        "Unavailable private Drafts were removed. Drafts will last for this visit.";
+      draftMessage = initialDraftMessage;
+    }
+  }
 
   const persistSelection = () => {
     persistent = saveSelection(storage, selectionState);
@@ -70,7 +95,7 @@ try {
   };
 
   const openChooser = () => {
-    if (chooser || mapMode !== "owner") return;
+    if (chooser || capture || mapMode !== "owner") return;
     chooser = new WorkChooser(root.querySelector(".app-shell"), catalogue, selectionState, {
       persistent,
       initialMessage: initialChooserMessage,
@@ -103,6 +128,58 @@ try {
     initialChooserMessage = "";
   };
 
+  const openCapture = (draftId = null) => {
+    if (capture || chooser || mapMode !== "owner") return;
+    const draft = draftId ? draftState.drafts.find((item) => item.id === draftId) : null;
+    if (draftId && !draft) return;
+    if (!draft && !selectionState.confirmed) return;
+
+    const workIds = draft ? [draft.mediaId] : selectionState.selectedMediaIds;
+    const works = workIds
+      .map((id) => catalogue.find((item) => item.id === id))
+      .filter(Boolean);
+    if (!works.length) return;
+
+    capture = new ThoughtCapture(root.querySelector(".app-shell"), works, {
+      draft,
+      initialMessage: draft ? "" : initialDraftMessage,
+      onSave: ({ draftId: editingId, mediaId, statement }) => {
+        const result = editingId
+          ? editDraft(draftState, editingId, statement)
+          : createDraft(
+              draftState,
+              {
+                id: `draft-${crypto.randomUUID()}`,
+                mediaId,
+                statement,
+                createdAt: new Date().toISOString(),
+              },
+              new Set(selectionState.selectedMediaIds),
+            );
+        if (result.error) return { saved: false, message: result.error };
+
+        draftState = result.state;
+        const persisted = !result.changed || saveDraftState(storage, draftState);
+        draftMessage = persisted
+          ? result.message
+          : `${result.message} This Draft will last for this visit.`;
+        return { saved: true, draft: result.draft, message: draftMessage };
+      },
+      onSaved: (result) => {
+        graph = composeGraphWithDrafts(baseGraph, draftState);
+        map.updateGraph(graph, { focusId: result.draft.id, message: result.message });
+      },
+      onClose: () => {
+        capture = null;
+      },
+      restoreFocus: () => {
+        if (draft) map.focusDraftEdit(draft.id);
+        else map.focusCaptureEntry();
+      },
+    });
+    initialDraftMessage = "";
+  };
+
   if (!graph.nodes.length) {
     root.innerHTML = `
       <main class="empty-state">
@@ -116,7 +193,10 @@ try {
       selectionState,
       featuredState,
       featuredMessage,
+      draftMessage,
       onOpenChooser: openChooser,
+      onOpenCapture: () => openCapture(),
+      onEditDraft: (id) => openCapture(id),
       onToggleFeatured: (id) => {
         const media = graph.nodes.find((node) => node.id === id && node.type === "media");
         const result = toggleFeaturedMedia(

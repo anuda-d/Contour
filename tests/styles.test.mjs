@@ -112,3 +112,41 @@ test("orbit titles wrap inside their Media silhouettes", () => {
   assert.match(bookRule, /width:\s*64px/);
   assert.match(bookRule, /height:\s*86px/);
 });
+
+test("private Drafts use the owner-selected semantic zoom treatment", () => {
+  const draftMarkRule = styles.match(/\.node-thought\.is-draft \.thought-mark\s*{([^}]*)}/)?.[1] ?? "";
+  const draftNoteRule = styles.match(/\.draft-note\s*{([^}]*)}/)?.[1] ?? "";
+  const farDraftRule =
+    styles.match(/\.map-canvas\[data-zoom-band="far"\][^{]*\.draft-note,[\s\S]*?{([^}]*)}/)?.[1] ?? "";
+  const closeDraftRule =
+    styles.match(/\.map-canvas\[data-zoom-band="close"\] \.draft-note\s*{([^}]*)}/)?.[1] ?? "";
+  assert.match(draftMarkRule, /border:\s*1px solid var\(--accent\)/);
+  assert.match(draftMarkRule, /background:\s*transparent/);
+  assert.match(draftNoteRule, /text-transform:\s*uppercase/);
+  assert.match(farDraftRule, /opacity:\s*0/);
+  assert.match(closeDraftRule, /opacity:\s*0/);
+});
+
+test("mobile capture controls keep full-size touch targets", () => {
+  const mobileBlock = styles.match(/@media \(max-width: 760px\)\s*{([\s\S]*)\n}/)?.[1] ?? "";
+  const backRule = mobileBlock.match(/\.capture-back\s*{([^}]*)}/)?.[1] ?? "";
+  const actionRule = mobileBlock.match(/\.capture-actions button\s*{([^}]*)}/)?.[1] ?? "";
+  const entryRule = mobileBlock.match(/\.capture-entry\s*{([^}]*)}/)?.[1] ?? "";
+  assert.match(backRule, /min-height:\s*44px/);
+  assert.match(actionRule, /min-height:\s*44px/);
+  assert.match(entryRule, /min-height:\s*44px/);
+});
+
+test("the capture sheet owns a bounded scroll viewport", () => {
+  const captureRule = styles.match(/\.thought-capture\s*{([^}]*)}/)?.[1] ?? "";
+  assert.match(captureRule, /height:\s*100%/);
+  assert.match(captureRule, /min-height:\s*0/);
+  assert.match(captureRule, /overflow:\s*auto/);
+});
+
+test("capture placeholder copy keeps full muted-text contrast", () => {
+  const placeholderRule =
+    styles.match(/\.capture-form textarea::placeholder\s*{([^}]*)}/)?.[1] ?? "";
+  assert.match(placeholderRule, /color:\s*var\(--muted\)/);
+  assert.match(placeholderRule, /opacity:\s*1/);
+});

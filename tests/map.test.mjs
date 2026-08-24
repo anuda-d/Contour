@@ -4,6 +4,7 @@ import {
   DRAG_THRESHOLD,
   getZoomBand,
   hasExceededDragThreshold,
+  mergeGraphPositions,
   positionFromDrag,
 } from "../src/map.js";
 
@@ -33,5 +34,16 @@ test("dragged positions remain inside the Map bounds", () => {
   assert.deepEqual(
     positionFromDrag({ x: 0, y: 0 }, { x: 5000, y: -5000 }, 1),
     { x: 490, y: -310 },
+  );
+});
+
+test("graph growth preserves existing placement and adds generated positions for new nodes", () => {
+  assert.deepEqual(
+    mergeGraphPositions(
+      [{ id: "existing" }, { id: "draft-new" }],
+      { existing: { x: 12, y: -8 }, removed: { x: 4, y: 4 } },
+      { existing: { x: 99, y: 99 }, "draft-new": { x: 42, y: 18 } },
+    ),
+    { existing: { x: 12, y: -8 }, "draft-new": { x: 42, y: 18 } },
   );
 });

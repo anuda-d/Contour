@@ -142,14 +142,16 @@ The owner selected these lasting foundations on 2026-08-22:
   Media anchors, floating Thought typography, selective relationship
   visibility, subtle unlabeled regions, and a shared owner/visitor composition.
 
-The following visual decision remains owner-gated and may not be settled by the
-loop:
+The owner selected the private Draft treatment on 2026-08-23:
 
-- the exact visual treatment that distinguishes private Draft Thoughts from
-  Published Thoughts without detaching either from the shared Map language.
+- Draft Thoughts retain the shared floating-typography geometry but use a quiet
+  margin-note distinction: an open authored mark at overview scale, a small
+  adjacent `Draft` note at middle scale, and explicit `Private draft` language
+  in close contextual detail. Visitor mode excludes Drafts entirely.
 
-If that decision blocks a work unit, stop at **NEEDS OWNER DECISION** with a
-concrete comparison. Do not silently choose a lasting product direction.
+If another unresolved material decision blocks a work unit, stop at **NEEDS
+OWNER DECISION** with a concrete comparison. Do not silently choose a lasting
+product direction.
 
 ## Out of Scope
 
