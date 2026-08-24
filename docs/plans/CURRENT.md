@@ -9,7 +9,7 @@ successive independently reviewed work units until the goal is complete.
 - Goal: [Identity Map Prototype](identity-map-prototype/GOAL.md)
 - Shared implementation state: [Implementation Plan](identity-map-prototype/IMPLEMENTATION_PLAN.md)
 - Map design foundation: [Editorial Constellation](identity-map-prototype/MAP_DESIGN_FOUNDATION.md)
-- Active work: Complete acceptance walkthrough hardening
+- Active work: owner decision on qualitative IM-1 acceptance
 
 ## Run State Snapshot
 
@@ -19,13 +19,13 @@ successive independently reviewed work units until the goal is complete.
 - Authorization source: owner
 - Loop cadence: continuous
 - Graph foundation: approved
-- Current run: Complete acceptance walkthrough hardening
-- Incomplete run: Complete acceptance walkthrough hardening
-- Run status: blocked
-- Pending owner decision: none
+- Current run: none
+- Incomplete run: none
+- Run status: needs owner decision
+- Pending owner decision: whether the rendered prototype creates credible desire to make one for IM-1, or completion should wait for target-user evaluation
 - Alignment due: no
-- Visual checkpoint: accepted through Map-led Thought capture, 2026-08-23
-- UI units since visual checkpoint: 4
+- Visual checkpoint: accepted through Complete acceptance walkthrough, 2026-08-24
+- UI units since visual checkpoint: 0
 
 The graph-first foundation correction was accepted under standing authorization
 on 2026-08-22 after full validation and clean fresh independent review. Routine
@@ -53,17 +53,18 @@ accepted after focused and full checks, a targeted rendered bridge-to-public
 flow, correction of cross-version lifecycle and stale-detail issues, and clean
 fresh correction review. Visitor profile framing is accepted after focused and
 full checks, targeted desktop and mobile visitor evidence, correction of one
-seed-coupled authorship label, and clean fresh correction review. The current
-validation-hardening unit adds no product surface and does not increment the UI
-counter. It composes the complete durable state contract and runs the full
+seed-coupled authorship label, and clean fresh correction review. The
+validation-hardening unit added no product surface and did not increment the UI
+counter. It composed the complete durable state contract and ran the full
 desktop/mobile, light/dark acceptance checkpoint required before goal
 completion. The checkpoint found and corrected one existing 38-pixel mobile
 chooser return target so it now follows the established 44-pixel touch rule;
 the complete isolated-origin walkthrough and all four responsive color-mode
-renders are otherwise clean. The candidate passed focused and full checks and
-clean fresh correction review, but the sandbox blocked its required local Git
-metadata write after the approval service failed. The current unit remains open
-until that already authorized local commit can be completed.
+renders are otherwise clean. The unit passed focused and full checks, clean
+fresh correction review, and was accepted in local commit `8368256`. No further
+technical unit can honestly settle IM-1's qualitative desire criterion; the
+loop is stopped at the smallest owner decision rather than inventing sharing,
+onboarding, or another surface.
 
 These fields mirror the active implementation state and are checked by
 `./scripts/check.sh`. Update both files in the same administrative change.

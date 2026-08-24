@@ -11,22 +11,22 @@ goal-bounded autonomous authorization granted on 2026-08-22 until completion.
 - Authorization source: owner
 - Loop cadence: continuous
 - Graph foundation: approved
-- Current run: Complete acceptance walkthrough hardening
-- Incomplete run: Complete acceptance walkthrough hardening
-- Run status: blocked
-- Pending owner decision: none
-- Last accepted run: Visitor profile framing, 2026-08-24
+- Current run: none
+- Incomplete run: none
+- Run status: needs owner decision
+- Pending owner decision: whether the rendered prototype creates credible desire to make one for IM-1, or completion should wait for target-user evaluation
+- Last accepted run: Complete acceptance walkthrough hardening, 2026-08-24
 - Alignment due: no
-- Visual checkpoint: accepted through Map-led Thought capture, 2026-08-23
-- UI units since visual checkpoint: 4
+- Visual checkpoint: accepted through Complete acceptance walkthrough, 2026-08-24
+- UI units since visual checkpoint: 0
 
 The graph foundation, Map-led three-work chooser, shared published-only visitor
 preview, Map-led Media featuring, and private Draft capture were accepted under
 standing authorization after full validation and clean fresh independent
 review. The owner explicitly resumed the loop on 2026-08-24. Durable pinned
 node placement, Map-led Draft publishing, the Map-led cross-media bridge Draft,
-and visitor profile framing are accepted. The current validation-hardening run
-tests the complete owner-to-public contract and performs the full visual
+and visitor profile framing are accepted. Complete acceptance walkthrough
+hardening tested the owner-to-public contract and performed the full visual
 checkpoint required before goal completion.
 
 ## Goal Progress
@@ -36,13 +36,13 @@ checkpoint required before goal completion.
 | IM-1 Desirable Map | in progress | Accepted foundation evidence: seeded Editorial Constellation renders as authored identity rather than a review log or technical graph. |
 | IM-2 Non-review expression | accepted | Accepted capture evidence: the private prompt asks what a work made the owner notice, feel, question, connect, or believe and explicitly avoids summary, score, verdict, rating, or review structure. |
 | IM-3 Draft boundary | accepted | Accepted capture evidence: a newly saved anchored Draft appears immediately and distinctly on the owner Map, remains editable and persistent, and is absent with its relationship from visitor mode. |
-| IM-4 Generated living Map | in progress | Accepted foundation, capture, publication, and bridge evidence: deterministic relationship-sensitive layout, semantic zoom, stable seeded regions, immediate graph growth, and one-anchor-to-bridge lifecycle changes preserve existing placement; the complete walkthrough candidate is validated and reviewed but not yet committed. |
+| IM-4 Generated living Map | accepted | Accepted complete-walkthrough evidence: deterministic relationship-sensitive layout, semantic zoom, stable seeded regions, immediate graph growth, one-anchor-to-bridge lifecycle changes, publication, and explicit shaping visibly preserve one readable displayed mind through the complete three-work sequence. |
 | IM-5 Intuitive spatial control | accepted | Accepted foundation and durable-placement evidence: pan, zoom, thresholded temporary pointer and keyboard movement, explicit Focus, generated-layout Reset, explicit persistent Pin position, and per-node Unpin without semantic changes. |
 | IM-6 Authored bridge | accepted | Accepted bridge evidence: one existing single-anchor private Draft can add exactly one confirmed second work while the owner keeps and may refine the human-authored sentence that makes the connection legible; publication names both works without introducing labels, inferred semantics, or a general relationship system. |
 | IM-7 Public identity boundary | accepted | Accepted preview, featuring, publication, and profile-framing evidence: the shared Published-only Map excludes private content and owner shaping controls; public Media can be curated into a persistent visitor orbit; publication reveals the same anchored Thought; and the existing mark, name, handle, identity line, orbit, and Map form one coherent public profile. |
-| IM-8 Integrated creation | in progress | Accepted chooser, capture, publication, and bridge evidence: exactly three works can be selected through a Map-led layer; saving, editing, or connecting returns directly to the same Map node; and explicit publication changes the same anchored Thought in place. The complete walkthrough candidate is validated and reviewed but not yet committed. |
-| IM-9 Responsive experience | in progress | Accepted foundation, chooser, preview, featuring, and capture evidence: coherent, overflow-free Map and creation behavior across mobile, responsive seam, and desktop; the final checkpoint candidate is validated and reviewed but not yet committed. |
-| IM-10 Durable acceptance walkthrough | in progress | Accepted chooser, featuring, capture, pinned-placement, publication, and bridge evidence: separate versioned selection, public-curation, authored-lifecycle, and explicit spatial state survive reload with safe recovery, cross-version precedence, stale-tab merging, and session-only fallbacks. The complete candidate is validated and reviewed but its local commit is blocked. |
+| IM-8 Integrated creation | accepted | Accepted complete-walkthrough evidence: exactly three works are selected through the Map-led layer; capture, bridge refinement, shaping, publication, and curation all return to or update the same visible Map rather than becoming disconnected forms. |
+| IM-9 Responsive experience | accepted | Accepted final-checkpoint evidence: the complete public composition and core owner layers are coherent and overflow-free at representative desktop and mobile viewports in rendered light and dark schemes, with visible focus, bounded sheets, reduced motion, and full-size touch targets. |
+| IM-10 Durable acceptance walkthrough | in progress | Accepted technical walkthrough evidence: the isolated-origin visible sequence completes through public actions; separate versioned selection, public-curation, authored-lifecycle, and explicit spatial state survive reload; visitor privacy holds; focused 1/1 and full 82/82 pass; and fresh correction review is clean. Final criterion acceptance remains coupled to proportionate evidence for qualitative IM-1. |
 
 This table records only evidence accepted after validation, fresh independent
 review, and local commit under standing authorization. It is not a task backlog
@@ -85,20 +85,13 @@ claim is chosen just in time from the verified repository baseline.
 
 ## Current Run
 
-- State: Complete acceptance walkthrough hardening; validated and independently
-  reviewed, with the required local commit blocked by sandbox Git-write
-  permission after the approval service failed.
-- Criterion: advance IM-4, IM-8, IM-9, and the technical portion of IM-10
-  through one complete public-action sequence and durable integration contract.
-- Intended behavior: from an isolated fresh origin, choose exactly three works,
-  create three private Drafts, connect two works through one authored Thought,
-  shape and pin the Map, publish all three Thoughts, feature public Media,
-  preview the coherent visitor profile, reload, and retain every durable state
-  while Draft privacy and visitor capability boundaries remain explicit.
-- Evidence status: focused 1/1, full 82/82, all four rendered checkpoint
-  combinations, clean console, clean diff, and clean fresh correction review.
-  No implementation or validation work remains; only the local commit is
-  blocked.
+- State: none. Complete acceptance walkthrough hardening is accepted in local
+  commit `8368256`.
+- Terminal boundary: the technical prototype and final rendered checkpoint are
+  complete. IM-1 asks whether the seeded mature Map creates credible desire to
+  make one, which is a qualitative owner or target-user judgment rather than a
+  missing implementation seam. No further bounded code change is justified
+  without that decision.
 
 ## Standing Goal Authorization
 
@@ -119,7 +112,7 @@ The standing-authorization terms below are active for the resumed loop.
 - Always separately authorized: destructive cleanup, deployment, push, merge,
   publication, and unrelated external side effects
 
-## Current Unit Evidence
+## Accepted Unit Evidence
 
 ### Complete acceptance walkthrough hardening
 
@@ -1003,13 +996,39 @@ choice, stop at `NEEDS OWNER DECISION`.
 
 ## Accepted Run Log
 
+- 2026-08-24: complete acceptance walkthrough hardening accepted in local
+  commit `8368256` after a public-API integration regression, all eighty-two
+  repository tests, an isolated owner-to-public walkthrough, light and dark
+  desktop and mobile rendering, zero console warnings or errors, one corrected
+  44-pixel chooser target, and clean fresh correction review. Accepted evidence
+  completes IM-4, IM-8, and IM-9 and completes the technical portion of IM-10;
+  qualitative IM-1 remains owner or target-user gated.
+- 2026-08-24: visitor profile framing accepted in local commit `887ffa6` after
+  thirty-one focused checks, all eighty-one repository tests, desktop and
+  mobile visitor evidence, one corrected profile-derived authorship label, and
+  clean fresh correction review. Accepted evidence advances IM-7 and IM-9.
+- 2026-08-24: Map-led cross-media bridge Draft accepted in local commit
+  `bb40eb2` after thirty-nine focused checks, all seventy-seven repository
+  tests, a rendered bridge-to-public flow, corrected lifecycle-key and stale
+  action issues, and clean fresh correction review. Accepted evidence completes
+  IM-6 and advances IM-4, IM-8, and IM-10.
+- 2026-08-24: Map-led Draft publishing accepted in local commit `cc92060`
+  after twenty-seven focused checks, all sixty-four repository tests, a rendered
+  private-to-public transition, corrected stale-tab persistence, and clean
+  fresh correction review. Accepted evidence advances IM-7, IM-8, and IM-10.
 - 2026-08-24: durable pinned node placement accepted under standing owner
-  authorization after twelve focused checks, `./scripts/check.sh` with
-  fifty-four passing tests, a targeted move, pin, reload, Reset, visitor,
+  authorization in local commit `ea38673` after twelve focused checks, all
+  fifty-four repository tests, a targeted move, pin, reload, Reset, visitor,
   unpin, focus, and repeat-move browser smoke check, corrected storage recovery
   and live status feedback, zero console warnings or errors, and clean final
   independent review. Accepted evidence completes IM-5 and advances IM-9 and
-  IM-10; the full goal walkthrough remains open.
+  IM-10.
+- 2026-08-23: Map-led private Draft capture accepted in local commit `45911a1`
+  after all forty-six repository tests, desktop, responsive seam, and mobile
+  capture and edit evidence, corrected scrolling, overflow, contrast, touch,
+  and feedback issues, zero console warnings or errors, and clean fresh final
+  review. Accepted evidence completes IM-2 and IM-3 and advances IM-4, IM-8,
+  IM-9, and IM-10.
 - 2026-08-23: Map-led Media featuring and visitor orbit accepted under standing
   owner authorization in local commit `4318bdc` after `./scripts/check.sh`,
   thirty-five passing tests, desktop/seam/mobile and light/dark evidence, full
