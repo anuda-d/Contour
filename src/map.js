@@ -404,6 +404,10 @@ export class ThoughtMap {
   }
 
   detailActions(id, node) {
+    const publishAction =
+      node.type === "thought" && node.status === "draft" && this.capabilities.canCaptureThoughts
+        ? `<button type="button" data-publish-draft="${escapeHtml(id)}">Publish Thought</button>`
+        : "";
     const editAction =
       node.type === "thought" && node.status === "draft" && this.capabilities.canCaptureThoughts
         ? `<button type="button" data-edit-draft="${escapeHtml(id)}">Edit Draft</button>`
@@ -422,6 +426,7 @@ export class ThoughtMap {
         : "";
     return `
       <div class="detail-actions">
+        ${publishAction}
         ${editAction}
         ${featureAction}
         ${placementAction}
@@ -454,6 +459,9 @@ export class ThoughtMap {
   }
 
   bindDetailEvents() {
+    this.detailPanel.querySelector("[data-publish-draft]")?.addEventListener("click", (event) => {
+      this.options.onPublishDraft?.(event.currentTarget.dataset.publishDraft);
+    });
     this.detailPanel.querySelector("[data-edit-draft]")?.addEventListener("click", (event) => {
       this.options.onEditDraft?.(event.currentTarget.dataset.editDraft);
     });
@@ -605,7 +613,7 @@ export class ThoughtMap {
     this.detailPanel.querySelector("[data-edit-draft]")?.focus();
   }
 
-  updateGraph(graph, { focusId = null, message = "" } = {}) {
+  updateGraph(graph, { focusId = null, selectId = null, message = "" } = {}) {
     const generatedPositions = layoutGraph(graph.nodes, graph.edges, WORLD);
     const positions = resolvePositions(
       graph.nodes,
@@ -622,6 +630,7 @@ export class ThoughtMap {
     this.movedNodes = new Set(
       [...this.movedNodes].filter((id) => positions[id] && !this.isPinned(id)),
     );
+    if (selectId && this.nodeById.has(selectId)) this.selectedId = selectId;
     if (!this.nodeById.has(this.selectedId)) this.selectedId = null;
     this.render();
     this.bindEvents();
@@ -630,6 +639,10 @@ export class ThoughtMap {
       requestAnimationFrame(() => {
         this.focusNode(focusId);
         this.root.querySelector(`[data-node-id="${CSS.escape(focusId)}"]`)?.focus();
+      });
+    } else if (selectId && this.nodeById.has(selectId)) {
+      requestAnimationFrame(() => {
+        this.root.querySelector(`[data-node-id="${CSS.escape(selectId)}"]`)?.focus();
       });
     }
   }

@@ -15,17 +15,17 @@ goal-bounded autonomous authorization granted on 2026-08-22 until completion.
 - Incomplete run: none
 - Run status: selecting
 - Pending owner decision: none
-- Last accepted run: Durable pinned node placement, 2026-08-24
+- Last accepted run: Map-led Draft publishing, 2026-08-24
 - Alignment due: no
 - Visual checkpoint: accepted through Map-led Thought capture, 2026-08-23
-- UI units since visual checkpoint: 1
+- UI units since visual checkpoint: 2
 
 The graph foundation, Map-led three-work chooser, shared published-only visitor
 preview, Map-led Media featuring, and private Draft capture were accepted under
 standing authorization after full validation and clean fresh independent
-review. The owner explicitly resumed the loop on 2026-08-24. The current unit
-advances the already approved durable-pinning policy without broadening the
-active goal.
+review. The owner explicitly resumed the loop on 2026-08-24. Durable pinned
+node placement and Map-led Draft publishing are accepted, and the loop is
+selecting the next smallest gap inside the active goal.
 
 ## Goal Progress
 
@@ -37,8 +37,8 @@ active goal.
 | IM-4 Generated living Map | in progress | Accepted foundation and capture evidence: deterministic relationship-sensitive layout, semantic zoom, stable seeded regions, and immediate graph growth that preserves existing placement when a Draft joins; publication and complete walkthrough evidence remain open. |
 | IM-5 Intuitive spatial control | accepted | Accepted foundation and durable-placement evidence: pan, zoom, thresholded temporary pointer and keyboard movement, explicit Focus, generated-layout Reset, explicit persistent Pin position, and per-node Unpin without semantic changes. |
 | IM-6 Authored bridge | open | None yet. |
-| IM-7 Public identity boundary | in progress | Accepted preview and featuring evidence: the shared published-only Map excludes private content and owner shaping controls, while public Map Media can be curated into a persistent visitor orbit that focuses the same neighborhoods; live publishing and the complete profile remain open. |
-| IM-8 Integrated creation | in progress | Accepted chooser and capture evidence: exactly three works can be selected through a Map-led layer, and saving or editing a Thought returns directly to the Map and reveals the change there; publishing and bridge creation remain open. |
+| IM-7 Public identity boundary | in progress | Accepted preview, featuring, and publication evidence: the shared Published-only Map excludes private content and owner shaping controls, public Map Media can be curated into a persistent visitor orbit, and an explicit anchored Draft publication becomes visitor-visible without changing identity or placement; the complete profile remains open. |
+| IM-8 Integrated creation | in progress | Accepted chooser, capture, and publication evidence: exactly three works can be selected through a Map-led layer, saving or editing returns directly to the Map, and explicit publication changes the same anchored Thought in place; bridge creation remains open. |
 | IM-9 Responsive experience | in progress | Accepted foundation, chooser, preview, featuring, and capture evidence: coherent, overflow-free Map and creation behavior across mobile, responsive seam, and desktop; the complete walkthrough remains open. |
 | IM-10 Durable acceptance walkthrough | in progress | Accepted chooser, featuring, capture, and pinned-placement evidence: separate versioned selected-work, public-curation, private-Draft, and explicit spatial state survive reload with safe recovery and session-only fallbacks; the complete end-to-end walkthrough remains open. |
 
@@ -83,7 +83,7 @@ claim is chosen just in time from the verified repository baseline.
 
 ## Current Run
 
-- State: none; selecting the next smallest justified gap inside the active goal.
+- State: none; selecting the next bounded unit inside the active goal.
 
 ## Standing Goal Authorization
 
@@ -105,6 +105,87 @@ The standing-authorization terms below are active for the resumed loop.
   publication, and unrelated external side effects
 
 ## Current Unit Evidence
+
+### Map-led Draft publishing
+
+- Criterion and claim: advances IM-7 and IM-8 with bounded IM-4 and IM-10
+  evidence by letting the owner explicitly publish one existing anchored Draft
+  in place; the same authored Thought becomes visitor-visible without gaining
+  a second identity, anchor, or Map position.
+- Base commit: `ea38673` (`mvp`).
+- Owned diff: `GATES.md`, `docs/plans/CURRENT.md`, this implementation state,
+  `index.html`, `src/app.js`, `src/draft-state.js`, `src/map.js`, `src/styles.css`,
+  `tests/draft-state.test.mjs`, `tests/map.test.mjs`, and
+  `tests/styles.test.mjs`.
+- Observed behavior: selecting a private anchored Draft exposes one owner-only
+  `Publish Thought` action beside `Edit Draft`. Activating it immediately
+  changes the open Draft mark and `Private draft` detail into the existing
+  solid Published treatment and `Mira's Thought` detail. The same node id stays
+  selected and keyboard-focused, the camera transform remains unchanged, and
+  no publication or editing action remains on the Published detail. Reload
+  restores the Published Thought. Visitor preview includes the Thought and its
+  Book anchor while excluding chooser, capture, edit, publish, pin, and Reset
+  controls.
+- State and privacy evidence: authored Thoughts now use one versioned lifecycle
+  store. Publication immutably replaces exactly one Draft record with a
+  Published record, preserves id, statement, Media id, and creation timestamp,
+  records an explicit publication timestamp, and uses one storage write. The
+  previous Draft-only key is read only when the lifecycle key is absent and is
+  never deleted; the new key always takes precedence so an old open client
+  cannot overwrite publication state. Every current-version write also merges
+  against the latest stored lifecycle state: Published status and its original
+  timestamp win over a stale Draft, new records are unioned, unrelated Draft
+  edits are retained, and the writing tab immediately adopts the merged state.
+  A storage event synchronizes other open tabs. Corrupt Published records are
+  never inferred to be public, and failed storage leaves the publication
+  visit-only with an explicit message.
+- Focused validation: `node --test tests/draft-state.test.mjs
+  tests/graph-projection.test.mjs tests/map.test.mjs` passes twenty-seven checks
+  covering immutable creation and editing, exact publication, invalid and
+  unanchored refusal, publication timestamps, safe normalization, legacy
+  migration and new-key precedence, storage fallback, two-current-tab
+  publication monotonicity, new-record union, unrelated Draft edit retention,
+  graph identity and edge preservation, Draft visitor exclusion, Published
+  visitor inclusion, shared capabilities, placement continuity, owner-only
+  action exposure, camera preservation, and prior movement and semantic-zoom
+  behavior.
+- Browser and visual validation: a targeted live flow created
+  `Distance can make belonging visible.` against *The Left Hand of Darkness*,
+  observed its private Draft treatment and contextual actions, published it,
+  reloaded, and entered visitor preview. Before and after publication the node
+  id remained `draft-21c0b8b9-b4dc-4942-94f8-9b164e00598c` and the world
+  transform remained `translate(-50%, -50%) translate(-284.719px, -207.668px)
+  scale(1.18)`. The Published node held focus, reload preserved it, visitor mode
+  showed the same Thought and anchor with only `Focus` and `Close`, and the
+  rendered dark desktop composition remained coherent. This targeted evidence
+  is not the complete five-unit visual checkpoint, which is not due for UI
+  unit 2.
+- Design pre-flight: Design Read is a quiet private-to-public authorship
+  transition inside the living Editorial Constellation for design-conscious
+  Book and Film users, implemented in native CSS with dials `6 / 3 / 4`. The
+  unit preserves the cool-mineral light and dark token family, one coral
+  authorship accent, floating Thought typography, semantic disclosure, the
+  shared owner and visitor canvas, visible focus, reduced motion, compact
+  contextual detail, nowrap actions, and 44-pixel mobile targets. It adds no
+  confirmation modal, wizard, second Map, card surface, Theme label, score,
+  social action, or decorative effect.
+- Scope and unresolved behavior: this unit deliberately does not decide or add
+  Published Thought editing, correction history, precise references, optional
+  body copy, lasting statement limits, confirmation policy, bridge creation,
+  Themes, routes, authentication, production storage, or a separate visitor
+  profile. Those remain later or owner-gated boundaries.
+- Full validation: `./scripts/check.sh` passes governance consistency, syntax,
+  diff checks, and all sixty-four tests.
+- Independent-review status: the first fresh read-only review found one P2
+  persistence issue: a stale current-version tab could replace the lifecycle
+  snapshot and undo another tab's publication. Writes now merge against current
+  storage with Published status monotonic, operation-scoped Draft updates, and
+  unique-record union; exact two-tab regressions and all repository checks pass.
+  A different fresh correction reviewer confirmed the P2 resolved and found
+  only one P3 migration inconsistency for array-backed valid Media ids. Legacy
+  migration now normalizes any iterable to a Set, its exact regression passes,
+  and follow-up review confirms no unresolved code, behavior, or evidence
+  finding. Accepted under standing authorization on 2026-08-24.
 
 ### Durable pinned node placement
 

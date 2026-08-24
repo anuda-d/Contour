@@ -117,6 +117,13 @@ test("pinning stays a quiet contextual action instead of permanent Map chrome", 
   assert.match(pinnedNodeRule, /cursor:\s*pointer/);
 });
 
+test("Draft publication is a full-width contextual action", () => {
+  const publishAction =
+    styles.match(/\.detail-actions \[data-publish-draft\]\s*{([^}]*)}/s)?.[1] ?? "";
+  assert.match(publishAction, /grid-column:\s*1 \/ -1/);
+  assert.match(publishAction, /white-space:\s*nowrap/);
+});
+
 test("orbit titles wrap inside their Media silhouettes", () => {
   const titleRule = styles.match(/\.orbit-work strong\s*{([^}]*)}/)?.[1] ?? "";
   const bookRule = styles.match(/\.orbit-book\s*{([^}]*)}/)?.[1] ?? "";

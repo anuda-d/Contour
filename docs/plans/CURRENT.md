@@ -25,7 +25,7 @@ successive independently reviewed work units until the goal is complete.
 - Pending owner decision: none
 - Alignment due: no
 - Visual checkpoint: accepted through Map-led Thought capture, 2026-08-23
-- UI units since visual checkpoint: 1
+- UI units since visual checkpoint: 2
 
 The graph-first foundation correction was accepted under standing authorization
 on 2026-08-22 after full validation and clean fresh independent review. Routine
@@ -46,7 +46,10 @@ repository checks remain required for every unit.
 The owner explicitly resumed the autonomous loop on 2026-08-24. Durable pinned
 node placement was accepted after focused and full validation, targeted browser
 evidence, correction of review findings, and clean fresh independent review.
-The loop is selecting the next smallest justified gap inside the same goal.
+Map-led Draft publishing is accepted after focused and full checks, a targeted
+rendered publication flow, correction of a stale-tab persistence issue, and
+clean fresh correction review. The loop is selecting the next bounded unit
+without broadening the goal.
 
 These fields mirror the active implementation state and are checked by
 `./scripts/check.sh`. Update both files in the same administrative change.

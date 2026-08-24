@@ -4,7 +4,9 @@ import {
   createDraft,
   editDraft,
   loadDraftState,
-  saveDraftState,
+  persistDraftState,
+  publishDraft,
+  THOUGHT_STORAGE_KEY,
 } from "./draft-state.js";
 import {
   loadFeaturedState,
@@ -12,7 +14,7 @@ import {
   toggleFeaturedMedia,
 } from "./featured-state.js";
 import { getPublicMediaIds } from "./graph-projection.js";
-import { ThoughtMap } from "./map.js?v=editorial-constellation-12";
+import { ThoughtMap } from "./map.js?v=editorial-constellation-13";
 import {
   loadPinnedState,
   pinPosition,
@@ -72,8 +74,8 @@ try {
       : "";
   let initialDraftMessage = loadedDrafts.storageError
     ? "Private Drafts will last for this visit."
-    : loadedDrafts.recovered
-      ? "Unavailable private Drafts were removed."
+    : (loadedDrafts.recoveryNotice ?? (loadedDrafts.recovered && !loadedDrafts.migrated))
+      ? "Saved authored Thoughts were recovered safely."
       : "";
   let draftMessage = initialDraftMessage;
   let chooser = null;
@@ -91,9 +93,12 @@ try {
     }
   }
   if (loadedDrafts.recovered && loadedDrafts.persistent) {
-    if (!saveDraftState(storage, draftState)) {
+    const persistedDrafts = persistDraftState(storage, draftState, validCatalogueIds);
+    draftState = persistedDrafts.state;
+    graph = composeGraphWithDrafts(baseGraph, draftState);
+    if (!persistedDrafts.saved) {
       initialDraftMessage =
-        "Unavailable private Drafts were removed. Drafts will last for this visit.";
+        "Saved authored Thoughts were recovered safely. Changes will last for this visit.";
       draftMessage = initialDraftMessage;
     }
   }
@@ -143,7 +148,9 @@ try {
 
   const openCapture = (draftId = null) => {
     if (capture || chooser || mapMode !== "owner") return;
-    const draft = draftId ? draftState.drafts.find((item) => item.id === draftId) : null;
+    const draft = draftId
+      ? draftState.thoughts.find((item) => item.id === draftId && item.status === "draft")
+      : null;
     if (draftId && !draft) return;
     if (!draft && !selectionState.confirmed) return;
 
@@ -172,11 +179,22 @@ try {
         if (result.error) return { saved: false, message: result.error };
 
         draftState = result.state;
-        const persisted = !result.changed || saveDraftState(storage, draftState);
-        draftMessage = persisted
-          ? result.message
-          : `${result.message} This Draft will last for this visit.`;
-        return { saved: true, draft: result.draft, message: draftMessage };
+        const persisted = result.changed
+          ? persistDraftState(storage, draftState, validCatalogueIds, result.draft.id)
+          : { saved: true, state: draftState };
+        draftState = persisted.state;
+        const currentThought = draftState.thoughts.find((thought) => thought.id === result.draft.id);
+        const publishedElsewhere = editingId && currentThought?.status === "published";
+        draftMessage = publishedElsewhere
+          ? "This Thought was already published in another tab. The private edit was not saved."
+          : persisted.saved
+            ? result.message
+            : `${result.message} This Draft will last for this visit.`;
+        return {
+          saved: true,
+          draft: currentThought ?? result.draft,
+          message: draftMessage,
+        };
       },
       onSaved: (result) => {
         graph = composeGraphWithDrafts(baseGraph, draftState);
@@ -211,6 +229,19 @@ try {
       onOpenChooser: openChooser,
       onOpenCapture: () => openCapture(),
       onEditDraft: (id) => openCapture(id),
+      onPublishDraft: (id) => {
+        const result = publishDraft(draftState, id, new Date().toISOString());
+        if (!result.changed) return result;
+        draftState = result.state;
+        const persisted = persistDraftState(storage, draftState, validCatalogueIds, id);
+        draftState = persisted.state;
+        draftMessage = persisted.saved
+          ? result.message
+          : "Thought published for this visit. The saved Draft was not changed.";
+        graph = composeGraphWithDrafts(baseGraph, draftState);
+        map.updateGraph(graph, { selectId: id, message: draftMessage });
+        return { ...result, state: draftState, message: draftMessage };
+      },
       onToggleFeatured: (id) => {
         const media = graph.nodes.find((node) => node.id === id && node.type === "media");
         const result = toggleFeaturedMedia(
@@ -255,6 +286,14 @@ try {
       },
     });
     window.thoughtMap = map;
+    window.addEventListener("storage", (event) => {
+      if (event.key !== THOUGHT_STORAGE_KEY) return;
+      const synced = loadDraftState(storage, validCatalogueIds);
+      if (synced.storageError) return;
+      draftState = synced.state;
+      graph = composeGraphWithDrafts(baseGraph, draftState);
+      map.updateGraph(graph, { message: "Authored Thoughts updated from another tab." });
+    });
   }
 } catch (error) {
   console.error("The Map could not start.", error);

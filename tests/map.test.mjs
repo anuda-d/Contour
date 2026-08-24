@@ -88,3 +88,18 @@ test("a new temporary move clears stale pin and unpin feedback", () => {
   assert.match(detail, /Temporary position\. Pin it to keep this placement\./);
   assert.doesNotMatch(detail, /returned to the generated layout/);
 });
+
+test("publishing is an owner-only Draft action that preserves the current camera", () => {
+  assert.match(mapSource, /data-publish-draft="\$\{escapeHtml\(id\)\}"/);
+  assert.match(
+    mapSource,
+    /node\.status === "draft" && this\.capabilities\.canCaptureThoughts/,
+  );
+  assert.match(mapSource, /this\.options\.onPublishDraft\?\./);
+  assert.match(mapSource, /updateGraph\(graph, \{ focusId = null, selectId = null, message = "" \} = \{\}\)/);
+  assert.match(mapSource, /if \(selectId && this\.nodeById\.has\(selectId\)\) this\.selectedId = selectId/);
+  assert.doesNotMatch(
+    mapSource,
+    /else if \(selectId && this\.nodeById\.has\(selectId\)\)[\s\S]{0,240}this\.focusNode/,
+  );
+});

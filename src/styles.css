@@ -817,6 +817,11 @@ a:focus-visible,
   white-space: nowrap;
 }
 
+.detail-actions [data-publish-draft] {
+  grid-column: 1 / -1;
+  white-space: nowrap;
+}
+
 .detail-actions [data-position-action] {
   grid-column: 1 / -1;
   white-space: nowrap;
