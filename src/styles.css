@@ -822,6 +822,11 @@ a:focus-visible,
   white-space: nowrap;
 }
 
+.detail-actions [data-connect-draft] {
+  grid-column: 1 / -1;
+  white-space: nowrap;
+}
+
 .detail-actions [data-position-action] {
   grid-column: 1 / -1;
   white-space: nowrap;
@@ -973,6 +978,10 @@ a:focus-visible,
   margin: 0 0 27px;
   padding: 0;
   border: 0;
+}
+
+.capture-works.bridge-works {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .capture-works legend,
@@ -1620,6 +1629,10 @@ a:focus-visible,
     grid-template-columns: 1fr;
     gap: 0;
     margin-bottom: 22px;
+  }
+
+  .capture-works.bridge-works {
+    grid-template-columns: 1fr;
   }
 
   .capture-work {

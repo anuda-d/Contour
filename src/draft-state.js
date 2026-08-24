@@ -1,5 +1,6 @@
-export const THOUGHT_VERSION = 1;
-export const THOUGHT_STORAGE_KEY = "thought-map.prototype.authored-thoughts.v1";
+export const THOUGHT_VERSION = 2;
+export const THOUGHT_STORAGE_KEY = "thought-map.prototype.authored-thoughts.v2";
+export const THOUGHT_V1_STORAGE_KEY = "thought-map.prototype.authored-thoughts.v1";
 // Kept as read-only migration input for existing prototype Drafts.
 export const DRAFT_VERSION = 1;
 export const DRAFT_STORAGE_KEY = "thought-map.prototype.drafts.v1";
@@ -15,20 +16,26 @@ const isTimestamp = (value) => {
   return !Number.isNaN(date.getTime()) && date.toISOString() === value;
 };
 
-function normalizeThoughts(sourceThoughts, validMediaIds) {
+function normalizeThoughts(sourceThoughts, validMediaIds, { allowLegacyMediaId = false } = {}) {
   const seenIds = new Set();
   const thoughts = [];
   let recovered = false;
 
   sourceThoughts.forEach((thought) => {
     const statement = cleanStatement(thought?.statement);
+    const primaryMediaId =
+      typeof thought?.primaryMediaId === "string"
+        ? thought.primaryMediaId
+        : allowLegacyMediaId
+          ? thought?.mediaId
+          : null;
     const valid =
       typeof thought?.id === "string" &&
       thought.id.startsWith("draft-") &&
       !seenIds.has(thought.id) &&
       statement.length > 0 &&
-      typeof thought?.mediaId === "string" &&
-      validMediaIds.has(thought.mediaId) &&
+      typeof primaryMediaId === "string" &&
+      validMediaIds.has(primaryMediaId) &&
       isTimestamp(thought?.createdAt);
     if (!valid) {
       recovered = true;
@@ -37,11 +44,16 @@ function normalizeThoughts(sourceThoughts, validMediaIds) {
 
     seenIds.add(thought.id);
     const published = thought.status === "published" && isTimestamp(thought.publishedAt);
+    const hasSecondary =
+      typeof thought.secondaryMediaId === "string" &&
+      thought.secondaryMediaId !== primaryMediaId &&
+      validMediaIds.has(thought.secondaryMediaId);
     const normalized = {
       id: thought.id,
       status: published ? "published" : "draft",
       statement,
-      mediaId: thought.mediaId,
+      primaryMediaId,
+      ...(hasSecondary ? { secondaryMediaId: thought.secondaryMediaId } : {}),
       createdAt: thought.createdAt,
       ...(published ? { publishedAt: thought.publishedAt } : {}),
     };
@@ -49,7 +61,10 @@ function normalizeThoughts(sourceThoughts, validMediaIds) {
     if (
       thought.status !== normalized.status ||
       thought.statement !== normalized.statement ||
-      thought.publishedAt !== normalized.publishedAt
+      thought.publishedAt !== normalized.publishedAt ||
+      thought.primaryMediaId !== normalized.primaryMediaId ||
+      thought.secondaryMediaId !== normalized.secondaryMediaId ||
+      thought.mediaId !== undefined
     ) {
       recovered = true;
     }
@@ -61,11 +76,14 @@ function normalizeThoughts(sourceThoughts, validMediaIds) {
 export function normalizeDraftState(value, validMediaIds) {
   const validIds = validMediaIds instanceof Set ? validMediaIds : new Set(validMediaIds);
   const sourceThoughts = Array.isArray(value?.thoughts) ? value.thoughts : [];
-  const normalized = normalizeThoughts(sourceThoughts, validIds);
+  const normalized = normalizeThoughts(sourceThoughts, validIds, {
+    allowLegacyMediaId: value?.version === 1,
+  });
 
   return {
     state: { version: THOUGHT_VERSION, thoughts: normalized.thoughts },
     recovered: value?.version !== THOUGHT_VERSION || normalized.recovered,
+    recoveryNotice: normalized.recovered,
   };
 }
 
@@ -73,7 +91,13 @@ function migrateLegacyDraftState(value, validMediaIds) {
   const validIds = validMediaIds instanceof Set ? validMediaIds : new Set(validMediaIds);
   const sourceDrafts = Array.isArray(value?.drafts) ? value.drafts : [];
   const normalized = normalizeThoughts(
-    sourceDrafts.map((draft) => ({ ...draft, status: "draft" })),
+    sourceDrafts.map((draft) => ({
+      id: draft?.id,
+      status: "draft",
+      statement: draft?.statement,
+      primaryMediaId: draft?.mediaId,
+      createdAt: draft?.createdAt,
+    })),
     validIds,
   );
   return {
@@ -106,6 +130,28 @@ export function loadDraftState(storage, validMediaIds) {
           recovered: true,
           storageError: false,
           migrated: false,
+          recoveryNotice: true,
+        };
+      }
+    }
+
+    const priorLifecycle = storage.getItem(THOUGHT_V1_STORAGE_KEY);
+    if (priorLifecycle !== null) {
+      try {
+        const normalized = normalizeDraftState(JSON.parse(priorLifecycle), validMediaIds);
+        return {
+          ...normalized,
+          persistent: true,
+          storageError: false,
+          migrated: true,
+        };
+      } catch {
+        return {
+          state: emptyDraftState(),
+          persistent: true,
+          recovered: true,
+          storageError: false,
+          migrated: true,
           recoveryNotice: true,
         };
       }
@@ -148,7 +194,7 @@ export function loadDraftState(storage, validMediaIds) {
   }
 }
 
-export function mergeDraftStates(storedState, incomingState, changedId = null) {
+export function mergeDraftStates(storedState, incomingState, mutation = null) {
   const thoughts = storedState.thoughts.map((thought) => ({ ...thought }));
   const indexById = new Map(thoughts.map((thought, index) => [thought.id, index]));
 
@@ -160,15 +206,32 @@ export function mergeDraftStates(storedState, incomingState, changedId = null) {
       return;
     }
     if (thoughts[index].status === "published") return;
-    if (thought.status === "published" || thought.id === changedId) {
-      thoughts[index] = { ...thought };
+    if (thought.status === "published") {
+      thoughts[index] = {
+        ...thoughts[index],
+        status: "published",
+        publishedAt: thought.publishedAt,
+      };
+      return;
+    }
+    if (thought.id !== mutation?.id) return;
+    mutation.fields.forEach((field) => {
+      if (!["statement", "secondaryMediaId"].includes(field)) return;
+      if (field === "secondaryMediaId" && !Object.hasOwn(thought, field)) {
+        delete thoughts[index][field];
+      } else {
+        thoughts[index][field] = thought[field];
+      }
+    });
+    if (thoughts[index].status !== "draft") {
+      thoughts[index].status = "draft";
     }
   });
 
   return { version: THOUGHT_VERSION, thoughts };
 }
 
-export function persistDraftState(storage, state, validMediaIds, changedId = null) {
+export function persistDraftState(storage, state, validMediaIds, mutation = null) {
   if (!storage) return { saved: false, state };
   try {
     const stored = storage.getItem(THOUGHT_STORAGE_KEY);
@@ -180,7 +243,7 @@ export function persistDraftState(storage, state, validMediaIds, changedId = nul
         current = emptyDraftState();
       }
     }
-    const merged = mergeDraftStates(current, state, changedId);
+    const merged = mergeDraftStates(current, state, mutation);
     storage.setItem(THOUGHT_STORAGE_KEY, JSON.stringify(merged));
     return { saved: true, state: merged };
   } catch {
@@ -191,7 +254,7 @@ export function persistDraftState(storage, state, validMediaIds, changedId = nul
 export function createDraft(state, input, validMediaIds) {
   const validIds = validMediaIds instanceof Set ? validMediaIds : new Set(validMediaIds);
   const statement = cleanStatement(input?.statement);
-  if (!validIds.has(input?.mediaId)) {
+  if (!validIds.has(input?.primaryMediaId)) {
     return { state, changed: false, error: "Choose one of your three works." };
   }
   if (!statement) {
@@ -212,7 +275,7 @@ export function createDraft(state, input, validMediaIds) {
     id: input.id,
     status: "draft",
     statement,
-    mediaId: input.mediaId,
+    primaryMediaId: input.primaryMediaId,
     createdAt,
   };
   return {
@@ -253,7 +316,48 @@ export function editDraft(state, id, statement) {
   };
 }
 
-export function publishDraft(state, id, publishedAt) {
+export function connectDraft(state, id, input, validMediaIds) {
+  const validIds = validMediaIds instanceof Set ? validMediaIds : new Set(validMediaIds);
+  const statement = cleanStatement(input?.statement);
+  if (!statement) {
+    return { state, changed: false, error: "Write the thought you want to keep." };
+  }
+  const index = state.thoughts.findIndex(
+    (thought) => thought.id === id && thought.status === "draft",
+  );
+  const current = state.thoughts[index];
+  if (!current) {
+    return { state, changed: false, error: "That Draft is no longer available." };
+  }
+  if (
+    !validIds.has(input?.secondaryMediaId) ||
+    input.secondaryMediaId === current.primaryMediaId
+  ) {
+    return { state, changed: false, error: "Choose a different work to make this bridge." };
+  }
+  const draft = {
+    ...current,
+    statement,
+    secondaryMediaId: input.secondaryMediaId,
+  };
+  if (
+    current.statement === draft.statement &&
+    current.secondaryMediaId === draft.secondaryMediaId
+  ) {
+    return { state, draft: current, changed: false, message: "Bridge Draft unchanged." };
+  }
+  const thoughts = [...state.thoughts];
+  thoughts[index] = draft;
+  return {
+    state: { ...state, thoughts },
+    draft,
+    changed: true,
+    message: "Private bridge added to your Map.",
+  };
+}
+
+export function publishDraft(state, id, publishedAt, validMediaIds) {
+  const validIds = validMediaIds instanceof Set ? validMediaIds : new Set(validMediaIds);
   if (!isTimestamp(publishedAt)) {
     return { state, changed: false, error: "This Thought could not be published. Try again." };
   }
@@ -264,7 +368,11 @@ export function publishDraft(state, id, publishedAt) {
   if (!draft) {
     return { state, changed: false, error: "That Draft is no longer available." };
   }
-  if (typeof draft.mediaId !== "string" || !draft.mediaId) {
+  const anchorsValid =
+    validIds.has(draft.primaryMediaId) &&
+    (!draft.secondaryMediaId ||
+      (draft.secondaryMediaId !== draft.primaryMediaId && validIds.has(draft.secondaryMediaId)));
+  if (!anchorsValid) {
     return {
       state,
       changed: false,
@@ -308,7 +416,10 @@ export function composeGraphWithDrafts(baseGraph, state) {
       type: "thought",
       status: thought.status,
       statement: thought.statement,
-      anchors: [thought.mediaId],
+      anchors: [
+        thought.primaryMediaId,
+        ...(thought.secondaryMediaId ? [thought.secondaryMediaId] : []),
+      ],
       createdAt: thought.createdAt,
       ...(thought.status === "published" ? { publishedAt: thought.publishedAt } : {}),
     });
@@ -321,11 +432,19 @@ export function composeGraphWithDrafts(baseGraph, state) {
       });
     }
     graph.edges.push({
-      id: `anchor-${thought.id}-${thought.mediaId}`,
+      id: `anchor-${thought.id}-${thought.primaryMediaId}`,
       source: thought.id,
-      target: thought.mediaId,
+      target: thought.primaryMediaId,
       kind: "primary-anchor",
     });
+    if (thought.secondaryMediaId) {
+      graph.edges.push({
+        id: `anchor-${thought.id}-${thought.secondaryMediaId}`,
+        source: thought.id,
+        target: thought.secondaryMediaId,
+        kind: "additional-anchor",
+      });
+    }
   });
 
   return graph;

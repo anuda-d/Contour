@@ -412,6 +412,14 @@ export class ThoughtMap {
       node.type === "thought" && node.status === "draft" && this.capabilities.canCaptureThoughts
         ? `<button type="button" data-edit-draft="${escapeHtml(id)}">Edit Draft</button>`
         : "";
+    const connectAction =
+      node.type === "thought" &&
+      node.status === "draft" &&
+      node.anchors.length === 1 &&
+      this.options.selectionState?.confirmed &&
+      this.capabilities.canCaptureThoughts
+        ? `<button type="button" data-connect-draft="${escapeHtml(id)}">Connect another work</button>`
+        : "";
     const featureAction =
       node.type === "media" && this.capabilities.canFeatureMedia
         ? `<button type="button" data-feature-toggle="${escapeHtml(id)}">
@@ -427,6 +435,7 @@ export class ThoughtMap {
     return `
       <div class="detail-actions">
         ${publishAction}
+        ${connectAction}
         ${editAction}
         ${featureAction}
         ${placementAction}
@@ -464,6 +473,9 @@ export class ThoughtMap {
     });
     this.detailPanel.querySelector("[data-edit-draft]")?.addEventListener("click", (event) => {
       this.options.onEditDraft?.(event.currentTarget.dataset.editDraft);
+    });
+    this.detailPanel.querySelector("[data-connect-draft]")?.addEventListener("click", (event) => {
+      this.options.onConnectDraft?.(event.currentTarget.dataset.connectDraft);
     });
     this.detailPanel.querySelector("[data-feature-toggle]")?.addEventListener("click", (event) => {
       const id = event.currentTarget.dataset.featureToggle;
@@ -553,6 +565,7 @@ export class ThoughtMap {
 
   updateSelectionState(state) {
     this.options.selectionState = state;
+    if (this.detailPanel) this.renderDetails();
     const entry = this.root.querySelector("[data-open-chooser]");
     if (!entry) return;
     entry.textContent = this.selectionEntryLabel();
@@ -611,6 +624,11 @@ export class ThoughtMap {
   focusDraftEdit(id) {
     if (this.selectedId !== id) this.selectNode(id);
     this.detailPanel.querySelector("[data-edit-draft]")?.focus();
+  }
+
+  focusDraftConnect(id) {
+    if (this.selectedId !== id) this.selectNode(id);
+    this.detailPanel.querySelector("[data-connect-draft]")?.focus();
   }
 
   updateGraph(graph, { focusId = null, selectId = null, message = "" } = {}) {

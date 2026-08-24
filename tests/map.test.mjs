@@ -103,3 +103,30 @@ test("publishing is an owner-only Draft action that preserves the current camera
     /else if \(selectId && this\.nodeById\.has\(selectId\)\)[\s\S]{0,240}this\.focusNode/,
   );
 });
+
+test("a private single-anchor Draft exposes one owner-only bridge action", () => {
+  assert.match(mapSource, /data-connect-draft="\$\{escapeHtml\(id\)\}"/);
+  assert.match(mapSource, /node\.anchors\.length === 1/);
+  assert.match(mapSource, /this\.options\.selectionState\?\.confirmed/);
+  assert.match(mapSource, /this\.options\.onConnectDraft\?\./);
+  assert.match(mapSource, /focusDraftConnect\(id\)/);
+});
+
+test("selection changes refresh open detail so an unavailable bridge action disappears", () => {
+  let detailRenders = 0;
+  const context = {
+    options: { selectionState: { confirmed: true } },
+    detailPanel: {},
+    root: { querySelector: () => null },
+    renderDetails: () => {
+      detailRenders += 1;
+    },
+  };
+
+  ThoughtMap.prototype.updateSelectionState.call(context, {
+    confirmed: false,
+    selectedMediaIds: ["left-hand", "arrival"],
+  });
+  assert.equal(detailRenders, 1);
+  assert.equal(context.options.selectionState.confirmed, false);
+});

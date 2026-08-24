@@ -15,17 +15,18 @@ goal-bounded autonomous authorization granted on 2026-08-22 until completion.
 - Incomplete run: none
 - Run status: selecting
 - Pending owner decision: none
-- Last accepted run: Map-led Draft publishing, 2026-08-24
+- Last accepted run: Map-led cross-media bridge Draft, 2026-08-24
 - Alignment due: no
 - Visual checkpoint: accepted through Map-led Thought capture, 2026-08-23
-- UI units since visual checkpoint: 2
+- UI units since visual checkpoint: 3
 
 The graph foundation, Map-led three-work chooser, shared published-only visitor
 preview, Map-led Media featuring, and private Draft capture were accepted under
 standing authorization after full validation and clean fresh independent
 review. The owner explicitly resumed the loop on 2026-08-24. Durable pinned
-node placement and Map-led Draft publishing are accepted, and the loop is
-selecting the next smallest gap inside the active goal.
+node placement, Map-led Draft publishing, and the Map-led cross-media bridge
+Draft are accepted, and the loop is selecting the next smallest gap inside the
+active goal.
 
 ## Goal Progress
 
@@ -34,13 +35,13 @@ selecting the next smallest gap inside the active goal.
 | IM-1 Desirable Map | in progress | Accepted foundation evidence: seeded Editorial Constellation renders as authored identity rather than a review log or technical graph. |
 | IM-2 Non-review expression | accepted | Accepted capture evidence: the private prompt asks what a work made the owner notice, feel, question, connect, or believe and explicitly avoids summary, score, verdict, rating, or review structure. |
 | IM-3 Draft boundary | accepted | Accepted capture evidence: a newly saved anchored Draft appears immediately and distinctly on the owner Map, remains editable and persistent, and is absent with its relationship from visitor mode. |
-| IM-4 Generated living Map | in progress | Accepted foundation and capture evidence: deterministic relationship-sensitive layout, semantic zoom, stable seeded regions, and immediate graph growth that preserves existing placement when a Draft joins; publication and complete walkthrough evidence remain open. |
+| IM-4 Generated living Map | in progress | Accepted foundation, capture, publication, and bridge evidence: deterministic relationship-sensitive layout, semantic zoom, stable seeded regions, immediate graph growth, and one-anchor-to-bridge lifecycle changes preserve existing placement; the complete walkthrough remains open. |
 | IM-5 Intuitive spatial control | accepted | Accepted foundation and durable-placement evidence: pan, zoom, thresholded temporary pointer and keyboard movement, explicit Focus, generated-layout Reset, explicit persistent Pin position, and per-node Unpin without semantic changes. |
-| IM-6 Authored bridge | open | None yet. |
+| IM-6 Authored bridge | accepted | Accepted bridge evidence: one existing single-anchor private Draft can add exactly one confirmed second work while the owner keeps and may refine the human-authored sentence that makes the connection legible; publication names both works without introducing labels, inferred semantics, or a general relationship system. |
 | IM-7 Public identity boundary | in progress | Accepted preview, featuring, and publication evidence: the shared Published-only Map excludes private content and owner shaping controls, public Map Media can be curated into a persistent visitor orbit, and an explicit anchored Draft publication becomes visitor-visible without changing identity or placement; the complete profile remains open. |
-| IM-8 Integrated creation | in progress | Accepted chooser, capture, and publication evidence: exactly three works can be selected through a Map-led layer, saving or editing returns directly to the Map, and explicit publication changes the same anchored Thought in place; bridge creation remains open. |
+| IM-8 Integrated creation | in progress | Accepted chooser, capture, publication, and bridge evidence: exactly three works can be selected through a Map-led layer; saving, editing, or connecting returns directly to the same Map node; and explicit publication changes the same anchored Thought in place. The complete walkthrough remains open. |
 | IM-9 Responsive experience | in progress | Accepted foundation, chooser, preview, featuring, and capture evidence: coherent, overflow-free Map and creation behavior across mobile, responsive seam, and desktop; the complete walkthrough remains open. |
-| IM-10 Durable acceptance walkthrough | in progress | Accepted chooser, featuring, capture, and pinned-placement evidence: separate versioned selected-work, public-curation, private-Draft, and explicit spatial state survive reload with safe recovery and session-only fallbacks; the complete end-to-end walkthrough remains open. |
+| IM-10 Durable acceptance walkthrough | in progress | Accepted chooser, featuring, capture, pinned-placement, publication, and bridge evidence: separate versioned selection, public-curation, authored-lifecycle, and explicit spatial state survive reload with safe recovery, cross-version precedence, stale-tab merging, and session-only fallbacks; the complete end-to-end walkthrough remains open. |
 
 This table records only evidence accepted after validation, fresh independent
 review, and local commit under standing authorization. It is not a task backlog
@@ -105,6 +106,94 @@ The standing-authorization terms below are active for the resumed loop.
   publication, and unrelated external side effects
 
 ## Current Unit Evidence
+
+### Map-led cross-media bridge Draft
+
+- Criterion and claim: advances IM-6 with bounded IM-3, IM-4, IM-8, and IM-10
+  evidence by turning one existing single-anchor private Draft into the same
+  human-authored Thought anchored to exactly two confirmed works, with a
+  comprehensible Published visitor result and no general relationship system.
+- Base commit: `cc92060` (`mvp`).
+- Owned diff: `GATES.md`, `docs/plans/CURRENT.md`, this implementation state,
+  `index.html`, `src/app.js`, `src/draft-state.js`, `src/map.js`,
+  `src/styles.css`, `src/thought-capture.js`, `tests/draft-state.test.mjs`,
+  `tests/map.test.mjs`, `tests/styles.test.mjs`, and
+  `tests/thought-capture.test.mjs`.
+- Observed behavior: selecting a single-anchor private Draft exposes one
+  owner-only `Connect another work` action between the separate Publish and
+  Edit actions. Its private refinement layer fixes and names the primary work,
+  presents the other confirmed works as labelled radio choices, asks what
+  the works make visible together, and lets the owner refine the existing
+  sentence. Saving adds one second anchor, returns to and focuses the same Map
+  node, removes the Connect action, keeps Publish separate, and changes detail
+  from `Connected through The Left Hand of Darkness.` to `Connected through
+  The Left Hand of Darkness and Arrival.`
+- State and persistence evidence: lifecycle schema version 2 stores one
+  `primaryMediaId` and at most one distinct `secondaryMediaId`. Current v1 and
+  legacy Draft-only records are read-only migration inputs only when the
+  distinct v2 lifecycle key is absent, and migrate their sole `mediaId` without
+  changing Thought identity, status, statement, or timestamps. Once any v2
+  payload exists, including a corrupt one, stale v1 writes cannot replace it.
+  Invalid primary records
+  are dropped; an invalid or duplicate secondary is stripped without dropping
+  the Thought; malformed publication still becomes private. Field-scoped
+  merging applies only the sentence when intentionally edited and only the
+  secondary anchor when the sentence was unchanged, preserves unrelated
+  concurrent changes, unions new records, and keeps stored Published status and
+  its original timestamp monotonic. Publication applies to the latest stored
+  Draft fields in one write.
+- Focused validation: `node --test tests/draft-state.test.mjs
+  tests/graph-projection.test.mjs tests/map.test.mjs
+  tests/thought-capture.test.mjs` passes thirty-nine checks covering distinct
+  v2-key precedence over stale v1 clients, v1 and legacy migration, corrupt
+  recovery, exact secondary-anchor validation,
+  Published refusal, immutable editing, field-scoped concurrency, stale-tab
+  monotonicity, storage fallback, deterministic primary/additional edges,
+  private visitor exclusion, Published two-anchor projection, preserved Map
+  identity and positioning seams, owner-only action disclosure, labelled radio
+  input, authored prompt, focus trap, and responsive foundations.
+- Browser and visual validation: a targeted live dark-desktop flow created
+  `Freedom changes shape when memory becomes a language.`, selected
+  `Connect another work`, chose Film `Arrival` beside primary Book *The Left
+  Hand of Darkness*, refined the human-authored statement, saved, checked
+  visitor privacy, explicitly published, entered visitor preview, and reloaded.
+  Before and after bridging, id
+  `draft-413a61b3-76b7-49db-9adc-84987890b74e`, node position
+  `159.94px / 297.6px`, and camera transform
+  `translate(-50%, -50%) translate(-213.996px, -311.089px) scale(1.18)` were
+  unchanged, and the updated node held keyboard focus. The private visitor Map
+  contained no bridge; the Published visitor detail named both works and
+  exposed only Focus and Close; reload retained both anchors. The quiet curved
+  additional path remained subordinate to the authored sentence. This is not
+  the complete five-unit visual checkpoint, which is not due for UI unit 3.
+- Design pre-flight: Design Read is incremental owner-only bridge refinement
+  inside the established Editorial Constellation for design-conscious Book and
+  Film users, implemented in native CSS with dials `6 / 4 / 4`. The unit
+  preserves cool-mineral light and dark tokens, one coral authorship accent,
+  fixed primary-work context, visible radio labels, floating Thought geometry,
+  quiet curved additional anchors, semantic zoom, shared owner/visitor canvas,
+  focus trapping and restoration, reduced motion, bounded overlay scrolling,
+  nowrap contextual actions, two-column desktop and one-column mobile choices,
+  and 44-pixel mobile controls. It adds no second Map, wizard, card grid, pill,
+  relationship label, permanent bridge badge, Theme, score, social action, or
+  decorative effect.
+- Scope and unresolved behavior: the unit deliberately omits third or later
+  anchors, unlinking, secondary-anchor replacement UI, post-publication bridge
+  edits, connection labels or types, broad `relates to`, Thought-to-Thought or
+  cross-person links, Themes, and spatially inferred meaning. The authored
+  sentence itself remains the bridge meaning.
+- Full validation: `./scripts/check.sh` passes governance consistency, syntax,
+  diff checks, and all seventy-seven tests.
+- Independent-review status: the initial fresh review found two material
+  lifecycle/UI issues: the v2 schema reused the v1 storage key, and an open
+  detail surface did not remove `Connect another work` when the confirmed
+  selection became invalid. The candidate now uses a distinct v2 key with v1
+  as read-only migration input and rerenders selected detail on selection-state
+  changes. Exact regressions pass. A different fresh correction reviewer found
+  no blocking findings and independently confirmed focused 39/39, full 77/77,
+  and a clean diff. Residual risks are limited to the documented fail-closed
+  corrupt-v2 recovery policy and this non-checkpoint unit's targeted rather than
+  complete browser coverage.
 
 ### Map-led Draft publishing
 

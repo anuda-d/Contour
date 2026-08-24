@@ -124,6 +124,20 @@ test("Draft publication is a full-width contextual action", () => {
   assert.match(publishAction, /white-space:\s*nowrap/);
 });
 
+test("bridge refinement stays contextual and its choices stack on mobile", () => {
+  const connectAction =
+    styles.match(/\.detail-actions \[data-connect-draft\]\s*{([^}]*)}/s)?.[1] ?? "";
+  const bridgeChoices =
+    styles.match(/\.capture-works\.bridge-works\s*{([^}]*)}/s)?.[1] ?? "";
+  const mobileBlock = styles.match(/@media \(max-width: 760px\)\s*{([\s\S]*)\n}/)?.[1] ?? "";
+  const mobileBridge =
+    mobileBlock.match(/\.capture-works\.bridge-works\s*{([^}]*)}/)?.[1] ?? "";
+  assert.match(connectAction, /grid-column:\s*1 \/ -1/);
+  assert.match(connectAction, /white-space:\s*nowrap/);
+  assert.match(bridgeChoices, /repeat\(2, minmax\(0, 1fr\)\)/);
+  assert.match(mobileBridge, /grid-template-columns:\s*1fr/);
+});
+
 test("orbit titles wrap inside their Media silhouettes", () => {
   const titleRule = styles.match(/\.orbit-work strong\s*{([^}]*)}/)?.[1] ?? "";
   const bookRule = styles.match(/\.orbit-book\s*{([^}]*)}/)?.[1] ?? "";

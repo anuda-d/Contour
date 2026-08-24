@@ -1,6 +1,7 @@
 import { getCatalogue } from "./catalog.js";
 import {
   composeGraphWithDrafts,
+  connectDraft,
   createDraft,
   editDraft,
   loadDraftState,
@@ -14,7 +15,7 @@ import {
   toggleFeaturedMedia,
 } from "./featured-state.js";
 import { getPublicMediaIds } from "./graph-projection.js";
-import { ThoughtMap } from "./map.js?v=editorial-constellation-13";
+import { ThoughtMap } from "./map.js?v=editorial-constellation-14";
 import {
   loadPinnedState,
   pinPosition,
@@ -154,7 +155,12 @@ try {
     if (draftId && !draft) return;
     if (!draft && !selectionState.confirmed) return;
 
-    const workIds = draft ? [draft.mediaId] : selectionState.selectedMediaIds;
+    const workIds = draft
+      ? [
+          draft.primaryMediaId,
+          ...(draft.secondaryMediaId ? [draft.secondaryMediaId] : []),
+        ]
+      : selectionState.selectedMediaIds;
     const works = workIds
       .map((id) => catalogue.find((item) => item.id === id))
       .filter(Boolean);
@@ -163,14 +169,14 @@ try {
     capture = new ThoughtCapture(root.querySelector(".app-shell"), works, {
       draft,
       initialMessage: draft ? "" : initialDraftMessage,
-      onSave: ({ draftId: editingId, mediaId, statement }) => {
+      onSave: ({ draftId: editingId, primaryMediaId, statement }) => {
         const result = editingId
           ? editDraft(draftState, editingId, statement)
           : createDraft(
               draftState,
               {
                 id: `draft-${crypto.randomUUID()}`,
-                mediaId,
+                primaryMediaId,
                 statement,
                 createdAt: new Date().toISOString(),
               },
@@ -180,7 +186,10 @@ try {
 
         draftState = result.state;
         const persisted = result.changed
-          ? persistDraftState(storage, draftState, validCatalogueIds, result.draft.id)
+          ? persistDraftState(storage, draftState, validCatalogueIds, {
+              id: result.draft.id,
+              fields: editingId ? ["statement"] : [],
+            })
           : { saved: true, state: draftState };
         draftState = persisted.state;
         const currentThought = draftState.thoughts.find((thought) => thought.id === result.draft.id);
@@ -211,6 +220,67 @@ try {
     initialDraftMessage = "";
   };
 
+  const openBridge = (draftId) => {
+    if (capture || chooser || mapMode !== "owner" || !selectionState.confirmed) return;
+    const draft = draftState.thoughts.find(
+      (thought) =>
+        thought.id === draftId && thought.status === "draft" && !thought.secondaryMediaId,
+    );
+    if (!draft) return;
+    const primaryWork = catalogue.find((item) => item.id === draft.primaryMediaId);
+    const otherWorks = selectionState.selectedMediaIds
+      .filter((id) => id !== draft.primaryMediaId)
+      .map((id) => catalogue.find((item) => item.id === id))
+      .filter(Boolean);
+    if (!primaryWork || !otherWorks.length) return;
+    const works = [primaryWork, ...otherWorks];
+
+    capture = new ThoughtCapture(root.querySelector(".app-shell"), works, {
+      draft,
+      bridgeMode: true,
+      onSave: ({ secondaryMediaId, statement }) => {
+        const result = connectDraft(
+          draftState,
+          draft.id,
+          { secondaryMediaId, statement },
+          validCatalogueIds,
+        );
+        if (result.error) return { saved: false, message: result.error };
+        draftState = result.state;
+        const persisted = result.changed
+          ? persistDraftState(storage, draftState, validCatalogueIds, {
+              id: draft.id,
+              fields: [
+                "secondaryMediaId",
+                ...(result.draft.statement === draft.statement ? [] : ["statement"]),
+              ],
+            })
+          : { saved: true, state: draftState };
+        draftState = persisted.state;
+        const currentThought = draftState.thoughts.find((thought) => thought.id === draft.id);
+        const publishedElsewhere = currentThought?.status === "published";
+        draftMessage = publishedElsewhere
+          ? "This Thought was already published in another tab. The bridge was not saved."
+          : persisted.saved
+            ? result.message
+            : `${result.message} This bridge will last for this visit.`;
+        return {
+          saved: true,
+          draft: currentThought ?? result.draft,
+          message: draftMessage,
+        };
+      },
+      onSaved: (result) => {
+        graph = composeGraphWithDrafts(baseGraph, draftState);
+        map.updateGraph(graph, { selectId: result.draft.id, message: result.message });
+      },
+      onClose: () => {
+        capture = null;
+      },
+      restoreFocus: () => map.focusDraftConnect(draft.id),
+    });
+  };
+
   if (!graph.nodes.length) {
     root.innerHTML = `
       <main class="empty-state">
@@ -229,11 +299,20 @@ try {
       onOpenChooser: openChooser,
       onOpenCapture: () => openCapture(),
       onEditDraft: (id) => openCapture(id),
+      onConnectDraft: (id) => openBridge(id),
       onPublishDraft: (id) => {
-        const result = publishDraft(draftState, id, new Date().toISOString());
+        const result = publishDraft(
+          draftState,
+          id,
+          new Date().toISOString(),
+          validCatalogueIds,
+        );
         if (!result.changed) return result;
         draftState = result.state;
-        const persisted = persistDraftState(storage, draftState, validCatalogueIds, id);
+        const persisted = persistDraftState(storage, draftState, validCatalogueIds, {
+          id,
+          fields: ["status", "publishedAt"],
+        });
         draftState = persisted.state;
         draftMessage = persisted.saved
           ? result.message
