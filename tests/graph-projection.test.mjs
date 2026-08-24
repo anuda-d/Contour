@@ -63,6 +63,9 @@ test("visitor projection excludes drafts, draft-only media, and dangling edges",
     projection.edges.map((edge) => edge.id),
     ["author-published", "anchor-published"],
   );
+  assert.deepEqual(projection.profile, graphWithDraft.profile);
+  projection.profile.displayName = "Changed visitor copy";
+  assert.equal(graphWithDraft.profile.displayName, "Person");
 });
 
 test("the fully published seed projects without losing graph content", () => {

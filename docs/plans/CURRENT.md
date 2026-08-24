@@ -25,7 +25,7 @@ successive independently reviewed work units until the goal is complete.
 - Pending owner decision: none
 - Alignment due: no
 - Visual checkpoint: accepted through Map-led Thought capture, 2026-08-23
-- UI units since visual checkpoint: 3
+- UI units since visual checkpoint: 4
 
 The graph-first foundation correction was accepted under standing authorization
 on 2026-08-22 after full validation and clean fresh independent review. Routine
@@ -51,8 +51,11 @@ rendered publication flow, correction of a stale-tab persistence issue, and
 clean fresh correction review. The Map-led cross-media bridge Draft is also
 accepted after focused and full checks, a targeted rendered bridge-to-public
 flow, correction of cross-version lifecycle and stale-detail issues, and clean
-fresh correction review. The loop is selecting the next bounded unit without
-broadening the goal.
+fresh correction review. Visitor profile framing is accepted after focused and
+full checks, targeted desktop and mobile visitor evidence, correction of one
+seed-coupled authorship label, and clean fresh correction review. The loop is
+selecting the next bounded unit without broadening the goal; the next UI
+candidate requires the full fifth-unit visual checkpoint before acceptance.
 
 These fields mirror the active implementation state and are checked by
 `./scripts/check.sh`. Update both files in the same administrative change.

@@ -130,3 +130,63 @@ test("selection changes refresh open detail so an unavailable bridge action disa
   assert.equal(detailRenders, 1);
   assert.equal(context.options.selectionState.confirmed, false);
 });
+
+test("visitor framing presents one public profile without duplicating owner chrome", () => {
+  const profile = {
+    displayName: "Mira Vale",
+    handle: "@miravale",
+    initials: "MV",
+    identityLine: "Books, films, and the questions they leave behind.",
+  };
+  const visitor = {
+    mode: "visitor",
+    graph: { profile },
+  };
+  const owner = {
+    mode: "owner",
+    graph: { profile },
+    options: { selectionState: { confirmed: true }, draftMessage: "" },
+    selectionEntryLabel: () => "3 works ready",
+  };
+
+  const visitorIntro = ThoughtMap.prototype.profileIntro.call(visitor);
+  assert.match(visitorIntro, /class="visitor-profile"/);
+  assert.match(visitorIntro, /<h1 id="map-title">Mira Vale<\/h1>/);
+  assert.match(visitorIntro, /@miravale/);
+  assert.match(visitorIntro, />MV<\/span>/);
+  assert.match(visitorIntro, /Books, films, and the questions they leave behind\./);
+  assert.doesNotMatch(visitorIntro, /data-open-chooser|data-open-capture/);
+  assert.equal(ThoughtMap.prototype.topbarIdentity.call(visitor), "");
+  assert.equal(
+    ThoughtMap.prototype.mapFrameLabel.call(visitor),
+    "Mira Vale's interactive public Map",
+  );
+
+  const ownerIntro = ThoughtMap.prototype.profileIntro.call(owner);
+  assert.match(ownerIntro, /Mira&#039;s map/);
+  assert.match(ownerIntro, /data-open-chooser/);
+  assert.match(ownerIntro, /data-open-capture/);
+  assert.match(ThoughtMap.prototype.topbarIdentity.call(owner), /aria-label="Map owner"/);
+});
+
+test("visitor mode keeps the same camera and positions while restoring mode focus", () => {
+  const setModeSource = mapSource.match(/setMode\(mode\) \{([\s\S]*?)\n  \}\n\n  handleNodeClick/)?.[1] ?? "";
+  assert.doesNotMatch(setModeSource, /this\.view\s*=/);
+  assert.doesNotMatch(setModeSource, /this\.positions\s*=/);
+  assert.match(setModeSource, /this\.render\(\)/);
+  assert.match(setModeSource, /this\.applyTransform\(\)/);
+  assert.match(setModeSource, /nextMode === MAP_MODES\.visitor \? "\[data-mode-exit\]"/);
+});
+
+test("Published Thought detail derives authorship from the active profile", () => {
+  const context = { graph: { profile: { displayName: "Avery Stone" } } };
+  assert.equal(
+    ThoughtMap.prototype.thoughtDetailLabel.call(context, { status: "published" }),
+    "Avery's Thought",
+  );
+  assert.equal(
+    ThoughtMap.prototype.thoughtDetailLabel.call(context, { status: "draft" }),
+    "Private draft",
+  );
+  assert.doesNotMatch(mapSource, /"Mira's Thought"/);
+});

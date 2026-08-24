@@ -1,21 +1,21 @@
-# Gates: Map-led cross-media bridge Draft
+# Gates: Visitor profile framing
 
-OWNS: GATES.md, docs/plans/CURRENT.md, docs/plans/identity-map-prototype/IMPLEMENTATION_PLAN.md, index.html, scripts/check.sh, src/app.js, src/draft-state.js, src/graph-projection.js, src/map.js, src/styles.css, src/thought-capture.js, tests/draft-state.test.mjs, tests/graph-projection.test.mjs, tests/map.test.mjs, tests/styles.test.mjs, tests/thought-capture.test.mjs
+OWNS: GATES.md, docs/plans/CURRENT.md, docs/plans/identity-map-prototype/IMPLEMENTATION_PLAN.md, index.html, scripts/check.sh, src/app.js, src/graph-projection.js, src/map.js, src/styles.css, tests/graph-projection.test.mjs, tests/map.test.mjs, tests/styles.test.mjs
 
-Scope: turn one existing single-anchor private Draft into a human-authored cross-media bridge Draft with exactly one additional work, preserving identity, position, lifecycle safety, and public privacy boundaries
+Scope: make visitor preview read as one coherent public identity portrait layered over the existing published-only Map, using only the accepted profile fields and featured orbit
 
-- [x] BR1: authored Thought state migrates safely, adds exactly one secondary anchor, merges field-scoped concurrent changes, and projects deterministic bridge edges without public Draft leakage
-  CHECK: node --test tests/draft-state.test.mjs tests/graph-projection.test.mjs tests/map.test.mjs tests/thought-capture.test.mjs
+- [x] PF1: visitor mode presents the existing visual mark, name, handle, identity line, featured orbit, and published-only Map as one profile while owner behavior and capability boundaries remain unchanged
+  CHECK: node --test tests/graph-projection.test.mjs tests/map.test.mjs tests/styles.test.mjs
   EXPECT: ℹ fail 0
-  EVIDENCE: exit=0; shell=/bin/sh; cwd=/Users/anuda/Desktop/bproject; path=668f0de3136d/22 entries; output=ℹ todo 0 | ℹ duration_ms 50.883042
+  EVIDENCE: exit=0; shell=/bin/sh; cwd=/Users/anuda/Desktop/bproject; path=668f0de3136d/22 entries; output=ℹ todo 0 | ℹ duration_ms 44.287541
 
-- [x] BR2: governance, syntax, focused behavior, and repository regressions all pass
+- [x] PF2: governance, syntax, focused behavior, and repository regressions all pass
   CHECK: ./scripts/check.sh
   EXPECT: ℹ fail 0
-  EVIDENCE: exit=0; shell=/bin/sh; cwd=/Users/anuda/Desktop/bproject; path=668f0de3136d/22 entries; output=ℹ todo 0 | ℹ duration_ms 100.366958
+  EVIDENCE: exit=0; shell=/bin/sh; cwd=/Users/anuda/Desktop/bproject; path=668f0de3136d/22 entries; output=ℹ todo 0 | ℹ duration_ms 102.08675
 
-- [x] BR3: source and design pre-flight preserve the Editorial Constellation, human-authored bridge meaning, fixed primary work, labelled second-work choice, separate publication, immediate Map return, focus, both themes, responsive scrolling, and 44px mobile targets
-  EVIDENCE: Design Read and dials 6 / 4 / 4 recorded; native token, contrast, labelled radio, focus trap, reduced-motion, bounded-scroll, nowrap, responsive 2-to-1-column, and 44px rules inspected; targeted dark desktop flow visibly retained one shared Map, same focused node and camera, private bridge exclusion, separate publication, curved additional path, and two-work visitor detail
+- [x] PF3: targeted rendered desktop/mobile evidence plus light/dark source inspection confirms readable profile framing, orbit-to-Map focus, visitor privacy, return focus, touch targets, and no console errors
+  EVIDENCE: active dark scheme rendered at 1280x820 and 390x844; Mira Vale, @miravale, visual mark, full identity line, featured orbit, and shared Map remained coherent; orbit focus selected dispossessed; visitor had zero Draft nodes and zero owner controls; mobile body scroll width equalled 390px, identity line wrapped normally, return target was 44px, owner return focused Preview as visitor, and console warnings/errors were empty; existing automatic light/dark token and contrast tests passed, but this browser could not emulate a second color scheme
 
-- [x] BR4: a fresh independent read-only review finds no unresolved blocker in the implementation or candidate evidence
-  EVIDENCE: fresh correction review found no blocking findings; it verified the distinct v2-key migration boundary, stale-v1 precedence, live Connect removal, field-scoped persistence, bridge privacy and publication, responsive/accessibility foundations, focused 39/39, full 77/77, and clean diff; only the documented fail-closed corrupt-v2 policy and non-checkpoint browser coverage remain as residual risks
+- [x] PF4: a fresh independent read-only review finds no unresolved blocker in the implementation or candidate evidence
+  EVIDENCE: a different fresh correction reviewer found no blocking findings; it verified dynamic alternate-profile Thought authorship, visitor profile and privacy boundaries, shared orbit/Map continuity, owner restoration, responsive and theme foundations, focused 31/31, full 81/81, and clean diff; residual risks are the explicitly recorded unrendered light scheme, one representative mobile width, and method-level alternate-profile regression

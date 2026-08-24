@@ -15,18 +15,18 @@ goal-bounded autonomous authorization granted on 2026-08-22 until completion.
 - Incomplete run: none
 - Run status: selecting
 - Pending owner decision: none
-- Last accepted run: Map-led cross-media bridge Draft, 2026-08-24
+- Last accepted run: Visitor profile framing, 2026-08-24
 - Alignment due: no
 - Visual checkpoint: accepted through Map-led Thought capture, 2026-08-23
-- UI units since visual checkpoint: 3
+- UI units since visual checkpoint: 4
 
 The graph foundation, Map-led three-work chooser, shared published-only visitor
 preview, Map-led Media featuring, and private Draft capture were accepted under
 standing authorization after full validation and clean fresh independent
 review. The owner explicitly resumed the loop on 2026-08-24. Durable pinned
-node placement, Map-led Draft publishing, and the Map-led cross-media bridge
-Draft are accepted, and the loop is selecting the next smallest gap inside the
-active goal.
+node placement, Map-led Draft publishing, the Map-led cross-media bridge Draft,
+and visitor profile framing are accepted. The loop is selecting the next
+smallest gap inside the active goal.
 
 ## Goal Progress
 
@@ -38,7 +38,7 @@ active goal.
 | IM-4 Generated living Map | in progress | Accepted foundation, capture, publication, and bridge evidence: deterministic relationship-sensitive layout, semantic zoom, stable seeded regions, immediate graph growth, and one-anchor-to-bridge lifecycle changes preserve existing placement; the complete walkthrough remains open. |
 | IM-5 Intuitive spatial control | accepted | Accepted foundation and durable-placement evidence: pan, zoom, thresholded temporary pointer and keyboard movement, explicit Focus, generated-layout Reset, explicit persistent Pin position, and per-node Unpin without semantic changes. |
 | IM-6 Authored bridge | accepted | Accepted bridge evidence: one existing single-anchor private Draft can add exactly one confirmed second work while the owner keeps and may refine the human-authored sentence that makes the connection legible; publication names both works without introducing labels, inferred semantics, or a general relationship system. |
-| IM-7 Public identity boundary | in progress | Accepted preview, featuring, and publication evidence: the shared Published-only Map excludes private content and owner shaping controls, public Map Media can be curated into a persistent visitor orbit, and an explicit anchored Draft publication becomes visitor-visible without changing identity or placement; the complete profile remains open. |
+| IM-7 Public identity boundary | accepted | Accepted preview, featuring, publication, and profile-framing evidence: the shared Published-only Map excludes private content and owner shaping controls; public Media can be curated into a persistent visitor orbit; publication reveals the same anchored Thought; and the existing mark, name, handle, identity line, orbit, and Map form one coherent public profile. |
 | IM-8 Integrated creation | in progress | Accepted chooser, capture, publication, and bridge evidence: exactly three works can be selected through a Map-led layer; saving, editing, or connecting returns directly to the same Map node; and explicit publication changes the same anchored Thought in place. The complete walkthrough remains open. |
 | IM-9 Responsive experience | in progress | Accepted foundation, chooser, preview, featuring, and capture evidence: coherent, overflow-free Map and creation behavior across mobile, responsive seam, and desktop; the complete walkthrough remains open. |
 | IM-10 Durable acceptance walkthrough | in progress | Accepted chooser, featuring, capture, pinned-placement, publication, and bridge evidence: separate versioned selection, public-curation, authored-lifecycle, and explicit spatial state survive reload with safe recovery, cross-version precedence, stale-tab merging, and session-only fallbacks; the complete end-to-end walkthrough remains open. |
@@ -106,6 +106,77 @@ The standing-authorization terms below are active for the resumed loop.
   publication, and unrelated external side effects
 
 ## Current Unit Evidence
+
+### Visitor profile framing
+
+- Criterion and claim: advances IM-7 with bounded IM-9 evidence by presenting
+  the accepted public identity fields, featured orbit, and published-only Map
+  as one coherent visitor profile rather than a filtered owner canvas.
+- Base commit: `bb40eb2` (`mvp`).
+- Owned diff: `GATES.md`, `docs/plans/CURRENT.md`, this implementation state,
+  `index.html`, `src/app.js`, `src/map.js`, `src/styles.css`,
+  `tests/graph-projection.test.mjs`, `tests/map.test.mjs`, and
+  `tests/styles.test.mjs`.
+- Observed behavior: `Preview as visitor` removes the duplicate owner identity
+  from the topbar and replaces the owner-oriented Map intro with one compact
+  masthead containing Mira Vale's existing `MV` visual mark, display name,
+  handle, and complete identity line. The existing `Media in Mira's orbit`
+  silhouettes follow directly and continue to focus their Media inside the
+  same interactive public Map. Returning restores the unchanged owner intro,
+  owner identity, controls, selection, and focus.
+- Visibility and continuity evidence: visitor projection still carries only
+  copied profile data, the User, Published Thoughts, their anchored Media, and
+  non-dangling edges. The masthead introduces no state or lifecycle write.
+  Mode switching continues to rerender the same `ThoughtMap` without assigning
+  new camera or position state; an existing public selection remains selected.
+  Draft nodes and owner chooser, capture, feature, publish, connect, movement,
+  pin, and Reset controls remain absent to visitors.
+- Focused validation: `node --test tests/graph-projection.test.mjs
+  tests/map.test.mjs tests/styles.test.mjs` passes thirty-one checks covering copied
+  profile projection, Draft exclusion, capability separation, mode-specific
+  identity markup, dynamic public labels, owner behavior, camera/position
+  continuity seams, responsive wrapping, touch sizing, both theme tokens, and
+  existing Map foundations.
+- Browser and visual validation: targeted active-dark flows at `1280x820` and
+  `390x844` visibly showed the mark, name, handle, complete two-line identity
+  statement, featured orbit, and shared Map as one sparse profile composition.
+  Orbit activation focused *The Dispossessed* and opened its existing detail;
+  visitor mode contained zero Draft nodes and zero owner controls. At mobile,
+  body scroll width equalled the 390-pixel viewport, the identity line used
+  normal wrapping with visible overflow, the return control measured 44 pixels,
+  and the canvas remained 380 pixels wide. Returning focused `Preview as
+  visitor`, retained the public selection, and restored both owner controls.
+  Console warnings and errors were empty. The browser exposed only the active
+  dark system scheme, so light mode is source- and contrast-test-validated
+  rather than claimed as a second rendered observation. This is not the full
+  fifth-unit visual checkpoint; this candidate is UI unit 4.
+- Design pre-flight: Design Read is a responsive public identity artifact for
+  culturally engaged Book and Film visitors, preserving the established
+  Editorial Constellation in native CSS with dials `6 / 2 / 4`. The unit keeps
+  cool-mineral automatic light/dark tokens, one coral accent, the existing
+  radius system, asymmetric floating profile placement, semantic zoom, focus
+  styling, reduced-motion rules, a single public `h1`, wrapped mobile identity
+  copy, 44-pixel mobile return and orbit targets, and one shared Map. It adds no
+  card grid, hero, second canvas, route, automatic motion, decorative effect,
+  Theme, count, rating, social action, or duplicate visitor CTA. New visible
+  copy contains no em dash.
+- Scope and unresolved behavior: the unit deliberately omits profile editing,
+  new profile fields or persistence, a public URL/router, profile image assets,
+  featured Thoughts or regions, named Themes, Paths, follows, social counts,
+  and sharing behavior. Those are later or owner-gated boundaries; no owner
+  decision is required for this exact framing from already specified fields.
+- Full validation: `./scripts/check.sh` passes governance consistency, syntax,
+  diff checks, and all eighty-one tests.
+- Independent-review status: the initial fresh reviewer found one seed-coupled
+  Published detail label (`Mira's Thought`) that contradicted the dynamic public
+  profile claim. The label now derives its possessive first name from the active
+  profile, and an alternate-profile regression passes. A different fresh
+  correction reviewer found no blocking findings and independently confirmed
+  focused 31/31, full 81/81, dynamic profile framing, privacy and capability
+  boundaries, responsive/theme foundations, and a clean diff. Residual risks
+  remain limited to the explicitly documented unrendered light scheme, one
+  representative rendered mobile width, and method-level alternate-profile
+  coverage.
 
 ### Map-led cross-media bridge Draft
 

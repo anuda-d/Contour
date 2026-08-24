@@ -15,7 +15,7 @@ import {
   toggleFeaturedMedia,
 } from "./featured-state.js";
 import { getPublicMediaIds } from "./graph-projection.js";
-import { ThoughtMap } from "./map.js?v=editorial-constellation-14";
+import { ThoughtMap } from "./map.js?v=editorial-constellation-15";
 import {
   loadPinnedState,
   pinPosition,

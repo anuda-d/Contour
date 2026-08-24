@@ -147,6 +147,25 @@ test("orbit titles wrap inside their Media silhouettes", () => {
   assert.match(bookRule, /height:\s*86px/);
 });
 
+test("visitor profile copy stays readable and return control remains touch sized", () => {
+  const profileRule = styles.match(/\.visitor-profile\s*\{([^}]*)\}/)?.[1] ?? "";
+  const lineRule =
+    styles.match(/\.map-intro \.visitor-profile-line\s*\{([^}]*)\}/)?.[1] ?? "";
+  const mobileBlock = styles.match(/@media \(max-width: 760px\)\s*\{([\s\S]*)\n}/)?.[1] ?? "";
+  const mobileModeAction = mobileBlock.match(/\.mode-action\s*\{([^}]*)\}/)?.[1] ?? "";
+  const mobileProfileCopy =
+    mobileBlock.match(
+      /\.map-intro \.visitor-profile-handle,\s*\.map-intro \.visitor-profile-line\s*\{([^}]*)\}/,
+    )?.[1] ?? "";
+
+  assert.match(profileRule, /display:\s*grid/);
+  assert.match(lineRule, /line-height:\s*1\.42/);
+  assert.match(mobileModeAction, /min-height:\s*44px/);
+  assert.match(mobileProfileCopy, /overflow:\s*visible/);
+  assert.match(mobileProfileCopy, /white-space:\s*normal/);
+  assert.match(mobileProfileCopy, /text-overflow:\s*clip/);
+});
+
 test("private Drafts use the owner-selected semantic zoom treatment", () => {
   const draftMarkRule = styles.match(/\.node-thought\.is-draft \.thought-mark\s*{([^}]*)}/)?.[1] ?? "";
   const draftNoteRule = styles.match(/\.draft-note\s*{([^}]*)}/)?.[1] ?? "";

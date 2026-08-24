@@ -91,42 +91,19 @@ export class ThoughtMap {
           </a>
           <div class="topbar-actions">
             ${this.modeControl()}
-            <div class="identity" aria-label="Map owner">
-              <span class="identity-copy">
-                <strong>${escapeHtml(this.graph.profile.displayName)}</strong>
-                <small>${escapeHtml(this.graph.profile.handle)}</small>
-              </span>
-              <span class="avatar" aria-hidden="true">${escapeHtml(this.graph.profile.initials)}</span>
-            </div>
+            ${this.topbarIdentity()}
           </div>
         </header>
 
         <main class="map-page" id="map">
           <section class="map-intro" aria-labelledby="map-title">
-            <h1 id="map-title">Mira's map</h1>
-            <p>${escapeHtml(this.graph.profile.identityLine)}</p>
-            ${
-              this.capabilities.canChooseWorks
-                ? `<div class="owner-map-actions">
-                    <button class="chooser-entry" type="button" data-open-chooser>
-                      ${escapeHtml(this.selectionEntryLabel())}
-                    </button>
-                    <button
-                      class="capture-entry"
-                      type="button"
-                      data-open-capture
-                      ${this.options.selectionState?.confirmed ? "" : "hidden"}
-                    >Write a Thought</button>
-                  </div>
-                  <p class="draft-status" role="status" data-draft-status>${escapeHtml(this.options.draftMessage ?? "")}</p>`
-                : ""
-            }
+            ${this.profileIntro()}
             <div class="orbit-root" data-orbit-root>
               ${this.profileOrbit()}
             </div>
           </section>
 
-          <section class="map-frame" aria-label="Interactive identity Map">
+          <section class="map-frame" aria-label="${escapeHtml(this.mapFrameLabel())}">
             <div
               class="map-canvas"
               data-zoom-band="middle"
@@ -183,11 +160,66 @@ export class ThoughtMap {
     return '<button class="mode-action" type="button" data-mode-enter>Preview as visitor</button>';
   }
 
-  canvasInstructions() {
+  topbarIdentity() {
+    if (this.mode === MAP_MODES.visitor) return "";
+    return `
+      <div class="identity" aria-label="Map owner">
+        <span class="identity-copy">
+          <strong>${escapeHtml(this.graph.profile.displayName)}</strong>
+          <small>${escapeHtml(this.graph.profile.handle)}</small>
+        </span>
+        <span class="avatar" aria-hidden="true">${escapeHtml(this.graph.profile.initials)}</span>
+      </div>
+    `;
+  }
+
+  profileIntro() {
+    const profile = this.graph.profile;
+    const firstName = String(profile.displayName).trim().split(/\s+/)[0];
     if (this.mode === MAP_MODES.visitor) {
-      return "Mira's public Map preview. Drag open space to move through it, scroll or pinch to zoom, and select an item for context.";
+      return `
+        <div class="visitor-profile">
+          <div class="visitor-profile-heading">
+            <span class="visitor-profile-mark" aria-hidden="true">${escapeHtml(profile.initials)}</span>
+            <div class="visitor-profile-name">
+              <h1 id="map-title">${escapeHtml(profile.displayName)}</h1>
+              <p class="visitor-profile-handle">${escapeHtml(profile.handle)}</p>
+            </div>
+          </div>
+          <p class="visitor-profile-line">${escapeHtml(profile.identityLine)}</p>
+        </div>
+      `;
     }
-    return "Mira's Map. Drag open space to move through it, scroll or pinch to zoom, select an item for context, and drag an item to temporarily reshape the Map.";
+    return `
+      <h1 id="map-title">${escapeHtml(`${firstName}'s map`)}</h1>
+      <p class="owner-identity-line">${escapeHtml(profile.identityLine)}</p>
+      <div class="owner-map-actions">
+        <button class="chooser-entry" type="button" data-open-chooser>
+          ${escapeHtml(this.selectionEntryLabel())}
+        </button>
+        <button
+          class="capture-entry"
+          type="button"
+          data-open-capture
+          ${this.options.selectionState?.confirmed ? "" : "hidden"}
+        >Write a Thought</button>
+      </div>
+      <p class="draft-status" role="status" data-draft-status>${escapeHtml(this.options.draftMessage ?? "")}</p>
+    `;
+  }
+
+  mapFrameLabel() {
+    return this.mode === MAP_MODES.visitor
+      ? `${this.graph.profile.displayName}'s interactive public Map`
+      : "Interactive identity Map";
+  }
+
+  canvasInstructions() {
+    const name = this.graph.profile.displayName;
+    if (this.mode === MAP_MODES.visitor) {
+      return `${name}'s public Map. Drag open space to move through it, scroll or pinch to zoom, and select an item for context.`;
+    }
+    return `${name}'s Map. Drag open space to move through it, scroll or pinch to zoom, select an item for context, and drag an item to temporarily reshape the Map.`;
   }
 
   featuredIds() {
@@ -199,6 +231,7 @@ export class ThoughtMap {
   }
 
   profileOrbit() {
+    const firstName = String(this.graph.profile.displayName).trim().split(/\s+/)[0];
     const media = this.featuredIds()
       .map((id) => this.nodeById.get(id))
       .filter((node) => node?.type === "media");
@@ -214,7 +247,7 @@ export class ThoughtMap {
                   class="orbit-work orbit-${escapeHtml(node.format)}"
                   type="button"
                   data-orbit-focus="${escapeHtml(node.id)}"
-                  aria-label="${escapeHtml(`${node.format}, ${node.title} by ${node.creator}. Focus in Mira's Map`)}"
+                  aria-label="${escapeHtml(`${node.format}, ${node.title} by ${node.creator}. Focus in ${firstName}'s Map`)}"
                 >
                   <span>${escapeHtml(node.format)}</span>
                   <strong>${escapeHtml(node.title)}</strong>
@@ -231,7 +264,7 @@ export class ThoughtMap {
 
     return `
       <section class="profile-orbit" aria-labelledby="orbit-title">
-        <h2 id="orbit-title">Media in Mira's orbit</h2>
+        <h2 id="orbit-title">Media in ${escapeHtml(firstName)}'s orbit</h2>
         ${works}
         ${status}
       </section>
@@ -380,7 +413,7 @@ export class ThoughtMap {
           ? `Connected through ${anchors.map((anchor) => anchor.title).join(" and ")}.`
           : `Connected through ${anchors[0]?.title ?? "one work"}.`;
       this.detailPanel.innerHTML = `
-        <p class="detail-label">${node.status === "draft" ? "Private draft" : "Mira's Thought"}</p>
+        <p class="detail-label">${escapeHtml(this.thoughtDetailLabel(node))}</p>
         <h2>${escapeHtml(node.statement)}</h2>
         <p>${escapeHtml(connectionCopy)}</p>
         ${this.placementDetail(node.id)}
@@ -401,6 +434,12 @@ export class ThoughtMap {
       `;
     }
     this.bindDetailEvents();
+  }
+
+  thoughtDetailLabel(node) {
+    if (node.status === "draft") return "Private draft";
+    const firstName = String(this.graph.profile.displayName).trim().split(/\s+/)[0];
+    return `${firstName}${firstName.endsWith("s") ? "'" : "'s"} Thought`;
   }
 
   detailActions(id, node) {
