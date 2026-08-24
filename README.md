@@ -1,6 +1,6 @@
-# Thought Map prototype
+# Contour prototype
 
-Thought Map is a runnable browser prototype for displaying identity through the ideas that books and films provoke. Its central artifact is a generated but shapeable Map of authored Thoughts and the Media that ground them.
+Contour is a runnable browser prototype for displaying identity through the ideas that books and films provoke. Its central artifact is a generated but shapeable Map of authored Thoughts and the Media that ground them.
 
 The prototype tests whether this Map can feel like a public portrait instead of a review page, media log, technical graph, or personal knowledge-management tool. It does not test market demand, retention, or production readiness.
 
