@@ -496,6 +496,10 @@ a:focus-visible,
   transition: none;
 }
 
+.map-node.is-pinned {
+  cursor: pointer;
+}
+
 .app-shell[data-map-mode="visitor"] .map-node {
   cursor: pointer;
 }
@@ -772,6 +776,11 @@ a:focus-visible,
   line-height: 1.4;
 }
 
+.detail-panel > .detail-placement {
+  margin-top: 7px;
+  color: var(--accent-ink);
+}
+
 .detail-actions {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -808,10 +817,21 @@ a:focus-visible,
   white-space: nowrap;
 }
 
+.detail-actions [data-position-action] {
+  grid-column: 1 / -1;
+  white-space: nowrap;
+}
+
 .detail-actions button:first-child {
   border-color: var(--accent);
   background: var(--accent);
   color: var(--accent-contrast);
+}
+
+.detail-actions [data-position-action]:first-child {
+  border-color: var(--line-strong);
+  background: color-mix(in srgb, var(--surface-solid) 90%, var(--canvas));
+  color: var(--text);
 }
 
 .detail-actions button:hover,

@@ -6,29 +6,26 @@ goal-bounded autonomous authorization granted on 2026-08-22 until completion.
 ## Run State
 
 - Active goal id: identity-map-prototype
-- Owner authorization: paused
+- Owner authorization: standing
 - Authorization scope: active goal
 - Authorization source: owner
-- Loop cadence: paused
+- Loop cadence: continuous
 - Graph foundation: approved
 - Current run: none
 - Incomplete run: none
-- Run status: paused
+- Run status: selecting
 - Pending owner decision: none
-- Last accepted run: Map-led Thought capture and immediate private Draft, 2026-08-23
+- Last accepted run: Durable pinned node placement, 2026-08-24
 - Alignment due: no
 - Visual checkpoint: accepted through Map-led Thought capture, 2026-08-23
-- UI units since visual checkpoint: 0
+- UI units since visual checkpoint: 1
 
 The graph foundation, Map-led three-work chooser, shared published-only visitor
-preview, and Map-led Media featuring were accepted under standing authorization
-after full validation and clean fresh independent review. On 2026-08-23 the
-owner resolved the Draft-treatment gate by selecting the quiet margin-note
-direction. The resulting capture-to-private-Draft unit passed full validation
-and clean fresh independent review and is accepted under standing authorization.
-The owner paused the loop on 2026-08-23 before another product unit was
-selected; accepted evidence remains intact and no implementation may continue
-until the owner explicitly resumes the loop.
+preview, Map-led Media featuring, and private Draft capture were accepted under
+standing authorization after full validation and clean fresh independent
+review. The owner explicitly resumed the loop on 2026-08-24. The current unit
+advances the already approved durable-pinning policy without broadening the
+active goal.
 
 ## Goal Progress
 
@@ -38,12 +35,12 @@ until the owner explicitly resumes the loop.
 | IM-2 Non-review expression | accepted | Accepted capture evidence: the private prompt asks what a work made the owner notice, feel, question, connect, or believe and explicitly avoids summary, score, verdict, rating, or review structure. |
 | IM-3 Draft boundary | accepted | Accepted capture evidence: a newly saved anchored Draft appears immediately and distinctly on the owner Map, remains editable and persistent, and is absent with its relationship from visitor mode. |
 | IM-4 Generated living Map | in progress | Accepted foundation and capture evidence: deterministic relationship-sensitive layout, semantic zoom, stable seeded regions, and immediate graph growth that preserves existing placement when a Draft joins; publication and complete walkthrough evidence remain open. |
-| IM-5 Intuitive spatial control | in progress | Accepted foundation evidence: pan, zoom, thresholded temporary node movement, keyboard movement, explicit Focus, and reset; durable Pin behavior remains open. |
+| IM-5 Intuitive spatial control | accepted | Accepted foundation and durable-placement evidence: pan, zoom, thresholded temporary pointer and keyboard movement, explicit Focus, generated-layout Reset, explicit persistent Pin position, and per-node Unpin without semantic changes. |
 | IM-6 Authored bridge | open | None yet. |
 | IM-7 Public identity boundary | in progress | Accepted preview and featuring evidence: the shared published-only Map excludes private content and owner shaping controls, while public Map Media can be curated into a persistent visitor orbit that focuses the same neighborhoods; live publishing and the complete profile remain open. |
 | IM-8 Integrated creation | in progress | Accepted chooser and capture evidence: exactly three works can be selected through a Map-led layer, and saving or editing a Thought returns directly to the Map and reveals the change there; publishing and bridge creation remain open. |
 | IM-9 Responsive experience | in progress | Accepted foundation, chooser, preview, featuring, and capture evidence: coherent, overflow-free Map and creation behavior across mobile, responsive seam, and desktop; the complete walkthrough remains open. |
-| IM-10 Durable acceptance walkthrough | in progress | Accepted chooser, featuring, and capture evidence: separate versioned selected-work, public-curation, and private-Draft state survive reload with safe recovery and session-only fallbacks; the complete end-to-end walkthrough remains open. |
+| IM-10 Durable acceptance walkthrough | in progress | Accepted chooser, featuring, capture, and pinned-placement evidence: separate versioned selected-work, public-curation, private-Draft, and explicit spatial state survive reload with safe recovery and session-only fallbacks; the complete end-to-end walkthrough remains open. |
 
 This table records only evidence accepted after validation, fresh independent
 review, and local commit under standing authorization. It is not a task backlog
@@ -86,12 +83,11 @@ claim is chosen just in time from the verified repository baseline.
 
 ## Current Run
 
-- State: none; the owner paused the loop before the next unit was selected.
+- State: none; selecting the next smallest justified gap inside the active goal.
 
 ## Standing Goal Authorization
 
-The terms below are suspended while `Owner authorization` is `paused`. They
-apply again only after the owner explicitly resumes the loop.
+The standing-authorization terms below are active for the resumed loop.
 
 - Authorization basis: owner standing authorization granted 2026-08-22
 - Scope: successive bounded units inside the active Identity Map Prototype goal
@@ -109,6 +105,76 @@ apply again only after the owner explicitly resumes the loop.
   publication, and unrelated external side effects
 
 ## Current Unit Evidence
+
+### Durable pinned node placement
+
+- Criterion and claim: advances IM-5 with bounded IM-9 and IM-10 evidence by
+  preserving ordinary node movement as temporary while an explicit owner-only
+  `Pin position` action keeps one node coordinate through reload, Reset, graph
+  growth, and shared visitor composition without changing graph meaning.
+- Base commit: `7228e87` (`mvp`).
+- Owned diff: `GATES.md`, `docs/plans/CURRENT.md`, this implementation state,
+  `index.html`, `scripts/check.sh`, `src/app.js`, `src/map.js`,
+  `src/pinned-state.js`, `src/styles.css`, `tests/map.test.mjs`,
+  `tests/pinned-state.test.mjs`, and `tests/styles.test.mjs`.
+- Observed behavior: moving a Thought by keyboard changed its x coordinate from
+  `-75.59px` to `-63.59px`, exposed `Pin position`, and changed the contextual
+  action to `Unpin position` after the explicit save. Reload and Reset retained
+  `-63.59px`. Visitor preview used that same coordinate but exposed zero pin
+  actions, no `data-pinned` metadata, and no spoken pin status. Unpin returned
+  the Thought to its generated `-75.59px` coordinate, restored keyboard focus
+  to the node, and remained unpinned after reload.
+- Interpretation: durable position is a separate versioned local state layered
+  over the generated layout. It does not persist camera movement or ordinary
+  drag and keyboard movement, and it does not mutate nodes, edges, Drafts,
+  featured Media, or chooser intent. A pinned node must be explicitly unpinned
+  before it can move again.
+- Focused validation: `node --test tests/pinned-state.test.mjs
+  tests/map.test.mjs` passes twelve checks covering normalization, malformed
+  version-current containers, bounds, immutability, invalid ids, storage round
+  trip, corrupt and unavailable storage, position precedence, graph growth,
+  explicit owner-only disclosure, retained pins on Reset, refreshed placement
+  feedback, and the prior movement and semantic-zoom behavior.
+- Browser and visual validation: a narrow live smoke check at `1280x720` in
+  dark mode exercised keyboard move, pin, reload, Reset, visitor preview,
+  visitor metadata and control exclusion, unpin, focus restoration, and reload
+  recovery. The contextual surface remained readable, actions did not wrap,
+  and the console reported zero warnings or errors. A correction replay also
+  confirmed that moving the same node again after Unpin reports `Temporary
+  position. Pin it to keep this placement.` instead of stale Unpin feedback.
+  This is not the complete
+  five-unit rendered checkpoint, which is not due for UI unit 1.
+- Design pre-flight: Design Read is incremental owner editing inside the living
+  Editorial Constellation for design-conscious Book and Film users, implemented
+  in native CSS with dials `6 / 4 / 4`. The unit preserves the cool-mineral
+  light and dark token family, one coral authorship accent, semantic zoom,
+  shared owner and visitor composition, compact contextual detail, visible
+  focus, reduced motion, the 7-8px shape system, and 44-pixel mobile contextual
+  actions. It adds no toolbar, pin badge field, permanent node card, second Map,
+  decorative gradient, visible em or en dash, graph-analysis language, or
+  relationship mark.
+- Scope and unresolved behavior: the unit deliberately omits a clear-all-pins
+  action, camera persistence, automatic persistence after ordinary movement,
+  editable pin coordinates, placement history, region controls, publication,
+  bridge creation, routes, authentication, and production storage. Reset keeps
+  durable pins and clears only temporary movement; Unpin restores one node to
+  its latest generated position.
+- Full validation: `./scripts/check.sh` passes governance consistency, syntax,
+  diff checks, and all fifty-four tests.
+- Independent-review status: accepted under standing authorization on
+  2026-08-24. The first fresh review found one P3 issue: moving
+  the same node again after Unpin retained stale placement feedback in the live
+  status region. That message now clears when pointer or keyboard movement
+  crosses into a new temporary placement, and malformed version-current
+  position containers now recover explicitly. Focused, full, and targeted
+  browser validation pass after the correction. A different fresh reviewer ran
+  all fifty-four tests, inspected the complete diff and candidate evidence,
+  confirmed storage recovery, Reset and graph-growth precedence, visitor and
+  Draft boundaries, refreshed feedback, focus, theme, mobile, and semantic
+  invariants, and found no implementation issue. It identified only an
+  inaccurate resume date in the two synchronized governance records; the date
+  was corrected to 2026-08-24, the full check remained clean, and reviewer
+  confirmation found no unresolved finding or blocker.
 
 ### Map-led Thought capture and immediate private Draft
 
@@ -612,6 +678,13 @@ choice, stop at `NEEDS OWNER DECISION`.
 
 ## Accepted Run Log
 
+- 2026-08-24: durable pinned node placement accepted under standing owner
+  authorization after twelve focused checks, `./scripts/check.sh` with
+  fifty-four passing tests, a targeted move, pin, reload, Reset, visitor,
+  unpin, focus, and repeat-move browser smoke check, corrected storage recovery
+  and live status feedback, zero console warnings or errors, and clean final
+  independent review. Accepted evidence completes IM-5 and advances IM-9 and
+  IM-10; the full goal walkthrough remains open.
 - 2026-08-23: Map-led Media featuring and visitor orbit accepted under standing
   owner authorization in local commit `4318bdc` after `./scripts/check.sh`,
   thirty-five passing tests, desktop/seam/mobile and light/dark evidence, full

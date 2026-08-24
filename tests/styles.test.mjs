@@ -104,6 +104,19 @@ test("mobile contextual actions keep full-size touch targets", () => {
   assert.match(detailActionRule, /min-height:\s*44px/);
 });
 
+test("pinning stays a quiet contextual action instead of permanent Map chrome", () => {
+  const positionRule =
+    styles.match(/\.detail-actions \[data-position-action\]\s*{([^}]*)}/)?.[1] ?? "";
+  const quietPrimaryRule =
+    styles.match(/\.detail-actions \[data-position-action\]:first-child\s*{([^}]*)}/)?.[1] ?? "";
+  const pinnedNodeRule = styles.match(/\.map-node\.is-pinned\s*{([^}]*)}/)?.[1] ?? "";
+  assert.match(positionRule, /grid-column:\s*1 \/ -1/);
+  assert.match(positionRule, /white-space:\s*nowrap/);
+  assert.match(quietPrimaryRule, /border-color:\s*var\(--line-strong\)/);
+  assert.match(quietPrimaryRule, /color:\s*var\(--text\)/);
+  assert.match(pinnedNodeRule, /cursor:\s*pointer/);
+});
+
 test("orbit titles wrap inside their Media silhouettes", () => {
   const titleRule = styles.match(/\.orbit-work strong\s*{([^}]*)}/)?.[1] ?? "";
   const bookRule = styles.match(/\.orbit-book\s*{([^}]*)}/)?.[1] ?? "";

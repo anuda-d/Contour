@@ -12,7 +12,13 @@ import {
   toggleFeaturedMedia,
 } from "./featured-state.js";
 import { getPublicMediaIds } from "./graph-projection.js";
-import { ThoughtMap } from "./map.js?v=editorial-constellation-11";
+import { ThoughtMap } from "./map.js?v=editorial-constellation-12";
+import {
+  loadPinnedState,
+  pinPosition,
+  savePinnedState,
+  unpinPosition,
+} from "./pinned-state.js";
 import {
   confirmSelection,
   loadSelection,
@@ -48,6 +54,10 @@ try {
   let featuredState = loadedFeatured.state;
   let draftState = loadedDrafts.state;
   let graph = composeGraphWithDrafts(baseGraph, draftState);
+  const pinnableIds = () =>
+    new Set(graph.nodes.filter((node) => node.type !== "user").map((node) => node.id));
+  const loadedPinned = loadPinnedState(storage, pinnableIds());
+  let pinnedState = loadedPinned.state;
   let persistent = loaded.persistent;
   let initialChooserMessage = loaded.storageError
     ? "Selections will last for this visit."
@@ -86,6 +96,9 @@ try {
         "Unavailable private Drafts were removed. Drafts will last for this visit.";
       draftMessage = initialDraftMessage;
     }
+  }
+  if (loadedPinned.recovered && loadedPinned.persistent) {
+    savePinnedState(storage, pinnedState);
   }
 
   const persistSelection = () => {
@@ -194,6 +207,7 @@ try {
       featuredState,
       featuredMessage,
       draftMessage,
+      pinnedState,
       onOpenChooser: openChooser,
       onOpenCapture: () => openCapture(),
       onEditDraft: (id) => openCapture(id),
@@ -212,6 +226,28 @@ try {
           ? result.message
           : `${result.message} This change will last for this visit.`;
         return { ...result, state: featuredState, message: featuredMessage };
+      },
+      onPinPosition: (id, position) => {
+        const result = pinPosition(pinnedState, id, position, pinnableIds());
+        pinnedState = result.state;
+        const saved = !result.changed || savePinnedState(storage, pinnedState);
+        return {
+          ...result,
+          state: pinnedState,
+          message: saved ? result.message : "Position pinned for this visit.",
+        };
+      },
+      onUnpinPosition: (id) => {
+        const result = unpinPosition(pinnedState, id);
+        pinnedState = result.state;
+        const saved = !result.changed || savePinnedState(storage, pinnedState);
+        return {
+          ...result,
+          state: pinnedState,
+          message: saved
+            ? result.message
+            : "Position returned for this visit. The saved pin could not be changed.",
+        };
       },
       onModeChange: (nextMode) => {
         mapMode = nextMode;

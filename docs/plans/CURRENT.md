@@ -9,23 +9,23 @@ successive independently reviewed work units until the goal is complete.
 - Goal: [Identity Map Prototype](identity-map-prototype/GOAL.md)
 - Shared implementation state: [Implementation Plan](identity-map-prototype/IMPLEMENTATION_PLAN.md)
 - Map design foundation: [Editorial Constellation](identity-map-prototype/MAP_DESIGN_FOUNDATION.md)
-- Active work: none; the owner paused the loop before the next unit was selected
+- Active work: selecting the next bounded unit inside the active goal
 
 ## Run State Snapshot
 
 - Active goal id: identity-map-prototype
-- Owner authorization: paused
+- Owner authorization: standing
 - Authorization scope: active goal
 - Authorization source: owner
-- Loop cadence: paused
+- Loop cadence: continuous
 - Graph foundation: approved
 - Current run: none
 - Incomplete run: none
-- Run status: paused
+- Run status: selecting
 - Pending owner decision: none
 - Alignment due: no
 - Visual checkpoint: accepted through Map-led Thought capture, 2026-08-23
-- UI units since visual checkpoint: 0
+- UI units since visual checkpoint: 1
 
 The graph-first foundation correction was accepted under standing authorization
 on 2026-08-22 after full validation and clean fresh independent review. Routine
@@ -43,9 +43,10 @@ per-unit gate to a checkpoint on every fifth UI unit before its acceptance and
 before goal completion. Fresh independent code review and focused/full
 repository checks remain required for every unit.
 
-The owner then paused the autonomous loop before another product unit was
-selected. The active goal and accepted evidence remain intact, but no new unit
-may be selected or implemented until the owner explicitly resumes the loop.
+The owner explicitly resumed the autonomous loop on 2026-08-24. Durable pinned
+node placement was accepted after focused and full validation, targeted browser
+evidence, correction of review findings, and clean fresh independent review.
+The loop is selecting the next smallest justified gap inside the same goal.
 
 These fields mirror the active implementation state and are checked by
 `./scripts/check.sh`. Update both files in the same administrative change.
@@ -68,8 +69,7 @@ improvement idea into active work.
 
 ## Standing Goal Authorization
 
-The terms below are suspended while `Owner authorization` is `paused`. They
-apply again only after the owner explicitly resumes the loop.
+The standing-authorization terms below are active for the resumed loop.
 
 - The owner granted standing authorization on 2026-08-22 to advance this one
   active goal through successive bounded units until it is complete.
