@@ -1753,7 +1753,7 @@ a:focus-visible,
   .chooser-back {
     right: 10px;
     top: 10px;
-    min-height: 38px;
+    min-height: 44px;
   }
 
   .chooser-heading h2 {

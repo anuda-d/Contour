@@ -11,9 +11,9 @@ goal-bounded autonomous authorization granted on 2026-08-22 until completion.
 - Authorization source: owner
 - Loop cadence: continuous
 - Graph foundation: approved
-- Current run: none
-- Incomplete run: none
-- Run status: selecting
+- Current run: Complete acceptance walkthrough hardening
+- Incomplete run: Complete acceptance walkthrough hardening
+- Run status: blocked
 - Pending owner decision: none
 - Last accepted run: Visitor profile framing, 2026-08-24
 - Alignment due: no
@@ -25,8 +25,9 @@ preview, Map-led Media featuring, and private Draft capture were accepted under
 standing authorization after full validation and clean fresh independent
 review. The owner explicitly resumed the loop on 2026-08-24. Durable pinned
 node placement, Map-led Draft publishing, the Map-led cross-media bridge Draft,
-and visitor profile framing are accepted. The loop is selecting the next
-smallest gap inside the active goal.
+and visitor profile framing are accepted. The current validation-hardening run
+tests the complete owner-to-public contract and performs the full visual
+checkpoint required before goal completion.
 
 ## Goal Progress
 
@@ -35,13 +36,13 @@ smallest gap inside the active goal.
 | IM-1 Desirable Map | in progress | Accepted foundation evidence: seeded Editorial Constellation renders as authored identity rather than a review log or technical graph. |
 | IM-2 Non-review expression | accepted | Accepted capture evidence: the private prompt asks what a work made the owner notice, feel, question, connect, or believe and explicitly avoids summary, score, verdict, rating, or review structure. |
 | IM-3 Draft boundary | accepted | Accepted capture evidence: a newly saved anchored Draft appears immediately and distinctly on the owner Map, remains editable and persistent, and is absent with its relationship from visitor mode. |
-| IM-4 Generated living Map | in progress | Accepted foundation, capture, publication, and bridge evidence: deterministic relationship-sensitive layout, semantic zoom, stable seeded regions, immediate graph growth, and one-anchor-to-bridge lifecycle changes preserve existing placement; the complete walkthrough remains open. |
+| IM-4 Generated living Map | in progress | Accepted foundation, capture, publication, and bridge evidence: deterministic relationship-sensitive layout, semantic zoom, stable seeded regions, immediate graph growth, and one-anchor-to-bridge lifecycle changes preserve existing placement; the complete walkthrough candidate is validated and reviewed but not yet committed. |
 | IM-5 Intuitive spatial control | accepted | Accepted foundation and durable-placement evidence: pan, zoom, thresholded temporary pointer and keyboard movement, explicit Focus, generated-layout Reset, explicit persistent Pin position, and per-node Unpin without semantic changes. |
 | IM-6 Authored bridge | accepted | Accepted bridge evidence: one existing single-anchor private Draft can add exactly one confirmed second work while the owner keeps and may refine the human-authored sentence that makes the connection legible; publication names both works without introducing labels, inferred semantics, or a general relationship system. |
 | IM-7 Public identity boundary | accepted | Accepted preview, featuring, publication, and profile-framing evidence: the shared Published-only Map excludes private content and owner shaping controls; public Media can be curated into a persistent visitor orbit; publication reveals the same anchored Thought; and the existing mark, name, handle, identity line, orbit, and Map form one coherent public profile. |
-| IM-8 Integrated creation | in progress | Accepted chooser, capture, publication, and bridge evidence: exactly three works can be selected through a Map-led layer; saving, editing, or connecting returns directly to the same Map node; and explicit publication changes the same anchored Thought in place. The complete walkthrough remains open. |
-| IM-9 Responsive experience | in progress | Accepted foundation, chooser, preview, featuring, and capture evidence: coherent, overflow-free Map and creation behavior across mobile, responsive seam, and desktop; the complete walkthrough remains open. |
-| IM-10 Durable acceptance walkthrough | in progress | Accepted chooser, featuring, capture, pinned-placement, publication, and bridge evidence: separate versioned selection, public-curation, authored-lifecycle, and explicit spatial state survive reload with safe recovery, cross-version precedence, stale-tab merging, and session-only fallbacks; the complete end-to-end walkthrough remains open. |
+| IM-8 Integrated creation | in progress | Accepted chooser, capture, publication, and bridge evidence: exactly three works can be selected through a Map-led layer; saving, editing, or connecting returns directly to the same Map node; and explicit publication changes the same anchored Thought in place. The complete walkthrough candidate is validated and reviewed but not yet committed. |
+| IM-9 Responsive experience | in progress | Accepted foundation, chooser, preview, featuring, and capture evidence: coherent, overflow-free Map and creation behavior across mobile, responsive seam, and desktop; the final checkpoint candidate is validated and reviewed but not yet committed. |
+| IM-10 Durable acceptance walkthrough | in progress | Accepted chooser, featuring, capture, pinned-placement, publication, and bridge evidence: separate versioned selection, public-curation, authored-lifecycle, and explicit spatial state survive reload with safe recovery, cross-version precedence, stale-tab merging, and session-only fallbacks. The complete candidate is validated and reviewed but its local commit is blocked. |
 
 This table records only evidence accepted after validation, fresh independent
 review, and local commit under standing authorization. It is not a task backlog
@@ -84,7 +85,20 @@ claim is chosen just in time from the verified repository baseline.
 
 ## Current Run
 
-- State: none; selecting the next bounded unit inside the active goal.
+- State: Complete acceptance walkthrough hardening; validated and independently
+  reviewed, with the required local commit blocked by sandbox Git-write
+  permission after the approval service failed.
+- Criterion: advance IM-4, IM-8, IM-9, and the technical portion of IM-10
+  through one complete public-action sequence and durable integration contract.
+- Intended behavior: from an isolated fresh origin, choose exactly three works,
+  create three private Drafts, connect two works through one authored Thought,
+  shape and pin the Map, publish all three Thoughts, feature public Media,
+  preview the coherent visitor profile, reload, and retain every durable state
+  while Draft privacy and visitor capability boundaries remain explicit.
+- Evidence status: focused 1/1, full 82/82, all four rendered checkpoint
+  combinations, clean console, clean diff, and clean fresh correction review.
+  No implementation or validation work remains; only the local commit is
+  blocked.
 
 ## Standing Goal Authorization
 
@@ -106,6 +120,76 @@ The standing-authorization terms below are active for the resumed loop.
   publication, and unrelated external side effects
 
 ## Current Unit Evidence
+
+### Complete acceptance walkthrough hardening
+
+- Criterion and claim: advances IM-4, IM-8, IM-9, and the technical portion of
+  IM-10 by proving the accepted owner-to-public actions as one coherent durable
+  sequence rather than only as separately tested features.
+- Base commit: `887ffa6` (`mvp`).
+- Owned diff: `GATES.md`, `docs/plans/CURRENT.md`, this implementation state,
+  `src/styles.css`, `tests/acceptance-walkthrough.test.mjs`, and
+  `tests/styles.test.mjs`.
+- Integration evidence: the new public-API regression confirms exactly three
+  selected works, three private anchored Drafts, one two-work authored bridge,
+  private visitor exclusion, an explicit pin, publication of all three, one
+  orbit replacement, durable reload, seven total visitor Thoughts, no Drafts,
+  the additional bridge edge, and mutation-free visitor capabilities. It
+  composes the same versioned state APIs used by the interface and performs no
+  private storage or source-module shortcut.
+- Browser and visual checkpoint: a fresh isolated WebKit origin at
+  `127.0.0.1:4175` completed `Choose 3 works` with *The Left Hand of Darkness*,
+  *Bluets*, and *Arrival*; captured one private Thought for each; converted the
+  first into a bridge with *Arrival*; used keyboard movement, Pin, later Unpin,
+  further movement, and Pin again; published all three; removed *Aftersun* from
+  the orbit and featured *The Left Hand of Darkness*; entered visitor preview;
+  and reloaded. Reload returned to owner mode as intentionally session-only but
+  retained zero Drafts, seven Published Thoughts, one explicit pin, the three
+  confirmed works, and the three-work orbit. Visitor mode showed the profile,
+  all seven public Thoughts and their grounded Media, exactly three orbit works,
+  and no chooser, capture, publish, edit, connect, feature, move, pin, or Reset
+  actions.
+- Responsive and theme evidence: the full public composition and selected
+  bridge detail were rendered and visually inspected at `1280x820` and
+  `390x844` in both emulated light and dark system schemes with reduced motion
+  active. Desktop preserved the sparse constellation and readable profile;
+  mobile body and document widths equalled the 390-pixel viewport, the canvas
+  measured 380 pixels, the profile/orbit wrapped coherently, selected detail
+  and contextual actions remained visible, and the visitor return control
+  measured 44 pixels. Capture and chooser layers occupied a bounded 380-pixel
+  sheet, restored keyboard focus, and kept primary actions at 44 pixels. The
+  checkpoint caught the chooser's 38-pixel return target; a test-first CSS
+  correction now gives it the same 44-pixel target, confirmed in a fresh
+  browser context. Console output contained zero warnings and zero errors.
+- Spatial interpretation: the first deliberately tiny keyboard move was pinned
+  close enough to overlap its anchor, which is permitted by the explicitly
+  shapeable Map rather than an automatic-layout defect. The owner-visible
+  Unpin, keyboard movement, and repin flow produced a non-overlapping bridge,
+  and that exact placement persisted through visitor mode and reload.
+- Design pre-flight: the existing Editorial Constellation remains one shared
+  full-canvas identity artifact with cool-mineral automatic tokens, one coral
+  authored accent, floating type, semantic zoom, visible focus, reduced-motion
+  support, and contextual owner actions. The only visual correction extends
+  the established 44-pixel mobile target rule to the chooser return action. No
+  route, second Map, landing page, onboarding, share surface, Theme, rating,
+  count, social action, or decorative system was added.
+- Focused validation: `node --test tests/acceptance-walkthrough.test.mjs`
+  passes 1/1; the mobile touch-target regression was observed red at 38 pixels
+  before `node --test tests/styles.test.mjs` passed 13/13 at 44 pixels.
+- Scope and unresolved behavior: the walkthrough establishes technical and
+  visible continuity, not target-user desire, retention, or willingness to
+  share. Visitor preview remains session-only by design. Whether the artifact
+  is desirable enough to complete IM-1 remains an owner/target-user qualitative
+  judgment; no speculative share, onboarding, or profile route is implied.
+- Full validation: `./scripts/check.sh` passes governance consistency, syntax,
+  diff checks, and all eighty-two tests; `git diff --check` is clean.
+- Independent-review status: the initial fresh reviewer found one mismatch
+  between the claimed orbit replacement and a regression that started from an
+  empty orbit. The regression now loads the actual seeded three-work orbit,
+  removes *Aftersun*, features *The Left Hand of Darkness*, reloads, and asserts
+  the exact three-work result. A different fresh correction reviewer reported
+  no findings and independently confirmed focused 1/1, full 82/82, clean diff,
+  public-API composition, privacy boundaries, and the narrow 44-pixel fix.
 
 ### Visitor profile framing
 

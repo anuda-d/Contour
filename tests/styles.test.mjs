@@ -180,12 +180,14 @@ test("private Drafts use the owner-selected semantic zoom treatment", () => {
   assert.match(closeDraftRule, /opacity:\s*0/);
 });
 
-test("mobile capture controls keep full-size touch targets", () => {
+test("mobile capture and chooser controls keep full-size touch targets", () => {
   const mobileBlock = styles.match(/@media \(max-width: 760px\)\s*{([\s\S]*)\n}/)?.[1] ?? "";
   const backRule = mobileBlock.match(/\.capture-back\s*{([^}]*)}/)?.[1] ?? "";
+  const chooserBackRule = mobileBlock.match(/\.chooser-back\s*{([^}]*)}/)?.[1] ?? "";
   const actionRule = mobileBlock.match(/\.capture-actions button\s*{([^}]*)}/)?.[1] ?? "";
   const entryRule = mobileBlock.match(/\.capture-entry\s*{([^}]*)}/)?.[1] ?? "";
   assert.match(backRule, /min-height:\s*44px/);
+  assert.match(chooserBackRule, /min-height:\s*44px/);
   assert.match(actionRule, /min-height:\s*44px/);
   assert.match(entryRule, /min-height:\s*44px/);
 });

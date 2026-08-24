@@ -9,7 +9,7 @@ successive independently reviewed work units until the goal is complete.
 - Goal: [Identity Map Prototype](identity-map-prototype/GOAL.md)
 - Shared implementation state: [Implementation Plan](identity-map-prototype/IMPLEMENTATION_PLAN.md)
 - Map design foundation: [Editorial Constellation](identity-map-prototype/MAP_DESIGN_FOUNDATION.md)
-- Active work: selecting the next bounded unit inside the active goal
+- Active work: Complete acceptance walkthrough hardening
 
 ## Run State Snapshot
 
@@ -19,9 +19,9 @@ successive independently reviewed work units until the goal is complete.
 - Authorization source: owner
 - Loop cadence: continuous
 - Graph foundation: approved
-- Current run: none
-- Incomplete run: none
-- Run status: selecting
+- Current run: Complete acceptance walkthrough hardening
+- Incomplete run: Complete acceptance walkthrough hardening
+- Run status: blocked
 - Pending owner decision: none
 - Alignment due: no
 - Visual checkpoint: accepted through Map-led Thought capture, 2026-08-23
@@ -53,9 +53,17 @@ accepted after focused and full checks, a targeted rendered bridge-to-public
 flow, correction of cross-version lifecycle and stale-detail issues, and clean
 fresh correction review. Visitor profile framing is accepted after focused and
 full checks, targeted desktop and mobile visitor evidence, correction of one
-seed-coupled authorship label, and clean fresh correction review. The loop is
-selecting the next bounded unit without broadening the goal; the next UI
-candidate requires the full fifth-unit visual checkpoint before acceptance.
+seed-coupled authorship label, and clean fresh correction review. The current
+validation-hardening unit adds no product surface and does not increment the UI
+counter. It composes the complete durable state contract and runs the full
+desktop/mobile, light/dark acceptance checkpoint required before goal
+completion. The checkpoint found and corrected one existing 38-pixel mobile
+chooser return target so it now follows the established 44-pixel touch rule;
+the complete isolated-origin walkthrough and all four responsive color-mode
+renders are otherwise clean. The candidate passed focused and full checks and
+clean fresh correction review, but the sandbox blocked its required local Git
+metadata write after the approval service failed. The current unit remains open
+until that already authorized local commit can be completed.
 
 These fields mirror the active implementation state and are checked by
 `./scripts/check.sh`. Update both files in the same administrative change.
