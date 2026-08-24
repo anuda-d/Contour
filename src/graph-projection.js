@@ -13,6 +13,7 @@ export function getModeCapabilities(mode) {
   return Object.freeze({
     mode: normalizedMode,
     canChooseWorks: owner,
+    canFeatureMedia: owner,
     canShapeNodes: owner,
     canResetPositions: owner,
   });
@@ -20,13 +21,26 @@ export function getModeCapabilities(mode) {
 
 function copyGraph(graph, nodes = graph.nodes, edges = graph.edges) {
   return {
-    profile: { ...graph.profile },
+    profile: {
+      ...graph.profile,
+      ...(graph.profile.featuredMediaIds
+        ? { featuredMediaIds: [...graph.profile.featuredMediaIds] }
+        : {}),
+    },
     nodes: nodes.map((node) => ({
       ...node,
       ...(node.anchors ? { anchors: [...node.anchors] } : {}),
     })),
     edges: edges.map((edge) => ({ ...edge })),
   };
+}
+
+export function getPublicMediaIds(graph) {
+  return new Set(
+    projectGraphForMode(graph, MAP_MODES.visitor)
+      .nodes.filter((node) => node.type === "media")
+      .map((node) => node.id),
+  );
 }
 
 export function projectGraphForMode(graph, mode) {

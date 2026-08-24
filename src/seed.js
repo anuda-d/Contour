@@ -6,6 +6,7 @@ export const profile = Object.freeze({
   handle: "@miravale",
   initials: "MV",
   identityLine: "Films, books, and the ideas I keep returning to.",
+  featuredMediaIds: Object.freeze(["dispossessed", "mood-for-love", "aftersun"]),
 });
 
 export const nodes = Object.freeze([
@@ -71,7 +72,7 @@ export const edges = Object.freeze([
 
 export function getSeedGraph() {
   return {
-    profile: { ...profile },
+    profile: { ...profile, featuredMediaIds: [...profile.featuredMediaIds] },
     nodes: nodes.map((node) => ({
       ...node,
       ...(node.anchors ? { anchors: [...node.anchors] } : {}),

@@ -184,7 +184,7 @@ a:focus-visible,
   left: 28px;
   top: 25px;
   z-index: 6;
-  max-width: 240px;
+  max-width: 320px;
   pointer-events: none;
 }
 
@@ -228,11 +228,109 @@ a:focus-visible,
   background: color-mix(in srgb, var(--accent) 11%, var(--surface-solid));
 }
 
+.orbit-root:empty {
+  display: none;
+}
+
+.profile-orbit {
+  margin-top: 15px;
+  pointer-events: auto;
+}
+
+.profile-orbit h2 {
+  margin: 0 0 7px;
+  color: var(--muted);
+  font-size: 0.54rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.orbit-works {
+  display: flex;
+  align-items: end;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.orbit-works li {
+  display: flex;
+}
+
+.orbit-work {
+  min-width: 44px;
+  min-height: 44px;
+  display: grid;
+  align-content: space-between;
+  justify-items: start;
+  gap: 3px;
+  padding: 6px;
+  border: 1px solid color-mix(in srgb, white 13%, transparent);
+  border-radius: 3px;
+  color: var(--book-ink);
+  text-align: left;
+  cursor: pointer;
+  box-shadow: 0 4px 13px color-mix(in srgb, var(--shadow) 62%, transparent);
+  transition: border-color 150ms ease, transform 150ms ease;
+}
+
+.orbit-work:hover {
+  border-color: color-mix(in srgb, var(--accent) 74%, white);
+  transform: translateY(-2px);
+}
+
+.orbit-work span {
+  font-size: 0.42rem;
+  font-weight: 760;
+  letter-spacing: 0.09em;
+  opacity: 0.72;
+  text-transform: uppercase;
+}
+
+.orbit-work strong {
+  width: 100%;
+  max-width: 100%;
+  font-size: 0.5rem;
+  line-height: 1.08;
+  overflow-wrap: break-word;
+}
+
+.orbit-book {
+  width: 64px;
+  height: 86px;
+  background: var(--book);
+}
+
+.orbit-film {
+  width: 70px;
+  height: 50px;
+  background: var(--film);
+  color: var(--film-ink);
+}
+
+.orbit-empty,
+.orbit-status {
+  max-width: 31ch;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.59rem;
+  line-height: 1.35;
+}
+
+.orbit-status {
+  min-height: 1.35em;
+  margin-top: 7px;
+  color: var(--accent-ink);
+}
+
 .map-canvas {
   position: relative;
   height: 100%;
   min-height: 0;
   overflow: hidden;
+  overflow: clip;
   border: 1px solid var(--line);
   border-radius: 8px;
   background:
@@ -613,7 +711,8 @@ a:focus-visible,
 }
 
 .detail-actions {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 6px;
   margin-top: 10px;
   padding-top: 9px;
@@ -632,16 +731,20 @@ a:focus-visible,
 }
 
 .detail-actions button {
-  flex: 1;
   padding: 0 9px;
   font-size: 0.66rem;
   font-weight: 750;
 }
 
+.detail-actions [data-feature-toggle] {
+  grid-column: 1 / -1;
+  white-space: nowrap;
+}
+
 .detail-actions button:first-child {
   border-color: var(--accent);
   background: var(--accent);
-  color: #fff6f2;
+  color: var(--accent-contrast);
 }
 
 .detail-actions button:hover,
@@ -1089,6 +1192,18 @@ a:focus-visible,
     white-space: nowrap;
   }
 
+  .profile-orbit {
+    margin-top: 10px;
+  }
+
+  .orbit-work:hover {
+    transform: none;
+  }
+
+  .orbit-status {
+    max-width: 38ch;
+  }
+
   .chooser-entry {
     min-height: 34px;
     margin-top: 9px;
@@ -1112,9 +1227,12 @@ a:focus-visible,
     bottom: 8px;
   }
 
-  .map-controls button,
-  .detail-actions button {
+  .map-controls button {
     min-height: 36px;
+  }
+
+  .detail-actions button {
+    min-height: 44px;
   }
 
   .chooser-overlay {

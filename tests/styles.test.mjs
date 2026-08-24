@@ -44,13 +44,37 @@ const contrastRatio = (first, second) => {
   return (luminances[0] + 0.05) / (luminances[1] + 0.05);
 };
 
+const compositeHex = (foreground, background, opacity) => {
+  const channels = [foreground, background].map((hex) =>
+    hex
+      .slice(1)
+      .match(/.{2}/g)
+      .map((channel) => Number.parseInt(channel, 16)),
+  );
+  return `#${channels[0]
+    .map((channel, index) =>
+      Math.round(channel * opacity + channels[1][index] * (1 - opacity))
+        .toString(16)
+        .padStart(2, "0"),
+    )
+    .join("")}`;
+};
+
 test("primary coral actions retain readable text in both themes", () => {
   const lightRoot = styles.match(/:root\s*{([^}]*)}/s)?.[1] ?? "";
   const darkRoot =
     styles.match(/@media \(prefers-color-scheme: dark\)\s*{\s*:root\s*{([^}]*)}/s)?.[1] ?? "";
   const chooserRule = styles.match(/\.chooser-continue\s*{([^}]*)}/s)?.[1] ?? "";
+  const detailPrimaryRule =
+    styles.match(/\.detail-actions button:first-child\s*{([^}]*)}/s)?.[1] ?? "";
+  const orbitFormatRule = styles.match(/\.orbit-work span\s*{([^}]*)}/s)?.[1] ?? "";
+  const orbitFormatOpacity = Number.parseFloat(
+    orbitFormatRule.match(/opacity:\s*([\d.]+)/)?.[1] ?? "0",
+  );
 
   assert.match(chooserRule, /color:\s*var\(--accent-contrast\)/);
+  assert.match(detailPrimaryRule, /color:\s*var\(--accent-contrast\)/);
+  assert.ok(orbitFormatOpacity >= 0.72);
   assert.ok(
     contrastRatio(readVariable(lightRoot, "accent"), readVariable(lightRoot, "accent-contrast")) >=
       4.5,
@@ -59,4 +83,32 @@ test("primary coral actions retain readable text in both themes", () => {
     contrastRatio(readVariable(darkRoot, "accent"), readVariable(darkRoot, "accent-contrast")) >=
       4.5,
   );
+  for (const theme of [lightRoot, darkRoot]) {
+    for (const format of ["book", "film"]) {
+      const background = readVariable(theme, format);
+      const ink = readVariable(theme, `${format}-ink`);
+      assert.ok(contrastRatio(background, compositeHex(ink, background, orbitFormatOpacity)) >= 4.5);
+    }
+  }
+});
+
+test("the Map canvas clips without becoming a focus-scroll container", () => {
+  const canvasRule = styles.match(/\.map-canvas\s*\{([^}]*)\}/)?.[1] ?? "";
+  assert.match(canvasRule, /overflow:\s*clip/);
+});
+
+test("mobile contextual actions keep full-size touch targets", () => {
+  const mobileBlock = styles.match(/@media \(max-width: 760px\)\s*{([\s\S]*)\n}/)?.[1] ?? "";
+  const detailActionRule =
+    mobileBlock.match(/\.detail-actions button\s*{([^}]*)}/)?.[1] ?? "";
+  assert.match(detailActionRule, /min-height:\s*44px/);
+});
+
+test("orbit titles wrap inside their Media silhouettes", () => {
+  const titleRule = styles.match(/\.orbit-work strong\s*{([^}]*)}/)?.[1] ?? "";
+  const bookRule = styles.match(/\.orbit-book\s*{([^}]*)}/)?.[1] ?? "";
+  assert.match(titleRule, /max-width:\s*100%/);
+  assert.match(titleRule, /overflow-wrap:\s*break-word/);
+  assert.match(bookRule, /width:\s*64px/);
+  assert.match(bookRule, /height:\s*86px/);
 });

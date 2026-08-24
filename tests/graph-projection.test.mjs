@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   getModeCapabilities,
+  getPublicMediaIds,
   normalizeMapMode,
   projectGraphForMode,
 } from "../src/graph-projection.js";
@@ -77,17 +78,23 @@ test("the fully published seed projects without losing graph content", () => {
   );
 });
 
+test("public Media eligibility comes only from the visitor projection", () => {
+  assert.deepEqual([...getPublicMediaIds(graphWithDraft)], ["shared"]);
+});
+
 test("visitor capabilities preserve exploration and remove owner mutation", () => {
   assert.equal(normalizeMapMode("unexpected"), "owner");
   assert.deepEqual(getModeCapabilities("visitor"), {
     mode: "visitor",
     canChooseWorks: false,
+    canFeatureMedia: false,
     canShapeNodes: false,
     canResetPositions: false,
   });
   assert.deepEqual(getModeCapabilities("owner"), {
     mode: "owner",
     canChooseWorks: true,
+    canFeatureMedia: true,
     canShapeNodes: true,
     canResetPositions: true,
   });

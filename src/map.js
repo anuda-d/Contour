@@ -97,6 +97,9 @@ export class ThoughtMap {
                   </button>`
                 : ""
             }
+            <div class="orbit-root" data-orbit-root>
+              ${this.profileOrbit()}
+            </div>
           </section>
 
           <section class="map-frame" aria-label="Interactive identity Map">
@@ -143,6 +146,7 @@ export class ThoughtMap {
     this.renderNodes();
     this.renderEdges();
     this.renderDetails();
+    this.bindOrbitEvents();
   }
 
   modeControl() {
@@ -160,6 +164,67 @@ export class ThoughtMap {
       return "Mira's public Map preview. Drag open space to move through it, scroll or pinch to zoom, and select an item for context.";
     }
     return "Mira's Map. Drag open space to move through it, scroll or pinch to zoom, select an item for context, and drag an item to temporarily reshape the Map.";
+  }
+
+  featuredIds() {
+    return this.options.featuredState?.featuredMediaIds ?? [];
+  }
+
+  isFeatured(id) {
+    return this.featuredIds().includes(id);
+  }
+
+  profileOrbit() {
+    const media = this.featuredIds()
+      .map((id) => this.nodeById.get(id))
+      .filter((node) => node?.type === "media");
+
+    if (!media.length && this.mode === MAP_MODES.visitor) return "";
+
+    const works = media.length
+      ? `<ul class="orbit-works">
+          ${media
+            .map(
+              (node) => `<li>
+                <button
+                  class="orbit-work orbit-${escapeHtml(node.format)}"
+                  type="button"
+                  data-orbit-focus="${escapeHtml(node.id)}"
+                  aria-label="${escapeHtml(`${node.format}, ${node.title} by ${node.creator}. Focus in Mira's Map`)}"
+                >
+                  <span>${escapeHtml(node.format)}</span>
+                  <strong>${escapeHtml(node.title)}</strong>
+                </button>
+              </li>`,
+            )
+            .join("")}
+        </ul>`
+      : '<p class="orbit-empty">Feature Media from a work\'s detail.</p>';
+    const status =
+      this.mode === MAP_MODES.owner && this.options.featuredMessage
+        ? `<p class="orbit-status" role="status">${escapeHtml(this.options.featuredMessage)}</p>`
+        : "";
+
+    return `
+      <section class="profile-orbit" aria-labelledby="orbit-title">
+        <h2 id="orbit-title">Media in Mira's orbit</h2>
+        ${works}
+        ${status}
+      </section>
+    `;
+  }
+
+  renderOrbit() {
+    const root = this.root.querySelector("[data-orbit-root]");
+    if (!root) return;
+    root.innerHTML = this.profileOrbit();
+    this.bindOrbitEvents();
+  }
+
+  bindOrbitEvents() {
+    this.root.querySelectorAll("[data-orbit-focus]").forEach((element) => {
+      element.addEventListener("click", () => this.focusNode(element.dataset.orbitFocus));
+    });
   }
 
   renderRegions() {
@@ -286,7 +351,7 @@ export class ThoughtMap {
         <p class="detail-label">Mira's Thought</p>
         <h2>${escapeHtml(node.statement)}</h2>
         <p>${escapeHtml(connectionCopy)}</p>
-        ${this.detailActions(node.id)}
+        ${this.detailActions(node.id, node)}
       `;
     } else {
       const related = this.graph.edges
@@ -298,15 +363,22 @@ export class ThoughtMap {
         <p class="detail-label">${escapeHtml(node.format)}</p>
         <h2>${escapeHtml(node.title)}</h2>
         <p>${escapeHtml(node.creator)}, ${escapeHtml(node.year)}. ${escapeHtml(relatedCopy)}.</p>
-        ${this.detailActions(node.id)}
+        ${this.detailActions(node.id, node)}
       `;
     }
     this.bindDetailEvents();
   }
 
-  detailActions(id) {
+  detailActions(id, node) {
+    const featureAction =
+      node.type === "media" && this.capabilities.canFeatureMedia
+        ? `<button type="button" data-feature-toggle="${escapeHtml(id)}">
+            ${this.isFeatured(id) ? "Remove from orbit" : "Feature in orbit"}
+          </button>`
+        : "";
     return `
       <div class="detail-actions">
+        ${featureAction}
         <button type="button" data-detail-focus="${escapeHtml(id)}">Focus</button>
         <button type="button" data-detail-close>Close</button>
       </div>
@@ -314,6 +386,12 @@ export class ThoughtMap {
   }
 
   bindDetailEvents() {
+    this.detailPanel.querySelector("[data-feature-toggle]")?.addEventListener("click", (event) => {
+      const id = event.currentTarget.dataset.featureToggle;
+      const result = this.options.onToggleFeatured?.(id);
+      if (!result) return;
+      this.updateFeaturedState(result.state, result.message, id);
+    });
     this.detailPanel.querySelector("[data-detail-focus]")?.addEventListener("click", (event) => {
       this.focusNode(event.currentTarget.dataset.detailFocus);
     });
@@ -388,6 +466,18 @@ export class ThoughtMap {
       "aria-label",
       state.confirmed ? "Three works ready. Edit selection" : `${entry.textContent}. Open chooser`,
     );
+  }
+
+  updateFeaturedState(state, message = "", focusId = null) {
+    this.options.featuredState = state;
+    this.options.featuredMessage = message;
+    this.renderOrbit();
+    this.renderDetails();
+    if (focusId) {
+      requestAnimationFrame(() => {
+        this.detailPanel.querySelector(`[data-feature-toggle="${CSS.escape(focusId)}"]`)?.focus();
+      });
+    }
   }
 
   focusChooserEntry() {

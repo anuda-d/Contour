@@ -1,5 +1,11 @@
 import { getCatalogue } from "./catalog.js";
-import { ThoughtMap } from "./map.js?v=editorial-constellation-9";
+import {
+  loadFeaturedState,
+  saveFeaturedState,
+  toggleFeaturedMedia,
+} from "./featured-state.js";
+import { getPublicMediaIds } from "./graph-projection.js";
+import { ThoughtMap } from "./map.js?v=editorial-constellation-10";
 import {
   confirmSelection,
   loadSelection,
@@ -15,6 +21,7 @@ try {
   const graph = getSeedGraph();
   const catalogue = getCatalogue();
   const validCatalogueIds = new Set(catalogue.map((item) => item.id));
+  const publicMediaIds = getPublicMediaIds(graph);
   let storage = null;
   try {
     storage = window.localStorage;
@@ -23,12 +30,24 @@ try {
   }
 
   const loaded = loadSelection(storage, validCatalogueIds);
+  const loadedFeatured = loadFeaturedState(
+    storage,
+    publicMediaIds,
+    graph.profile.featuredMediaIds,
+  );
   let selectionState = loaded.state;
+  let featuredState = loadedFeatured.state;
   let persistent = loaded.persistent;
   let initialChooserMessage = loaded.storageError
     ? "Selections will last for this visit."
     : loaded.recovered
       ? "Unavailable saved works were removed."
+      : "";
+  let featuredPersistent = loadedFeatured.persistent;
+  let featuredMessage = loadedFeatured.storageError
+    ? "Featured Media will last for this visit."
+    : loadedFeatured.recovered
+      ? "Unavailable featured works were removed."
       : "";
   let chooser = null;
   let map = null;
@@ -36,6 +55,12 @@ try {
 
   if (loaded.recovered && loaded.persistent) {
     persistent = saveSelection(storage, selectionState);
+  }
+  if (loadedFeatured.recovered && loadedFeatured.persistent) {
+    featuredPersistent = saveFeaturedState(storage, featuredState);
+    if (!featuredPersistent) {
+      featuredMessage = "Unavailable featured works were removed. Changes will last for this visit.";
+    }
   }
 
   const persistSelection = () => {
@@ -89,7 +114,25 @@ try {
     map = new ThoughtMap(root, graph, {
       mode: mapMode,
       selectionState,
+      featuredState,
+      featuredMessage,
       onOpenChooser: openChooser,
+      onToggleFeatured: (id) => {
+        const media = graph.nodes.find((node) => node.id === id && node.type === "media");
+        const result = toggleFeaturedMedia(
+          featuredState,
+          id,
+          publicMediaIds,
+          media?.title ?? "This work",
+        );
+        featuredState = result.state;
+        const saved = !result.changed || saveFeaturedState(storage, featuredState);
+        featuredPersistent = featuredPersistent && saved;
+        featuredMessage = saved
+          ? result.message
+          : `${result.message} This change will last for this visit.`;
+        return { ...result, state: featuredState, message: featuredMessage };
+      },
       onModeChange: (nextMode) => {
         mapMode = nextMode;
         map.setMode(nextMode);

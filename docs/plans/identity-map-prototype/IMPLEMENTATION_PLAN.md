@@ -15,13 +15,13 @@ goal-bounded autonomous authorization granted on 2026-08-22 until completion.
 - Incomplete run: none
 - Run status: selecting
 - Pending owner decision: none
-- Last accepted run: shared published-only visitor preview, 2026-08-22
+- Last accepted run: Map-led Media featuring and visitor orbit, 2026-08-23
 - Alignment due: no
 
-The graph foundation, Map-led three-work chooser, and shared published-only
-visitor preview were accepted under standing authorization on 2026-08-22 after
-full validation and clean fresh independent review. No bounded unit is active
-while the loop selects the next smallest goal gap.
+The graph foundation, Map-led three-work chooser, shared published-only visitor
+preview, and Map-led Media featuring were accepted under standing authorization
+after full validation and clean fresh independent review. No bounded unit is
+active while the loop selects the next smallest goal gap.
 
 ## Goal Progress
 
@@ -33,10 +33,10 @@ while the loop selects the next smallest goal gap.
 | IM-4 Generated living Map | in progress | Accepted foundation evidence: deterministic relationship-sensitive layout, semantic zoom, and stable seeded regions; creation-driven changes remain open. |
 | IM-5 Intuitive spatial control | in progress | Accepted foundation evidence: pan, zoom, thresholded temporary node movement, keyboard movement, explicit Focus, and reset; durable Pin behavior remains open. |
 | IM-6 Authored bridge | open | None yet. |
-| IM-7 Public identity boundary | in progress | Accepted preview evidence: a shared published-only projection excludes synthetic Draft content and owner shaping controls while preserving public Map exploration; live publishing, featuring, and the complete profile remain open. |
+| IM-7 Public identity boundary | in progress | Accepted preview and featuring evidence: the shared published-only Map excludes private content and owner shaping controls, while public Map Media can be curated into a persistent visitor orbit that focuses the same neighborhoods; live publishing and the complete profile remain open. |
 | IM-8 Integrated creation | in progress | Accepted chooser evidence: exactly three Books or Films can be selected through a Map-led editorial layer and confirmation returns to the unchanged Map; authored creation remains open. |
-| IM-9 Responsive experience | in progress | Accepted foundation, chooser, and preview evidence: coherent Map interaction and overflow-free owner/visitor UI across mobile, responsive seam, and desktop; the complete walkthrough remains open. |
-| IM-10 Durable acceptance walkthrough | in progress | Accepted chooser evidence: versioned selected-work state survives reload with safe recovery and session-only fallback; the complete end-to-end walkthrough remains open. |
+| IM-9 Responsive experience | in progress | Accepted foundation, chooser, preview, and featuring evidence: coherent Map interaction and overflow-free owner/visitor UI across mobile, responsive seam, and desktop; the complete walkthrough remains open. |
+| IM-10 Durable acceptance walkthrough | in progress | Accepted chooser and featuring evidence: separate versioned selected-work and public-curation state survive reload with safe recovery and session-only fallbacks; the complete end-to-end walkthrough remains open. |
 
 This table records only evidence accepted after validation, fresh independent
 review, and local commit under standing authorization. It is not a task backlog
@@ -96,6 +96,85 @@ claim is chosen just in time from the verified repository baseline.
   publication, and unrelated external side effects
 
 ## Current Unit Evidence
+
+### Map-led Media featuring and visitor orbit
+
+- Criterion and claim: advances IM-7 with bounded IM-9 and IM-10 evidence by
+  letting the owner feature or remove up to three published-Map Media through
+  contextual detail, persist the ordered curation separately from private
+  chooser intent, and reveal it through the shared visitor portrait.
+- Base commit: `1581c0c` (`mvp`).
+- Owned diff: `GATES.md`, this implementation state, `index.html`,
+  `scripts/check.sh`, `src/app.js`, `src/featured-state.js`,
+  `src/graph-projection.js`, `src/map.js`, `src/seed.js`, `src/styles.css`,
+  `tests/featured-state.test.mjs`, `tests/graph-projection.test.mjs`,
+  `tests/seed.test.mjs`, and `tests/styles.test.mjs`.
+- Observed behavior: the mature seed begins with three deliberate public Media
+  in a small asymmetric `Media in Mira's orbit` rail. A fourth feature attempt
+  leaves all three unchanged and reports `Remove a featured work first.`
+  Removing and replacing a work preserves action order, immediately updates
+  the rail, and restores focus to the new contextual verb. Curation leaves the
+  camera and every node position unchanged. Owner empty state gives one quiet
+  instruction; visitor empty state omits the section. Visitor mode shows the
+  same non-empty rail, exposes no chooser, feature, movement, or Reset control,
+  and an orbit item Focuses its exact Media neighborhood. Reload restores the
+  ordered set; Map Reset leaves it intact; the private chooser remains `3 works
+  ready` and separate.
+- Interpretation: featured Media is public profile curation drawn only from the
+  published Map projection. It is neither graph membership nor a popularity
+  score, and it never promotes the private three-work chooser automatically.
+  The three-item cap and initial seed are forced prototype fit decisions, not a
+  lasting product policy.
+- Focused validation: pure tests cover public-only eligibility, ordered
+  add/remove, duplicate and excess recovery, fourth-work refusal, stored empty
+  versus deliberate defaults, corrupt-state recovery, persistence, visit-only
+  fallback, visitor-projection eligibility, nested seed isolation, and public
+  seeded defaults. A style regression proves the clipped Map cannot become a
+  focus-scroll container.
+- Browser and visual validation: the live app was exercised at `1440x1000`,
+  `761x844`, and `390x844`. Full, remove, replace, empty, reload, focus
+  restoration, Reset independence, visitor-control exclusion, orbit Focus,
+  desktop/mobile fit, and equal client and scroll widths were observed. A
+  mobile focus path initially exposed hidden-canvas scrolling that shifted
+  fixed controls; `overflow: clip` removed the scroll container, and the replay
+  held the detail at `left: 134px` and controls at `right: 376px` with
+  `scrollLeft: 0`. A review-found 36-pixel contextual target was raised to 44
+  pixels; the corrected mobile replay measured the curation action at
+  `220x44` and Focus and Close at `107x44`. Dark desktop/mobile and a temporary
+  light desktop render were inspected. Review-found long-title overflow was
+  corrected with content-width wrapping and taller Media silhouettes. A later
+  orphaned-letter finding was corrected by widening the Book while preserving
+  its portrait ratio and preferring whole-word wrapping. Browser ranges then
+  measured `Darkness` as one `35.9px` line at desktop and mobile, with zero
+  button overflow and equal page client and scroll widths. A final review-found
+  light Film format-label contrast miss was corrected by raising its shared
+  opacity to `0.72`; the regression now
+  calculates composited Book and Film label contrast in both themes. The
+  system-theme rule was restored. The console reported no warnings or errors.
+- Design pre-flight: the profile layer reuses the cool-mineral theme family,
+  one coral accent, Book/Film silhouettes, semantic zoom, accessible focus,
+  reduced motion, compact contextual detail, and the established responsive
+  seam. It adds no profile-card grid, separate featured page, counts, pills,
+  engagement language, second Map, visible em/en dashes, decorative gradient,
+  or competing primary action. Mobile targets remain at least 44 pixels and do
+  not cover the detail or Map controls.
+- Scope and unresolved behavior: the unit does not render or style Drafts,
+  create/edit/publish Thoughts, create bridges, change Pin/Unpin/position Reset,
+  reorder featured works, add external artwork, persist camera or node
+  positions, add profile editing, routes, authentication, social actions, or a
+  second graph. Exact Draft and durable Pin treatments remain owner-gated.
+- Full validation: `./scripts/check.sh` passes governance consistency, syntax,
+  diff checks, and all thirty-five tests. Runnable MF1 and MF2 gates pass; MF3
+  has direct rendered evidence in [the unit gate record](../../../GATES.md).
+- Independent-review status: accepted under standing owner authorization,
+  2026-08-22. Early fresh reviews found a 36-pixel mobile curation target,
+  internal title overflow, a light-theme Film format-label contrast miss, and
+  an orphaned final letter in a long Book title. Each correction received
+  focused and full validation plus another fresh review. The final reviewer
+  reproduced all thirty-five tests, whole-word `Darkness` wrapping at desktop
+  and mobile, 44-pixel contextual targets, AA label contrast, full curation and
+  visitor flows, persistence, Reset independence, responsive fit, restored seed
+  state, and zero console warnings or errors, and found no blocker or residual.
 
 ### Shared published-only visitor preview
 

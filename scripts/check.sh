@@ -184,6 +184,7 @@ git diff --check -- .
 
 node --check src/app.js
 node --check src/catalog.js
+node --check src/featured-state.js
 node --check src/graph-projection.js
 node --check src/layout.js
 node --check src/map.js
