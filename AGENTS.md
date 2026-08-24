@@ -65,11 +65,15 @@ repository. Product direction belongs to the owner.
 ## Validation
 
 - Run focused checks first and `./scripts/check.sh` before review.
-- Render every affected visual surface at representative desktop and mobile
-  sizes.
-- Click through every affected user flow through the visible interface.
-- Inspect layout, state transitions, responsive behavior, and console output.
-- If the result cannot be seen or evaluated, say so and do not claim completion.
+- Full rendered desktop/mobile click-through validation is a checkpoint, not a
+  per-unit gate. Run it on every fifth UI implementation unit before that unit
+  is accepted, and once more before goal completion.
+- Between checkpoints, validate UI changes through focused tests, source and
+  design-system inspection, and `./scripts/check.sh`. A narrow rendered smoke
+  check may be used to diagnose a specific risk, but a complete click-through
+  is not required for unit acceptance.
+- At a visual checkpoint, exercise the accumulated affected flows, responsive
+  behavior, supported color modes, focus and touch interaction, and console.
 - Use a fresh independent read-only review agent after implementation and after
   every material correction.
 
@@ -82,9 +86,10 @@ repository. Product direction belongs to the owner.
 - Independent review is required. A reviewer reports findings but does not make
   product decisions.
 - Record candidate evidence before independent review so the reviewer inspects
-  the claim as well as the implementation. Full validation and a clean fresh
-  independent review permit local acceptance and commit under the standing
-  authorization.
+  the claim as well as the implementation. Focused and repository validation
+  plus a clean fresh independent review permit local acceptance and commit;
+  full rendered click-through evidence is required only when the visual
+  checkpoint is due.
 - After a unit is committed, immediately re-orient and select the next smallest
   justified gap inside the same goal.
 - The owner remains the decision-maker for new goals and unresolved material

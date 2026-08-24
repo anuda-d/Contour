@@ -44,7 +44,9 @@ for shared_field in \
   'Incomplete run' \
   'Run status' \
   'Pending owner decision' \
-  'Alignment due'
+  'Alignment due' \
+  'Visual checkpoint' \
+  'UI units since visual checkpoint'
 do
   assert_same_field "$shared_field"
 done
@@ -60,6 +62,8 @@ incomplete_run=$(read_field 'Incomplete run' "$state_file")
 run_status=$(read_field 'Run status' "$state_file")
 pending_decision=$(read_field 'Pending owner decision' "$state_file")
 alignment_due=$(read_field 'Alignment due' "$state_file")
+visual_checkpoint=$(read_field 'Visual checkpoint' "$state_file")
+ui_units_since_visual_checkpoint=$(read_field 'UI units since visual checkpoint' "$state_file")
 
 test "$graph_foundation" = open -o "$graph_foundation" = approved
 
@@ -116,6 +120,8 @@ case "$owner_authorization" in
     test "$pending_decision" = none
     test "$graph_foundation" = approved
     test "$alignment_due" = no
+    test "$visual_checkpoint" = 'goal completion'
+    test "$ui_units_since_visual_checkpoint" = 0
     ;;
   standing)
     test "$active_goal_id" = identity-map-prototype
@@ -131,11 +137,13 @@ case "$owner_authorization" in
       test "$incomplete_run" = none
       test "$run_status" = selecting -o \
         "$run_status" = none -o \
+        "$run_status" = 'visual checkpoint' -o \
         "$run_status" = 'needs owner decision'
     else
       test "$incomplete_run" = "$current_run"
       test "$run_status" = implementation -o \
         "$run_status" = validation -o \
+        "$run_status" = 'visual checkpoint' -o \
         "$run_status" = 'independent review' -o \
         "$run_status" = blocked -o \
         "$run_status" = 'needs owner decision'
@@ -145,6 +153,19 @@ case "$owner_authorization" in
     else
       test "$run_status" = 'needs owner decision'
     fi
+    printf '%s\n' "$visual_checkpoint" | \
+      grep -Eq '^accepted through .+, [0-9]{4}-[0-9]{2}-[0-9]{2}$'
+    case "$ui_units_since_visual_checkpoint" in
+      0|1|2|3|4)
+        test "$run_status" != 'visual checkpoint'
+        ;;
+      5)
+        test "$current_run" != none
+        test "$incomplete_run" = "$current_run"
+        test "$run_status" = 'visual checkpoint'
+        ;;
+      *) exit 1 ;;
+    esac
     ;;
   paused)
     test "$active_goal_id" = identity-map-prototype
@@ -162,6 +183,16 @@ case "$owner_authorization" in
     else
       test "$incomplete_run" = "$current_run"
     fi
+    printf '%s\n' "$visual_checkpoint" | \
+      grep -Eq '^accepted through .+, [0-9]{4}-[0-9]{2}-[0-9]{2}$'
+    case "$ui_units_since_visual_checkpoint" in
+      0|1|2|3|4) ;;
+      5)
+        test "$current_run" != none
+        test "$incomplete_run" = "$current_run"
+        ;;
+      *) exit 1 ;;
+    esac
     ;;
   *)
     echo "Invalid owner authorization: $owner_authorization" >&2

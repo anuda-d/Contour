@@ -6,17 +6,19 @@ goal-bounded autonomous authorization granted on 2026-08-22 until completion.
 ## Run State
 
 - Active goal id: identity-map-prototype
-- Owner authorization: standing
+- Owner authorization: paused
 - Authorization scope: active goal
 - Authorization source: owner
-- Loop cadence: continuous
+- Loop cadence: paused
 - Graph foundation: approved
 - Current run: none
 - Incomplete run: none
-- Run status: selecting
+- Run status: paused
 - Pending owner decision: none
 - Last accepted run: Map-led Thought capture and immediate private Draft, 2026-08-23
 - Alignment due: no
+- Visual checkpoint: accepted through Map-led Thought capture, 2026-08-23
+- UI units since visual checkpoint: 0
 
 The graph foundation, Map-led three-work chooser, shared published-only visitor
 preview, and Map-led Media featuring were accepted under standing authorization
@@ -24,6 +26,9 @@ after full validation and clean fresh independent review. On 2026-08-23 the
 owner resolved the Draft-treatment gate by selecting the quiet margin-note
 direction. The resulting capture-to-private-Draft unit passed full validation
 and clean fresh independent review and is accepted under standing authorization.
+The owner paused the loop on 2026-08-23 before another product unit was
+selected; accepted evidence remains intact and no implementation may continue
+until the owner explicitly resumes the loop.
 
 ## Goal Progress
 
@@ -81,15 +86,21 @@ claim is chosen just in time from the verified repository baseline.
 
 ## Current Run
 
-- State: none; selecting the next bounded unit inside the active goal.
+- State: none; the owner paused the loop before the next unit was selected.
 
 ## Standing Goal Authorization
+
+The terms below are suspended while `Owner authorization` is `paused`. They
+apply again only after the owner explicitly resumes the loop.
 
 - Authorization basis: owner standing authorization granted 2026-08-22
 - Scope: successive bounded units inside the active Identity Map Prototype goal
 - Cadence: continuous until the goal is complete or a terminal condition holds
 - Unit acceptance: applicable validation passes, fresh independent review has
   no unresolved blocker, and every development-loop guard holds
+- Visual validation cadence: full rendered click-through on every fifth UI unit
+  before acceptance and before goal completion; ordinary units use focused and
+  repository validation plus independent code review
 - Automatic action after acceptance: record evidence, create one local commit,
   and immediately re-orient for the next smallest justified gap
 - Always owner-gated: a new goal and unresolved material product, visual, scope,
@@ -560,8 +571,10 @@ When populated, this section must identify:
 
 ## Acceptance Rules
 
-- Standing authorization plus full validation and clean fresh independent
-  review permits routine local acceptance and commit.
+- Standing authorization plus focused and full repository validation and clean
+  fresh independent review permits routine local acceptance and commit. Full
+  rendered click-through is required only on the fifth UI unit before its
+  acceptance and before goal completion.
 - Independent review is mandatory and advisory. It does not make product
   decisions.
 - Material implementation, test, behavior, evidence, or product-state changes

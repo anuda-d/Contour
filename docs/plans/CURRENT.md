@@ -9,21 +9,23 @@ successive independently reviewed work units until the goal is complete.
 - Goal: [Identity Map Prototype](identity-map-prototype/GOAL.md)
 - Shared implementation state: [Implementation Plan](identity-map-prototype/IMPLEMENTATION_PLAN.md)
 - Map design foundation: [Editorial Constellation](identity-map-prototype/MAP_DESIGN_FOUNDATION.md)
-- Active work: selecting the next bounded Identity Map unit
+- Active work: none; the owner paused the loop before the next unit was selected
 
 ## Run State Snapshot
 
 - Active goal id: identity-map-prototype
-- Owner authorization: standing
+- Owner authorization: paused
 - Authorization scope: active goal
 - Authorization source: owner
-- Loop cadence: continuous
+- Loop cadence: paused
 - Graph foundation: approved
 - Current run: none
 - Incomplete run: none
-- Run status: selecting
+- Run status: paused
 - Pending owner decision: none
 - Alignment due: no
+- Visual checkpoint: accepted through Map-led Thought capture, 2026-08-23
+- UI units since visual checkpoint: 0
 
 The graph-first foundation correction was accepted under standing authorization
 on 2026-08-22 after full validation and clean fresh independent review. Routine
@@ -35,6 +37,15 @@ On 2026-08-23 the owner selected the quiet Draft margin-note treatment. Draft
 Thoughts use an open authored mark at overview scale, add a small `Draft` note
 beside their floating fragment at middle scale, and identify themselves as
 `Private draft` in close contextual detail. Visitor mode excludes them.
+
+On 2026-08-23 the owner also reduced rendered click-through validation from a
+per-unit gate to a checkpoint on every fifth UI unit before its acceptance and
+before goal completion. Fresh independent code review and focused/full
+repository checks remain required for every unit.
+
+The owner then paused the autonomous loop before another product unit was
+selected. The active goal and accepted evidence remain intact, but no new unit
+may be selected or implemented until the owner explicitly resumes the loop.
 
 These fields mirror the active implementation state and are checked by
 `./scripts/check.sh`. Update both files in the same administrative change.
@@ -57,10 +68,14 @@ improvement idea into active work.
 
 ## Standing Goal Authorization
 
+The terms below are suspended while `Owner authorization` is `paused`. They
+apply again only after the owner explicitly resumes the loop.
+
 - The owner granted standing authorization on 2026-08-22 to advance this one
   active goal through successive bounded units until it is complete.
-- Each unit still requires focused and full validation, applicable browser and
-  visual evidence, and fresh independent read-only review.
+- Each unit still requires focused and full repository validation and fresh
+  independent read-only review. Full rendered click-through evidence is batched
+  on every fifth UI unit before acceptance and before goal completion.
 - A clean unit is accepted and committed locally under the standing
   authorization, then the loop immediately selects the next smallest justified
   gap inside the same goal.
@@ -75,8 +90,8 @@ improvement idea into active work.
 - Repository state: `git status --short`
 - Diff review: `git diff --check`
 
-Browser and visual validation commands must be added to this index after the
-application baseline selects and validates them.
+Rendered checkpoint commands and evidence are recorded when the five-unit or
+final-goal checkpoint is due.
 
 ## Run Contract
 
@@ -91,7 +106,11 @@ application baseline selects and validates them.
 - State one criterion, one behavior, and one evidence claim before editing.
 - Load implementation just in time; the state file prescribes no task sequence.
 - Run focused validation before the full check.
-- Render affected visual surfaces and click through affected flows.
+- Increment `UI units since visual checkpoint` for accepted UI units one through
+  four. When the next UI candidate is the fifth, preserve it as the current
+  run, set the counter to five and `Run status` to `visual checkpoint`, and run
+  the combined rendered click-through before review and acceptance. A clean
+  fifth unit records the checkpoint and resets the count to zero.
 - Record candidate evidence, then use a fresh independent read-only reviewer of
   the implementation and evidence claim.
 - Resolve blocking findings and repeat review after material corrections.

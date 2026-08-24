@@ -29,12 +29,12 @@ Each work unit:
 2. obtains one to three independent read-only explorations;
 3. states one criterion, intended behavior, and evidence claim;
 4. implements one coherent change through the sole-writer orchestrator;
-5. runs focused, full, browser, interaction, and visual validation as
-   applicable;
+5. runs focused and full repository validation, plus a rendered click-through
+   only when the five-UI-unit visual checkpoint is due;
 6. records candidate evidence;
 7. receives a fresh independent read-only review;
-8. resolves every blocking finding and repeats validation and review after
-   material correction;
+8. resolves every blocking finding and repeats focused/full repository
+   validation and review after material correction;
 9. records accepted evidence and creates one local commit after a clean review;
    and
 10. immediately re-orients for the next bounded unit inside the same goal.
@@ -47,8 +47,8 @@ scope.
 ## Owner Decision Boundary
 
 Routine implementation evidence is accepted under standing authorization after
-full validation and clean fresh independent review. The owner is not a routine
-work-unit reviewer.
+focused and full repository validation and clean fresh independent review. The
+owner is not a routine work-unit reviewer.
 
 Stop at **NEEDS OWNER DECISION** before acting when continuation requires:
 
@@ -84,11 +84,41 @@ Before editing, record:
 - the relevant redesign audit and patterns being preserved or retired; and
 - the applicable design-system or honest native-CSS choice.
 
-Before acceptance, apply the skill's relevant pre-flight checks, including
-responsive behavior, reduced motion, both supported color modes, content
-clarity, contrast, shape consistency, and removal of generic or flowchart-like
-visual patterns. Landing-page-specific rules do not apply mechanically to the
-interactive Map.
+Before acceptance, apply the skill's relevant source, token, content, contrast,
+shape, and accessibility pre-flight checks. Full rendered responsive,
+color-mode, motion, and interaction replay belongs to the visual checkpoint
+unless a narrow smoke check is needed to diagnose a specific implementation
+risk. Landing-page-specific rules do not apply mechanically to the interactive
+Map.
+
+## Visual Checkpoint Cadence
+
+Full rendered click-through testing is deliberately batched for this
+experimental prototype.
+
+- Count only implementation units that change a visible UI surface or
+  interaction. Counts one through four represent accepted units since the last
+  checkpoint.
+- When the next UI candidate would be the fifth, preserve it as `Current run`,
+  set the count to five and `Run status` to `visual checkpoint`, and run one
+  combined checkpoint before review and acceptance.
+- Record the checkpoint with the candidate evidence, then obtain the unit's
+  fresh independent review of both code and checkpoint evidence. After a clean
+  review, accept and commit the fifth unit, update `Visual checkpoint`, reset
+  the count to zero, and return `Run status` to `selecting`.
+- Exercise the accumulated affected flows at representative desktop and mobile
+  sizes, supported color modes, keyboard/touch behavior, responsive seams, and
+  console output.
+- Reset the count to zero only after the checkpoint evidence is recorded.
+- Run the same complete checkpoint before marking the goal complete, even when
+  fewer than five UI units have accumulated.
+- Independent read-only code review remains required for every unit and after
+  every material correction. Reviewers do not repeat the complete rendered
+  click-through unless a checkpoint is due.
+
+The full rendered acceptance replay completed with the fifth accepted UI unit,
+Map-led Thought capture, on 2026-08-23. The next UI-unit count therefore starts
+at zero.
 
 ## Graph-First Entry Gate
 
@@ -240,15 +270,19 @@ Use the frontend design contract for every relevant visual unit.
 
 Run focused checks first and then `./scripts/check.sh`.
 
-For every affected visual surface or flow:
+For each ordinary unit, validate the affected behavior with focused tests,
+source and diff inspection, and the full repository check. Record whether the
+unit increments the UI-unit checkpoint counter. A targeted rendered smoke check
+is optional when it answers a concrete risk efficiently; it is not a routine
+acceptance gate.
 
-- launch through the documented command;
+When the visual checkpoint is due, launch through the documented command and:
+
 - render representative desktop and mobile sizes;
-- test every affected pointer, keyboard, touch, and responsive flow;
-- inspect layout, state transitions, both supported color modes, and console
-  output;
+- test the accumulated affected pointer, keyboard, touch, and responsive flows;
+- inspect layout, state transitions, both supported color modes, and console;
 - exercise reduced-motion behavior when motion changed; and
-- retain concise evidence for review.
+- retain concise checkpoint evidence.
 
 Review the diff for:
 
@@ -264,8 +298,6 @@ Review the diff for:
 - speculative infrastructure; and
 - unrelated work.
 
-If affected behavior cannot be seen or evaluated, it is not ready for review.
-
 ### 6. Record evidence and obtain fresh review
 
 Before review, record under the current unit:
@@ -273,7 +305,8 @@ Before review, record under the current unit:
 - criterion and progress claim;
 - exact owned diff;
 - observed behavior separately from interpretation;
-- focused, full, browser, interaction, and visual validation;
+- focused and full repository validation, any targeted smoke evidence, and the
+  current visual-checkpoint count or checkpoint result;
 - risks, forced prototype behavior, and unresolved assumptions; and
 - proposed accepted evidence.
 
@@ -282,12 +315,15 @@ goal, relevant product and design rules, actual diff, evidence claim,
 validation, and known risks. Do not provide private implementation reasoning or
 ask for confirmation.
 
-The reviewer checks goal fit, invariants, privacy boundaries, interaction and
-visual quality, evidence sufficiency, test coverage, unnecessary complexity,
-and whether an owner decision is required.
+The reviewer checks goal fit, invariants, privacy boundaries, code-level
+interaction and visual quality, evidence sufficiency, test coverage,
+unnecessary complexity, and whether an owner decision is required. At a visual
+checkpoint, the reviewer also inspects the rendered click-through evidence.
 
 Resolve every blocking finding. Every material correction requires focused and
-full validation again plus another fresh review.
+full repository validation again plus another fresh review. It does not require
+another complete rendered click-through unless the visual checkpoint is due or
+the correction invalidates checkpoint evidence.
 
 ### 7. Accept, commit, and continue
 
@@ -298,12 +334,15 @@ After validation passes and a fresh review has no unresolved blocker:
    `standing owner authorization, 2026-08-22`;
 3. set `Graph foundation` to `approved` when the unit satisfies its gate;
 4. append the accepted run record;
-5. clear `Current run` and `Incomplete run`;
-6. set `Run status` to `selecting` unless the goal is complete;
-7. synchronize `CURRENT.md`;
-8. review and stage only the coherent unit;
-9. create one local commit; and
-10. re-orient immediately for the next bounded unit.
+5. for an accepted UI unit below the checkpoint, increment `UI units since
+   visual checkpoint`; for the fifth unit, update `Visual checkpoint` with its
+   recorded evidence and reset the count from five to zero;
+6. clear `Current run` and `Incomplete run`;
+7. set `Run status` to `selecting` unless the goal is complete;
+8. synchronize `CURRENT.md`;
+9. review and stage only the coherent unit;
+10. create one local commit; and
+11. re-orient immediately for the next bounded unit.
 
 The factual acceptance record may differ from the reviewed diff only in
 administrative state. Any change to implementation, tests, behavior, or the
@@ -349,8 +388,9 @@ On pause:
 - retain `Authorization scope: active goal` and `Authorization source: owner`;
 - set `Loop cadence` and `Run status` to `paused`;
 - preserve any matching `Current run` and `Incomplete run`; and
-- make no implementation change or commit until the owner resumes or directs
-  disposition.
+- make no product implementation change or loop-unit commit until the owner
+  resumes or directs disposition. An administrative state change or commit
+  explicitly requested by the owner remains allowed.
 
 If the owner stops while a material unit is active, preserve it. Do not clear,
 discard, or commit it without explicit disposition. A stopped clean boundary
@@ -366,8 +406,10 @@ review finds no unresolved blocker or missing criterion.
 
 When complete:
 
-1. record the final accepted evidence and review, and mark every IM criterion
-   `accepted` in the Goal Progress table;
+1. run and record the final complete rendered click-through checkpoint, set
+   `Visual checkpoint` to `goal completion`, reset `UI units since visual
+   checkpoint` to `0`, record the final accepted evidence and review, and mark
+   every IM criterion `accepted` in the Goal Progress table;
 2. replace the goal status with the single canonical line `Status: complete;
    owner-approved goal completed under standing authorization.`;
 3. clear `Current run`, `Incomplete run`, and `Pending owner decision` to
@@ -423,7 +465,8 @@ For every committed unit retain:
 1. criterion and claim;
 2. observed behavior and interpretation separately;
 3. exact files and local commit;
-4. focused, full, browser, interaction, and visual validation;
+4. focused and full repository validation, plus the UI checkpoint count and any
+   applicable targeted smoke or full checkpoint evidence;
 5. explorer partition and fresh review result;
 6. risks and unresolved assumptions; and
 7. acceptance basis: `standing owner authorization, 2026-08-22`.
