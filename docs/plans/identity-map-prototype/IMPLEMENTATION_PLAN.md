@@ -13,15 +13,15 @@ goal-bounded autonomous authorization granted on 2026-08-22 until completion.
 - Graph foundation: approved
 - Current run: none
 - Incomplete run: none
-- Run status: selecting
-- Pending owner decision: none
+- Run status: needs owner decision
+- Pending owner decision: choose the private Draft treatment: A open thought mark, B quiet Draft margin note, or C offset underprint
 - Last accepted run: Map-led Media featuring and visitor orbit, 2026-08-23
 - Alignment due: no
 
 The graph foundation, Map-led three-work chooser, shared published-only visitor
 preview, and Map-led Media featuring were accepted under standing authorization
 after full validation and clean fresh independent review. No bounded unit is
-active while the loop selects the next smallest goal gap.
+active while the loop awaits the owner decision on the private Draft treatment.
 
 ## Goal Progress
 
@@ -79,7 +79,7 @@ claim is chosen just in time from the verified repository baseline.
 
 ## Current Run
 
-- State: none; selecting the next bounded unit.
+- State: none; needs owner decision before selecting the next bounded unit.
 
 ## Standing Goal Authorization
 
@@ -513,6 +513,13 @@ choice, stop at `NEEDS OWNER DECISION`.
 
 ## Accepted Run Log
 
+- 2026-08-23: Map-led Media featuring and visitor orbit accepted under standing
+  owner authorization in local commit `4318bdc` after `./scripts/check.sh`,
+  thirty-five passing tests, desktop/seam/mobile and light/dark evidence, full
+  curation and visitor click-through, responsive and accessibility corrections,
+  zero console warnings/errors, and a clean final fresh independent review.
+  Accepted evidence advances IM-7, IM-9, and IM-10; live publishing and the
+  complete public-profile walkthrough remain open.
 - 2026-08-22: shared published-only visitor preview accepted under standing
   owner authorization after `./scripts/check.sh`, twenty-four passing tests,
   desktop/seam/mobile and light/dark evidence, full mode and exploration

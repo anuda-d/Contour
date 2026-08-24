@@ -9,7 +9,7 @@ successive independently reviewed work units until the goal is complete.
 - Goal: [Identity Map Prototype](identity-map-prototype/GOAL.md)
 - Shared implementation state: [Implementation Plan](identity-map-prototype/IMPLEMENTATION_PLAN.md)
 - Map design foundation: [Editorial Constellation](identity-map-prototype/MAP_DESIGN_FOUNDATION.md)
-- Active work: select the next smallest justified gap inside the active goal
+- Active work: needs owner decision on the private Draft visual treatment
 
 ## Run State Snapshot
 
@@ -21,8 +21,8 @@ successive independently reviewed work units until the goal is complete.
 - Graph foundation: approved
 - Current run: none
 - Incomplete run: none
-- Run status: selecting
-- Pending owner decision: none
+- Run status: needs owner decision
+- Pending owner decision: choose the private Draft treatment: A open thought mark, B quiet Draft margin note, or C offset underprint
 - Alignment due: no
 
 The graph-first foundation correction was accepted under standing authorization
