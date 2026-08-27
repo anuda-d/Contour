@@ -1,143 +1,261 @@
-# Social Contract
+# Social contract
 
 ## Purpose
 
-This document defines how people interact without turning the product into a popularity feed, debate forum, or repost network.
+This document defines how people improve one another's discovery without
+turning Contour into a popularity contest, engagement feed, debate hierarchy,
+or surveillance product.
 
 ## Principle
 
-Art creates human-to-human connection. The product should eventually make recognition and conversation easy while reserving the Map for durable authored interpretation. The first product proof remains the person's Map and public profile; the wider social system follows only after that artifact is viable.
+There is no single correct interpretation of a Book or Film. Social behavior
+should help each person find useful works, perspectives, and people while
+preserving authorship, disagreement, and context.
+
+Personal relevance may be learned from many signals. Public validity is never
+decided by one global score.
 
 ## Social actions
 
-### Follow
+### Like a Book or Film
 
-Follow a person to prioritize their interpretations across the product.
+A Like is a deliberate public taste claim.
 
-Following should affect:
+- Adds the shared work to the User's public Map taste layer.
+- Does not require a Thought or imply authorship.
+- Does not create an unexplained semantic relationship.
+- May improve personal recommendations.
+- Does not expose a prominent public aggregate count.
 
-- Media-page ordering.
-- Theme-space relevance.
-- People discovery.
-- Access to the person's evolving Map and Paths.
+Like is distinct from voting on another person's Thought and from privately
+Saving a work for later.
 
-Following does not require a conventional home feed.
+### Save a Book or Film
 
-Who a person follows may be visible because it supports taste-based discovery. Aggregate follower counts should be hidden or strongly de-emphasized.
-
-### Save
-
-Save a Book, Film, or another person's Thought to the private Library.
+Save a work privately for possible future reading or viewing.
 
 - Private by default.
-- No public count.
-- Does not place the item in the User's Map.
-- Does not create a graph edge.
-- Does not imply agreement.
+- Does not add the work to the public Map.
+- Does not imply that the User has completed or liked it.
+- May improve personal recommendations.
+- Does not notify another User.
 
-### Appreciate
+### Bookmark evidence
 
-Send a lightweight signal that a Thought resonated.
+Bookmark another person's Thought, connection, Theme region, or Map route for
+private return.
 
-- Not a public popularity score.
-- Does not create a Map node or edge.
-- May notify the author through a quiet activity surface.
-- Should not be used to rank public discovery by default.
+- Private by default.
+- Does not copy the material into the User's public Map.
+- Does not create a graph edge or imply agreement.
+- Preserves the source author and original context.
 
-### Comment
+Save and Bookmark are parallel private utilities: Save targets a Book or Film;
+Bookmark targets the human evidence or route around it.
 
-Have contextual conversation inside a Thought.
+### Vote on relevance
 
-- Public when the parent Thought is public.
-- Visible only through that Thought.
-- Not included in profiles, search, Theme regions, Maps, or global discovery.
-- Shallow conversation rather than deeply nested debate.
-- May optionally be developed into an anchored Thought.
+Upvotes and downvotes are private taste signals about a Thought, connection, or
+discovery route.
+
+- An upvote means `More like this for me`.
+- A downvote means `Less like this for me`.
+- Neither means the contribution is objectively correct or incorrect.
+- Neither changes the author's Map or creates an authored relationship.
+- Downvotes do not notify the author.
+- Public totals and global vote scores are excluded.
+- A quiet positive notification may later let an author know that a Thought
+  helped someone, but it must not create a visible scoreboard.
+
+Voting should improve personal relevance without eliminating thoughtful
+disagreement or varied perspectives.
+
+### Follow
+
+Follow a person to prioritize routes through their public taste and ideas.
+
+Following may affect:
+
+- recommendation relevance;
+- Media-page ordering;
+- personal Theme retrieval;
+- people discovery; and
+- access to the person's evolving Map and later Paths.
+
+Following does not import the person's material into the follower's Map and
+does not require a conventional home feed. Who someone follows may be visible
+because it supports taste-based discovery; aggregate follower counts should be
+hidden or strongly de-emphasized.
 
 ### Connect
 
-Create durable interpretation.
+Create durable authored interpretation.
 
 Connect may produce:
 
-- A multi-media bridge Thought.
-- A link between the User's own Thoughts.
-- A new Thought referencing another person's Thought.
+- a multi-Media bridge Thought;
+- a relationship between the User's own Thoughts; or
+- a new Thought referencing another person's Thought or Theme region.
 
-Only Connect changes the authored graph.
+Only a deliberate public Like, Published Thought, or authored connection
+changes public Map membership or meaning. Spatial movement does not.
 
-## Cross-person references
+### Comment
 
-A User cannot insert another person's Thought into their authored Map.
+Comments, if introduced, provide contextual conversation inside a Thought.
 
-Instead, the User writes a new media-anchored Thought and may reference the other Thought. The new Thought belongs to its author. The referenced Thought remains in its original Map.
+- Public only when the parent Thought is public.
+- Visible through that Thought rather than as an independent discovery object.
+- Shallow rather than a deeply nested debate system.
+- May optionally be developed into an anchored Thought.
+- Can be disabled and moderated by the parent author within defined policy.
 
-### Default presentation
+Comments are not required for the next discovery proof.
 
-The new Thought may show a quiet line such as:
+## Recommendation contract
 
-> References a Thought by Mike.
+Recommendations may combine public, private, and aggregate signals, including:
 
-The full external node and cross-map edge appear only when the visitor opens the reference or enables the social layer.
+- the viewer's Likes, Thoughts, and explicit connections;
+- private Saves and Bookmarks;
+- follows and personalized Votes;
+- searches and repeated deliberate exploration;
+- visits to Media, Thoughts, Theme regions, Maps, and people;
+- similarities among public Maps and visible personal Themes; and
+- aggregate behavior that does not expose another person's private activity.
 
-### Backlink
+### Signal strength
 
-The original Thought may show:
+Deliberate expression and repeated intentional actions carry more weight than
+passive impressions, dwell, or one accidental visit. The system should not
+pretend every captured event represents stable taste.
 
-> Referenced by 3 Thoughts.
+### Human evidence
 
-This makes the connection credited, bidirectional, and navigable without cluttering either personal Map.
+When available, a recommendation must identify the public human route behind
+it:
+
+- a Thought;
+- an authored connection;
+- a personal Theme region;
+- a person or Map the viewer follows or resembles; or
+- a known work from which the route began.
+
+An inferred recommendation may still appear when no explicit connection
+exists, but its explanation must not invent human authorship or expose private
+behavior.
+
+### Personalization boundary
+
+- Private behavior may alter recommendations, not public identity.
+- Passive behavior never silently changes the public Map.
+- Explanations must not reveal private Saves, Bookmarks, Votes, or viewing
+  history to another person.
+- Production launch requires proportionate controls for history, correction,
+  reset, and privacy.
+- Personalized results should preserve some serendipity and opposing
+  perspectives rather than optimizing only for agreement.
+
+## Discovery routes
+
+Contour should let someone move among:
+
+1. a Book or Film;
+2. a Thought about it;
+3. an authored connection;
+4. a personal Theme region;
+5. the person and Map behind that material; and
+6. another unfamiliar Book or Film.
+
+These routes matter more than a chronological posting stream.
+
+## Discovery ordering
+
+Prioritize according to the current intent:
+
+1. direct matches to the known work, idea, person, or Theme the viewer chose;
+2. explicit human evidence from people the viewer follows or has found useful;
+3. the viewer's own public and private high-intent signals;
+4. related personal Theme regions and similar Maps;
+5. varied and opposing interpretations; and
+6. wider aggregate candidates with honest explanation.
+
+Avoid default ranking by:
+
+- global vote totals;
+- follower count;
+- public Like count;
+- Comment count;
+- posting frequency;
+- generic engagement velocity; or
+- raw time spent without evidence of intent.
+
+## Cross-person references and branch reuse
+
+A User cannot silently claim another person's Thought, Theme, or Map region as
+their own.
+
+The first safe model is:
+
+- Bookmark another person's material privately.
+- Navigate back to its original public context.
+- Publish a new Media-anchored Thought in response.
+- Credit and link the original source.
+- Keep each person's authored material in their own Map.
+
+Whether Contour later supports adding a live, copied, or visually external
+branch of someone else's Map remains an unresolved owner decision. Any future
+model must preserve original authorship, attribution, edit behavior, context,
+and the distinction between reference and agreement.
 
 ## Authorship
 
-- Authorship never transfers through Save, Appreciate, Comment, reference, or Path inclusion.
-- A person's default Map is a claim about what they authored, not everything they admire.
-- External references always retain author, original context, and a route to the original Map.
-- The system must not visually imply that a referenced Thought belongs to the referencing User.
+- Authorship never transfers through Like, Save, Bookmark, Vote, Follow,
+  Comment, reference, or Path inclusion.
+- A person's authored Map layer contains what they wrote and deliberately
+  connected, not everything they admire or browse.
+- The public taste layer may contain deliberately Liked Media without implying
+  authorship.
+- External references always retain author, original context, and a route to
+  the original Map.
+- Generated Theme names are system organization unless the owner explicitly
+  renames them; they are not presented as authored Thoughts.
 
 ## Published correction and evolution
 
 - Wording corrections retain the Thought's identity and revision history.
 - Semantic change creates a new Thought connected to the old one.
-- Directly connected or referenced Thoughts should indicate when the source was corrected after the relationship was created.
-- The exact withdrawal and deletion policy remains an open question because linked public content cannot be treated like isolated content.
+- Directly connected or referenced Thoughts should indicate when the source was
+  corrected after the relationship was created.
+- Withdrawal and deletion policy remains an open question because linked
+  public content cannot be treated like isolated content.
 
-## Conversation controls
+## Conversation and safety controls
 
-The first social system should support:
+Before a multi-User public launch, the system needs:
 
-- Disable Comments on an individual Thought.
-- Remove one's own Comment.
-- Author moderation of conversation attached to their Thought.
-- Blocking and reporting at User, Thought, and Comment level before a multi-user public launch.
-- One reply level at most.
+- blocking and reporting at User, Thought, and Comment level;
+- author control over Comments attached to their Thought;
+- removal of one's own Comment;
+- defined handling for harassment through references or repeated interaction;
+- moderation and appeal policy; and
+- privacy controls for personalization history.
 
-Detailed moderation and appeal policy must be defined before the closed alpha accepts outside users.
+Votes are taste signals, not substitutes for reporting or moderation.
 
-## Discovery rules
+## Anti-feed and anti-compulsion guardrails
 
-Prioritize:
-
-1. The viewer's own work and connections.
-2. People the viewer follows.
-3. Explicit graph relationships.
-4. Nearby personal Map regions and, later, user-recognized Themes.
-5. Varied and opposing interpretations.
-
-Avoid default ranking by:
-
-- Follower count.
-- Appreciation count.
-- Comment count.
-- Posting frequency.
-- Generic engagement velocity.
-
-## Anti-feed guardrails
-
-- My Map is the signed-in home.
-- Explore is intentionally composed and finite enough to encourage navigation.
-- Media pages and future Theme spaces provide contextual discovery.
+- Explore is the signed-in home, but it is a search- and intent-led discovery
+  workspace rather than an infinite activity feed.
+- Recommendations are contextual and bounded enough to encourage deliberate
+  navigation.
+- Media pages, personal Theme regions, Thoughts, people, and Maps provide
+  durable destinations.
 - Comments do not escape their parent Thought.
-- Saves stay private.
-- Appreciations do not produce a visible scoreboard.
-- Following improves relevance without obligating an infinite activity stream.
+- Saves and Bookmarks stay private.
+- Votes do not produce visible scoreboards.
+- Following improves relevance without obligating a chronological home feed.
+- Streaks, daily-use pressure, autoplay loops, and artificial urgency are
+  excluded.
+- Success is measured at natural discovery and contribution moments, not by
+  maximizing time spent or daily opens.

@@ -1,178 +1,284 @@
-# Product Foundation
+# Product foundation
 
-## Purpose
+## Product identity
 
-This document defines what the product is, why it should exist, and the principles that should control future decisions.
+The product is called **Contour**.
+
+Contour is an intentional, human-to-human discovery platform for Books and
+Films. It helps someone begin with a work or idea they already know, encounter
+an unfamiliar work through another person's taste or interpretation, and
+understand why it may matter before committing their time.
+
+## Problem
+
+Book discovery is fragmented and lacks context. Social platforms can surface a
+compelling recommendation, but the reason, the person behind it, and the route
+to related ideas quickly disappear into unrelated content. Film discovery is
+more available, yet people who care deeply about film still lack a coherent
+place to follow taste and interpretation across works.
+
+People already express cultural taste through Letterboxd, Goodreads, TikTok,
+Pinterest, Instagram, private notes, and conversations. What they publish and
+save is scattered. Their opinions rarely accumulate into a durable structure
+that can help another person discover something.
+
+Contour gives that activity context and continuity.
 
 ## Core belief
 
-People use culture to understand themselves and to shape how other people understand them.
+People are more likely to try an unfamiliar work when they can see why it
+connected with a real person and how it relates to something they already care
+about.
 
-Art is a human-to-human connection. A book or film matters not only as an object to consume, but because it passes through a person and produces interpretation. The product makes that passage visible.
+Art is a human-to-human connection. A Book or Film matters not only as an
+object to consume, but because it passes through a person and produces taste,
+interpretation, comparison, disagreement, and curiosity. Contour makes those
+human routes visible and searchable.
 
-Identity is partly performed. People use clothing, beliefs, hobbies, taste, and cultural references to compose how others perceive them. That performance can be deliberate and still be sincere.
-
-> The product gives people an aesthetic, authored way to put their mind on display through what culture produces in them.
+Identity still matters. People use culture to understand themselves and shape
+how others understand them. On Contour, that identity accumulates as a result
+of useful discovery and expression rather than becoming required labor before
+the product provides value.
 
 ## Product thesis
 
-The product is a social identity platform centered on public, profile-based Thought Maps about books and films.
+Contour is a social discovery platform organized around Books, Films, and the
+people who give them meaning.
 
-People author compact Thoughts anchored to media. Those Thoughts connect across works and may later reveal recurring regions and Themes. The product generates the Map from those authored relationships while allowing the owner to move, shape, and lightly curate it. The accumulated Map becomes a public portrait that visitors can explore and a mirror through which the owner notices patterns in themselves.
+Users can deliberately Like works, write free-form Thoughts, connect works or
+Thoughts through their own language, and develop personal Theme regions. The
+system organizes that public material into a generated but shapeable Map. The
+Map helps other people explore the User's taste and ideas, and helps Contour
+personalize future discovery.
 
-This is a social platform whose primary identity object is a person's displayed Map. It is not a claim to reveal the person's complete or objective mind; it is the part they have chosen to articulate and publish.
+Discovery can begin from five human routes:
+
+- a Book or Film;
+- a Thought about it;
+- an authored connection between works or Thoughts;
+- a personal Theme region; or
+- a person whose taste is worth following.
+
+Recommendations may use explicit and behavioral signals, but Contour must
+show the human evidence behind them whenever it exists. A direct Thought,
+connection, Theme region, or trusted person is more useful than an unexplained
+similarity score.
 
 ## North star
 
-> My Map looks like me, and I want other people to explore it.
+> I found something worth reading or watching, and I understand the human path
+> that led me there.
 
-The strongest success signal is not the number of items logged. It is that a user voluntarily returns to look at, improve, and share their own Map.
+The strongest early signal is that someone starts from a known work or idea,
+discovers an unfamiliar Book or Film, examines the evidence, and deliberately
+saves it for later.
+
+Longer term, discovery should compound: the User's Likes, Thoughts,
+connections, and follows make future results more personally useful, while the
+Map becomes something they value revisiting and showing.
+
+Daily active use is not the north star. Books and Films have a natural cadence.
+Contour should earn intentional return visits when someone wants to discover,
+respond, or contribute rather than manufacture an attention habit.
+
+## Initial audience
+
+The initial User is culturally curious and visually expressive. They use Books,
+Films, and online media to shape and communicate taste, but they do not need to
+be a critic or write academic analysis.
+
+They may already use Letterboxd, Goodreads, TikTok, Pinterest, Instagram,
+private notes, or group chats. They like discovering through people, care about
+how cultural interests fit together, and want something more coherent and
+durable than scattered posts, lists, and saved videos.
+
+## Product promises
+
+For someone discovering:
+
+> Find your next Book or Film through a mind, not a score.
+
+For someone contributing:
+
+> Your taste and opinions become more useful instead of disappearing into a
+> feed.
+
+For someone exploring a person:
+
+> Follow the works, ideas, and connections that shape their perspective.
 
 ## Product pillars
 
-### The mind is the profile
+### Discovery begins with something meaningful
 
-The primary identity artifact is the person's evolving Thought Map rather than a consumption history, post stream, or popularity score.
+A User should be able to start from a work, idea, or person they already care
+about. Contour then provides routes outward to unfamiliar works with enough
+context to judge whether the recommendation is relevant.
 
-### Thought is the form of self-expression
+### Human interpretation makes recommendations persuasive
 
-People express what a work caused them to notice, feel, question, connect, or believe. The product does not force those expressions into a conventional review structure or an academic register.
+Behavioral similarity can generate candidates, but human evidence explains
+them. Thoughts, connections, personal Theme regions, and recognizable people
+should make the reason for discovery legible.
 
-### Aesthetic self-presentation creates desire
+### Expression is free; context is structured
 
-The Map must feel distinctive, shapeable, and worth showing to other people. Its aesthetics are part of the product's identity function, not decoration added after the utility works.
+People may write a sharp sentence, a personal reaction, a disagreement, or a
+longer interpretation. Contour does not force a rating or review template.
+Every public Thought remains grounded by at least one Book or Film, and an
+authored connection must contain the human meaning that makes it useful.
 
-### The graph makes identity explorable
+### The Map makes taste and ideas explorable
 
-Media, Thoughts, and authored relationships reveal a shape that a list, grid, or chronological feed cannot. The system supplies a legible starting structure; the owner can intuitively move through and influence its presentation without building a graph manually.
+A Map may begin with deliberately Liked Books and Films. Thoughts and authored
+connections give it substance; generated Theme regions make recurring ideas
+discoverable. The system supplies a coherent structure while the owner can
+move, shape, feature, rename, or hide appropriate parts without facing a blank
+canvas.
 
-### Social connection happens through interpretation
+### Identity accumulates from participation
 
-People should eventually discover and respond to one another through Thoughts, shared or contrasting media, similar Map regions, and cross-map relationships. The personal profile and Map must prove valuable before the wider social system is expanded.
+The public Map and profile communicate taste and authorship, but building them
+is not a prerequisite for receiving value. A User can discover first, then Like,
+save, follow, respond, or publish as their relationship with Contour deepens.
 
-## Stage and mirror
+### Personalization stays distinct from public identity
 
-The product must serve two motivations without pretending they are separate.
+Searches, views, Saves, Bookmarks, Votes, follows, and other behavior may form a
+private interest model. Passive behavior never silently adds to, removes from,
+or rewrites the public Map. Public identity changes only through deliberate
+public actions.
 
-### The stage
+### Intentional use beats manufactured engagement
 
-The public profile lets a person deliberately express:
+Contour should support high-intent discovery and contribution without a
+primary engagement-ranked infinite feed, public popularity scoreboard, streak,
+or daily-use pressure.
 
-- The media in their current orbit.
-- The Thoughts that best represent them.
-- The recurring ideas and connections visible in their Map.
-- The paths through culture that they want others to follow.
+## The discovery and contribution loops
 
-The product is performative by design. The desire to be perceived creates the initial pull: the user wants a compelling public artifact that communicates more than a list of favourites.
+### Discovery loop
 
-### The mirror
+1. Begin with a known Book, Film, idea, Theme, or person.
+2. Encounter unfamiliar works selected from explicit and behavioral signals.
+3. Inspect the Thought, connection, Theme region, or person that explains why a
+   result may fit.
+4. Explore the surrounding Map or Media context when useful.
+5. Vote on the relevance of the evidence, Bookmark it, or Save the work.
+6. Return at the next natural discovery moment with a better-personalized
+   starting point.
 
-The Map helps a person notice:
+### Contribution loop
 
-- Ideas they repeatedly return to.
-- Unexpected relationships between books and films.
-- How their interpretations change over time.
-- Which works have genuinely shaped their thinking.
-- Where their ideas touch or diverge from other people's.
+1. Deliberately Like a Book or Film so it can appear in the public taste layer.
+2. Write freely about what stayed with you, without completing a review form.
+3. Publish when the Thought represents what you want to say.
+4. Connect another work or Thought when the relationship itself has meaning.
+5. Let the system organize the accumulating material into a generated Map and
+   suggest coherent Theme names.
+6. Rename, hide, shape, or feature the public presentation where control is
+   appropriate.
+7. Help another person discover through the result.
 
-The stage creates desire; the mirror gives the performance substance. Building a public identity should help the owner make genuine discoveries rather than merely assemble signals of taste.
+## Layered Map meaning
 
-## Target user
+The public Map contains distinct kinds of meaning:
 
-The initial user is culturally engaged and aesthetically aware. They use books and films as part of how they present themselves but do not want to write academic essays or maintain a productivity system.
+- **Taste:** deliberately Liked Books and Films.
+- **Authorship:** the User's Published Thoughts and explicit connections.
+- **Generated structure:** layout and Theme regions inferred from public
+  material, clearly presented as system organization rather than the User's
+  exact words.
+- **External context:** credited routes to other people's material without
+  pretending it belongs to the current User.
 
-They may already use Letterboxd, Instagram, Goodreads, private notes, or visual inspiration tools. What they lack is a public place where their interpretations and cross-media connections accumulate into a coherent portrait.
-
-## The product promise
-
-For the owner:
-
-> See what your mind looks like when culture passes through it.
-
-For a visitor:
-
-> Explore a person through what they noticed, not merely what they consumed.
-
-## Core loop
-
-1. Encounter a distinctive Map or profile that creates the desire to make one of your own.
-2. Choose a work that matters to you.
-3. Capture a compact Thought and see its Draft appear immediately on your private Map.
-4. Publish when the Thought represents you and see it become part of the public Map.
-5. Add another work or Thought and make an authored connection.
-6. Move through and shape the generated Map without having to construct it manually.
-7. Preview, refine, and share the profile through which other people will perceive you.
-8. Return to expand the Map, discover patterns, and eventually connect with other minds.
+These layers must remain visually and semantically distinguishable. Spatial
+proximity does not silently become an authored claim.
 
 ## Product principles
 
-### The user is the centre
+### Books and Films are the boundary
 
-The work is context. The Thought is interpretation. The profile is the accumulated reward.
+The first product supports Books and Films. A public Thought must be anchored
+to at least one of them. This keeps Contour grounded in created culture rather
+than becoming a general-purpose posting network.
 
-Every core action should make the user want to look at their own profile again.
+### Thoughts over verdicts
 
-### Thoughts over ratings
+People can call their contribution a review in ordinary conversation, but the
+product should invite what a work made them notice, feel, question, connect, or
+believe. Ratings, aggregate scores, and mandatory verdicts are not the primary
+form.
 
-The system should ask what a work made someone notice, not whether the work was objectively good.
+### Public taste is deliberate
 
-Ratings, aggregate scores, and consumption totals are excluded from the core product.
+A Like is an intentional public taste claim and may add a work to the Map. A
+Save or Bookmark is private utility. Merely viewing, searching for, or dwelling
+on something never publishes it.
 
-### Created media grounds public thought
+### Authorship and provenance stay legible
 
-A public Thought must be anchored to a created work. Drafts may begin unattached, but publication requires a book or film anchor.
+A personal Map never implies that someone authored another person's Thought.
+References remain credited and navigable. Importing another person's Map branch
+requires a later owner decision and is not implied by saving or referencing it.
 
-This keeps the product from becoming a general-purpose posting network.
+### Themes remain personal discovery lenses
 
-### Authorship must remain legible
+Themes are coherent regions arising from a person's public works, Thoughts,
+and connections. The system creates and names a Theme when enough substance
+exists. The Theme is visible with a public Map; renaming preserves visibility,
+while hiding or dismissing removes it. A visible Theme is searchable, but it is
+not a universal tag or canonical global concept.
 
-A personal Map contains only Thoughts authored by that person. Cross-person references are credited and navigable but do not become part of someone else's authored Map.
+### AI and automation assist without impersonating
 
-### Generated structure, personal control
+The system may retrieve, cluster, rank, summarize recommendation evidence, or
+name a generated Theme. It must distinguish generated organization from human
+authorship, preserve source context, and never fabricate or publish a Thought
+as if the User wrote it.
 
-The product should create a coherent Map automatically. Users may explore, move, pin, connect, and feature parts of it, but they should never face a blank canvas or be required to perform design labour before the Map becomes meaningful.
+### Discovery avoids global truth scores
 
-Spatial proximity alone does not silently create a public semantic claim. The exact lightweight interaction for authoring relationships remains an open design question.
+Personal Votes and aggregate behavior may improve relevance. They do not make
+an interpretation objectively correct, produce a public leaderboard, or make
+generic popularity the default discovery principle.
 
-### Themes emerge from the Map
+### Complexity emerges gradually
 
-Themes are patterns or regions that become visible through a person's Thoughts, media, and authored relationships. They are not manually attached graph nodes. Naming and public Theme discovery may be introduced only after the underlying Map earns them.
-
-### Discovery should feel human
-
-Discovery should eventually flow through people, media, emergent Theme regions, similar Maps, and explicit connections. Generic popularity should not dominate.
-
-### Complexity should emerge gradually
-
-A user begins with one work and one Thought. Clusters, named Themes, cross-media bridges, Paths, and social connections should appear only as the Map earns them.
-
-### AI may assist, never impersonate
-
-The system may suggest possible clusters or nearby works, but it must not publish interpretations, name a person's public identity, or make factual claims on their behalf.
+A new User can begin by selecting or Liking familiar works. Thoughts,
+connections, Theme regions, and a richer Map appear only as their activity
+earns them.
 
 ## Explicit non-goals
 
-The initial product is not:
+Contour is not:
 
-- A Goodreads or Letterboxd replacement based on ratings and logs.
-- A Twitter-like network for standalone posts.
-- A Reddit-style forum or debate system.
-- A generic bookmarking or link-saving tool.
-- An Obsidian replacement for private files and notes.
-- A productivity dashboard.
-- A manually arranged canvas requiring design labour.
-- An objective or canonical knowledge graph.
-- An AI-generated intellectual persona.
+- a ratings-first Goodreads or Letterboxd clone;
+- a public consumption log or achievement tracker;
+- a TikTok-style engagement feed for disconnected posts;
+- a Reddit-style debate hierarchy where votes establish truth;
+- a generic bookmarking or productivity system;
+- a blank manual canvas or technical knowledge graph;
+- a global taxonomy of canonical Themes;
+- an opaque recommendation engine with no human routes;
+- an AI-generated cultural persona; or
+- a product optimized to make people open it every day.
 
 ## Long-term direction
 
-The long-term network is a graph of authored human interpretation:
+The long-term network connects shared cultural objects with human taste and
+interpretation:
 
-- Media are shared cultural objects.
-- Thoughts are authored interpretations.
-- Themes are personal conceptual regions that emerge from Map structure rather than global taxonomy.
-- References create understated relationships across people.
-- Profiles are public subgraphs centered on one person.
-- The wider network reveals how culture produces related, opposing, and evolving ideas across human minds.
+- Media are shared Books and Films.
+- Likes are deliberate public taste signals.
+- Thoughts are authored expression.
+- Connections are authored explanations of relationship.
+- Themes are personal generated regions that can become public discovery
+  lenses.
+- Profiles and Maps are public subgraphs centered on one person.
+- A private interest graph improves recommendations without becoming identity.
+- References and follows create credited routes across people.
 
-The network should emerge from real user behaviour rather than being designed as a universal taxonomy from above.
+The wider system should reveal related, opposing, and unexpected paths through
+culture without flattening them into one universal taxonomy or popularity
+ranking.

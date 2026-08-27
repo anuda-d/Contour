@@ -1,7 +1,19 @@
 # Identity Map Prototype
 
-Status: active; owner-approved on 2026-08-20. Standing goal-bounded autonomous
-implementation was authorized on 2026-08-22 until this goal is complete.
+Status: complete; owner-approved goal completed under standing authorization.
+
+## Completion record
+
+The owner accepted this bounded software artifact as the completed Identity Map
+Prototype on 2026-08-26. The accepted evidence proves the local interaction
+prototype, responsive owner-to-public walkthrough, privacy boundaries, and
+durable state described below.
+
+The owner also selected a later discovery-first direction for Contour. That
+realignment does not retrofit discovery behavior into this historical goal and
+does not imply that this prototype proved target-user discovery quality, demand,
+retention, or market viability. The Map remains accepted as a valuable
+profile/contribution foundation for a later separately authorized goal.
 
 ## Question
 
@@ -170,6 +182,10 @@ product direction.
 
 ## Specification Routing
 
+This routing records the specification context used while the goal was active.
+The product foundation was realigned after completion; this goal's historical
+question, boundaries, and accepted evidence remain unchanged.
+
 After selecting one smallest useful goal gap, read only the relevant parts of:
 
 - [Map Design Foundation](MAP_DESIGN_FOUNDATION.md) for every change affecting
@@ -193,14 +209,10 @@ anti-popularity invariants.
 
 ## Completion Boundary
 
-Complete IM-1 through IM-10 through single-work-unit runs selected from current
-verified evidence. Every implementation unit must pass focused and full
-validation and receive fresh independent review. A clean unit is accepted and
-committed locally under the standing goal authorization, then the loop continues
-with the next smallest justified gap.
+IM-1 through IM-10 were completed through single-work-unit runs selected from
+verified evidence. Every implementation unit passed focused and full validation
+and received fresh independent review. Clean units were accepted and committed
+locally under the standing goal authorization.
 
-The owner remains the authority for unresolved material product, visual, scope,
-and lasting architecture decisions and for any later goal. Routine alignment
-and final completion do not require owner review when the documented criteria,
-validation, and fresh independent review are all satisfied. Mark the goal
-complete, commit the final state update, and stop before selecting another goal.
+Standing authorization ended with this goal. Any later goal requires separate
+owner approval and authorization.

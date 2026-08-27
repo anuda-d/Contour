@@ -1,18 +1,20 @@
-# Goal-Bounded Autonomous Development Loop
+# Goal-bounded autonomous development loop
 
 Status: current operating contract for continuous development against one
 owner-approved goal.
 
 This loop advances one approved product goal through small, independently
-validated work units. The owner has granted standing authorization for the loop
-to continue until the active goal is complete. Routine implementation does not
-wait for owner review.
+validated work units. It operates only when `docs/plans/CURRENT.md` records one
+active owner-approved goal with standing authorization. When no active goal is
+recorded, implementation stops until the owner supplies and authorizes one.
+Routine implementation inside an authorized goal does not wait for owner
+review.
 
 The owner remains the authority for a new goal and for unresolved material
 product, visual, scope, or lasting architecture decisions. The loop never uses
 standing authorization to broaden or reinterpret the active goal.
 
-## Goal and Work-Unit Boundary
+## Goal and work-unit boundary
 
 The active goal defines the outcome, invariants, authorized scope, validation
 standard, and completion condition. A work unit is the smallest coherent change
@@ -44,7 +46,7 @@ owner decision is required, another run overlaps, the baseline is unsafe, or a
 technical or external-action blocker cannot be resolved within authorized
 scope.
 
-## Owner Decision Boundary
+## Owner decision boundary
 
 Routine implementation evidence is accepted under standing authorization after
 focused and full repository validation and clean fresh independent review. The
@@ -71,7 +73,7 @@ unit when one exists; otherwise leave `Current run` and `Incomplete run` as
 `none`. Standing authorization remains recorded but no work continues until the
 decision is supplied.
 
-## Frontend Design Contract
+## Frontend design contract
 
 For work affecting Map presentation, interaction, visibility, responsive
 layout, design tokens, or reusable frontend foundations, the orchestrator must
@@ -91,7 +93,7 @@ unless a narrow smoke check is needed to diagnose a specific implementation
 risk. Landing-page-specific rules do not apply mechanically to the interactive
 Map.
 
-## Visual Checkpoint Cadence
+## Visual checkpoint cadence
 
 Full rendered click-through testing is deliberately batched for this
 experimental prototype.
@@ -116,28 +118,28 @@ experimental prototype.
   every material correction. Reviewers do not repeat the complete rendered
   click-through unless a checkpoint is due.
 
-The full rendered acceptance replay completed with the fifth accepted UI unit,
-Map-led Thought capture, on 2026-08-23. The next UI-unit count therefore starts
-at zero.
+Each active goal's implementation state owns the current checkpoint date and
+UI-unit count. Historical goal checkpoints do not authorize or satisfy a later
+goal's visual evidence.
 
-## Graph-First Entry Gate
+## Goal-specific entry gate
 
-The active implementation state carries a `Graph foundation` field. While it is
-`open`, the loop may work only on the first visible, interactive Map foundation.
+The implementation-state schema retains a `Graph foundation` field for the
+completed Identity Map Prototype and compatible later goals. When an active
+goal sets this field to `open`, that goal must define the exact visible entry
+gate and restrict selection accordingly.
 
-The graph foundation must develop observable graph behavior and the smallest
+Any entry gate must develop observable end-to-end behavior and the smallest
 necessary substrate together. It may include an application shell, goal-valid
-seed data, graph model, rendering, layout, and direct interaction only insofar
-as they support the visible claim. It may not select profile, onboarding,
-publishing, authentication, or speculative production work before the gate is
-accepted.
+seed data, model, rendering, interaction, and local state only insofar as they
+support the visible claim. It may not be satisfied by speculative architecture
+or a placeholder surface.
 
-The gate becomes `approved` only when a bounded graph unit is rendered,
-interacted with, fully validated, independently reviewed without an unresolved
-blocker, recorded as accepted evidence, and committed under standing
-authorization.
+The gate becomes `approved` only when its bounded behavior is exercised, fully
+validated, independently reviewed without an unresolved blocker, recorded as
+accepted evidence, and committed under standing authorization.
 
-## Model Routing
+## Model routing
 
 - The sole-writer orchestrator uses `gpt-5.6-terra` with high reasoning.
 - Read-only explorer subagents use `gpt-5.6-terra` with high reasoning.
@@ -146,7 +148,7 @@ authorization.
 - Reviewers are read-only and may not edit, commit, choose product direction,
   or determine a new goal.
 
-## No-Overlap Gate
+## No-overlap gate
 
 Before selecting a unit, inspect project task and agent activity. Ignore the
 active orchestrator itself.
@@ -159,7 +161,7 @@ Explorers and reviewers spawned by the current orchestrator are expected. The
 orchestrator must receive, stop, or otherwise resolve every owned subagent
 before accepting a unit.
 
-## Sources of Authority
+## Sources of authority
 
 Read these in order before repository work:
 
@@ -167,7 +169,7 @@ Read these in order before repository work:
 2. `docs/plans/CURRENT.md`;
 3. the active goal linked from `CURRENT.md`;
 4. the linked implementation state;
-5. relevant implementation and tests located just in time; and
+5. relevant implementation and tests located at selection time; and
 6. only the product specification relevant to the selected unit.
 
 The product foundation and active goal are authoritative. The active goal may
@@ -178,7 +180,7 @@ If sources conflict in a way that affects product direction, visual language,
 scope, or lasting architecture, stop at **NEEDS OWNER DECISION** with the
 smallest concrete decision required.
 
-## Standing Authority
+## Standing authority
 
 While the active goal has `Owner authorization: standing`, the loop may:
 
@@ -217,14 +219,14 @@ Before selecting a new unit or continuing the current unit, confirm that:
 - a current unit, if any, matches the recorded incomplete unit;
 - the behavior is authorized by the active goal;
 - no future task queue is recorded;
-- the graph-first gate is respected;
+- any goal-specific entry gate is respected;
 - the checkout contains no unsafe overlapping user changes; and
 - the repository check passes, or a pre-existing unrelated failure is recorded.
 
 If unrelated user changes overlap the unit, stop at **BASELINE BLOCKED** and
 report exact paths. Never reset or discard them without direction.
 
-## One Work-Unit Run
+## One work-unit run
 
 ### 1. Orient
 
@@ -258,11 +260,14 @@ writer and owns selection, integration, validation, and completion judgment.
 ### 4. Implement one coherent change
 
 Make the smallest end-to-end change that can satisfy the claim. Infrastructure
-is allowed only when necessary for the visible behavior in the same unit.
+is allowed only when necessary for visible or directly testable behavior in the
+same unit.
 
-Develop the graph and surrounding user experience in tandem. Preserve spatial
-movement as distinct from semantic authorship, private Drafts as distinct from
-Published content, and unrelated user changes as outside the unit.
+Develop discovery behavior and its supporting surfaces in tandem. When the Map
+is affected, preserve spatial movement as distinct from semantic authorship,
+private Drafts as distinct from Published content, private interest behavior as
+distinct from public Map membership, and unrelated user changes as outside the
+unit.
 
 Use the frontend design contract for every relevant visual unit.
 
@@ -286,13 +291,19 @@ When the visual checkpoint is due, launch through the documented command and:
 
 Review the diff for:
 
-- drift from identity and self-presentation toward reviews, logging, feeds, or
-  productivity software;
+- drift from intentional human discovery toward ratings, generic logging,
+  opaque recommendations, feeds, or productivity software;
+- discovery results that lack truthful provenance or understandable evidence;
+- private Saves, Bookmarks, Votes, or passive behavior leaking into the public
+  Map or another User's recommendation explanation;
 - private Draft leakage into visitor mode;
 - semantic relationships created by spatial movement;
-- manual Theme nodes or premature social systems;
+- canonical Theme nodes, manual Theme filing, or generated Themes presented as
+  authored human language;
+- public popularity scores or personalized Votes treated as global truth;
 - a Map that is decorative, technical, unstable, flowchart-like, or detached
-  from creation;
+  from discovery and contribution;
+- attention-maximizing mechanics inconsistent with intentional use;
 - inaccessible responsive behavior;
 - tests weakened beyond intended behavior;
 - speculative infrastructure; and
@@ -332,7 +343,8 @@ After validation passes and a fresh review has no unresolved blocker:
 1. append the factual review result;
 2. mark only proportionately supported criteria and evidence accepted under
    `standing owner authorization, 2026-08-22`;
-3. set `Graph foundation` to `approved` when the unit satisfies its gate;
+3. set `Graph foundation` to `approved` when the unit satisfies its recorded
+   goal-specific gate;
 4. append the accepted run record;
 5. for an accepted UI unit below the checkpoint, increment `UI units since
    visual checkpoint`; for the fifth unit, update `Visual checkpoint` with its
@@ -348,7 +360,7 @@ The factual acceptance record may differ from the reviewed diff only in
 administrative state. Any change to implementation, tests, behavior, or the
 evidence claim requires fresh validation and review.
 
-## Blocked Units
+## Blocked units
 
 If a selected unit becomes non-viable, do not silently replace it.
 
@@ -365,7 +377,7 @@ If a selected unit becomes non-viable, do not silently replace it.
 Administrative closure or removal of a blocked unit requires explicit owner
 direction when it would discard material work.
 
-## Alignment
+## Alignment review
 
 Perform goal-level alignment at meaningful milestones or when verified evidence
 reveals possible drift or unnecessary complexity. Alignment reviews observable
@@ -378,7 +390,7 @@ authorization, clear `Alignment due`, and continue. If it requires a material
 product, visual, scope, or architecture decision, stop at **NEEDS OWNER
 DECISION**.
 
-## Owner Pause or Stop
+## Owner pause or stop
 
 The owner may pause or stop the loop at any time.
 
@@ -397,7 +409,7 @@ discard, or commit it without explicit disposition. A stopped clean boundary
 with no active unit may use the same paused state until the owner supplies a new
 direction.
 
-## Goal Completion
+## Goal completion
 
 The active goal is complete only when every criterion has proportionate
 accepted evidence, the complete walkthrough and full check pass, all affected
@@ -409,7 +421,7 @@ When complete:
 1. run and record the final complete rendered click-through checkpoint, set
    `Visual checkpoint` to `goal completion`, reset `UI units since visual
    checkpoint` to `0`, record the final accepted evidence and review, and mark
-   every IM criterion `accepted` in the Goal Progress table;
+   every active-goal criterion `accepted` in the Goal Progress table;
 2. replace the goal status with the single canonical line `Status: complete;
    owner-approved goal completed under standing authorization.`;
 3. clear `Current run`, `Incomplete run`, and `Pending owner decision` to
@@ -434,7 +446,7 @@ When complete:
 
 The owner supplies any later goal.
 
-## Terminal States
+## Terminal states
 
 Each unit or loop ends in exactly one state:
 
@@ -458,7 +470,7 @@ Each unit or loop ends in exactly one state:
 - **GOAL COMPLETE**: all criteria have accepted evidence, the final validation
   and review are clean, the final commit exists, and no later goal is selected.
 
-## Accepted Run Record
+## Accepted run record
 
 For every committed unit retain:
 
