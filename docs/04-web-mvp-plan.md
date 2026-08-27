@@ -1,196 +1,248 @@
-# Web MVP Plan
+# Web MVP plan
 
 ## Purpose
 
-This document defines the smallest staged web build that can test the new product thesis without rebuilding the discarded book-only prototype under different names.
+This document separates what Contour has already built from what the next
+discovery proof must test. A staged prototype is evidence only for its stated
+question; it does not prove demand, retention, recommendation quality, or
+product viability.
 
-## What must be proven
+## Product sequence
 
-The first build must test whether target users:
+Contour has two complementary foundations:
 
-1. Want a public identity built from Thoughts about books and films.
-2. Enjoy looking at and exploring their own Map.
-3. Can create useful Thoughts without academic friction.
-4. Understand the difference between private Drafts and their public Map.
-5. Find the generated graph intuitive to move through and shape.
-6. Value cross-media connections as part of how the profile represents them.
+1. **Contribution and profile:** a person can accumulate deliberate taste,
+   authored Thoughts, connections, Themes, and a public Map.
+2. **Human discovery:** another person can start from something known, follow
+   understandable human evidence, and find an unfamiliar Book or Film worth
+   saving.
 
-The strongest qualitative signal is:
-
-> The user wants to keep shaping and sharing their Map after the guided session ends.
+The completed Identity Map Prototype establishes a substantial part of the
+first foundation. The proposed next prototype must test the second before the
+repository expands into production infrastructure or a complete social system.
 
 ## Platform decision
 
-Start with a responsive web product.
+Continue with responsive web for the next proof.
 
-Web is the right first surface because:
+Web remains appropriate because:
 
-- Profiles, Thoughts, and Media need public URLs; named Theme-region URLs may follow later.
-- Graph exploration benefits from desktop space.
-- Visitors can explore without installing an app.
-- The model can be iterated quickly.
-- The wider web remains a natural source of Media references.
+- discovery routes need public URLs;
+- search, Media, Thoughts, personal Themes, people, and Maps benefit from
+  linkable destinations;
+- visitors can explore without installing an app;
+- graph and recommendation context benefit from desktop space;
+- mobile web can test high-intent search, saving, voting, and capture; and
+- the product model can change quickly before native investment.
 
-Native mobile is deferred until capture and repeat behaviour are proven. A browser extension or bookmarklet may precede it.
+Native mobile remains deferred until discovery and contribution behavior are
+proven. A browser extension or share target may eventually support capture but
+is not part of the next proof.
 
-## Stage 0: identity and Map interaction prototype
+## Stage 0: Identity Map Prototype, complete
 
-### Goal
+### Historical question
 
-Prove that the generated-but-shapeable Map and resulting public profile create a desirable identity experience before production infrastructure or the wider social system.
+Can one User encounter, shape, and grow a small Book-and-Film Thought Map until
+it becomes a coherent public profile rather than a technical graph or media
+log?
 
-### Data
+### Implemented result
 
-- One editable prototype User.
-- A curated catalogue of Books and Films.
-- Enough seeded content to demonstrate a compelling mature profile and Map before creation begins.
-- Local persistence is acceptable.
+The completed local prototype supports:
+
+- a mature seeded Editorial Constellation;
+- generated layout, semantic zoom, pan, focus, movement, and durable pinning;
+- a bounded Book and Film chooser;
+- private editable Draft Thoughts;
+- anchored publication into a Published-only visitor Map;
+- one human-authored cross-media bridge Thought;
+- featured public Media;
+- a coherent owner and visitor profile composition;
+- local durable state; and
+- a complete responsive desktop/mobile, light/dark acceptance walkthrough.
+
+### Evidence boundary
+
+The owner accepted this as a completed MVP foundation on 2026-08-26. The
+software and bounded interaction walkthrough are complete. This acceptance does
+not claim:
+
+- that target users want to create Maps;
+- that Contour improves real discovery;
+- that seeded recommendations are trustworthy;
+- that people return after saving a work;
+- that the product has demand or retention; or
+- that the prototype is production-ready.
+
+The historical goal, implementation state, and visual design foundation remain
+the authoritative record of what was built.
+
+## Proposed Stage 1: Human Discovery Prototype
+
+Status: product direction is settled; implementation requires a separate
+owner-approved goal and authorization.
+
+### Question
+
+Can someone start from a Book, Film, or idea they already know, discover an
+unfamiliar Book or Film through understandable human evidence, and care enough
+to save it?
+
+### Strongest qualitative signal
+
+> This gave me a more convincing route to something new than a generic list,
+> opaque algorithm, or disconnected social post.
+
+### Bounded data
+
+- Several seeded public people with distinct Maps.
+- A curated Book and Film catalogue large enough to support surprising routes.
+- Seeded free-form Thoughts and explicit cross-work connections.
+- Seeded personal Theme regions with generated-name provenance.
+- Honest forced personalization inputs for one local viewer.
+- Local state is acceptable.
+
+The prototype may force or seed recommendation candidates, but the interface
+must disclose that limitation in evidence. It may not imply that a production
+recommender or real multi-User behavior exists.
 
 ### Required surfaces
 
-- Discovery-led landing and onboarding.
-- My Map.
-- Public-profile preview and visitor view.
-- Thought creation and detail.
-- A minimal Book and Film chooser sufficient to anchor Thoughts.
+- Discovery-led landing example.
+- Explore as the signed-in home.
+- Search from a known work or idea.
+- Bounded recommendation results with reasons.
+- Media page or equivalent Media context.
+- Thought and connection detail.
+- Personal Theme region detail.
+- Public person and Map exploration using the existing foundation.
+- Private Library state for Saved works and Bookmarked evidence.
+- Starter-Map state from deliberately Liked familiar works.
 
 ### Required actions
 
-- Search and choose a Book or Film.
-- Create a Draft Thought.
-- See the Draft appear distinctly and immediately on the private Map.
-- Anchor and publish a Thought.
-- See the published Thought enter the public Map without losing its recognizable place.
-- Attach another work to create a bridge Thought.
-- Move through and spatially shape the generated graph.
-- Exercise the first bounded form of authored connection selected in the owner-approved goal.
-- Feature Media already present in the Map.
+- Start from a known Book, Film, or idea.
+- Receive unfamiliar Book and Film candidates.
+- Inspect the human evidence behind a candidate.
+- Move through a Thought, connection, Theme region, and person's Map.
+- Upvote or downvote the personal relevance of evidence.
+- Bookmark the evidence privately.
+- Save an unfamiliar work privately.
+- Like a familiar work publicly and see it enter a starter Map taste layer.
+- See an understandable recommendation reason update when relevant.
 
-### Map requirements
+### Acceptance walkthrough
 
-- Automatically generated and visually stable.
-- Readable Books, Films, Draft Thoughts, and Published Thoughts.
-- Immediate growth after creation.
-- Intuitive movement with a clear distinction between spatial placement and semantic connection.
-- Whole-map and focused-region exploration.
-- Thought detail from a node.
-- A way to preview the same graph as a visitor will encounter it.
-- Usable focused navigation on mobile.
+In roughly ten minutes, a target User can:
 
-### Prototype exclusions
+1. Encounter one strong example of a known work leading to an unfamiliar work
+   through a real person's explanation.
+2. Select a Book, Film, or idea they already care about.
+3. Receive several bounded candidates and distinguish why each appeared.
+4. Open one Thought or connection and understand the human meaning.
+5. Continue into the contributor's personal Theme region or Map.
+6. Upvote, downvote, or Bookmark the route without producing a public score.
+7. Save one unfamiliar Book or Film privately.
+8. Deliberately Like familiar works and see a lightweight public Map begin.
+9. Return to Explore without being placed in an infinite feed.
+10. Prefer at least one resulting discovery route to an opaque or generic
+    recommendation.
 
-- Real multi-user authentication.
-- Follow, Save, Appreciate, Comment, activity, and notification systems.
-- Cross-person references and similar-Map discovery.
-- Theme naming, Theme spaces, and manual Theme membership.
-- Full Media pages and external catalogue synchronization.
-- Production moderation systems.
+### Failure conditions
+
+The proof fails if:
+
+- candidates feel like arbitrary seeded cards;
+- the User cannot tell why a work was recommended;
+- human evidence is decorative rather than decision-useful;
+- personal Themes look like generic tags;
+- Votes appear to establish correctness or global popularity;
+- Saves, Bookmarks, or passive activity leak into the public Map;
+- liking familiar works requires writing before a starter Map appears;
+- Explore behaves like an endless engagement feed; or
+- the User finds nothing worth saving.
+
+### Exclusions
+
+- Real multi-User authentication.
+- Production recommendation infrastructure or machine-learning claims.
+- Live behavioral analytics collection.
+- Production Media-catalogue synchronization.
+- Public vote, Like, or follower counts.
+- Comments; reconsidering them requires a later owner decision.
+- Notifications or an activity feed.
+- Cross-Map branch import.
+- Canonical global Themes or manual Theme filing.
+- Production moderation, privacy, security, or deployment.
 - Native applications.
-- Browser extension.
-- Paths authoring unless core work finishes early.
-- AI-generated public text or automatic public Theme naming.
 
-## Stage 0 acceptance walkthrough
+## Stage 2: closed web alpha
 
-In roughly ten minutes, a target user can:
-
-1. Explore a compelling seeded profile and understand that its Map represents the person's displayed mind.
-2. Choose three Books or Films.
-3. Add a compact Thought to each.
-4. See each Draft appear on the private Map immediately and distinctly.
-5. Connect two works through a bridge Thought.
-6. Publish the Thoughts and understand what changed on the public Map.
-7. Move through and shape the graph without needing graph-analysis knowledge.
-8. Feature Media above the Map.
-9. Preview the public profile as another person would encounter it.
-10. Want to keep refining or share the result.
-
-The walkthrough fails if the Map feels decorative or technical, Draft and public state are confused, creation feels like writing reviews, or users do not care about revisiting or showing the profile.
-
-## Later prototype expansion
-
-Only after the identity and Map artifact shows promise should a later owner-approved goal choose among:
-
-- Emergent Theme-region recognition and optional naming.
-- Discovery through similar Map regions and distinctive people.
-- Media pages organized around interpretation.
-- Save, Appreciate, Comment, Follow, and activity behavior.
-- Cross-person Thought references and backlinks.
-
-These are directions, not a committed implementation sequence. Social activity remains intentionally unresolved until the personal profile works.
-
-## Stage 1: closed web alpha
-
-### Goal
-
-Test the behaviour with real people and durable shared state.
+Only after the discovery interaction shows promise should a closed alpha add
+real shared state and behavior.
 
 ### Additional requirements
 
 - Authentication and account recovery.
 - Persistent database and stable public URLs.
-- Media record deduplication and merging.
+- Real Likes, Saves, Bookmarks, Votes, and Follows.
+- Media-record deduplication and merging.
 - Image-source and metadata provenance.
-- Real Follow, Save, Appreciate, Comment, and reference relationships.
-- Activity surface sufficient for Appreciations, Comments, and references.
-- Blocking, reporting, conversation controls, and moderation tooling.
+- Real recommendation candidate generation and explanation logging.
+- Personalization history, correction, reset, and privacy controls.
+- Blocking, reporting, moderation, and appeal tooling.
 - Revision history and content withdrawal rules.
-- Accessibility, responsive behaviour, and performance budgets.
-- Privacy and security review.
-- Basic product analytics focused on the core loop rather than engagement maximization.
+- Accessibility, responsive behavior, and performance budgets.
+- Security and privacy review.
+- Product analytics focused on discovery outcomes rather than engagement
+  maximization.
 
 ### Alpha research questions
 
-- Do users return to inspect their own Map without a notification prompt?
-- Which creation prompts produce specific Thoughts rather than generic reviews?
-- Does selecting featured Media improve pride in the profile?
-- Do emergent Theme regions feel revealing, arbitrary, or invasive?
-- Are cross-person references understandable when visually understated?
-- Do Comments create connection without overwhelming durable Thoughts?
-- Does Follow improve discovery without a feed?
-- Which graph views remain legible as Maps grow?
+- Do Users find and later act on Saved Books or Films?
+- Which human evidence most improves confidence: Thoughts, direct connections,
+  personal Themes, people, or similar Maps?
+- Which explicit and passive signals improve relevance without feeling creepy?
+- Do personalized Votes help without collapsing discovery into agreement?
+- Do Users deliberately Like familiar works after receiving discovery value?
+- Do Thoughts and connections accumulate without forced prompts?
+- Do generated Theme names feel useful, generic, or misrepresentative?
+- Does following a person improve discovery without a home feed?
+- How frequently do Users return at natural discovery and contribution moments?
+- Which Map views remain legible as taste-only and authored layers grow?
 
-## Stage 2: expansion only after proof
+## Stage 3: expansion only after proof
 
 Candidates, not commitments:
 
-- Path creation and sharing.
-- Browser capture extension.
+- Comments and quiet activity notifications.
+- Cross-person Thought references and backlinks.
+- Carefully designed external Map-branch reuse.
+- Paths through works, Thoughts, and Theme regions.
+- Browser capture or share extension.
 - Native mobile capture.
 - Additional created-media types.
-- Collaborative Paths.
 - Stronger graph history and time travel.
-- Carefully assistive Theme and connection suggestions.
+- Assistive Theme and connection suggestions.
 
-No candidate should be promoted merely because it is technically easy.
-
-## Stage 0 dependency direction
-
-Stage 0 begins with a visible, interactive graph foundation rather than a
-profile shell or an abstract data layer. After that foundation is accepted,
-the graph and the creation experience must be developed in
-tandem. The owner-approved implementation goal defines completion criteria,
-and the development loop selects one bounded gap at a time rather than treating
-this document as a task queue.
-
-The conceptual dependency is:
-
-1. A desirable seeded Map establishes the first visible product foundation.
-2. Generated layout and direct spatial interaction make the graph explorable
-   rather than decorative.
-3. Thought lifecycle and Media anchoring supply authentic content.
-4. The Map changes visibly through the same interface after every creation action.
-5. A responsive public profile is layered over the proven Map.
-6. The complete walkthrough and target-user sessions test whether it is worth continuing.
+No candidate should be promoted merely because it is available to implement.
 
 ## Validation standard
 
-The prototype is not done because every screen exists. It is done when:
+A prototype is not done because every planned screen exists.
 
-- The complete acceptance walkthrough works through public interface actions.
-- The Map remains readable on desktop and navigable on mobile.
-- All creation visibly improves the profile.
-- No core flow requires ratings, reviews, counts, or a feed.
-- The distinction between private Drafts and public identity remains clear.
-- Spatial graph customization does not silently create confusing semantic claims.
-- Target users demonstrate desire to continue shaping their own Map.
+For the proposed discovery proof, completion requires:
+
+- the walkthrough to work through visible interface actions;
+- public and private state boundaries to remain clear;
+- every recommendation reason to match its actual evidence;
+- the existing Map and Draft/Published behavior to remain intact where reused;
+- responsive desktop and mobile behavior;
+- focused checks and `./scripts/check.sh` to pass;
+- a full rendered checkpoint at the cadence defined by the active goal;
+- fresh independent review with no unresolved blocker; and
+- honest documentation of forced data, special cases, and unproven claims.
+
+The primary outcome is useful discovery, not daily activity, time spent,
+content volume, or profile completion.

@@ -1,9 +1,9 @@
-# Agent Guidance
+# Agent guidance
 
 These instructions govern contributors and coding agents working in this
 repository. Product direction belongs to the owner.
 
-## Before Working
+## Before working
 
 - Start with `docs/plans/CURRENT.md`; it is the compact operational index.
 - Confirm that exactly one owner-approved goal is active.
@@ -17,31 +17,41 @@ repository. Product direction belongs to the owner.
 - Treat `docs/05-open-questions.md` as owner decision boundaries, not a backlog.
 - If an owner decision is pending, do not select or begin another work unit.
 
-## Product Direction
+## Product direction
 
-- This is a social identity platform centered on a person's displayed Thought
-  Map.
-- The stage creates desire; the mirror gives the performance substance.
-- The User is the center, Thoughts are authored expression, Media is grounding,
-  and the Map is the identity artifact.
-- Build the graph and the surrounding user experience in tandem.
-- The first implementation foundation is the visible, interactive Map. Until
-  that foundation is accepted through full validation, clean fresh independent
-  review, and local commit under standing authorization, do not select profile,
-  onboarding, publishing, or production-infrastructure work.
-- Build only the thin application and data substrate required by the current
-  visible graph behavior. An architecture-only layer is not progress.
+- The product is Contour, an intentional human-to-human discovery platform for
+  Books and Films.
+- The primary outcome is finding an unfamiliar work through understandable
+  human evidence: a Thought, authored connection, personal Theme region, person,
+  or Map.
+- The Map is a layered public taste and authorship artifact that supports
+  discovery. It may begin with deliberately Liked Media and becomes richer
+  through authored Thoughts and connections.
+- Discovery creates immediate utility; identity accumulates through
+  participation. Do not require Map-building labor before proving value.
+- Build visible end-to-end discovery behavior and only the application and data
+  substrate required to evaluate it. Architecture without observable product
+  behavior is not progress.
 - Keep the Map generated but shapeable. Do not present a blank manual canvas.
 - Drafts belong visibly to the private owner Map and never to visitor mode.
 - Public Thoughts require a Book or Film anchor.
-- Do not introduce ratings, conventional reviews, consumption statistics,
-  popularity scores, or a primary engagement-ranked feed.
-- Do not introduce Theme nodes or manual Theme filing. Themes may later emerge
-  from Map regions after the core artifact is proven.
-- AI may assist future private workflows but may not author or publish the
-  User's identity.
+- Free-form expression is allowed; do not force ratings, verdicts, summaries,
+  or a conventional review template.
+- A public Like, private Save, private Bookmark, personalized Vote, and authored
+  Thought are distinct actions. Passive behavior may personalize discovery but
+  must never silently change the public Map.
+- Do not introduce canonical Theme nodes or manual Theme filing. Personal
+  Themes emerge from coherent Map regions; the system names them, and the
+  owner can rename, hide, or dismiss them.
+- Recommendations may use explicit and behavioral signals, but must expose
+  understandable human evidence when available and never reveal another
+  person's private activity.
+- Do not introduce public popularity scores, global truth-ranking Votes,
+  consumption achievements, or a primary engagement-ranked infinite feed.
+- AI may assist retrieval, ranking, clustering, or generated Theme naming, but
+  may not impersonate a User or publish a Thought as human authorship.
 
-## While Implementing
+## While implementing
 
 - State the criterion, intended behavior, and evidence before editing.
 - Use one to three read-only explorer subagents for independent investigation
@@ -62,7 +72,7 @@ repository. Product direction belongs to the owner.
   without owner approval.
 - Preserve unrelated user changes and never absorb them into a loop commit.
 
-## Validation
+## Validation requirements
 
 - Run focused checks first and `./scripts/check.sh` before review.
 - Full rendered desktop/mobile click-through validation is a checkpoint, not a
@@ -77,11 +87,12 @@ repository. Product direction belongs to the owner.
 - Use a fresh independent read-only review agent after implementation and after
   every material correction.
 
-## Goal-Bounded Autonomous Development Loop
+## Goal-bounded autonomous development loop
 
 - Use `docs/main/DEVELOPMENT_LOOP.md` as the complete operating contract.
-- The owner has granted standing authorization to advance the active goal
-  through successive bounded work units until the goal is complete.
+- Standing authorization exists only when `docs/plans/CURRENT.md` records one
+  active owner-approved goal with `Owner authorization: standing`. If no active
+  goal is recorded, stop before implementation.
 - Work remains one bounded unit at a time. Do not create a future task queue.
 - Independent review is required. A reviewer reports findings but does not make
   product decisions.
@@ -91,7 +102,8 @@ repository. Product direction belongs to the owner.
   full rendered click-through evidence is required only when the visual
   checkpoint is due.
 - After a unit is committed, immediately re-orient and select the next smallest
-  justified gap inside the same goal.
+  justified gap inside the same goal only while standing authorization remains
+  active.
 - The owner remains the decision-maker for new goals and unresolved material
   product, visual, scope, or lasting architecture choices. Stop at **NEEDS
   OWNER DECISION** when one is required.
@@ -101,14 +113,14 @@ repository. Product direction belongs to the owner.
 - Stop when the goal is complete, the owner pauses, or continuing requires an
   owner decision or unsafe external action.
 
-## Model Routing
+## Model routing
 
 - The sole-writer orchestrator uses `gpt-5.6-terra` with high reasoning.
 - Explorer subagents use `gpt-5.6-terra` with high reasoning and are read-only.
 - Fresh independent review uses `gpt-5.6-sol` with high reasoning.
 - Review agents are read-only and must return findings to the orchestrator.
 
-## Communicating Results
+## Communicating results
 
 - Lead with what visibly changed and what was actually observed.
 - Separate evidence from interpretation.

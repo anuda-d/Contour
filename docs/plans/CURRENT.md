@@ -1,106 +1,86 @@
-# Current Development Index
+# Current development index
 
-Status: Identity Map Prototype is the active owner-approved goal as of
-2026-08-20. Standing goal-bounded authorization was granted on 2026-08-22 for
-successive independently reviewed work units until the goal is complete.
+Status: no active goal; Identity Map Prototype is complete.
 
-## Active Work
+## Active work
 
-- Goal: [Identity Map Prototype](identity-map-prototype/GOAL.md)
+- Last completed goal: [Identity Map Prototype](identity-map-prototype/GOAL.md)
 - Shared implementation state: [Implementation Plan](identity-map-prototype/IMPLEMENTATION_PLAN.md)
-- Map design foundation: [Editorial Constellation](identity-map-prototype/MAP_DESIGN_FOUNDATION.md)
-- Active work: owner decision on qualitative IM-1 acceptance
+- Preserved design foundation: [Editorial Constellation](identity-map-prototype/MAP_DESIGN_FOUNDATION.md)
+- Active work: none; Identity Map Prototype is complete and the loop is stopped
 
-## Run State Snapshot
+## Run state snapshot
 
-- Active goal id: identity-map-prototype
-- Owner authorization: standing
-- Authorization scope: active goal
-- Authorization source: owner
-- Loop cadence: continuous
+- Active goal id: none
+- Owner authorization: pending
+- Authorization scope: none
+- Authorization source: none
+- Loop cadence: stopped
 - Graph foundation: approved
 - Current run: none
 - Incomplete run: none
-- Run status: needs owner decision
-- Pending owner decision: whether the rendered prototype creates credible desire to make one for IM-1, or completion should wait for target-user evaluation
+- Run status: none
+- Pending owner decision: none
 - Alignment due: no
-- Visual checkpoint: accepted through Complete acceptance walkthrough, 2026-08-24
+- Visual checkpoint: goal completion
 - UI units since visual checkpoint: 0
 
-The graph-first foundation correction was accepted under standing authorization
-on 2026-08-22 after full validation and clean fresh independent review. Routine
-validation and fresh independent review replace owner work-unit review;
-material product, visual, scope, and lasting architecture decisions remain
-owner-gated.
+## Completed goal boundary
 
-On 2026-08-23 the owner selected the quiet Draft margin-note treatment. Draft
-Thoughts use an open authored mark at overview scale, add a small `Draft` note
-beside their floating fragment at middle scale, and identify themselves as
-`Private draft` in close contextual detail. Visitor mode excludes them.
+The owner accepted the Identity Map Prototype as a completed MVP foundation on
+2026-08-26. Its software, local durability contract, and complete owner-to-public
+walkthrough were already implemented, validated on representative desktop and
+mobile viewports in light and dark modes, independently reviewed, and committed.
 
-On 2026-08-23 the owner also reduced rendered click-through validation from a
-per-unit gate to a checkpoint on every fifth UI unit before its acceptance and
-before goal completion. Fresh independent code review and focused/full
-repository checks remain required for every unit.
+The owner-level acceptance of IM-1 means the rendered Map remains a credible
+and valuable profile/contribution feature worth carrying forward. It does not
+claim target-user validation, real discovery quality, market demand, retention,
+or production readiness.
 
-The owner explicitly resumed the autonomous loop on 2026-08-24. Durable pinned
-node placement was accepted after focused and full validation, targeted browser
-evidence, correction of review findings, and clean fresh independent review.
-Map-led Draft publishing is accepted after focused and full checks, a targeted
-rendered publication flow, correction of a stale-tab persistence issue, and
-clean fresh correction review. The Map-led cross-media bridge Draft is also
-accepted after focused and full checks, a targeted rendered bridge-to-public
-flow, correction of cross-version lifecycle and stale-detail issues, and clean
-fresh correction review. Visitor profile framing is accepted after focused and
-full checks, targeted desktop and mobile visitor evidence, correction of one
-seed-coupled authorship label, and clean fresh correction review. The
-validation-hardening unit added no product surface and did not increment the UI
-counter. It composed the complete durable state contract and ran the full
-desktop/mobile, light/dark acceptance checkpoint required before goal
-completion. The checkpoint found and corrected one existing 38-pixel mobile
-chooser return target so it now follows the established 44-pixel touch rule;
-the complete isolated-origin walkthrough and all four responsive color-mode
-renders are otherwise clean. The unit passed focused and full checks, clean
-fresh correction review, and was accepted in local commit `8368256`. No further
-technical unit can honestly settle IM-1's qualitative desire criterion; the
-loop is stopped at the smallest owner decision rather than inventing sharing,
-onboarding, or another surface.
+The goal's accepted interaction evidence remains recorded in the linked
+implementation state. No unfinished technical unit or overlapping run remains.
+Standing authorization ended with goal completion.
 
-These fields mirror the active implementation state and are checked by
-`./scripts/check.sh`. Update both files in the same administrative change.
+## Product realignment
 
-## Required Read Order
+The owner named the product **Contour** and selected a discovery-first direction
+on 2026-08-26.
+
+Contour helps someone begin with a known Book, Film, or idea and discover an
+unfamiliar work through understandable human evidence: a Thought, authored
+connection, personal Theme region, person, or Map. The completed Map prototype
+is preserved as Contour's profile and contribution foundation rather than
+treated as the first-use promise.
+
+The proposed Human Discovery Prototype is specified in the
+[Web MVP Plan](../04-web-mvp-plan.md). That proposed phase is not an active goal
+and has no standing implementation authorization. A later owner instruction
+must establish its exact goal, invariants, implementation state, and
+authorization before code work begins.
+
+## Required read order
 
 1. `AGENTS.md`
 2. this file
-3. the owner-approved active goal
-4. its shared implementation state
-5. relevant implementation and tests located just in time for task selection
-6. only the specification relevant to the selected task
+3. stop if this file records no active goal
+4. otherwise read the linked active goal
+5. read its shared implementation state
+6. locate only enough code and tests to select one smallest useful gap
+7. read only the product specification relevant to that selected task
 
-If this index reports no active goal, no standing authorization, a pending owner
-decision, or an incomplete conflicting run, stop at the corresponding terminal
-state. If a current unit exists, continue only that unit. While `Graph
-foundation` is `open`, any new work must remain a visible graph foundation
-allowed by the active goal. Do not turn an open question, later direction, or
-improvement idea into active work.
+Product discussion and owner-directed documentation changes may proceed without
+an active implementation goal. Product implementation may not.
 
-## Standing Goal Authorization
+## Current authorization boundary
 
-The standing-authorization terms below are active for the resumed loop.
-
-- The owner granted standing authorization on 2026-08-22 to advance this one
-  active goal through successive bounded units until it is complete.
-- Each unit still requires focused and full repository validation and fresh
-  independent read-only review. Full rendered click-through evidence is batched
-  on every fifth UI unit before acceptance and before goal completion.
-- A clean unit is accepted and committed locally under the standing
-  authorization, then the loop immediately selects the next smallest justified
-  gap inside the same goal.
-- The owner remains the authority for new goals and unresolved material
-  product, visual, scope, or lasting architecture decisions.
-- The loop may not push, merge, deploy, publish, discard user work, or perform
-  another external or destructive action without explicit direction.
+- No active goal exists.
+- No standing goal-bounded implementation authorization exists.
+- Do not select, infer, or begin a discovery implementation unit from the Web
+  MVP Plan or Open Questions.
+- The owner remains the authority for the next goal and every unresolved
+  product, visual, scope, privacy, or lasting architecture decision.
+- Push, merge, deploy, publish, destructive cleanup, and unrelated external
+  side effects remain separately authorized.
 
 ## Commands
 
@@ -108,43 +88,8 @@ The standing-authorization terms below are active for the resumed loop.
 - Repository state: `git status --short`
 - Diff review: `git diff --check`
 
-Rendered checkpoint commands and evidence are recorded when the five-unit or
-final-goal checkpoint is due.
+## Stop condition
 
-## Run Contract
-
-- Confirm standing authorization, owner-decision, and no-overlap gates before
-  repository work.
-- Continue an existing current unit before selecting anything new.
-- Otherwise select one smallest useful gap from the goal and current evidence.
-- While `Graph foundation` is `open`, select only a bounded visible graph claim
-  allowed by the graph-first entry gate.
-- Use `design-taste-frontend` for every relevant Map UI unit and record its
-  Design Read, dials, audit, and applicable pre-flight result.
-- State one criterion, one behavior, and one evidence claim before editing.
-- Load implementation just in time; the state file prescribes no task sequence.
-- Run focused validation before the full check.
-- Increment `UI units since visual checkpoint` for accepted UI units one through
-  four. When the next UI candidate is the fifth, preserve it as the current
-  run, set the counter to five and `Run status` to `visual checkpoint`, and run
-  the combined rendered click-through before review and acceptance. A clean
-  fifth unit records the checkpoint and resets the count to zero.
-- Record candidate evidence, then use a fresh independent read-only reviewer of
-  the implementation and evidence claim.
-- Resolve blocking findings and repeat review after material corrections.
-- After a clean review, record accepted evidence, commit the coherent local
-  unit, and immediately continue the loop.
-- Never select a new goal, push, merge, publish, or disturb unrelated user work.
-
-## Stop Conditions
-
-- Standing authorization is absent or withdrawn.
-- A material owner decision is pending.
-- A work unit is blocked and requires owner authority or destructive handling.
-- Another project run or unrelated or orphaned subagent is active before task
-  selection.
-- Baseline repository state is unsafe.
-- The task exceeds one fresh context window.
-- No justified task advances the goal.
-- The owner pauses or stops the loop.
-- The goal is complete.
+The development loop is stopped at **GOAL COMPLETE**. The next implementation
+run requires a new owner-approved goal; the proposed discovery phase does not
+become active merely because its direction is documented.

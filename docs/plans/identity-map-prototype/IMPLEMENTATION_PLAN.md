@@ -1,39 +1,36 @@
 # Identity Map Prototype Implementation State
 
-Status: active shared state; the goal is owner-approved, with standing
-goal-bounded autonomous authorization granted on 2026-08-22 until completion.
+Status: complete shared state; no work is active and the loop is stopped.
 
 ## Run State
 
-- Active goal id: identity-map-prototype
-- Owner authorization: standing
-- Authorization scope: active goal
-- Authorization source: owner
-- Loop cadence: continuous
+- Active goal id: none
+- Owner authorization: pending
+- Authorization scope: none
+- Authorization source: none
+- Loop cadence: stopped
 - Graph foundation: approved
 - Current run: none
 - Incomplete run: none
-- Run status: needs owner decision
-- Pending owner decision: whether the rendered prototype creates credible desire to make one for IM-1, or completion should wait for target-user evaluation
-- Last accepted run: Complete acceptance walkthrough hardening, 2026-08-24
+- Run status: none
+- Pending owner decision: none
+- Last accepted run: Owner completion decision, 2026-08-26
 - Alignment due: no
-- Visual checkpoint: accepted through Complete acceptance walkthrough, 2026-08-24
+- Visual checkpoint: goal completion
 - UI units since visual checkpoint: 0
 
-The graph foundation, Map-led three-work chooser, shared published-only visitor
-preview, Map-led Media featuring, and private Draft capture were accepted under
-standing authorization after full validation and clean fresh independent
-review. The owner explicitly resumed the loop on 2026-08-24. Durable pinned
-node placement, Map-led Draft publishing, the Map-led cross-media bridge Draft,
-and visitor profile framing are accepted. Complete acceptance walkthrough
-hardening tested the owner-to-public contract and performed the full visual
-checkpoint required before goal completion.
+The graph foundation, Map-led three-work chooser, shared Published-only visitor
+preview, Map-led Media featuring, private Draft capture, durable pinning,
+publishing, cross-media bridge, visitor profile framing, and final acceptance
+hardening were accepted after proportionate validation and fresh independent
+review. The owner accepted the bounded software artifact as a completed MVP
+foundation on 2026-08-26. No active run or standing authorization remains.
 
 ## Goal Progress
 
 | Criterion | Status | Accepted evidence |
 | --- | --- | --- |
-| IM-1 Desirable Map | in progress | Accepted foundation evidence: seeded Editorial Constellation renders as authored identity rather than a review log or technical graph. |
+| IM-1 Desirable Map | accepted | Accepted foundation and owner-level evidence: the seeded Editorial Constellation renders as a coherent, explorable public portrait rather than a review log or technical graph, and the owner chose to preserve the Map as Contour's profile/contribution foundation. This is not target-user discovery, demand, or retention evidence. |
 | IM-2 Non-review expression | accepted | Accepted capture evidence: the private prompt asks what a work made the owner notice, feel, question, connect, or believe and explicitly avoids summary, score, verdict, rating, or review structure. |
 | IM-3 Draft boundary | accepted | Accepted capture evidence: a newly saved anchored Draft appears immediately and distinctly on the owner Map, remains editable and persistent, and is absent with its relationship from visitor mode. |
 | IM-4 Generated living Map | accepted | Accepted complete-walkthrough evidence: deterministic relationship-sensitive layout, semantic zoom, stable seeded regions, immediate graph growth, one-anchor-to-bridge lifecycle changes, publication, and explicit shaping visibly preserve one readable displayed mind through the complete three-work sequence. |
@@ -42,15 +39,16 @@ checkpoint required before goal completion.
 | IM-7 Public identity boundary | accepted | Accepted preview, featuring, publication, and profile-framing evidence: the shared Published-only Map excludes private content and owner shaping controls; public Media can be curated into a persistent visitor orbit; publication reveals the same anchored Thought; and the existing mark, name, handle, identity line, orbit, and Map form one coherent public profile. |
 | IM-8 Integrated creation | accepted | Accepted complete-walkthrough evidence: exactly three works are selected through the Map-led layer; capture, bridge refinement, shaping, publication, and curation all return to or update the same visible Map rather than becoming disconnected forms. |
 | IM-9 Responsive experience | accepted | Accepted final-checkpoint evidence: the complete public composition and core owner layers are coherent and overflow-free at representative desktop and mobile viewports in rendered light and dark schemes, with visible focus, bounded sheets, reduced motion, and full-size touch targets. |
-| IM-10 Durable acceptance walkthrough | in progress | Accepted technical walkthrough evidence: the isolated-origin visible sequence completes through public actions; separate versioned selection, public-curation, authored-lifecycle, and explicit spatial state survive reload; visitor privacy holds; focused 1/1 and full 82/82 pass; and fresh correction review is clean. Final criterion acceptance remains coupled to proportionate evidence for qualitative IM-1. |
+| IM-10 Durable acceptance walkthrough | accepted | Accepted technical and completion evidence: the isolated-origin visible sequence completes through public actions; separate versioned selection, public-curation, authored-lifecycle, and explicit spatial state survive reload; visitor privacy holds; focused 1/1 and full 82/82 pass; fresh correction review is clean; and the owner accepted the bounded MVP foundation without claiming external product validation. |
 
-This table records only evidence accepted after validation, fresh independent
-review, and local commit under standing authorization. It is not a task backlog
-or implementation sequence.
+This table combines technical evidence accepted after validation, fresh
+independent review, and local commits under standing authorization with the
+final owner completion decision. It is not a task backlog or implementation
+sequence.
 
-## Per-Run Selection
+## Historical Per-Run Selection
 
-Each fresh work unit:
+While this goal was active, each fresh work unit:
 
 1. reads the active goal and this shared state;
 2. confirms standing authorization, owner-decision, repository, and no-overlap
@@ -66,51 +64,38 @@ Each fresh work unit:
 9. accepts and commits the clean unit locally, then immediately repeats inside
    the same goal.
 
-Criteria order does not prescribe task order. Do not select or record future
-work. While `Graph foundation` is `open`, however, the graph-first entry gate
-in the goal and development loop restricts selection to a visible graph
-foundation. If no honest work unit advances the goal, make no implementation
-change.
+Criteria order did not prescribe task order. The graph-first entry gate
+restricted early selection to the visible Map foundation. This section records
+the completed operating contract and grants no later authorization.
 
 ## Graph-First Entry State
 
 - Gate result: approved on 2026-08-22 through a running, visible, interactive
   2D Map, full validation, clean fresh independent review, and local commit
-- Resulting selection boundary: profile, onboarding, Thought capture, and
-  publishing gaps inside the active goal may now be selected just in time;
-  authentication and production infrastructure remain outside this goal
+- Resulting historical boundary: after approval, profile, onboarding, Thought
+  capture, and publishing gaps inside the goal could be selected just in time;
+  authentication and production infrastructure remained outside this goal
 
-This is a selection constraint, not a future task queue. The exact bounded
-claim is chosen just in time from the verified repository baseline.
+This was a selection constraint, not a future task queue. It grants no current
+authority.
 
 ## Current Run
 
-- State: none. Complete acceptance walkthrough hardening is accepted in local
-  commit `8368256`.
-- Terminal boundary: the technical prototype and final rendered checkpoint are
-  complete. IM-1 asks whether the seeded mature Map creates credible desire to
-  make one, which is a qualitative owner or target-user judgment rather than a
-  missing implementation seam. No further bounded code change is justified
-  without that decision.
+- State: none; goal complete.
 
 ## Standing Goal Authorization
 
-The standing-authorization terms below are active for the resumed loop.
+Standing authorization ended when the goal completed on 2026-08-26.
 
 - Authorization basis: owner standing authorization granted 2026-08-22
-- Scope: successive bounded units inside the active Identity Map Prototype goal
-- Cadence: continuous until the goal is complete or a terminal condition holds
+- Historical scope: successive bounded units inside the Identity Map Prototype
+- Final cadence: stopped at goal completion
 - Unit acceptance: applicable validation passes, fresh independent review has
   no unresolved blocker, and every development-loop guard holds
-- Visual validation cadence: full rendered click-through on every fifth UI unit
-  before acceptance and before goal completion; ordinary units use focused and
-  repository validation plus independent code review
-- Automatic action after acceptance: record evidence, create one local commit,
-  and immediately re-orient for the next smallest justified gap
-- Always owner-gated: a new goal and unresolved material product, visual, scope,
-  or lasting architecture decisions
-- Always separately authorized: destructive cleanup, deployment, push, merge,
-  publication, and unrelated external side effects
+- Final visual checkpoint: complete owner-to-public walkthrough accepted through
+  representative desktop/mobile and light/dark evidence
+- Current authority: none; any later goal and implementation authorization must
+  come from the owner
 
 ## Accepted Unit Evidence
 
@@ -953,56 +938,52 @@ When populated, this section must identify:
 - forced outcomes, special cases, risks, and unresolved assumptions; and
 - any precise material owner decision required to continue.
 
+## Current Unit Evidence
+
+- State: complete; no current unit.
+
 ## Acceptance Rules
 
-- Standing authorization plus focused and full repository validation and clean
-  fresh independent review permits routine local acceptance and commit. Full
-  rendered click-through is required only on the fifth UI unit before its
-  acceptance and before goal completion.
-- Independent review is mandatory and advisory. It does not make product
-  decisions.
-- Material implementation, test, behavior, evidence, or product-state changes
-  after review invalidate that review and require fresh validation and review.
-- Factual administrative updates that only record completed review and
-  acceptance do not invalidate review when they alter no implementation, test,
-  behavior, or evidence claim.
-- After a clean review, record accepted evidence, set `Graph foundation` to
-  `approved` when supported, clear the current-run fields, append the accepted
-  run, synchronize `CURRENT.md`, and commit the coherent unit locally.
-- After commit, immediately select the next smallest justified gap inside the
-  same goal unless a terminal condition applies.
-- If a unit becomes non-viable, do not silently select a replacement or discard
-  work. Resolve it inside the same claim when safe; otherwise stop at `WORK UNIT
-  BLOCKED`, `BASELINE BLOCKED`, or `NEEDS OWNER DECISION` as applicable.
-- Product, visual, scope, and lasting architecture choices that are not already
-  settled remain owner decisions.
+- While the goal was active, routine acceptance required focused and full
+  repository validation plus clean fresh independent review. Full rendered
+  click-through evidence was required at each fifth UI unit and before goal
+  completion.
+- The accepted evidence archive remains factual historical evidence. It grants
+  no authority to modify the product or select a later goal.
+- Material changes to this completed prototype require a new owner-approved
+  goal or explicit maintenance authorization.
 - Push, merge, deploy, publish, destructive cleanup, and unrelated external
   actions remain separately authorized.
 
 ## Alignment
 
-Perform goal-level alignment at a named product milestone or when verified
-evidence reveals product or lasting architecture drift. A work-unit count never
-triggers alignment by itself.
+Goal-level alignment was available at named product milestones or when verified
+evidence revealed product or lasting architecture drift. A work-unit count did
+not trigger alignment by itself.
 
-A fresh independent reviewer compares all accepted evidence with the
-goal, identifies drift or unnecessary complexity, and recommends removal when
-appropriate. Alignment does not select or suggest a later task.
+A fresh independent reviewer compared accepted evidence with the goal and could
+identify drift or unnecessary complexity. Alignment never selected a later
+task.
 
-When alignment has a clean review and needs no material owner decision, record
-and commit it under standing authorization, set `Alignment due` to `no`, and
-continue. If it requires a product, visual, scope, or lasting architecture
-choice, stop at `NEEDS OWNER DECISION`.
+The final state records `Alignment due: no`. Later Contour direction is governed
+by the current product documents and a separate future goal, not by reopening
+this archive.
 
 ## Accepted Run Log
 
+- 2026-08-26: owner completion decision accepted the rendered Map as a credible
+  profile/contribution foundation, accepted IM-1 and the already complete
+  technical IM-10 evidence, set the final visual checkpoint to goal completion,
+  ended standing authorization, and stopped the loop. This is owner-level
+  prototype acceptance, not target-user discovery, demand, retention, or market
+  evidence.
 - 2026-08-24: complete acceptance walkthrough hardening accepted in local
   commit `8368256` after a public-API integration regression, all eighty-two
   repository tests, an isolated owner-to-public walkthrough, light and dark
   desktop and mobile rendering, zero console warnings or errors, one corrected
   44-pixel chooser target, and clean fresh correction review. Accepted evidence
-  completes IM-4, IM-8, and IM-9 and completes the technical portion of IM-10;
-  qualitative IM-1 remains owner or target-user gated.
+  completed IM-4, IM-8, and IM-9 and supplied the technical portion of IM-10;
+  final owner-level acceptance followed on 2026-08-26.
 - 2026-08-24: visitor profile framing accepted in local commit `887ffa6` after
   thirty-one focused checks, all eighty-one repository tests, desktop and
   mobile visitor evidence, one corrected profile-derived authorship label, and
