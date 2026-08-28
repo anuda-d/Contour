@@ -1,86 +1,115 @@
 # Current development index
 
-Status: no active goal; Identity Map Prototype is complete.
+Status: Human Discovery Prototype is owner-approved and paused.
 
 ## Active work
 
-- Last completed goal: [Identity Map Prototype](identity-map-prototype/GOAL.md)
-- Shared implementation state: [Implementation Plan](identity-map-prototype/IMPLEMENTATION_PLAN.md)
+- Goal: [Human Discovery Prototype](human-discovery-prototype/GOAL.md)
+- Shared implementation state: [Implementation Plan](human-discovery-prototype/IMPLEMENTATION_PLAN.md)
+- Prior completed goal: [Identity Map Prototype](identity-map-prototype/GOAL.md)
 - Preserved design foundation: [Editorial Constellation](identity-map-prototype/MAP_DESIGN_FOUNDATION.md)
-- Active work: none; Identity Map Prototype is complete and the loop is stopped
+- Active work: none; owner authorization is paused
 
 ## Run state snapshot
 
-- Active goal id: none
-- Owner authorization: pending
-- Authorization scope: none
-- Authorization source: none
-- Loop cadence: stopped
+- Active goal id: human-discovery-prototype
+- Owner authorization: paused
+- Authorization scope: active goal
+- Authorization source: owner
+- Loop cadence: paused
 - Graph foundation: approved
+- Discovery entry gate: open
 - Current run: none
 - Incomplete run: none
-- Run status: none
-- Pending owner decision: none
+- Run status: paused
+- Pending owner decision: select the allowed source for attributed human evidence before resume
+- Attributed evidence source: pending owner decision
+- Attributed evidence provenance: pending owner decision
 - Alignment due: no
-- Visual checkpoint: goal completion
+- Visual checkpoint: not yet established
 - UI units since visual checkpoint: 0
 
-## Completed goal boundary
+## Goal boundary
+
+The owner approved the Human Discovery Prototype goal on 2026-08-27.
+It tests whether someone can begin from a known Book, Film, or explicitly
+supported idea, follow understandable human evidence to an unfamiliar work,
+inspect the contributor and context, and privately Save the work.
+
+The goal was placed in its initial paused state during preparation.
+No implementation work unit was selected or started during that preparation.
+Every transition from paused to standing authorization requires an explicit
+owner instruction in a fresh chat before the loop may select or continue a
+unit.
+Before any such transition, the owner must select and durably record whether
+attributed human evidence is owner-authored, contributor-supplied with
+permission, or another documented permissioned source.
+Fictional fixtures may test mechanics but cannot prove a human-evidence claim.
+
+The discovery-first entry gate requires one visible known-work to
+unfamiliar-candidate route with attributed authored evidence, contributor Map
+context, private Save, finite Explore return, and reload-safe public/private
+boundaries.
+The same unit may establish the smallest strict TypeScript browser and
+validation substrate needed for that route.
+Compiler-only work, a whole-codebase migration, or unrelated architecture
+replacement cannot satisfy the gate.
+
+## Completed foundation
 
 The owner accepted the Identity Map Prototype as a completed MVP foundation on
-2026-08-26. Its software, local durability contract, and complete owner-to-public
-walkthrough were already implemented, validated on representative desktop and
-mobile viewports in light and dark modes, independently reviewed, and committed.
+2026-08-26.
+Its software, local durability contract, and complete owner-to-public
+walkthrough were implemented, validated on representative desktop and mobile
+viewports in light and dark modes, independently reviewed, and committed.
 
-The owner-level acceptance of IM-1 means the rendered Map remains a credible
-and valuable profile/contribution feature worth carrying forward. It does not
-claim target-user validation, real discovery quality, market demand, retention,
-or production readiness.
-
-The goal's accepted interaction evidence remains recorded in the linked
-implementation state. No unfinished technical unit or overlapping run remains.
-Standing authorization ended with goal completion.
-
-## Product realignment
-
-The owner named the product **Contour** and selected a discovery-first direction
-on 2026-08-26.
-
-Contour helps someone begin with a known Book, Film, or idea and discover an
-unfamiliar work through understandable human evidence: a Thought, authored
-connection, personal Theme region, person, or Map. The completed Map prototype
-is preserved as Contour's profile and contribution foundation rather than
-treated as the first-use promise.
-
-The proposed Human Discovery Prototype is specified in the
-[Web MVP Plan](../04-web-mvp-plan.md). That proposed phase is not an active goal
-and has no standing implementation authorization. A later owner instruction
-must establish its exact goal, invariants, implementation state, and
-authorization before code work begins.
+That accepted foundation remains Contour's public profile and contribution
+surface.
+It does not claim target-user validation, real discovery quality, market
+demand, retention, or production readiness.
 
 ## Required read order
 
 1. `AGENTS.md`
 2. this file
-3. stop if this file records no active goal
-4. otherwise read the linked active goal
-5. read its shared implementation state
-6. locate only enough code and tests to select one smallest useful gap
-7. read only the product specification relevant to that selected task
+3. the active goal linked above
+4. the shared implementation state linked above
+5. the latest temporary handoff when one exists
+6. stop if authorization is not standing
+7. otherwise locate only enough code and tests to select or continue one
+   smallest useful goal gap
+8. read only the product specification relevant to that unit
 
-Product discussion and owner-directed documentation changes may proceed without
-an active implementation goal. Product implementation may not.
+The first implementation chat has no prior unit handoff.
+Every later implementation chat must be fresh and must read the latest compact
+handoff from the operating system temporary directory when it exists.
+The handoff is context, not authority or a future task queue.
 
 ## Current authorization boundary
 
-- No active goal exists.
-- No standing goal-bounded implementation authorization exists.
-- Do not select, infer, or begin a discovery implementation unit from the Web
-  MVP Plan or Open Questions.
-- The owner remains the authority for the next goal and every unresolved
-  product, visual, scope, privacy, or lasting architecture decision.
+- Exactly one owner-approved goal exists.
+- Owner authorization is paused.
+- Standing implementation authority: paused
+- No standing goal-bounded implementation authorization exists yet.
+- One owner decision on attributed-evidence sourcing is pending.
+- Do not select, infer, or begin a discovery implementation unit.
+- Do not add TypeScript tooling or migrate JavaScript while paused.
+- Product discussion, goal correction, audit, and readiness validation may
+  proceed without starting the loop.
+- The owner remains the authority for unresolved product, visual, scope,
+  privacy, and lasting architecture decisions.
 - Push, merge, deploy, publish, destructive cleanup, and unrelated external
   side effects remain separately authorized.
+
+## Fresh-chat boundary
+
+Once the owner resumes standing authorization, one implementation chat owns at
+most one work unit.
+After that unit reaches an accepted commit or another terminal handoff state,
+the chat writes `contour-human-discovery-prototype-handoff.md` in the operating
+system temporary directory and stops.
+It records `No next unit selected`.
+A new work unit may be selected only in a newly created fresh chat.
 
 ## Commands
 
@@ -90,6 +119,6 @@ an active implementation goal. Product implementation may not.
 
 ## Stop condition
 
-The development loop is stopped at **GOAL COMPLETE**. The next implementation
-run requires a new owner-approved goal; the proposed discovery phase does not
-become active merely because its direction is documented.
+The repository is at **GOAL APPROVED - PAUSED**.
+Do not start the implementation loop until the owner explicitly resumes this
+goal in a fresh chat.

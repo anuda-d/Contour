@@ -9,6 +9,10 @@ repository. Product direction belongs to the owner.
 - Confirm that exactly one owner-approved goal is active.
 - Confirm that the active goal has standing owner authorization and that no
   owner decision, pause, unsafe baseline, or overlapping run blocks work.
+- Confirm that this is a fresh implementation chat for the selected or resumed
+  work unit and that this chat has not completed another unit.
+- Read the latest temporary handoff when one exists, but treat the active goal
+  and implementation state as authoritative.
 - Standing authorization permits successive bounded units only inside the
   approved goal. It does not authorize a new goal or broader product direction.
 - Read the active goal and implementation state, then locate only enough code
@@ -94,6 +98,11 @@ repository. Product direction belongs to the owner.
   active owner-approved goal with `Owner authorization: standing`. If no active
   goal is recorded, stop before implementation.
 - Work remains one bounded unit at a time. Do not create a future task queue.
+- One implementation chat owns at most one work unit.
+- After an accepted commit or another terminal unit state, write the compact
+  redacted temporary handoff required by the development loop, record `No next
+  unit selected`, and stop the chat.
+- Select or continue the next unit only in a newly created fresh chat.
 - Independent review is required. A reviewer reports findings but does not make
   product decisions.
 - Record candidate evidence before independent review so the reviewer inspects
@@ -101,9 +110,9 @@ repository. Product direction belongs to the owner.
   plus a clean fresh independent review permit local acceptance and commit;
   full rendered click-through evidence is required only when the visual
   checkpoint is due.
-- After a unit is committed, immediately re-orient and select the next smallest
-  justified gap inside the same goal only while standing authorization remains
-  active.
+- After a unit is committed, hand off and stop.
+  A fresh chat may select the next smallest justified gap inside the same goal
+  only while standing authorization remains active.
 - The owner remains the decision-maker for new goals and unresolved material
   product, visual, scope, or lasting architecture choices. Stop at **NEEDS
   OWNER DECISION** when one is required.
