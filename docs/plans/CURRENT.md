@@ -19,7 +19,7 @@ Status: Architecture Foundation is active under standing scheduled authorization
 - Authorization source: owner
 - Loop cadence: scheduled autonomous relay
 - Frozen behavior baseline: approved
-- Architecture entry gate: open
+- Architecture entry gate: approved
 - Current run: none
 - Incomplete run: none
 - Run status: awaiting scheduled fresh task

@@ -10,6 +10,8 @@ for required_file in \
   README.md \
   package.json \
   docs/main/DEVELOPMENT_LOOP.md \
+  docs/architecture/ARCHITECTURE_CONTRACT.md \
+  docs/architecture/COMPATIBILITY_INVENTORY.md \
   "$current_file" \
   "$goal_file" \
   "$state_file" \
@@ -251,6 +253,8 @@ then
   ' "$state_file")
   test "$accepted_count" -eq 0
 fi
+
+npm run check:architecture
 
 if find . \
   -path './.git' -prune -o \

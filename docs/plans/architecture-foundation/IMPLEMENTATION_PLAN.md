@@ -10,7 +10,7 @@ Status: active shared state; standing scheduled owner authorization.
 - Authorization source: owner
 - Loop cadence: scheduled autonomous relay
 - Frozen behavior baseline: approved
-- Architecture entry gate: open
+- Architecture entry gate: approved
 - Current run: none
 - Incomplete run: none
 - Run status: awaiting scheduled fresh task
@@ -26,7 +26,7 @@ Status: active shared state; standing scheduled owner authorization.
 
 | Criterion | Status | Accepted evidence |
 | --- | --- | --- |
-| AF-1 Enforced architecture contract | open | None yet. |
+| AF-1 Enforced architecture contract | accepted | Architecture decision records, six-key compatibility inventory, and the checked import-boundary gate were accepted after 30 focused and 112 repository tests plus clean fresh review. |
 | AF-2 Complete strict TypeScript | open | None yet. |
 | AF-3 Deep product modules | open | None yet. |
 | AF-4 Application use cases | open | None yet. |
@@ -42,7 +42,7 @@ It is not a task sequence, roadmap, or permission to infer later work units.
 
 ## Architecture entry state
 
-- Gate state: open
+- Gate state: approved
 - Authorized gate claim: establish the architecture decision records, intended
   source ownership, dependency rules, executable import-boundary check, and
   current behavior plus storage compatibility inventory
@@ -60,7 +60,13 @@ queue.
 
 ## Current run
 
-- State: none.
+- State: none; AF-1 accepted and no current unit is selected.
+- Latest accepted criterion: Architecture entry gate contract.
+- Accepted result: decision records, target layout, compatibility inventory, and an executable import-boundary check establish the approved migration baseline without changing current behavior.
+- Accepted evidence: `node --test tests/architecture-boundaries.test.mjs` passed thirty controlled architecture tests.
+- Accepted evidence: `node scripts/check-import-boundaries.mjs` passed the real legacy source tree through extension-aware `@babel/parser` parsing and scope-aware `@babel/traverse` analysis.
+- Accepted evidence: `./scripts/check.sh` passed with one hundred twelve tests and zero failures.
+- Independent review: fresh `gpt-5.6-sol` high-reasoning review returned clean with no P0-P3 findings.
 
 ## Owner authorization
 
@@ -107,9 +113,9 @@ queue.
 
 ## Fresh-task handoff state
 
-- Latest accepted unit: none
-- Latest implementation commit: none
-- Latest temporary handoff: none
+- Latest accepted unit: af-1-architecture-entry-contract
+- Latest implementation commit: AF-1 local acceptance commit.
+- Latest temporary handoff: pending this unit's post-commit handoff.
 - Next unit selected: no
 
 Every unit task writes a compact redacted handoff document in the operating
@@ -135,7 +141,10 @@ without discarding uncommitted work or inferring missing decisions.
 
 ## Current unit evidence
 
-- State: none.
+- State: accepted; no current unit.
+- Criterion: Architecture entry gate contract.
+- Intended result: establish enforceable directional architecture and compatibility evidence before broad source migration.
+- Accepted evidence: architecture contract and six-key compatibility inventory are present, AST-validated controlled negative fixtures fail, focused validation passes, full validation passes with one hundred twelve tests and zero failures, and fresh independent review is clean.
 
 ## Goal-readiness evidence
 
@@ -218,7 +227,10 @@ Routine work-unit completion does not require owner review.
 
 ## Accepted run log
 
-None.
+- AF-1 `af-1-architecture-entry-contract` accepted on 2026-08-28.
+  The architecture contract, compatibility inventory, import-boundary gate,
+  focused 30-test suite, full 112-test repository check, and fresh independent
+  review support the claim.
 
 ## Administratively closed run log
 
