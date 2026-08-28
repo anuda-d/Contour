@@ -1,72 +1,80 @@
 # Current development index
 
-Status: Human Discovery Prototype is owner-approved and paused.
+Status: Architecture Foundation is active under standing scheduled authorization.
 
 ## Active work
 
-- Goal: [Human Discovery Prototype](human-discovery-prototype/GOAL.md)
-- Shared implementation state: [Implementation Plan](human-discovery-prototype/IMPLEMENTATION_PLAN.md)
+- Goal: [Architecture Foundation](architecture-foundation/GOAL.md)
+- Shared implementation state: [Implementation Plan](architecture-foundation/IMPLEMENTATION_PLAN.md)
+- Deferred proposal: [Human Discovery Prototype](human-discovery-prototype/GOAL.md)
 - Prior completed goal: [Identity Map Prototype](identity-map-prototype/GOAL.md)
 - Preserved design foundation: [Editorial Constellation](identity-map-prototype/MAP_DESIGN_FOUNDATION.md)
-- Active work: none; owner authorization is paused
+- Active work: Architecture Foundation units may run during the authorized daily window
 
 ## Run state snapshot
 
-- Active goal id: human-discovery-prototype
-- Owner authorization: paused
+- Active goal id: architecture-foundation
+- Owner authorization: standing
 - Authorization scope: active goal
 - Authorization source: owner
-- Loop cadence: paused
-- Graph foundation: approved
-- Discovery entry gate: open
+- Loop cadence: scheduled autonomous relay
+- Frozen behavior baseline: approved
+- Architecture entry gate: open
 - Current run: none
 - Incomplete run: none
-- Run status: paused
-- Pending owner decision: select the allowed source for attributed human evidence before resume
-- Attributed evidence source: pending owner decision
-- Attributed evidence provenance: pending owner decision
+- Run status: awaiting scheduled fresh task
+- Pending owner decision: none
+- Scheduled window: daily 18:00-23:00 America/Toronto
+- Fresh-task relay: active
 - Alignment due: no
-- Visual checkpoint: not yet established
+- Visual checkpoint: Identity Map Prototype goal completion, 2026-08-26
 - UI units since visual checkpoint: 0
+- Standing implementation authority: active
 
 ## Goal boundary
 
-The owner approved the Human Discovery Prototype goal on 2026-08-27.
-It tests whether someone can begin from a known Book, Film, or explicitly
-supported idea, follow understandable human evidence to an unfamiliar work,
-inspect the contributor and context, and privately Save the work.
+The owner approved the Architecture Foundation goal and standing implementation
+authorization on 2026-08-28.
+This is an explicit, temporary exception to the ordinary rule that architecture
+must accompany new visible product behavior.
+The accepted Identity Map Prototype is the frozen compatibility target while
+the implementation is restructured beneath it.
 
-The goal was placed in its initial paused state during preparation.
-No implementation work unit was selected or started during that preparation.
-Every transition from paused to standing authorization requires an explicit
-owner instruction in a fresh chat before the loop may select or continue a
-unit.
-Before any such transition, the owner must select and durably record whether
-attributed human evidence is owner-authored, contributor-supplied with
-permission, or another documented permissioned source.
-Fictional fixtures may test mechanics but cannot prove a human-evidence claim.
+The goal establishes a strict TypeScript modular monolith around current product
+facts and behavior.
+It does not add Discovery, Library, Search, Themes, personalization, a framework,
+or another product surface.
+It must preserve the existing visual design, user flows, public and private
+boundaries, and persisted browser state through versioned migration.
 
-The discovery-first entry gate requires one visible known-work to
-unfamiliar-candidate route with attributed authored evidence, contributor Map
-context, private Save, finite Explore return, and reload-safe public/private
-boundaries.
-The same unit may establish the smallest strict TypeScript browser and
-validation substrate needed for that route.
-Compiler-only work, a whole-codebase migration, or unrelated architecture
-replacement cannot satisfy the gate.
+The architecture entry gate requires an accepted architecture contract,
+decision records, and an automated dependency-boundary check before broad source
+migration begins.
+This gate is an approved architecture-only work unit because the owner selected
+the foundation-first strategy explicitly.
 
-## Completed foundation
+## Scheduled autonomy
 
-The owner accepted the Identity Map Prototype as a completed MVP foundation on
-2026-08-26.
-Its software, local durability contract, and complete owner-to-public
-walkthrough were implemented, validated on representative desktop and mobile
-viewports in light and dark modes, independently reviewed, and committed.
+The authorized window is daily from 18:00 through 23:00 in America/Toronto.
+Each implementation task owns at most one bounded unit.
+After a clean accepted commit before 23:00, that task writes the required
+temporary handoff and creates one fresh successor task in the same project.
+At or after 23:00, it finishes the active unit safely, writes the handoff, and
+does not create a successor.
 
-That accepted foundation remains Contour's public profile and contribution
-surface.
-It does not claim target-user validation, real discovery quality, market
-demand, retention, or production readiness.
+Hourly scheduled starts during the window are recovery opportunities.
+They must exit without repository changes when another live project
+implementation task owns the work.
+When no live owner exists, they resume exactly a matching recorded current and
+incomplete run instead of selecting a replacement.
+Conflicting run fields or uncertain ownership stop safely.
+No human approval is required between clean units that remain inside this goal.
+The loop still stops for an unresolved owner decision, unsafe or overlapping
+state, failed validation or review that cannot be resolved in scope, or an
+external action not already authorized.
+
+Push, merge, deploy, publish, destructive cleanup, and unrelated external side
+effects are not authorized by standing implementation authority.
 
 ## Required read order
 
@@ -75,41 +83,20 @@ demand, retention, or production readiness.
 3. the active goal linked above
 4. the shared implementation state linked above
 5. the latest temporary handoff when one exists
-6. stop if authorization is not standing
-7. otherwise locate only enough code and tests to select or continue one
-   smallest useful goal gap
-8. read only the product specification relevant to that unit
+6. confirm the current time is inside the scheduled window for new selection
+7. confirm no task or recorded run overlaps
+8. select or continue only one smallest useful goal gap
+9. read only the code, tests, and specification needed for that unit
 
-The first implementation chat has no prior unit handoff.
-Every later implementation chat must be fresh and must read the latest compact
-handoff from the operating system temporary directory when it exists.
-The handoff is context, not authority or a future task queue.
+## Fresh-task boundary
 
-## Current authorization boundary
-
-- Exactly one owner-approved goal exists.
-- Owner authorization is paused.
-- Standing implementation authority: paused
-- No standing goal-bounded implementation authorization exists yet.
-- One owner decision on attributed-evidence sourcing is pending.
-- Do not select, infer, or begin a discovery implementation unit.
-- Do not add TypeScript tooling or migrate JavaScript while paused.
-- Product discussion, goal correction, audit, and readiness validation may
-  proceed without starting the loop.
-- The owner remains the authority for unresolved product, visual, scope,
-  privacy, and lasting architecture decisions.
-- Push, merge, deploy, publish, destructive cleanup, and unrelated external
-  side effects remain separately authorized.
-
-## Fresh-chat boundary
-
-Once the owner resumes standing authorization, one implementation chat owns at
-most one work unit.
-After that unit reaches an accepted commit or another terminal handoff state,
-the chat writes `contour-human-discovery-prototype-handoff.md` in the operating
-system temporary directory and stops.
-It records `No next unit selected`.
-A new work unit may be selected only in a newly created fresh chat.
+One implementation task owns at most one work unit.
+Every terminal unit state writes
+`contour-architecture-foundation-handoff.md` in the operating system temporary
+directory and records `No next unit selected`.
+The current task never selects a second unit.
+When relay is allowed, it creates a fresh task whose first action is to select
+the next smallest justified gap from authoritative repository state.
 
 ## Commands
 
@@ -119,6 +106,6 @@ A new work unit may be selected only in a newly created fresh chat.
 
 ## Stop condition
 
-The repository is at **GOAL APPROVED - PAUSED**.
-Do not start the implementation loop until the owner explicitly resumes this
-goal in a fresh chat.
+The repository is at **GOAL ACTIVE - AWAITING SCHEDULED FRESH TASK**.
+The automation may start or relay one fresh task at a time during the authorized
+window without intermediate owner approval.

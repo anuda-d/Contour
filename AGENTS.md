@@ -36,6 +36,11 @@ repository. Product direction belongs to the owner.
 - Build visible end-to-end discovery behavior and only the application and data
   substrate required to evaluate it. Architecture without observable product
   behavior is not progress.
+- The active Architecture Foundation goal is the owner-approved exception to
+  the preceding rule.
+  During that goal, enforceable architecture, migration, compatibility, and
+  test evidence are progress while current visible behavior and design remain
+  frozen.
 - Keep the Map generated but shapeable. Do not present a blank manual canvas.
 - Drafts belong visibly to the private owner Map and never to visitor mode.
 - Public Thoughts require a Book or Film anchor.
@@ -67,7 +72,8 @@ repository. Product direction belongs to the owner.
   than mechanically importing landing-page patterns.
 - The orchestrator is the sole implementation writer and owns selection,
   integration, validation, and completion judgment.
-- Prefer the smallest end-to-end behavior that can be seen and evaluated.
+- Prefer the smallest end-to-end behavior or directly testable architecture
+  claim authorized by the active goal.
 - Keep spatial graph movement distinct from semantic authorship.
 - Preserve clear private Draft and public Published boundaries.
 - Avoid speculative infrastructure for later social or production goals.
@@ -113,6 +119,20 @@ repository. Product direction belongs to the owner.
 - After a unit is committed, hand off and stop.
   A fresh chat may select the next smallest justified gap inside the same goal
   only while standing authorization remains active.
+- During an authorized scheduled window, an accepted unit may create exactly one
+  fresh successor task in the same project after its handoff.
+  The current task still stops and never selects the successor's unit.
+- For Architecture Foundation, new units may start daily from 18:00 until 23:00
+  America/Toronto.
+  An accepted task finishing before 23:00 relays immediately; at or after 23:00
+  it does not relay.
+- Hourly scheduled tasks are recovery starts and must no-op when another live
+  project implementation task owns the work.
+  With no live owner, they resume exactly a matching recorded current and
+  incomplete run; conflicting fields stop safely.
+- No human approval is required between clean units inside the active goal.
+  Owner-decision, safety, overlap, review, validation, and external-action gates
+  remain in force.
 - The owner remains the decision-maker for new goals and unresolved material
   product, visual, scope, or lasting architecture choices. Stop at **NEEDS
   OWNER DECISION** when one is required.

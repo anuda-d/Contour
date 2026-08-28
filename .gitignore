@@ -7,3 +7,8 @@ output/
 drafts/
 GATES.md
 contour-*-handoff.md
+
+# Generated TypeScript and browser tooling output
+dist/
+coverage/
+*.tsbuildinfo

@@ -1,6 +1,6 @@
 # Contour prototype
 
-Status: Human Discovery Prototype is owner-approved and paused.
+Status: Architecture Foundation is active under standing scheduled authorization.
 
 Contour is an intentional, human-to-human discovery product for Books and
 Films. It helps someone begin with a work or idea they already know, encounter
@@ -8,14 +8,17 @@ an unfamiliar work through another person's taste or interpretation, and
 understand why the recommendation may matter.
 
 The current repository contains the completed **Identity Map Prototype** and an
-owner-approved **Human Discovery Prototype** goal.
+active **Architecture Foundation** goal.
 Current authorization is recorded in the Current Development Index.
 The existing software proves a responsive, locally persistent profile and
 contribution foundation: a generated but shapeable Map of Books, Films,
 authored Thoughts, and explicit connections.
-At goal preparation time, the software did not yet implement Contour's
-discovery experience, shared accounts, real recommendations, or production
-infrastructure.
+The architecture goal preserves that accepted behavior while migrating the
+application and tests completely to strict TypeScript, isolating effects and
+privacy boundaries, and retaining all valid browser state through versioned
+migration.
+It does not add Contour's discovery experience, shared accounts, real
+recommendations, or production infrastructure.
 
 ## What the completed prototype can do
 
@@ -50,7 +53,7 @@ consistency, syntax checks, tests, and diff validation.
 
 ## Completed Map prototype limits
 
-At goal preparation time, the completed Map prototype did not include:
+The completed Map prototype does not include:
 
 - Authentication, shared accounts, or a production database
 - Public discovery through search, recommendations, people, Media, or Themes
@@ -93,15 +96,18 @@ Product direction:
 Implementation state:
 
 1. [Current Development Index](docs/plans/CURRENT.md)
-2. [Human Discovery Prototype goal](docs/plans/human-discovery-prototype/GOAL.md)
-3. [Human Discovery implementation state](docs/plans/human-discovery-prototype/IMPLEMENTATION_PLAN.md)
-4. [Identity Map Prototype goal](docs/plans/identity-map-prototype/GOAL.md)
-5. [Identity Map implementation archive](docs/plans/identity-map-prototype/IMPLEMENTATION_PLAN.md)
-6. [Editorial Constellation design foundation](docs/plans/identity-map-prototype/MAP_DESIGN_FOUNDATION.md)
-7. [Goal-bounded development loop](docs/main/DEVELOPMENT_LOOP.md)
+2. [Architecture Foundation goal](docs/plans/architecture-foundation/GOAL.md)
+3. [Architecture Foundation implementation state](docs/plans/architecture-foundation/IMPLEMENTATION_PLAN.md)
+4. [Deferred Human Discovery proposal](docs/plans/human-discovery-prototype/GOAL.md)
+5. [Identity Map Prototype goal](docs/plans/identity-map-prototype/GOAL.md)
+6. [Identity Map implementation archive](docs/plans/identity-map-prototype/IMPLEMENTATION_PLAN.md)
+7. [Editorial Constellation design foundation](docs/plans/identity-map-prototype/MAP_DESIGN_FOUNDATION.md)
+8. [Goal-bounded development loop](docs/main/DEVELOPMENT_LOOP.md)
 
 Coding agents must begin with the Current Development Index, confirm that one
 owner-approved goal and standing authorization exist, and stop when
 authorization is absent or paused.
-Every implementation unit begins in a fresh chat and ends with a temporary
+Every implementation unit begins in a fresh task and ends with a temporary
 handoff that selects no next unit.
+During the daily 18:00-23:00 America/Toronto window, a clean accepted unit may
+create one fresh successor task without intermediate owner approval.

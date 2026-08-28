@@ -1,14 +1,13 @@
 # Human Discovery Prototype
 
-Status: active; owner-approved goal paused.
+Status: deferred proposal; not active and not authorized for implementation.
 
 ## Owner decision
 
-The owner approved this goal on 2026-08-27 and explicitly directed that the
-implementation loop must not start as part of goal preparation.
-That initial pause is historical goal context.
-`CURRENT.md` and the shared implementation state control current authorization.
-Goal approval alone never authorizes implementation.
+The owner approved this proposal on 2026-08-27, then selected Architecture
+Foundation as the active goal on 2026-08-28.
+This proposal is retained for later reconsideration but has no implementation
+authority and is not an active goal.
 
 ## Question
 

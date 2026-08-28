@@ -1,6 +1,6 @@
 # Human Discovery Prototype Implementation State
 
-Status: active shared state; owner-approved goal paused.
+Status: deferred historical state; no implementation is authorized.
 
 ## Run state
 
