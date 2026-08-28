@@ -1,4 +1,9 @@
 .DS_Store
+
+# Local development and agent harness artifacts
 .unlazy/
 .playwright-cli/
-output/playwright/
+output/
+drafts/
+GATES.md
+contour-*-handoff.md
