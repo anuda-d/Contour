@@ -86,9 +86,7 @@ queue.
   handoff
 - Relay boundary: an accepted task before 23:00 creates one fresh successor in
   the same project; at or after 23:00 it does not relay
-- Recovery starts: scheduled hourly tasks exit when another live project task
-  owns the work; with no live owner, they resume exactly a matching recorded
-  current and incomplete run, and conflicting fields stop safely
+- Recovery starts: scheduled hourly tasks atomically claim the durable checkout lock without calling the unscoped task listing; they exit when another lock owner exists, wake that exact idle owner instead of stealing ownership, resume a matching recorded current and incomplete run only as the owner, and stop on conflicting fields or unverifiable recorded ownership
 - Owner boundary: new goals and unresolved material product, visual, scope, or
   architecture decisions still require the owner
 - External actions: push, merge, deploy, publish, destructive cleanup, and
@@ -187,11 +185,7 @@ without discarding uncommitted work or inferring missing decisions.
   The full check validates governance and JavaScript syntax, passes all
   eighty-two existing tests with zero failures, and prints
   `Repository check passed.`
-- Automation evidence: existing automation `bproject-autonomous-graph-loop` was
-  updated rather than duplicated, is active against the saved local bproject,
-  starts hourly from 18:00 through 22:00, relays clean units before 23:00,
-  resumes matching orphaned units, stops on overlap or conflicting state, and
-  pauses itself when the goal completes.
+- Automation evidence: existing automation `bproject-autonomous-graph-loop` was updated rather than duplicated, is active against the saved local bproject, starts hourly from 18:00 through 22:00, relays clean units before 23:00, resumes matching orphaned units, uses an atomic durable checkout lock without calling the unreliable unscoped task listing, stops on real overlap or conflicting state, and pauses itself when the goal completes.
 - Independent activation review: the first fresh read-only reviewer found that
   completion could not pass unconditional active-goal checks.
   The check now branches between active, paused, and canonical completed states
@@ -233,6 +227,17 @@ Request owner alignment only when evidence reveals a required change to the
 approved architecture, visible behavior, visual design, scope, privacy
 boundary, or external-action authority.
 Routine work-unit completion does not require owner review.
+
+## Administrative loop reliability
+
+- Criterion: a scheduled recovery start must preserve single-writer checkout ownership without treating an unavailable unscoped Codex task listing as proof that progress is unsafe.
+- Observed failure: three consecutive scheduled starts at approximately 19:04, 20:05, and 21:04 America/Toronto reached clean idle repository state but stopped because the task listing did not return.
+- Result: `scripts/development_loop_lock.py` uses an atomic local ownership record keyed by `CODEX_THREAD_ID`; the no-overlap gate does not call the unreliable unscoped task listing, a recovery task wakes an exact idle recorded owner instead of stealing its lock, and every repository-working task must assert and release ownership at the documented boundaries.
+- Exact change: the ownership utility and focused TypeScript test, the no-overlap rules in `AGENTS.md` and `docs/main/DEVELOPMENT_LOOP.md`, synchronized operational summaries in `docs/plans/CURRENT.md` and this implementation state, repository-check enforcement in `scripts/check.sh`, and the installed `bproject-autonomous-graph-loop` prompt.
+- Focused evidence: seven ownership tests pass, including environment task-ID resolution, twelve simultaneous claimants producing exactly one owner, second-owner and takeover rejection, release protection, and fail-closed corrupt-record handling; strict test TypeScript compilation also passes.
+- Full evidence after material corrections: `./scripts/check.sh` passes architecture enforcement, strict browser and test typechecks, the Vite production build, and 122 tests with zero failures; `git diff --check -- .` passes; and the installed active automation contains atomic ownership, exact-owner wakeup, assertion, and release instructions without any `list_threads` or takeover call.
+- Independent review: three fresh reviews found and drove correction of the stale installed prompt, listing-before-acquire blocking, stale-takeover TOCTOU, and unclassifiable advisory idle tasks; after removing the task-list gate and takeover path, the final fresh `gpt-5.6-sol` high-reasoning review returned clean with no P0-P3 finding.
+- Product and goal impact: this is owner-requested administrative loop infrastructure, not an Architecture Foundation implementation unit; it changes no product behavior, criterion status, run selection, UI checkpoint, or accepted unit evidence.
 
 ## Accepted run log
 

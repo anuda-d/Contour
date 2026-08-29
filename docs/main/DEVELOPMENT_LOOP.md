@@ -29,14 +29,11 @@ At or after 23:00, the active task finishes its current unit safely, writes the
 handoff, and does not create a successor.
 
 The hourly starts are recovery opportunities, not permission for overlap.
-Every scheduled or relayed task first inspects project task activity and the
-recorded run state.
-If another live implementation task is active, the new task exits without
-changing the repository.
+Every scheduled or relayed task first inspects the recorded run state and atomically claims the durable checkout-ownership record before any subagent spawn or file change.
+If another durable owner is active, the new task exits without changing the repository.
 If no live task owns a matching recorded `Current run` and `Incomplete run`, the
 fresh task resumes exactly that orphaned unit instead of selecting a new one.
-If the two run fields conflict or ownership is uncertain, stop safely without
-changes.
+If the two run fields conflict, the ownership record is unreadable, or the recorded owner's state cannot be verified, stop safely without changes.
 
 Outside the scheduled window, a task may finish an already-recorded unit safely
 but may not select a new unit or relay a successor.
@@ -131,12 +128,11 @@ America/Toronto.
 If it is before 23:00 and standing authorization remains active:
 
 1. use the Codex project tools to identify the exact current local project;
-2. create one fresh local task in that project with `gpt-5.6-terra` and high
-   reasoning;
-3. give it the active automation prompt and tell it to begin with the
-   authoritative read order;
-4. wait once, briefly, only to confirm dispatch; and
-5. stop the current task.
+2. assert and release checkout ownership, then enter handoff-only state and perform no more repository work;
+3. create one fresh local task in that project with `gpt-5.6-terra` and high reasoning;
+4. give it the active automation prompt and tell it to begin with the authoritative read order;
+5. wait once, briefly, only to confirm dispatch; and
+6. stop the current task.
 
 Do not relay after a blocked, paused, owner-decision, unsafe-baseline,
 overlapping-run, or goal-complete terminal state.
@@ -147,12 +143,29 @@ The next hourly recovery start may resume from the handoff.
 
 ## No-overlap gate
 
-Before changing the repository, inspect project task and agent activity.
-Ignore the active orchestrator itself and agents it owns for the current unit.
+Before any subagent spawn or repository change, run `python3 scripts/development_loop_lock.py acquire`.
+The command obtains the current task ID from `CODEX_THREAD_ID` and atomically creates the durable local ownership record.
 
-If another project orchestrator, orphaned explorer, reviewer, or unrelated task
-is active, stop at **ACTIVE RUN EXISTS** without repository changes.
-If activity cannot be inspected reliably, stop at **ACTIVE RUN STATUS UNKNOWN**.
+If acquisition reports `HELD_BY <owner-id>`, inspect that exact task with `read_thread`.
+Stop at **ACTIVE RUN EXISTS** when the recorded owner is queued, active, or owns a non-terminal latest turn.
+An idle owner that asked for input still owns the checkout.
+When the exact owner is idle or `notLoaded` after a failed or interrupted turn, send a follow-up to that same task instructing it to assert ownership and resume its matching recorded unit.
+When the exact owner completed a documented loop terminal state but failed to release, send a follow-up to that same task instructing it to release its own record and finish the applicable handoff or relay only.
+The recovery task that does not own the record then stops without repository changes.
+Ownership is never taken over or force-released by a different task.
+If the record is unreadable, exact-owner inspection fails, or the exact-owner follow-up cannot be dispatched, stop at **ACTIVE RUN STATUS UNKNOWN**.
+
+The unscoped Codex task listing is not an ownership precondition because it can hang, cannot filter by project, and cannot reliably classify idle historical tasks.
+Do not call `list_threads` as part of the no-overlap gate.
+The atomic ownership record is the decisive single-writer proof for every task governed by this repository.
+The transition to this rule was accepted only after a successful project activity screen showed no competing active task.
+
+Before every later repository mutation phase and after any resumed turn, run
+`python3 scripts/development_loop_lock.py assert-owner`.
+A mismatch stops all further repository work.
+Release ownership with `python3 scripts/development_loop_lock.py release` at every non-relaying terminal state.
+For a relay, assert and release ownership immediately before creating the successor, enter handoff-only state, and perform no more repository work.
+The successor must acquire ownership for itself.
 
 The recorded `Current run` and `Incomplete run` must also agree.
 A fresh task continues a recorded incomplete unit instead of selecting a
@@ -263,6 +276,7 @@ Before selecting or continuing a unit, confirm that:
 - owner authorization is standing;
 - no owner decision or alignment blocker is pending;
 - no overlapping task or recorded run exists;
+- the durable checkout-ownership record names the current task;
 - a current unit, if any, matches the incomplete unit;
 - the work is authorized by the active goal;
 - no future task queue is recorded;
@@ -279,7 +293,7 @@ Never reset or discard them without direction.
 
 Read the sources of authority, latest handoff, run fields, accepted evidence,
 and repository state.
-Confirm this is a fresh task and no overlap exists.
+Confirm this is a fresh task, acquire durable checkout ownership, and confirm no overlap exists.
 
 ### 2. Select one task
 

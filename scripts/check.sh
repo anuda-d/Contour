@@ -9,6 +9,8 @@ for required_file in \
   AGENTS.md \
   README.md \
   package.json \
+  scripts/development_loop_lock.py \
+  tests/development-loop-lock.test.ts \
   docs/main/DEVELOPMENT_LOOP.md \
   docs/architecture/ARCHITECTURE_CONTRACT.md \
   docs/architecture/COMPATIBILITY_INVENTORY.md \
@@ -107,6 +109,15 @@ grep -q 'No next unit selected' docs/main/DEVELOPMENT_LOOP.md
 grep -q 'newly created fresh task' docs/main/DEVELOPMENT_LOOP.md
 grep -q '18:00 until' docs/main/DEVELOPMENT_LOOP.md
 grep -q 'create one fresh successor task' docs/main/DEVELOPMENT_LOOP.md
+grep -q 'development_loop_lock.py acquire' AGENTS.md docs/main/DEVELOPMENT_LOOP.md
+grep -q 'unscoped Codex task listing is not an ownership precondition' \
+  docs/main/DEVELOPMENT_LOOP.md
+grep -q 'Do not call `list_threads` as part of the no-overlap gate' \
+  docs/main/DEVELOPMENT_LOOP.md
+grep -q 'Ownership is never taken over or force-released by a different task' \
+  docs/main/DEVELOPMENT_LOOP.md
+grep -q 'idle owner that asked for input still owns the checkout' \
+  docs/main/DEVELOPMENT_LOOP.md
 grep -q 'No human approval is required between clean' \
   docs/plans/architecture-foundation/IMPLEMENTATION_PLAN.md
 grep -q 'contour-architecture-foundation-handoff.md' \
