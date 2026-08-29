@@ -1,8 +1,42 @@
 export const SELECTION_VERSION = 1;
 export const SELECTION_LIMIT = 3;
-export const SELECTION_STORAGE_KEY = "thought-map.prototype.media-selection.v1";
 
-export function emptySelection() {
+export type SelectionState = {
+  version: typeof SELECTION_VERSION;
+  selectedMediaIds: string[];
+  confirmed: boolean;
+};
+
+export type SelectionNormalization = {
+  state: SelectionState;
+  recovered: boolean;
+};
+
+export type SelectionChange = {
+  state: SelectionState;
+  changed: boolean;
+  message: string;
+};
+
+export type SelectionConfirmation = {
+  state: SelectionState;
+  confirmed: boolean;
+  message: string;
+};
+
+type ValidIds = Iterable<string> | ReadonlySet<string>;
+
+function toValidIdSet(validIds: ValidIds): ReadonlySet<string> {
+  return validIds instanceof Set ? validIds : new Set(validIds);
+}
+
+function recordValue(value: unknown): Record<string, unknown> | null {
+  return value !== null && typeof value === "object" && !Array.isArray(value)
+    ? value as Record<string, unknown>
+    : null;
+}
+
+export function emptySelection(): SelectionState {
   return {
     version: SELECTION_VERSION,
     selectedMediaIds: [],
@@ -10,10 +44,13 @@ export function emptySelection() {
   };
 }
 
-export function normalizeSelection(value, validIds) {
-  const validIdSet = validIds instanceof Set ? validIds : new Set(validIds);
-  const sourceIds = Array.isArray(value?.selectedMediaIds) ? value.selectedMediaIds : [];
-  const selectedMediaIds = [];
+export function normalizeSelection(value: unknown, validIds: ValidIds): SelectionNormalization {
+  const source = recordValue(value);
+  const validIdSet = toValidIdSet(validIds);
+  const sourceIds: unknown[] = Array.isArray(source?.selectedMediaIds)
+    ? source.selectedMediaIds
+    : [];
+  const selectedMediaIds: string[] = [];
 
   sourceIds.forEach((id) => {
     if (
@@ -26,12 +63,12 @@ export function normalizeSelection(value, validIds) {
     }
   });
 
-  const confirmed = value?.confirmed === true && selectedMediaIds.length === SELECTION_LIMIT;
+  const confirmed = source?.confirmed === true && selectedMediaIds.length === SELECTION_LIMIT;
   const recovered =
-    value?.version !== SELECTION_VERSION ||
+    source?.version !== SELECTION_VERSION ||
     sourceIds.length !== selectedMediaIds.length ||
     sourceIds.some((id, index) => id !== selectedMediaIds[index]) ||
-    value?.confirmed === true && !confirmed;
+    source?.confirmed === true && !confirmed;
 
   return {
     state: { version: SELECTION_VERSION, selectedMediaIds, confirmed },
@@ -39,50 +76,12 @@ export function normalizeSelection(value, validIds) {
   };
 }
 
-export function loadSelection(storage, validIds) {
-  if (!storage) {
-    return {
-      state: emptySelection(),
-      persistent: false,
-      recovered: false,
-      storageError: true,
-    };
-  }
-
-  try {
-    const stored = storage.getItem(SELECTION_STORAGE_KEY);
-    if (!stored) {
-      return {
-        state: emptySelection(),
-        persistent: true,
-        recovered: false,
-        storageError: false,
-      };
-    }
-    const normalized = normalizeSelection(JSON.parse(stored), validIds);
-    return { ...normalized, persistent: true, storageError: false };
-  } catch {
-    return {
-      state: emptySelection(),
-      persistent: false,
-      recovered: false,
-      storageError: true,
-    };
-  }
-}
-
-export function saveSelection(storage, state) {
-  if (!storage) return false;
-  try {
-    storage.setItem(SELECTION_STORAGE_KEY, JSON.stringify(state));
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-export function toggleMediaSelection(state, id, validIds) {
-  const validIdSet = validIds instanceof Set ? validIds : new Set(validIds);
+export function toggleMediaSelection(
+  state: SelectionState,
+  id: string,
+  validIds: ValidIds,
+): SelectionChange {
+  const validIdSet = toValidIdSet(validIds);
   if (!validIdSet.has(id)) {
     return { state, changed: false, message: "That work is not available." };
   }
@@ -118,7 +117,7 @@ export function toggleMediaSelection(state, id, validIds) {
   };
 }
 
-export function confirmSelection(state) {
+export function confirmSelection(state: SelectionState): SelectionConfirmation {
   if (state.selectedMediaIds.length !== SELECTION_LIMIT) {
     return {
       state,

@@ -1,165 +1,229 @@
 # Goal-bounded autonomous development loop
 
-Status: current operating contract for continuous development against one
+Status: current operating contract for scheduled development against one
 owner-approved goal.
 
-This loop advances one approved product goal through small, independently
-validated work units. It operates only when `docs/plans/CURRENT.md` records one
-active owner-approved goal with standing authorization. When no active goal is
-recorded, implementation stops until the owner supplies and authorizes one.
-Routine implementation inside an authorized goal does not wait for owner
-review.
+This loop advances one approved goal through small, independently validated
+work units in successive fresh tasks.
+It operates only when `docs/plans/CURRENT.md` records exactly one active goal
+with standing owner authorization.
+Routine implementation, acceptance, local commit, handoff, and relay inside the
+approved goal do not wait for owner review.
 
 The owner remains the authority for a new goal and for unresolved material
-product, visual, scope, or lasting architecture decisions. The loop never uses
-standing authorization to broaden or reinterpret the active goal.
+product, visual, scope, privacy, or lasting architecture decisions.
+Standing authorization never broadens or reinterprets the active goal.
+
+## Scheduled operating window
+
+The Architecture Foundation loop may start new units daily from 18:00 until
+23:00 in America/Toronto.
+The recurring scheduler starts a fresh recovery task once per hour at 18:00,
+19:00, 20:00, 21:00, and 22:00.
+
+An accepted unit that finishes before 23:00 creates one fresh successor task in
+the same local project after writing its handoff.
+That relay provides back-to-back progress without letting one task own two
+units.
+At or after 23:00, the active task finishes its current unit safely, writes the
+handoff, and does not create a successor.
+
+The hourly starts are recovery opportunities, not permission for overlap.
+Every scheduled or relayed task first inspects the recorded run state and atomically claims the durable checkout-ownership record before any subagent spawn or file change.
+If another durable owner is active, the new task exits without changing the repository.
+If no live task owns a matching recorded `Current run` and `Incomplete run`, the
+fresh task resumes exactly that orphaned unit instead of selecting a new one.
+If the two run fields conflict, the ownership record is unreadable, or the recorded owner's state cannot be verified, stop safely without changes.
+
+Outside the scheduled window, a task may finish an already-recorded unit safely
+but may not select a new unit or relay a successor.
+An explicit owner instruction may perform administrative work outside the
+window but does not silently start an implementation unit.
 
 ## Goal and work-unit boundary
 
 The active goal defines the outcome, invariants, authorized scope, validation
-standard, and completion condition. A work unit is the smallest coherent change
-that can create new evidence for one unmet goal criterion in one fresh context.
+standard, and completion condition.
+A work unit is the smallest coherent change that creates evidence for one unmet
+criterion.
+One implementation task owns at most one work unit.
 
-Standing authorization permits successive bounded work units only inside the
-active goal. Work remains strictly one unit at a time. The loop selects each
-unit from current repository evidence after the prior unit is accepted and
-committed. It never creates a future task queue.
+Standing authorization permits successive bounded units only inside the active
+goal.
+The loop selects each unit from current repository evidence after the prior unit
+is accepted and committed.
+It never records a future task queue.
 
 Each work unit:
 
 1. selects one smallest justified goal gap;
 2. obtains one to three independent read-only explorations;
-3. states one criterion, intended behavior, and evidence claim;
+3. states one criterion, intended result, and evidence claim;
 4. implements one coherent change through the sole-writer orchestrator;
-5. runs focused and full repository validation, plus a rendered click-through
-   only when the five-UI-unit visual checkpoint is due;
+5. runs focused checks and the full repository check;
 6. records candidate evidence;
 7. receives a fresh independent read-only review;
-8. resolves every blocking finding and repeats focused/full repository
-   validation and review after material correction;
-9. records accepted evidence and creates one local commit after a clean review;
-   and
-10. immediately re-orients for the next bounded unit inside the same goal.
+8. resolves every blocking finding and repeats validation and fresh review after
+   a material correction;
+9. records accepted evidence and creates one local commit;
+10. writes the compact temporary handoff with `No next unit selected`;
+11. creates one fresh successor before 23:00 when relay remains authorized; and
+12. stops without selecting another unit.
 
-The loop stops only when the goal is complete, the owner pauses or stops it, an
-owner decision is required, another run overlaps, the baseline is unsafe, or a
-technical or external-action blocker cannot be resolved within authorized
-scope.
+## Architecture Foundation exception
+
+The owner explicitly authorized architecture-only work for the active
+Architecture Foundation goal.
+During this goal, enforceable architecture, compatibility, migration, and test
+evidence are valid progress even when a unit intentionally changes no visible
+product behavior.
+
+This exception is narrow.
+The accepted Identity Map Prototype remains the frozen behavior and visual
+baseline.
+No Discovery, Library, Themes, Search, personalization, framework migration,
+visual redesign, or speculative future module is authorized.
+
+While the architecture entry gate is open, only the contract unit defined by
+the active goal may be selected.
+Broad source migration starts only after that gate is accepted.
+
+## Fresh-task handoff contract
+
+Every implementation unit begins in a newly created fresh task.
+The first unit reads the active goal and implementation state without requiring
+a prior handoff.
+Every later unit reads the latest temporary handoff before selecting or
+continuing work.
+
+A task may orient, select or continue one unit, explore, implement, validate,
+review, correct, accept, commit, hand off, and relay.
+It may not select or implement a second unit.
+
+At every accepted, paused, blocked, or owner-decision terminal state, write a
+compact redacted handoff in the operating system temporary directory.
+Use `contour-<active-goal-id>-handoff.md` and capture the goal id before a
+completion transition clears it.
+
+The handoff contains only:
+
+- active goal id and exact terminal state;
+- accepted commit or exact incomplete working-tree state;
+- criterion and evidence status;
+- focused, full, rendered, and independent-review results as applicable;
+- UI checkpoint count;
+- risks and unresolved owner decisions;
+- `No next unit selected`; and
+- suggested skills for the next task.
+
+The handoff is context, not authority, accepted evidence, or a future task
+queue.
+If it is unavailable, the fresh task reconstructs factual state from the
+repository and does not infer missing decisions or discard work.
+
+## Fresh-task relay
+
+After an accepted local commit and handoff, read the current local time in
+America/Toronto.
+If it is before 23:00 and standing authorization remains active:
+
+1. use the Codex project tools to identify the exact current local project;
+2. assert and release checkout ownership, then enter handoff-only state and perform no more repository work;
+3. create one fresh local task in that project with `gpt-5.6-terra` and high reasoning;
+4. give it the active automation prompt and tell it to begin with the authoritative read order;
+5. wait once, briefly, only to confirm dispatch; and
+6. stop the current task.
+
+Do not relay after a blocked, paused, owner-decision, unsafe-baseline,
+overlapping-run, or goal-complete terminal state.
+Do not relay at or after 23:00.
+Do not interpret failure to create a successor as permission to keep working in
+the current task.
+The next hourly recovery start may resume from the handoff.
+
+## No-overlap gate
+
+Before any subagent spawn or repository change, run `python3 scripts/development_loop_lock.py acquire`.
+The command obtains the current task ID from `CODEX_THREAD_ID` and atomically creates the durable local ownership record.
+
+If acquisition reports `HELD_BY <owner-id>`, inspect that exact task with `read_thread`.
+Stop at **ACTIVE RUN EXISTS** when the recorded owner is queued, active, or owns a non-terminal latest turn.
+An idle owner that asked for input still owns the checkout.
+When the exact owner is idle or `notLoaded` after a failed or interrupted turn, send a follow-up to that same task instructing it to assert ownership and resume its matching recorded unit.
+When the exact owner completed a documented loop terminal state but failed to release, send a follow-up to that same task instructing it to release its own record and finish the applicable handoff or relay only.
+The recovery task that does not own the record then stops without repository changes.
+Ownership is never taken over or force-released by a different task.
+If the record is unreadable, exact-owner inspection fails, or the exact-owner follow-up cannot be dispatched, stop at **ACTIVE RUN STATUS UNKNOWN**.
+
+The unscoped Codex task listing is not an ownership precondition because it can hang, cannot filter by project, and cannot reliably classify idle historical tasks.
+Do not call `list_threads` as part of the no-overlap gate.
+The atomic ownership record is the decisive single-writer proof for every task governed by this repository.
+The transition to this rule was accepted only after a successful project activity screen showed no competing active task.
+
+Before every later repository mutation phase and after any resumed turn, run
+`python3 scripts/development_loop_lock.py assert-owner`.
+A mismatch stops all further repository work.
+Release ownership with `python3 scripts/development_loop_lock.py release` at every non-relaying terminal state.
+For a relay, assert and release ownership immediately before creating the successor, enter handoff-only state, and perform no more repository work.
+The successor must acquire ownership for itself.
+
+The recorded `Current run` and `Incomplete run` must also agree.
+A fresh task continues a recorded incomplete unit instead of selecting a
+replacement.
 
 ## Owner decision boundary
 
-Routine implementation evidence is accepted under standing authorization after
-focused and full repository validation and clean fresh independent review. The
-owner is not a routine work-unit reviewer.
+Routine work-unit evidence is accepted under standing authorization after
+focused and full validation plus clean fresh independent review.
+The owner is not a routine unit reviewer.
 
 Stop at **NEEDS OWNER DECISION** before acting when continuation requires:
 
 - selecting, replacing, broadening, or reinterpreting a goal;
-- a material product, visual, scope, or lasting architecture choice not already
-  settled by authoritative documents;
-- changing the product philosophy, pillars, invariants, or model;
+- a material product, visual, scope, privacy, or lasting architecture choice not
+  already settled by authoritative documents;
+- changing the frozen behavior or design outside an allowed correctness fix;
 - resolving an open question that materially affects behavior;
 - destructive cleanup, disposal of user work, deployment, publication, push,
   merge, or another external side effect;
-- authority to handle overlapping unrelated changes; or
+- authority to absorb overlapping unrelated changes; or
 - direction after the owner pauses or stops the loop.
 
-The independent reviewer may identify that a decision is required, but may not
-make the decision.
-
-When a decision is required, set `Pending owner decision` to the smallest
-concrete question and `Run status` to `needs owner decision`. Preserve a current
-unit when one exists; otherwise leave `Current run` and `Incomplete run` as
-`none`. Standing authorization remains recorded but no work continues until the
-decision is supplied.
+When a decision is required, record the smallest concrete question, set `Run
+status` to `needs owner decision`, write the handoff, and do not relay.
 
 ## Frontend design contract
 
 For work affecting Map presentation, interaction, visibility, responsive
-layout, design tokens, or reusable frontend foundations, the orchestrator must
-use the `design-taste-frontend` skill.
+layout, design tokens, or reusable frontend foundations, use the
+`design-taste-frontend` skill.
+Record its Design Read, design dials, relevant redesign audit, and applicable
+pre-flight results before acceptance.
 
-Before editing, record:
-
-- the one-line Design Read;
-- `DESIGN_VARIANCE`, `MOTION_INTENSITY`, and `VISUAL_DENSITY`;
-- the relevant redesign audit and patterns being preserved or retired; and
-- the applicable design-system or honest native-CSS choice.
-
-Before acceptance, apply the skill's relevant source, token, content, contrast,
-shape, and accessibility pre-flight checks. Full rendered responsive,
-color-mode, motion, and interaction replay belongs to the visual checkpoint
-unless a narrow smoke check is needed to diagnose a specific implementation
-risk. Landing-page-specific rules do not apply mechanically to the interactive
-Map.
+The Architecture Foundation freezes the accepted visual design.
+A UI-affecting unit must explain why an accessibility or correctness fix is
+required and demonstrate preservation of unrelated behavior.
 
 ## Visual checkpoint cadence
 
-Full rendered click-through testing is deliberately batched for this
-experimental prototype.
+Count only accepted units that change a visible UI surface or interaction.
+Run the complete rendered checkpoint on every fifth such unit and before goal
+completion.
 
-- Count only implementation units that change a visible UI surface or
-  interaction. Counts one through four represent accepted units since the last
-  checkpoint.
-- When the next UI candidate would be the fifth, preserve it as `Current run`,
-  set the count to five and `Run status` to `visual checkpoint`, and run one
-  combined checkpoint before review and acceptance.
-- Record the checkpoint with the candidate evidence, then obtain the unit's
-  fresh independent review of both code and checkpoint evidence. After a clean
-  review, accept and commit the fifth unit, update `Visual checkpoint`, reset
-  the count to zero, and return `Run status` to `selecting`.
-- Exercise the accumulated affected flows at representative desktop and mobile
-  sizes, supported color modes, keyboard/touch behavior, responsive seams, and
-  console output.
-- Reset the count to zero only after the checkpoint evidence is recorded.
-- Run the same complete checkpoint before marking the goal complete, even when
-  fewer than five UI units have accumulated.
-- Independent read-only code review remains required for every unit and after
-  every material correction. Reviewers do not repeat the complete rendered
-  click-through unless a checkpoint is due.
-
-Each active goal's implementation state owns the current checkpoint date and
-UI-unit count. Historical goal checkpoints do not authorize or satisfy a later
-goal's visual evidence.
-
-## Goal-specific entry gate
-
-The implementation-state schema retains a `Graph foundation` field for the
-completed Identity Map Prototype and compatible later goals. When an active
-goal sets this field to `open`, that goal must define the exact visible entry
-gate and restrict selection accordingly.
-
-Any entry gate must develop observable end-to-end behavior and the smallest
-necessary substrate together. It may include an application shell, goal-valid
-seed data, model, rendering, interaction, and local state only insofar as they
-support the visible claim. It may not be satisfied by speculative architecture
-or a placeholder surface.
-
-The gate becomes `approved` only when its bounded behavior is exercised, fully
-validated, independently reviewed without an unresolved blocker, recorded as
-accepted evidence, and committed under standing authorization.
+The checkpoint exercises accumulated affected flows at representative desktop
+and mobile sizes, supported color modes, keyboard and touch behavior,
+responsive seams, local persistence, and console output.
+Reset the counter only after checkpoint evidence is accepted.
+Independent code review remains required for every unit.
 
 ## Model routing
 
 - The sole-writer orchestrator uses `gpt-5.6-terra` with high reasoning.
-- Read-only explorer subagents use `gpt-5.6-terra` with high reasoning.
+- Read-only explorer agents use `gpt-5.6-terra` with high reasoning.
 - Every independent implementation and alignment review uses a fresh
   `gpt-5.6-sol` agent with high reasoning.
 - Reviewers are read-only and may not edit, commit, choose product direction,
   or determine a new goal.
-
-## No-overlap gate
-
-Before selecting a unit, inspect project task and agent activity. Ignore the
-active orchestrator itself.
-
-If another project orchestrator, orphaned explorer, reviewer, or unrelated task
-is active, stop at **ACTIVE RUN EXISTS** without changing the repository. If
-activity cannot be inspected reliably, stop at **ACTIVE RUN STATUS UNKNOWN**.
-
-Explorers and reviewers spawned by the current orchestrator are expected. The
-orchestrator must receive, stop, or otherwise resolve every owned subagent
-before accepting a unit.
 
 ## Sources of authority
 
@@ -169,33 +233,27 @@ Read these in order before repository work:
 2. `docs/plans/CURRENT.md`;
 3. the active goal linked from `CURRENT.md`;
 4. the linked implementation state;
-5. relevant implementation and tests located at selection time; and
-6. only the product specification relevant to the selected unit.
-
-The product foundation and active goal are authoritative. The active goal may
-narrow higher-level documents but may not violate their invariants. Open
-questions identify owner-decision boundaries and are not a backlog.
+5. the latest temporary handoff when available;
+6. relevant implementation and tests located at selection time; and
+7. only the product specification relevant to the selected unit.
 
 If sources conflict in a way that affects product direction, visual language,
-scope, or lasting architecture, stop at **NEEDS OWNER DECISION** with the
-smallest concrete decision required.
+scope, privacy, or lasting architecture, stop at **NEEDS OWNER DECISION**.
 
 ## Standing authority
 
 While the active goal has `Owner authorization: standing`, the loop may:
 
-- select successive bounded units inside the active goal;
+- select successive bounded units during the scheduled window;
 - implement one coherent change per unit;
-- add or update focused tests for that behavior;
-- create the smallest necessary application or validation substrate tied to a
-  named criterion;
+- add or update focused tests and quality gates;
 - update implementation-state evidence;
-- simplify or remove loop-owned code when it is the safest smallest way to
-  satisfy the goal;
-- use bounded read-only explorers and reviewers;
+- simplify or remove loop-owned code when it is the safest bounded solution;
+- use read-only explorers and reviewers;
 - accept clean reviewed evidence;
-- create local commits; and
-- continue immediately to the next justified unit.
+- create local commits;
+- create the required temporary handoff; and
+- create one fresh successor task before 23:00.
 
 Standing authority does not permit the loop to:
 
@@ -204,281 +262,175 @@ Standing authority does not permit the loop to:
 - decide an unresolved owner question;
 - weaken tests, validation, product boundaries, authorship, or privacy rules;
 - absorb, overwrite, discard, or commit unrelated user work;
-- push, merge, deploy, publish, or create external side effects;
+- push, merge, deploy, publish, or create unrelated external side effects;
 - use destructive cleanup to make a unit pass; or
 - treat a reviewer as a product decision-maker.
 
 ## Preconditions
 
-Before selecting a new unit or continuing the current unit, confirm that:
+Before selecting or continuing a unit, confirm that:
 
-- `CURRENT.md` links exactly one active owner-approved goal;
-- standing authorization is active for that goal;
+- the task has not completed another unit;
+- current time permits new selection, or an incomplete unit is being finished;
+- exactly one active owner-approved goal is linked;
+- owner authorization is standing;
 - no owner decision or alignment blocker is pending;
-- no overlapping run exists;
-- a current unit, if any, matches the recorded incomplete unit;
-- the behavior is authorized by the active goal;
+- no overlapping task or recorded run exists;
+- the durable checkout-ownership record names the current task;
+- a current unit, if any, matches the incomplete unit;
+- the work is authorized by the active goal;
 - no future task queue is recorded;
-- any goal-specific entry gate is respected;
+- the architecture entry gate is respected;
 - the checkout contains no unsafe overlapping user changes; and
 - the repository check passes, or a pre-existing unrelated failure is recorded.
 
-If unrelated user changes overlap the unit, stop at **BASELINE BLOCKED** and
-report exact paths. Never reset or discard them without direction.
+If unrelated changes overlap the unit, stop at **BASELINE BLOCKED**.
+Never reset or discard them without direction.
 
 ## One work-unit run
 
 ### 1. Orient
 
-Read the compact index, active goal, implementation state, accepted evidence,
-current run, and owner-decision state. If a unit is already active, continue
-only that unit. Otherwise select a new unit after all preconditions pass.
+Read the sources of authority, latest handoff, run fields, accepted evidence,
+and repository state.
+Confirm this is a fresh task, acquire durable checkout ownership, and confirm no overlap exists.
 
 ### 2. Select one task
 
-Choose the smallest unmet goal gap that can create visible or behavioral
-evidence in one context. While the graph foundation is open, select only a
-visible graph-foundation gap.
+Choose the smallest unmet goal gap that can create direct evidence in one task.
+While the architecture entry gate is open, select only its contract unit.
 
-Record only that task under `Current Run`. State:
+Record only that task under `Current run` and `Incomplete run`.
+State:
 
-> This work unit advances criterion X by producing behavior Y, verified by
+> This work unit advances criterion X by producing result Y, verified by
 > evidence Z.
 
-Do not record later tasks. If no honest gap advances the goal, stop at **NO
-JUSTIFIED CHANGE** without changing implementation.
+Do not record later tasks.
+If no honest gap advances the goal, stop at **NO JUSTIFIED CHANGE**.
 
-### 3. Partition bounded work
+### 3. Explore
 
-Use one to three read-only explorer subagents for concrete independent
-questions. They may inspect code, tests, docs, runtime evidence, and options.
-They may not edit or choose the task or product direction.
+Use one to three read-only explorer agents for concrete independent questions.
+Wait for all explorers before editing.
+The orchestrator remains the sole writer.
 
-Wait for all explorers before implementation. The orchestrator remains the sole
-writer and owns selection, integration, validation, and completion judgment.
+### 4. Implement
 
-### 4. Implement one coherent change
+Make the smallest coherent change that can satisfy the claim.
+Preserve the visible behavior freeze, public and private boundaries, authored
+meaning, spatial separation, storage compatibility, and unrelated work.
 
-Make the smallest end-to-end change that can satisfy the claim. Infrastructure
-is allowed only when necessary for visible or directly testable behavior in the
-same unit.
+Do not add speculative infrastructure or future-feature seams.
 
-Develop discovery behavior and its supporting surfaces in tandem. When the Map
-is affected, preserve spatial movement as distinct from semantic authorship,
-private Drafts as distinct from Published content, private interest behavior as
-distinct from public Map membership, and unrelated user changes as outside the
-unit.
-
-Use the frontend design contract for every relevant visual unit.
-
-### 5. Validate proportionately
+### 5. Validate
 
 Run focused checks first and then `./scripts/check.sh`.
+Inspect the owned diff and verify the intended architecture or compatibility
+claim directly.
+Run rendered evidence only for a concrete risk, a due visual checkpoint, or
+AF-10.
 
-For each ordinary unit, validate the affected behavior with focused tests,
-source and diff inspection, and the full repository check. Record whether the
-unit increments the UI-unit checkpoint counter. A targeted rendered smoke check
-is optional when it answers a concrete risk efficiently; it is not a routine
-acceptance gate.
+### 6. Record and review
 
-When the visual checkpoint is due, launch through the documented command and:
+Before review, record the criterion, claim, exact diff, observed evidence,
+validation, UI counter, risks, and proposed accepted evidence.
 
-- render representative desktop and mobile sizes;
-- test the accumulated affected pointer, keyboard, touch, and responsive flows;
-- inspect layout, state transitions, both supported color modes, and console;
-- exercise reduced-motion behavior when motion changed; and
-- retain concise checkpoint evidence.
+Use a fresh read-only `gpt-5.6-sol` high-reasoning reviewer.
+Provide the goal, relevant rules, actual diff, evidence claim, validation, and
+known risks.
+Resolve every blocker.
+A material correction repeats focused and full validation and uses a new fresh
+reviewer.
 
-Review the diff for:
+### 7. Accept, commit, hand off, relay, and stop
 
-- drift from intentional human discovery toward ratings, generic logging,
-  opaque recommendations, feeds, or productivity software;
-- discovery results that lack truthful provenance or understandable evidence;
-- private Saves, Bookmarks, Votes, or passive behavior leaking into the public
-  Map or another User's recommendation explanation;
-- private Draft leakage into visitor mode;
-- semantic relationships created by spatial movement;
-- canonical Theme nodes, manual Theme filing, or generated Themes presented as
-  authored human language;
-- public popularity scores or personalized Votes treated as global truth;
-- a Map that is decorative, technical, unstable, flowchart-like, or detached
-  from discovery and contribution;
-- attention-maximizing mechanics inconsistent with intentional use;
-- inaccessible responsive behavior;
-- tests weakened beyond intended behavior;
-- speculative infrastructure; and
-- unrelated work.
+After validation passes and review is clean:
 
-### 6. Record evidence and obtain fresh review
-
-Before review, record under the current unit:
-
-- criterion and progress claim;
-- exact owned diff;
-- observed behavior separately from interpretation;
-- focused and full repository validation, any targeted smoke evidence, and the
-  current visual-checkpoint count or checkpoint result;
-- risks, forced prototype behavior, and unresolved assumptions; and
-- proposed accepted evidence.
-
-Then use a fresh read-only `gpt-5.6-sol` high-reasoning reviewer. Provide the
-goal, relevant product and design rules, actual diff, evidence claim,
-validation, and known risks. Do not provide private implementation reasoning or
-ask for confirmation.
-
-The reviewer checks goal fit, invariants, privacy boundaries, code-level
-interaction and visual quality, evidence sufficiency, test coverage,
-unnecessary complexity, and whether an owner decision is required. At a visual
-checkpoint, the reviewer also inspects the rendered click-through evidence.
-
-Resolve every blocking finding. Every material correction requires focused and
-full repository validation again plus another fresh review. It does not require
-another complete rendered click-through unless the visual checkpoint is due or
-the correction invalidates checkpoint evidence.
-
-### 7. Accept, commit, and continue
-
-After validation passes and a fresh review has no unresolved blocker:
-
-1. append the factual review result;
-2. mark only proportionately supported criteria and evidence accepted under
-   `standing owner authorization, 2026-08-22`;
-3. set `Graph foundation` to `approved` when the unit satisfies its recorded
-   goal-specific gate;
+1. record the factual review result;
+2. mark only supported criteria accepted;
+3. approve the architecture entry gate only when its exact claim is satisfied;
 4. append the accepted run record;
-5. for an accepted UI unit below the checkpoint, increment `UI units since
-   visual checkpoint`; for the fifth unit, update `Visual checkpoint` with its
-   recorded evidence and reset the count from five to zero;
+5. update the UI checkpoint fields when applicable;
 6. clear `Current run` and `Incomplete run`;
-7. set `Run status` to `selecting` unless the goal is complete;
+7. set `Run status` to `awaiting scheduled fresh task` unless the goal is
+   complete;
 8. synchronize `CURRENT.md`;
-9. review and stage only the coherent unit;
-10. create one local commit; and
-11. re-orient immediately for the next bounded unit.
+9. stage only the coherent unit;
+10. create one local commit;
+11. write the temporary handoff with `No next unit selected`;
+12. before 23:00, create one fresh successor when every relay precondition
+    remains true; and
+13. stop at **UNIT COMMITTED - HANDOFF READY**.
 
-The factual acceptance record may differ from the reviewed diff only in
-administrative state. Any change to implementation, tests, behavior, or the
-evidence claim requires fresh validation and review.
+The current task never selects the successor's unit.
 
 ## Blocked units
 
-If a selected unit becomes non-viable, do not silently replace it.
+Do not silently replace a non-viable selected unit.
 
-- If the blocker is technical and can be resolved safely inside the same claim,
-  continue that unit.
-- If the blocker requires a product, visual, scope, architecture, destructive,
-  or external-action decision, set `Pending owner decision`, set `Run status`
-  to `needs owner decision`, preserve the isolated unit, and stop at **NEEDS
-  OWNER DECISION**.
-- If the baseline or overlapping user work is unsafe, stop at **BASELINE
-  BLOCKED**.
-- Never remove loop-owned or user-owned work merely because a unit is blocked.
-
-Administrative closure or removal of a blocked unit requires explicit owner
-direction when it would discard material work.
-
-## Alignment review
-
-Perform goal-level alignment at meaningful milestones or when verified evidence
-reveals possible drift or unnecessary complexity. Alignment reviews observable
-behavior, accepted evidence, product fit, and possible removal. It does not
-select future tasks.
-
-Alignment receives fresh independent read-only review. If it finds no material
-owner decision and no blocker, record and commit the alignment under standing
-authorization, clear `Alignment due`, and continue. If it requires a material
-product, visual, scope, or architecture decision, stop at **NEEDS OWNER
-DECISION**.
+- Resolve a technical blocker safely inside the same claim when possible.
+- For a required owner decision, record it, hand off, and stop without relay.
+- For an unsafe baseline or overlap, preserve exact state, hand off when
+  appropriate, and stop without relay.
+- Never remove work merely because a unit is blocked.
 
 ## Owner pause or stop
 
 The owner may pause or stop the loop at any time.
+On pause, set owner authorization, cadence, relay, and run status to paused in
+both operational files, preserve any active unit, write a handoff, and stop.
+The scheduler must no-op while authorization is paused.
 
-On pause:
-
-- set `Owner authorization` to `paused`;
-- retain `Authorization scope: active goal` and `Authorization source: owner`;
-- set `Loop cadence` and `Run status` to `paused`;
-- preserve any matching `Current run` and `Incomplete run`; and
-- make no product implementation change or loop-unit commit until the owner
-  resumes or directs disposition. An administrative state change or commit
-  explicitly requested by the owner remains allowed.
-
-If the owner stops while a material unit is active, preserve it. Do not clear,
-discard, or commit it without explicit disposition. A stopped clean boundary
-with no active unit may use the same paused state until the owner supplies a new
-direction.
+Administrative state changes explicitly requested by the owner remain allowed.
+Resuming requires an explicit owner instruction and synchronized standing state.
 
 ## Goal completion
 
-The active goal is complete only when every criterion has proportionate
-accepted evidence, the complete walkthrough and full check pass, all affected
-visual surfaces have been rendered and exercised, and a final fresh independent
-review finds no unresolved blocker or missing criterion.
+The active goal is complete only when every criterion has accepted evidence,
+the final full repository check and complete rendered walkthrough pass, legacy
+storage compatibility is exercised, and a final fresh independent review is
+clean.
 
-When complete:
+At completion:
 
-1. run and record the final complete rendered click-through checkpoint, set
-   `Visual checkpoint` to `goal completion`, reset `UI units since visual
-   checkpoint` to `0`, record the final accepted evidence and review, and mark
-   every active-goal criterion `accepted` in the Goal Progress table;
-2. replace the goal status with the single canonical line `Status: complete;
-   owner-approved goal completed under standing authorization.`;
-3. clear `Current run`, `Incomplete run`, and `Pending owner decision` to
-   `none`;
-4. set `Run status` to `none`;
-5. set `Owner authorization` to `pending`, `Authorization scope` and
-   `Authorization source` to `none`, and `Loop cadence` to `stopped`;
-6. set `Graph foundation` to `approved` and `Alignment due` to `no`;
-7. set `Active goal id` to `none` in both state files;
-8. replace (do not append to) the status and active-work prose in both state
-   files with the canonical completed lines enforced by `scripts/check.sh`, so
-   no stale active-correction claim remains;
-9. replace the full `Current Run` section body with only `- State: none; goal
-   complete.` and the full `Current Unit Evidence` section body with only
-   `- State: complete; no current unit.`;
-10. replace the active `Goal` link in `CURRENT.md` with `Last completed goal`
-   while retaining the shared implementation-state link;
-11. synchronize every remaining mirrored field in `CURRENT.md`;
-12. run the final repository check against that exact terminal state;
-13. create the final local commit; and
-14. stop at **GOAL COMPLETE** without selecting another goal.
-
-The owner supplies any later goal.
+1. record final evidence and review;
+2. mark every criterion accepted;
+3. set the goal and implementation state to their canonical completed status;
+4. clear current and incomplete runs and pending decisions;
+5. set `Active goal id` to `none`, owner authorization to `pending`, cadence to
+   `stopped`, relay to `stopped`, and standing authority to `none`;
+6. synchronize `CURRENT.md` and `README.md`;
+7. run the final repository check;
+8. create the final local commit;
+9. write the final handoff using the captured completing goal id;
+10. pause the `bproject-autonomous-graph-loop` automation so it does not create
+    later no-op recovery tasks;
+11. do not relay; and
+12. stop at **GOAL COMPLETE** without selecting another goal.
 
 ## Terminal states
 
-Each unit or loop ends in exactly one state:
-
-- **UNIT COMMITTED**: one bounded unit passed validation and fresh independent
-  review, was accepted under standing authorization, and was committed locally.
-  The loop continues immediately unless another terminal condition applies.
-- **ALIGNMENT COMMITTED**: a clean independently reviewed alignment was
-  committed and the loop continues.
-- **NEEDS OWNER DECISION**: continuation requires a new goal or a material
-  product, visual, scope, architecture, destructive, external-action, pause, or
-  stop decision.
-- **OWNER AUTHORIZATION REQUIRED OR PAUSED**: standing authorization is absent
-  or withdrawn.
-- **ACTIVE RUN EXISTS**: another project run makes safe selection impossible.
-- **ACTIVE RUN STATUS UNKNOWN**: overlap could not be checked reliably.
-- **NO JUSTIFIED CHANGE**: no honest bounded unit advances the goal from current
-  evidence.
-- **WORK UNIT BLOCKED**: a technical blocker prevents the current claim from
-  completing safely.
-- **BASELINE BLOCKED**: overlapping or unsafe repository state prevents work.
-- **GOAL COMPLETE**: all criteria have accepted evidence, the final validation
-  and review are clean, the final commit exists, and no later goal is selected.
+- **UNIT COMMITTED - HANDOFF READY**
+- **ALIGNMENT COMMITTED - HANDOFF READY**
+- **NEEDS OWNER DECISION - HANDOFF READY**
+- **OWNER AUTHORIZATION REQUIRED OR PAUSED**
+- **ACTIVE RUN EXISTS**
+- **ACTIVE RUN STATUS UNKNOWN**
+- **NO JUSTIFIED CHANGE**
+- **WORK UNIT BLOCKED - HANDOFF READY**
+- **BASELINE BLOCKED - HANDOFF READY**
+- **GOAL COMPLETE**
 
 ## Accepted run record
 
 For every committed unit retain:
 
 1. criterion and claim;
-2. observed behavior and interpretation separately;
+2. observed evidence and interpretation separately;
 3. exact files and local commit;
-4. focused and full repository validation, plus the UI checkpoint count and any
-   applicable targeted smoke or full checkpoint evidence;
+4. focused and full validation plus applicable rendered evidence;
 5. explorer partition and fresh review result;
-6. risks and unresolved assumptions; and
-7. acceptance basis: `standing owner authorization, 2026-08-22`.
+6. risks and unresolved assumptions;
+7. acceptance basis under standing owner authorization; and
+8. confirmation that the handoff records `No next unit selected`.

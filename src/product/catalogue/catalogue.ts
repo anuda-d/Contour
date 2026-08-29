@@ -1,4 +1,14 @@
-export const mediaCatalogue = Object.freeze([
+export type MediaFormat = "book" | "film";
+
+export interface CatalogueWork {
+  id: string;
+  format: MediaFormat;
+  title: string;
+  creator: string;
+  year: number;
+}
+
+export const mediaCatalogue: ReadonlyArray<Readonly<CatalogueWork>> = Object.freeze([
   Object.freeze({
     id: "left-hand",
     format: "book",
@@ -43,6 +53,6 @@ export const mediaCatalogue = Object.freeze([
   }),
 ]);
 
-export function getCatalogue() {
+export function getCatalogue(): CatalogueWork[] {
   return mediaCatalogue.map((item) => ({ ...item }));
 }

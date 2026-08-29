@@ -1,30 +1,14 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
-  SELECTION_STORAGE_KEY,
+  SELECTION_LIMIT,
   confirmSelection,
   emptySelection,
-  loadSelection,
   normalizeSelection,
-  saveSelection,
   toggleMediaSelection,
-} from "../src/selection-state.js";
+} from "../../../src/product/taste/selection.ts";
 
 const validIds = new Set(["a", "b", "c", "d"]);
-
-class MemoryStorage {
-  constructor() {
-    this.values = new Map();
-  }
-
-  getItem(key) {
-    return this.values.get(key) ?? null;
-  }
-
-  setItem(key, value) {
-    this.values.set(key, value);
-  }
-}
 
 test("selection toggles, deduplicates, and refuses a fourth work", () => {
   let state = emptySelection();
@@ -64,35 +48,12 @@ test("normalization removes unknown, duplicate, and excess ids", () => {
   assert.deepEqual(normalized.state.selectedMediaIds, ["a", "b", "c"]);
   assert.equal(normalized.state.confirmed, true);
   assert.equal(normalized.recovered, true);
+  assert.equal(SELECTION_LIMIT, 3);
 });
 
-test("selection persistence round-trips a confirmed set", () => {
-  const storage = new MemoryStorage();
-  const state = { ...emptySelection(), selectedMediaIds: ["a", "b", "c"], confirmed: true };
-  assert.equal(saveSelection(storage, state), true);
-  assert.equal(storage.values.has(SELECTION_STORAGE_KEY), true);
-  assert.deepEqual(loadSelection(storage, validIds), {
-    state,
-    persistent: true,
-    recovered: false,
-    storageError: false,
-  });
-});
-
-test("unavailable storage falls back to a safe session state", () => {
-  const storage = {
-    getItem() {
-      throw new Error("unavailable");
-    },
-    setItem() {
-      throw new Error("unavailable");
-    },
-  };
-  assert.deepEqual(loadSelection(storage, validIds), {
+test("a current-version envelope without an id array stays canonical without recovery", () => {
+  assert.deepEqual(normalizeSelection({ version: 1, selectedMediaIds: null }, validIds), {
     state: emptySelection(),
-    persistent: false,
     recovered: false,
-    storageError: true,
   });
-  assert.equal(saveSelection(storage, emptySelection()), false);
 });

@@ -1,15 +1,24 @@
 # Contour prototype
 
+Status: Architecture Foundation is active under standing scheduled authorization.
+
 Contour is an intentional, human-to-human discovery product for Books and
 Films. It helps someone begin with a work or idea they already know, encounter
 an unfamiliar work through another person's taste or interpretation, and
 understand why the recommendation may matter.
 
-The current repository contains the completed **Identity Map Prototype**. It
-proves a responsive, locally persistent profile and contribution foundation:
-a generated but shapeable Map of Books, Films, authored Thoughts, and explicit
-connections. It does not yet implement Contour's discovery experience, shared
-accounts, real recommendations, or production infrastructure.
+The current repository contains the completed **Identity Map Prototype** and an
+active **Architecture Foundation** goal.
+Current authorization is recorded in the Current Development Index.
+The existing software proves a responsive, locally persistent profile and
+contribution foundation: a generated but shapeable Map of Books, Films,
+authored Thoughts, and explicit connections.
+The architecture goal preserves that accepted behavior while migrating the
+application and tests completely to strict TypeScript, isolating effects and
+privacy boundaries, and retaining all valid browser state through versioned
+migration.
+It does not add Contour's discovery experience, shared accounts, real
+recommendations, or production infrastructure.
 
 ## What the completed prototype can do
 
@@ -30,21 +39,25 @@ remains anchored to at least one Book or Film.
 
 ## Run the prototype locally
 
-You need Node.js for tests and Python 3 for the local static server.
+You need Node.js `^20.19.0` or `>=22.12.0` and npm.
+Vite provides the development server and production browser build.
 
-1. Run `npm run serve`.
-2. Open `http://localhost:4173`.
+1. Run `npm install`.
+2. Run `npm run serve`.
+3. Open `http://localhost:4173`.
 
 The prototype stores durable state in this browser's local storage. Camera
 position, selected node, temporary movement, and visitor-preview mode last only
 for the current visit.
 
-Run `npm test` for the test suite. Run `./scripts/check.sh` for governance
-consistency, syntax checks, tests, and diff validation.
+Run `npm test` for the test suite.
+Run `npm run typecheck` for strict TypeScript validation.
+Run `npm run build` for the production browser build.
+Run `./scripts/check.sh` for governance consistency, type checking, the browser build, tests, and diff validation.
 
-## Prototype limits
+## Completed Map prototype limits
 
-This repository does not include:
+The completed Map prototype does not include:
 
 - Authentication, shared accounts, or a production database
 - Public discovery through search, recommendations, people, Media, or Themes
@@ -87,11 +100,18 @@ Product direction:
 Implementation state:
 
 1. [Current Development Index](docs/plans/CURRENT.md)
-2. [Identity Map Prototype goal](docs/plans/identity-map-prototype/GOAL.md)
-3. [Implementation Plan](docs/plans/identity-map-prototype/IMPLEMENTATION_PLAN.md)
-4. [Editorial Constellation design foundation](docs/plans/identity-map-prototype/MAP_DESIGN_FOUNDATION.md)
-5. [Goal-bounded development loop](docs/main/DEVELOPMENT_LOOP.md)
+2. [Architecture Foundation goal](docs/plans/architecture-foundation/GOAL.md)
+3. [Architecture Foundation implementation state](docs/plans/architecture-foundation/IMPLEMENTATION_PLAN.md)
+4. [Deferred Human Discovery proposal](docs/plans/human-discovery-prototype/GOAL.md)
+5. [Identity Map Prototype goal](docs/plans/identity-map-prototype/GOAL.md)
+6. [Identity Map implementation archive](docs/plans/identity-map-prototype/IMPLEMENTATION_PLAN.md)
+7. [Editorial Constellation design foundation](docs/plans/identity-map-prototype/MAP_DESIGN_FOUNDATION.md)
+8. [Goal-bounded development loop](docs/main/DEVELOPMENT_LOOP.md)
 
-Coding agents must begin with the Current Development Index, confirm that an
-owner-approved goal and authorization exist, and stop when no active goal is
-recorded.
+Coding agents must begin with the Current Development Index, confirm that one
+owner-approved goal and standing authorization exist, and stop when
+authorization is absent or paused.
+Every implementation unit begins in a fresh task and ends with a temporary
+handoff that selects no next unit.
+During the daily 18:00-23:00 America/Toronto window, a clean accepted unit may
+create one fresh successor task without intermediate owner approval.

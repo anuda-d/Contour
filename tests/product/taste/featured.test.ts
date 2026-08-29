@@ -2,28 +2,13 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   FEATURED_LIMIT,
-  FEATURED_STORAGE_KEY,
   FEATURED_VERSION,
   createFeaturedState,
-  loadFeaturedState,
   normalizeFeaturedState,
-  saveFeaturedState,
   toggleFeaturedMedia,
-} from "../src/featured-state.js";
+} from "../../../src/product/taste/featured.ts";
 
 const eligibleIds = new Set(["book-a", "film-a", "book-b", "film-b"]);
-
-function memoryStorage(initial = {}) {
-  const values = new Map(Object.entries(initial));
-  return {
-    getItem(key) {
-      return values.has(key) ? values.get(key) : null;
-    },
-    setItem(key, value) {
-      values.set(key, value);
-    },
-  };
-}
 
 test("featured state keeps ordered unique public Media and caps the prototype at three", () => {
   const normalized = normalizeFeaturedState(
@@ -67,42 +52,9 @@ test("non-public Media cannot enter featured state", () => {
   assert.strictEqual(result.state, state);
 });
 
-test("missing storage starts from deliberate seed defaults while stored empty remains empty", () => {
-  const storage = memoryStorage();
-  const defaults = loadFeaturedState(storage, eligibleIds, ["book-a", "film-a"]);
-  assert.deepEqual(defaults.state.featuredMediaIds, ["book-a", "film-a"]);
-  assert.equal(defaults.persistent, true);
-
-  storage.setItem(
-    FEATURED_STORAGE_KEY,
-    JSON.stringify({ version: FEATURED_VERSION, featuredMediaIds: [] }),
-  );
-  const empty = loadFeaturedState(storage, eligibleIds, ["book-a", "film-a"]);
-  assert.deepEqual(empty.state.featuredMediaIds, []);
-});
-
-test("featured state round trips and corrupted data recovers to valid defaults", () => {
-  const storage = memoryStorage();
-  const state = createFeaturedState(["film-a", "book-a"], eligibleIds);
-  assert.equal(saveFeaturedState(storage, state), true);
-  assert.deepEqual(loadFeaturedState(storage, eligibleIds).state, state);
-
-  storage.setItem(FEATURED_STORAGE_KEY, "not json");
-  const recovered = loadFeaturedState(storage, eligibleIds, ["book-b"]);
-  assert.deepEqual(recovered.state.featuredMediaIds, ["book-b"]);
-  assert.equal(recovered.recovered, true);
-  assert.equal(recovered.storageError, false);
-});
-
-test("unavailable storage falls back to visit-only defaults", () => {
-  const broken = {
-    getItem() {
-      throw new Error("blocked");
-    },
-  };
-  const loaded = loadFeaturedState(broken, eligibleIds, ["book-a"]);
-  assert.deepEqual(loaded.state.featuredMediaIds, ["book-a"]);
-  assert.equal(loaded.persistent, false);
-  assert.equal(loaded.storageError, true);
-  assert.equal(saveFeaturedState(null, loaded.state), false);
+test("a current-version envelope without an id array remains an empty deliberate choice", () => {
+  assert.deepEqual(normalizeFeaturedState({ version: 1, featuredMediaIds: null }, eligibleIds), {
+    state: createFeaturedState([], eligibleIds),
+    recovered: false,
+  });
 });

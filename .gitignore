@@ -1,4 +1,15 @@
 .DS_Store
+node_modules/
+
+# Local development and agent harness artifacts
 .unlazy/
 .playwright-cli/
-output/playwright/
+output/
+drafts/
+GATES.md
+contour-*-handoff.md
+
+# Generated TypeScript and browser tooling output
+dist/
+coverage/
+*.tsbuildinfo

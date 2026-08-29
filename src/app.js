@@ -1,4 +1,4 @@
-import { getCatalogue } from "./catalog.js";
+import { getCatalogue } from "./product/catalogue/catalogue.ts";
 import {
   composeGraphWithDrafts,
   connectDraft,
@@ -12,8 +12,7 @@ import {
 import {
   loadFeaturedState,
   saveFeaturedState,
-  toggleFeaturedMedia,
-} from "./featured-state.js";
+} from "./adapters/browser/featured-local-storage.ts";
 import { getPublicMediaIds } from "./graph-projection.js";
 import { ThoughtMap } from "./map.js?v=editorial-constellation-15";
 import {
@@ -23,11 +22,14 @@ import {
   unpinPosition,
 } from "./pinned-state.js";
 import {
-  confirmSelection,
   loadSelection,
   saveSelection,
+} from "./adapters/browser/selection-local-storage.ts";
+import {
+  confirmSelection,
   toggleMediaSelection,
-} from "./selection-state.js";
+} from "./product/taste/selection.ts";
+import { toggleFeaturedMedia } from "./product/taste/featured.ts";
 import { getSeedGraph } from "./seed.js";
 import { ThoughtCapture } from "./thought-capture.js";
 import { WorkChooser } from "./work-chooser.js";

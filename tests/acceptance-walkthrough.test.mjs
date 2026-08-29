@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { getCatalogue } from "../src/catalog.js";
+import { getCatalogue } from "../src/product/catalogue/catalogue.ts";
 import {
   composeGraphWithDrafts,
   connectDraft,
@@ -13,8 +13,7 @@ import {
 import {
   loadFeaturedState,
   saveFeaturedState,
-  toggleFeaturedMedia,
-} from "../src/featured-state.js";
+} from "../src/adapters/browser/featured-local-storage.ts";
 import {
   getModeCapabilities,
   getPublicMediaIds,
@@ -27,12 +26,15 @@ import {
   savePinnedState,
 } from "../src/pinned-state.js";
 import {
-  confirmSelection,
-  emptySelection,
   loadSelection,
   saveSelection,
+} from "../src/adapters/browser/selection-local-storage.ts";
+import {
+  confirmSelection,
+  emptySelection,
   toggleMediaSelection,
-} from "../src/selection-state.js";
+} from "../src/product/taste/selection.ts";
+import { toggleFeaturedMedia } from "../src/product/taste/featured.ts";
 import { getSeedGraph } from "../src/seed.js";
 
 function memoryStorage() {
