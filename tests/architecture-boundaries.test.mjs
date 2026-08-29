@@ -299,6 +299,15 @@ test("architecture boundary check validates legacy import resolution before exem
   assert.match(result.output, /imports unresolved source/);
 });
 
+test("architecture boundary check rejects the migrated top-level Draft-state path", () => {
+  const root = createFixture({
+    "src/draft-state.js": "export const stale = true;\n",
+  });
+  const result = runChecker(root);
+  assert.equal(result.status, 1, result.output);
+  assert.match(result.output, /source file is not assigned to a permitted layer/);
+});
+
 test("architecture boundary check rejects a directory import without an index source file", () => {
   const root = createFixture({
     "src/product/catalog/catalog.ts": 'import "../../adapters/browser";\n',

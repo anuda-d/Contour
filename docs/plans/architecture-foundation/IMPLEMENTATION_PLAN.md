@@ -27,14 +27,14 @@ Status: active shared state; standing scheduled owner authorization.
 | Criterion | Status | Accepted evidence |
 | --- | --- | --- |
 | AF-1 Enforced architecture contract | accepted | Architecture decision records, six-key compatibility inventory, and the checked import-boundary gate were accepted after 30 focused and 112 repository tests plus clean fresh review. |
-| AF-2 Complete strict TypeScript | open | Partial: strict browser and Node-test type environments, reproducible Vite build, and the catalogue, selection, featured-Media, and pinned-position seams plus their tests are accepted; the remaining maintained files are not yet migrated. |
-| AF-3 Deep product modules | open | None yet. |
+| AF-2 Complete strict TypeScript | open | Partial: strict browser and Node-test type environments, reproducible Vite build, and the catalogue, selection, featured-Media, pinned-position, and authored-Thought seams plus their tests are accepted; the remaining maintained files are not yet migrated. |
+| AF-3 Deep product modules | open | Partial: authored Thought lifecycle, anchors, publication, and immutable merge now live in a cohesive strict TypeScript product module; other product facts remain in prototype seams. |
 | AF-4 Application use cases | open | None yet. |
-| AF-5 Isolated effects and validated boundaries | open | Partial: selection, featured-Media, and pinned-position persistence now cross injected browser-storage ports, and untrusted JSON is normalized before entering typed product state; other effects remain un-migrated. |
+| AF-5 Isolated effects and validated boundaries | open | Partial: selection, featured-Media, pinned-position, and authored-Thought persistence now cross injected browser-storage ports, untrusted JSON is normalized before entering typed product state, and the authored lifecycle no longer reads the wall clock; other effects remain un-migrated. |
 | AF-6 Explicit projections and privacy | open | None yet. |
-| AF-7 Durable compatibility | open | None yet. |
+| AF-7 Durable compatibility | open | Partial: authored V2, V1, and legacy-Draft browser storage now has typed precedence, normalization, migration, recovery, and read-merge-write evidence; other persisted state remains to be completed. |
 | AF-8 Frozen visible behavior | open | None yet. |
-| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, and 124 discovered tests, including product and browser-adapter selection, featured-Media, and pinned-position coverage; later migrated seams and final coverage remain open. |
+| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, and 125 discovered tests, including product and browser-adapter selection, featured-Media, pinned-position, and authored-Thought coverage; later migrated seams and final coverage remain open. |
 | AF-10 Durable completion walkthrough | open | None yet. |
 
 This table records accepted evidence only.
@@ -60,16 +60,15 @@ queue.
 
 ## Current run
 
-- State: none; `af-2-pinned-position-typescript-seam` is accepted and no current unit is selected.
-- Criterion: AF-2 Complete strict TypeScript, AF-5 Isolated effects and validated boundaries, and AF-9 Layered test and quality gates.
-- Claim: the existing pinned-position seam became strict TypeScript with pure spatial preference rules and a narrow injected browser-storage adapter while preserving the V1 payload, recovery semantics, and rendered placement behavior.
-- Intended result: `src/product/map/pinned-positions.ts` owns pinned state, coordinate normalization, immutable commands, and pins-over-temporary-over-generated precedence; `src/adapters/browser/pinned-local-storage.ts` owns the V1 key, untrusted JSON parsing, and persistence; matching TypeScript tests cover both layers without JavaScript mirrors.
-- Evidence: focused product, adapter, and persisted acceptance-walkthrough validation passed 8 tests; strict browser and Node-test typechecks, the architecture check, and the Vite production build passed; `./scripts/check.sh` passed 124 tests with zero failures; and `git diff --check -- .` passed.
-- Interpretation: spatial pin facts no longer own concrete persistence, the browser adapter validates the untrusted V1 payload before it reaches typed product state, and all observed recovery and placement-precedence outcomes remain covered without a UI change.
-- Exact owned diff: `src/product/map/pinned-positions.ts`, `src/adapters/browser/pinned-local-storage.ts`, their matching TypeScript tests, `src/app.js`, `src/map.js`, `tests/acceptance-walkthrough.test.mjs`, the architecture checker and records, this implementation state, and the deleted pinned JavaScript source and test mirror.
+- State: none; `af-2-draft-state-typescript-seam` is accepted and no current unit is selected.
+- Criterion: AF-2 Complete strict TypeScript, AF-3 Deep product modules, AF-5 Isolated effects and validated boundaries, AF-7 Durable compatibility, and AF-9 Layered test and quality gates.
+- Claim: the authored Draft Thought lifecycle became a strict TypeScript product module and V2, V1, plus legacy-Draft browser storage became a narrow injected adapter while preserving payload precedence, recovery, merge, and native DOM behavior.
+- Evidence: focused product, adapter, and persisted acceptance-walkthrough validation passed 21 tests; strict browser and Node-test typechecks, the updated architecture check, and the Vite production build passed; `./scripts/check.sh` passed 125 tests with zero failures; and `git diff --check -- .` passed.
+- Interpretation: authored state now owns its lifecycle, anchor validity, immutable merge, and rebuilt graph output without concrete browser effects; the adapter owns key precedence, untrusted JSON parsing, and read-merge-write persistence; explicit timestamps keep the product layer deterministic.
+- Exact owned diff: `src/product/authorship/draft-state.ts`, `src/adapters/browser/authored-local-storage.ts`, their matching TypeScript tests, `src/app.js`, `tests/acceptance-walkthrough.test.mjs`, the architecture checker and records, this implementation state, and the deleted Draft-state JavaScript source and test mirror.
 - UI checkpoint: not incremented because this unit preserves presentation, interaction, styles, and rendered behavior.
-- Acceptance: partial evidence is recorded for AF-2, AF-5, and AF-9; all three criteria remain open because other maintained seams and effects are still JavaScript or not isolated.
-- Independent review: a final fresh `gpt-5.6-sol` high-reasoning read-only reviewer returned clean with no P0-P3 finding or unresolved blocker after the initial P2 stale-record correction was validated.
+- Acceptance: partial evidence is recorded for AF-2, AF-3, AF-5, AF-7, and AF-9; all remain open because other maintained seams, effects, privacy projections, and storage representations are still incomplete.
+- Independent review: the first fresh reviewer found P2 stale-exemption and implicit-clock issues; after correction and repeated focused plus full validation, a new fresh `gpt-5.6-sol` high-reasoning reviewer returned clean with no P0-P3 finding or unresolved blocker.
 
 ## Owner authorization
 
@@ -114,9 +113,9 @@ queue.
 
 ## Fresh-task handoff state
 
-- Latest accepted unit: af-2-pinned-position-typescript-seam
-- Latest implementation commit: pending this unit's local acceptance commit.
-- Latest temporary handoff: pending this unit's post-commit handoff.
+- Latest accepted unit: af-2-draft-state-typescript-seam
+- Latest implementation commit: recorded in the accepted unit handoff.
+- Latest temporary handoff: pending this accepted unit's post-commit handoff.
 - Next unit selected: no
 
 Every unit task writes a compact redacted handoff document in the operating
@@ -143,14 +142,14 @@ without discarding uncommitted work or inferring missing decisions.
 ## Current unit evidence
 
 - State: accepted; no current unit.
-- Criterion: AF-2 Complete strict TypeScript, AF-5 Isolated effects and validated boundaries, and AF-9 Layered test and quality gates.
-- Intended result: migrate the pinned-position rules and V1 storage adapter into strict TypeScript while preserving placement behavior, persistence compatibility, and the existing native DOM callers.
-- Evidence claim: product normalization, immutable commands, position precedence, missing/corrupt/unavailable storage handling, and persisted Draft-pin reload behavior are typechecked, browser-buildable, architecture-compliant, and behaviorally equivalent under focused tests.
-- Focused validation: `npx tsx --test tests/product/map/pinned-positions.test.ts tests/adapters/browser/pinned-local-storage.test.ts tests/acceptance-walkthrough.test.mjs` passed 8 tests.
-- Full validation: after correcting the initial P2 stale-record finding, `./scripts/check.sh` passed strict typecheck, Vite build, architecture enforcement, and all 124 tests with zero failures; `git diff --check -- .` passed.
+- Criterion: AF-2 Complete strict TypeScript, AF-3 Deep product modules, AF-5 Isolated effects and validated boundaries, AF-7 Durable compatibility, and AF-9 Layered test and quality gates.
+- Intended result: migrate the authored Draft Thought lifecycle and its V2, V1, plus legacy-Draft browser persistence into strict TypeScript while preserving compatibility, publication privacy inputs, cross-tab merge, and the existing native DOM callers.
+- Evidence claim: product lifecycle, anchor validation, immutable merge, composition inputs, storage precedence, legacy migration, malformed and unavailable-storage recovery, and persisted Draft-to-Published walkthrough behavior are typechecked, browser-buildable, architecture-compliant, and behaviorally equivalent under focused tests.
+- Focused validation: `npx tsx --test tests/product/authorship/draft-state.test.ts tests/adapters/browser/authored-local-storage.test.ts tests/acceptance-walkthrough.test.mjs` passed 21 tests.
+- Full validation: after correcting the initial P2 legacy-exemption and implicit-clock findings, `./scripts/check.sh` passed strict typecheck, Vite build, updated architecture enforcement, and all 125 tests with zero failures; `git diff --check -- .` passed.
 - Rendered validation: not due; no UI surface or interaction changed and the UI checkpoint count remains zero.
-- Remaining risk: remaining maintained source and tests are still JavaScript, and most browser effects remain un-migrated, so AF-2, AF-5, and AF-9 remain open.
-- Independent review: first fresh review found P2 stale transition and compatibility records; a final fresh `gpt-5.6-sol` high-reasoning reviewer returned clean after correction.
+- Remaining risk: remaining maintained source and tests are still JavaScript, and most browser effects, projections, and storage representations remain un-migrated, so AF-2, AF-3, AF-5, AF-7, and AF-9 remain open.
+- Independent review: first fresh review found the P2 stale legacy exemption and product-layer clock; a final fresh `gpt-5.6-sol` high-reasoning reviewer returned clean after correction.
 - Acceptance basis: standing owner authorization permits local acceptance after focused and full validation plus clean fresh independent review.
 
 ## Goal-readiness evidence
@@ -270,6 +269,13 @@ Routine work-unit completion does not require owner review.
   matching product and adapter tests, focused eight-test evidence, full
   124-test repository validation, and a clean final fresh independent review
   after correction support the bounded claim while all three criteria remain open.
+- AF-2, AF-3, AF-5, AF-7, and AF-9 partial unit
+  `af-2-draft-state-typescript-seam` accepted on 2026-08-29.
+  Strict TypeScript authored Thought lifecycle and graph-composition rules, an
+  injected V2, V1, and legacy-Draft browser-storage adapter, matching product
+  and adapter tests, focused 21-test evidence, full 125-test repository
+  validation, and a clean final fresh independent review after correction
+  support the bounded claim while all five criteria remain open.
 
 ## Administratively closed run log
 

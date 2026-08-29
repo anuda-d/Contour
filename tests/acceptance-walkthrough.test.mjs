@@ -6,10 +6,12 @@ import {
   connectDraft,
   createDraft,
   emptyDraftState,
+  publishDraft,
+} from "../src/product/authorship/draft-state.ts";
+import {
   loadDraftState,
   persistDraftState,
-  publishDraft,
-} from "../src/draft-state.js";
+} from "../src/adapters/browser/authored-local-storage.ts";
 import {
   loadFeaturedState,
   saveFeaturedState,

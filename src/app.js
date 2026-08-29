@@ -4,11 +4,13 @@ import {
   connectDraft,
   createDraft,
   editDraft,
+  publishDraft,
+} from "./product/authorship/draft-state.ts";
+import {
   loadDraftState,
   persistDraftState,
-  publishDraft,
   THOUGHT_STORAGE_KEY,
-} from "./draft-state.js";
+} from "./adapters/browser/authored-local-storage.ts";
 import {
   loadFeaturedState,
   saveFeaturedState,
