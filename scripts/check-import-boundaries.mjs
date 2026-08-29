@@ -11,7 +11,6 @@ const legacyLayers = new Map([
   ["map.js", "ui"],
   ["thought-capture.js", "ui"],
   ["work-chooser.js", "ui"],
-  ["catalog.js", "product"],
   ["seed.js", "product"],
   ["draft-state.js", "product"],
   ["selection-state.js", "product"],

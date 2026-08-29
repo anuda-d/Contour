@@ -39,17 +39,21 @@ remains anchored to at least one Book or Film.
 
 ## Run the prototype locally
 
-You need Node.js for tests and Python 3 for the local static server.
+You need Node.js `^20.19.0` or `>=22.12.0` and npm.
+Vite provides the development server and production browser build.
 
-1. Run `npm run serve`.
-2. Open `http://localhost:4173`.
+1. Run `npm install`.
+2. Run `npm run serve`.
+3. Open `http://localhost:4173`.
 
 The prototype stores durable state in this browser's local storage. Camera
 position, selected node, temporary movement, and visitor-preview mode last only
 for the current visit.
 
-Run `npm test` for the test suite. Run `./scripts/check.sh` for governance
-consistency, syntax checks, tests, and diff validation.
+Run `npm test` for the test suite.
+Run `npm run typecheck` for strict TypeScript validation.
+Run `npm run build` for the production browser build.
+Run `./scripts/check.sh` for governance consistency, type checking, the browser build, tests, and diff validation.
 
 ## Completed Map prototype limits
 

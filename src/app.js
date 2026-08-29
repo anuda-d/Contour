@@ -1,4 +1,4 @@
-import { getCatalogue } from "./catalog.js";
+import { getCatalogue } from "./product/catalogue/catalogue.ts";
 import {
   composeGraphWithDrafts,
   connectDraft,

@@ -83,11 +83,16 @@ They are explicit in the import checker so a new top-level source file cannot si
 | --- | --- | --- | --- |
 | `src/app.js` | composition | `src/composition/main.ts` | concrete browser wiring only |
 | `src/map.js`, `src/thought-capture.js`, `src/work-chooser.js` | UI | `src/ui/` | DOM rendering and event translation |
-| `src/catalog.js` | product transition | `src/product/catalogue/` | Book and Film facts |
 | `src/seed.js` | seed transition | `src/adapters/seed/` plus current identity, authorship, taste, and Map contracts | validated seeded owner, Media, Thoughts, authored relationships, public choices, and spatial inputs |
 | `src/draft-state.js` | product transition | `src/product/authorship/` and `src/adapters/browser/` | Thought rules separated from storage |
 | `src/selection-state.js`, `src/featured-state.js` | product transition | `src/product/taste/` and `src/adapters/browser/` | deliberate selection and public presentation choices |
 | `src/pinned-state.js`, `src/layout.js`, `src/graph-projection.js` | product transition | `src/product/map/`, `src/application/`, and `src/ui/` | rebuildable projections and spatial presentation inputs |
+
+## Migrated seams
+
+| Current owner | Migrated source | Preserved responsibility |
+| --- | --- | --- |
+| Catalogue | `src/product/catalogue/catalogue.ts` | Typed Book and Film facts and fresh editable catalogue reads |
 
 The temporary `src/map.js` visitor filter and `composeGraphWithDrafts` graph composition are migration seams, not enduring privacy or product-authority mechanisms.
 Owner and visitor read models will become structurally separate application outputs.

@@ -1,4 +1,4 @@
-import { mediaCatalogue } from "./catalog.js";
+import { mediaCatalogue } from "./product/catalogue/catalogue.ts";
 
 export const profile = Object.freeze({
   id: "mira-vale",

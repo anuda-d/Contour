@@ -1,6 +1,9 @@
-import test from "node:test";
 import assert from "node:assert/strict";
-import { getCatalogue, mediaCatalogue } from "../src/catalog.js";
+import test from "node:test";
+import {
+  getCatalogue,
+  mediaCatalogue,
+} from "../../../src/product/catalogue/catalogue.ts";
 
 test("the curated catalogue has unique Book and Film records", () => {
   const ids = mediaCatalogue.map((item) => item.id);
@@ -19,7 +22,11 @@ test("the curated catalogue has unique Book and Film records", () => {
 test("catalogue callers receive an editable fresh copy", () => {
   const first = getCatalogue();
   const second = getCatalogue();
-  first[0].title = "Changed locally";
-  assert.notEqual(first[0].title, second[0].title);
-  assert.notStrictEqual(first[0], second[0]);
+  const firstItem = first[0];
+  const secondItem = second[0];
+  assert.ok(firstItem);
+  assert.ok(secondItem);
+  firstItem.title = "Changed locally";
+  assert.notEqual(firstItem.title, secondItem.title);
+  assert.notStrictEqual(firstItem, secondItem);
 });
