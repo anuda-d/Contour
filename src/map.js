@@ -5,7 +5,7 @@ import {
   normalizeMapMode,
   projectGraphForMode,
 } from "./graph-projection.js";
-import { resolvePositions } from "./pinned-state.js";
+import { resolvePositions } from "./product/map/pinned-positions.ts";
 
 const WORLD = { width: 1080, height: 720 };
 const MIN_SCALE = 0.3;

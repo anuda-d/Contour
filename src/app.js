@@ -17,10 +17,12 @@ import { getPublicMediaIds } from "./graph-projection.js";
 import { ThoughtMap } from "./map.js?v=editorial-constellation-15";
 import {
   loadPinnedState,
-  pinPosition,
   savePinnedState,
+} from "./adapters/browser/pinned-local-storage.ts";
+import {
+  pinPosition,
   unpinPosition,
-} from "./pinned-state.js";
+} from "./product/map/pinned-positions.ts";
 import {
   loadSelection,
   saveSelection,

@@ -20,11 +20,13 @@ import {
   projectGraphForMode,
 } from "../src/graph-projection.js";
 import {
-  emptyPinnedState,
   loadPinnedState,
-  pinPosition,
   savePinnedState,
-} from "../src/pinned-state.js";
+} from "../src/adapters/browser/pinned-local-storage.ts";
+import {
+  emptyPinnedState,
+  pinPosition,
+} from "../src/product/map/pinned-positions.ts";
 import {
   loadSelection,
   saveSelection,
