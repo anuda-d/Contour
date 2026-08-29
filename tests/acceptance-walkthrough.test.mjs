@@ -13,8 +13,7 @@ import {
 import {
   loadFeaturedState,
   saveFeaturedState,
-  toggleFeaturedMedia,
-} from "../src/featured-state.js";
+} from "../src/adapters/browser/featured-local-storage.ts";
 import {
   getModeCapabilities,
   getPublicMediaIds,
@@ -35,6 +34,7 @@ import {
   emptySelection,
   toggleMediaSelection,
 } from "../src/product/taste/selection.ts";
+import { toggleFeaturedMedia } from "../src/product/taste/featured.ts";
 import { getSeedGraph } from "../src/seed.js";
 
 function memoryStorage() {

@@ -12,8 +12,7 @@ import {
 import {
   loadFeaturedState,
   saveFeaturedState,
-  toggleFeaturedMedia,
-} from "./featured-state.js";
+} from "./adapters/browser/featured-local-storage.ts";
 import { getPublicMediaIds } from "./graph-projection.js";
 import { ThoughtMap } from "./map.js?v=editorial-constellation-15";
 import {
@@ -30,6 +29,7 @@ import {
   confirmSelection,
   toggleMediaSelection,
 } from "./product/taste/selection.ts";
+import { toggleFeaturedMedia } from "./product/taste/featured.ts";
 import { getSeedGraph } from "./seed.js";
 import { ThoughtCapture } from "./thought-capture.js";
 import { WorkChooser } from "./work-chooser.js";
