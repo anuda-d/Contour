@@ -27,12 +27,14 @@ import {
   savePinnedState,
 } from "../src/pinned-state.js";
 import {
-  confirmSelection,
-  emptySelection,
   loadSelection,
   saveSelection,
+} from "../src/adapters/browser/selection-local-storage.ts";
+import {
+  confirmSelection,
+  emptySelection,
   toggleMediaSelection,
-} from "../src/selection-state.js";
+} from "../src/product/taste/selection.ts";
 import { getSeedGraph } from "../src/seed.js";
 
 function memoryStorage() {

@@ -23,11 +23,13 @@ import {
   unpinPosition,
 } from "./pinned-state.js";
 import {
-  confirmSelection,
   loadSelection,
   saveSelection,
+} from "./adapters/browser/selection-local-storage.ts";
+import {
+  confirmSelection,
   toggleMediaSelection,
-} from "./selection-state.js";
+} from "./product/taste/selection.ts";
 import { getSeedGraph } from "./seed.js";
 import { ThoughtCapture } from "./thought-capture.js";
 import { WorkChooser } from "./work-chooser.js";

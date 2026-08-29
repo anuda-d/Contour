@@ -27,14 +27,14 @@ Status: active shared state; standing scheduled owner authorization.
 | Criterion | Status | Accepted evidence |
 | --- | --- | --- |
 | AF-1 Enforced architecture contract | accepted | Architecture decision records, six-key compatibility inventory, and the checked import-boundary gate were accepted after 30 focused and 112 repository tests plus clean fresh review. |
-| AF-2 Complete strict TypeScript | open | Partial: strict browser and Node-test type environments, reproducible Vite build, and the catalogue seam plus test are accepted; the remaining maintained files are not yet migrated. |
+| AF-2 Complete strict TypeScript | open | Partial: strict browser and Node-test type environments, reproducible Vite build, and the catalogue plus selection seams and their tests are accepted; the remaining maintained files are not yet migrated. |
 | AF-3 Deep product modules | open | None yet. |
 | AF-4 Application use cases | open | None yet. |
-| AF-5 Isolated effects and validated boundaries | open | None yet. |
+| AF-5 Isolated effects and validated boundaries | open | Partial: selection persistence now crosses an injected browser-storage port, and untrusted JSON is normalized before entering the typed product state; other effects remain un-migrated. |
 | AF-6 Explicit projections and privacy | open | None yet. |
 | AF-7 Durable compatibility | open | None yet. |
 | AF-8 Frozen visible behavior | open | None yet. |
-| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, and all 112 discovered tests; later migrated seams and final coverage remain open. |
+| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, and 114 discovered tests, including product and browser-adapter selection coverage; later migrated seams and final coverage remain open. |
 | AF-10 Durable completion walkthrough | open | None yet. |
 
 This table records accepted evidence only.
@@ -60,22 +60,16 @@ queue.
 
 ## Current run
 
-- State: none; `af-2-typescript-build-substrate` is accepted and no current unit is selected.
-- Criterion: AF-2 Complete strict TypeScript and AF-9 Layered test and quality gates.
-- Claim: a strict TypeScript and Vite substrate plus one migrated catalogue seam creates the first enforceable, browser-buildable TypeScript path without changing product behavior.
-- Intended result: exact-pinned TypeScript tooling, a strict no-emit configuration, a reproducible Vite build, and the dependency-free catalogue plus its focused test in the approved target layout.
-- Evidence target: focused catalogue, seed, and acceptance tests; strict typecheck; Vite production build; import-boundary check; and the complete repository check.
-- Explorer partition: one read-only explorer audited the seam and import graph; one independently audited build, test-runner, configuration, and dependency risks.
-- Known risk: the TypeScript-aware test command must execute both legacy `.mjs` tests and the migrated `.ts` test without silently omitting either group.
-- Observed evidence: after the second review correction, the focused catalogue, seed, and acceptance command passed seven tests; separate browser and Node-test strict typechecks, `npm run build`, and `npm run check:architecture` passed; `./scripts/check.sh` passed all one hundred twelve tests; `git diff --check -- .` passed; and Vite served both the application HTML and transformed catalogue module at the preserved `localhost:4173` origin.
-- Interpretation: the strict tooling and migrated catalogue seam are browser-buildable, test-discoverable, boundary-enforced, and behaviorally equivalent within the unit's scope.
-- Exact owned diff: `package.json`, `package-lock.json`, `tsconfig.json`, `tsconfig.test.json`, `README.md`, `src/product/catalogue/catalogue.ts`, `tests/product/catalogue/catalogue.test.ts`, `src/app.js`, `src/seed.js`, `tests/acceptance-walkthrough.test.mjs`, `scripts/check-import-boundaries.mjs`, `docs/architecture/ARCHITECTURE_CONTRACT.md`, and this implementation state; legacy `src/catalog.js` and `tests/catalog.test.mjs` are removed without mirrors.
-- UI checkpoint: not incremented because the unit changes build and product-source structure without changing presentation, interaction, styles, or rendered behavior.
-- Acceptance: partial evidence is recorded for AF-2 and AF-9, both criteria remain open, and only this migrated substrate and catalogue seam are accepted.
-- First review correction: declared Vite's supported Node range in package metadata and replaced obsolete Python-server instructions with exact Vite, typecheck, build, test, and repository-check guidance in `README.md`.
-- Second review correction: retained the canonical `localhost:4173` storage origin with a strict port, split browser and Node test type environments, and aligned Node typings with the minimum supported Node major.
-- Final review correction: relabeled the stale no-TypeScript statement as the historical goal-activation baseline so live implementation state no longer contradicts this unit's candidate evidence.
-- Independent review: the final fresh `gpt-5.6-sol` high-reasoning reviewer returned clean with no P0-P3 finding or unresolved blocker after all corrections.
+- State: none; `af-2-selection-state-typescript-seam` is accepted and no current unit is selected.
+- Criterion: AF-2 Complete strict TypeScript, AF-5 Isolated effects and validated boundaries, and AF-9 Layered test and quality gates.
+- Claim: the existing private selection seam became strict TypeScript with pure selection rules and a narrow injected storage adapter while preserving the V1 browser payload and every observed selection outcome.
+- Intended result: `src/product/taste/selection.ts` owns selection state, limits, normalization, and commands; `src/adapters/browser/selection-local-storage.ts` owns the storage key, untrusted JSON parsing, and persistence; matching TypeScript tests cover both layers without a JavaScript mirror.
+- Evidence: focused product, adapter, and persisted acceptance-walkthrough validation passed 8 tests; strict browser and Node-test typechecks, the architecture check, and the Vite production build passed; `./scripts/check.sh` passed 114 tests with zero failures; and `git diff --check -- .` passed.
+- Interpretation: selection logic no longer owns concrete persistence, the browser adapter validates the untrusted V1 payload before it reaches typed product state, and all observable selection outcomes remain covered without a UI change.
+- Exact owned diff: `src/product/taste/selection.ts`, `src/adapters/browser/selection-local-storage.ts`, their matching TypeScript tests, `src/app.js`, `tests/acceptance-walkthrough.test.mjs`, the architecture checker and records, this implementation state, and the deleted selection JavaScript source and test mirror.
+- UI checkpoint: not incremented because this unit preserves presentation, interaction, styles, and rendered behavior.
+- Acceptance: partial evidence is recorded for AF-2, AF-5, and AF-9; all three criteria remain open because other maintained seams and effects are still JavaScript or not isolated.
+- Independent review: a fresh `gpt-5.6-sol` high-reasoning read-only reviewer returned clean with no P0-P3 finding or unresolved blocker.
 
 ## Owner authorization
 
@@ -122,8 +116,8 @@ queue.
 
 ## Fresh-task handoff state
 
-- Latest accepted unit: af-2-typescript-build-substrate
-- Latest implementation commit: AF-2 local acceptance commit.
+- Latest accepted unit: af-2-selection-state-typescript-seam
+- Latest implementation commit: AF-2 selection seam local acceptance commit.
 - Latest temporary handoff: pending this unit's post-commit handoff.
 - Next unit selected: no
 
@@ -151,17 +145,15 @@ without discarding uncommitted work or inferring missing decisions.
 ## Current unit evidence
 
 - State: accepted; no current unit.
-- Criterion: AF-2 Complete strict TypeScript and AF-9 Layered test and quality gates.
-- Intended result: introduce the strict TypeScript and Vite substrate and migrate the catalogue seam plus its focused test into the approved target layout.
-- Evidence claim: the migrated seam is typechecked, browser-buildable, architecture-compliant, behaviorally equivalent under focused tests, and included in complete repository validation.
-- Focused validation: seven catalogue, seed, and end-to-end walkthrough tests passed.
-- Full validation: `./scripts/check.sh` passed strict typecheck, Vite build, architecture enforcement, and all one hundred twelve tests with zero failures.
-- Runtime smoke: Vite served the unchanged application HTML and transformed TypeScript catalogue module successfully at the configured local port.
+- Criterion: AF-2 Complete strict TypeScript, AF-5 Isolated effects and validated boundaries, and AF-9 Layered test and quality gates.
+- Intended result: migrate the private selection seam into strict TypeScript product rules and an injected browser-storage adapter without changing its V1 storage compatibility or rendered behavior.
+- Evidence claim: the selection rules, persisted state normalization, and storage failure behavior are typechecked, browser-buildable, architecture-compliant, behaviorally equivalent under focused tests, and included in complete repository validation.
+- Focused validation: eight product, adapter, and persisted acceptance-walkthrough tests passed.
+- Full validation: `./scripts/check.sh` passed strict typecheck, Vite build, architecture enforcement, and all 114 tests with zero failures.
 - Rendered validation: not due; no UI surface or interaction changed and the UI checkpoint count remains zero.
-- Remaining risk: the remaining maintained source and tests are still JavaScript, so AF-2 and AF-9 remain open.
-- Review correction validation: focused seven-test validation, separate strict browser and Node-test typechecks, Vite build, architecture check, full one-hundred-twelve-test repository validation, diff validation, and preserved-origin runtime smoke all passed after the second correction.
-- Final documentation validation: the focused seven-test command, complete repository check, and diff validation passed after the historical evidence label was corrected.
-- Independent review: clean final fresh review with no P0-P3 finding or unresolved blocker.
+- Remaining risk: remaining maintained source and tests are still JavaScript, and most browser effects remain un-migrated, so AF-2, AF-5, and AF-9 remain open.
+- Independent review: clean fresh review with no P0-P3 finding or unresolved blocker.
+- Acceptance basis: standing owner authorization permits local acceptance after focused and full validation plus clean fresh independent review.
 - Acceptance basis: standing owner authorization permits local acceptance after focused and full validation plus clean fresh independent review.
 
 ## Goal-readiness evidence
@@ -256,6 +248,12 @@ Routine work-unit completion does not require owner review.
   evidence, full 112-test repository validation, preserved-origin runtime smoke,
   and clean final fresh review support the bounded claim while both criteria
   remain open.
+- AF-2, AF-5, and AF-9 partial unit `af-2-selection-state-typescript-seam`
+  accepted on 2026-08-28.
+  Strict TypeScript selection product rules, an injected browser-storage adapter,
+  matching product and adapter tests, focused eight-test evidence, full 114-test
+  repository validation, and a clean fresh independent review support the
+  bounded claim while all three criteria remain open.
 
 ## Administratively closed run log
 
