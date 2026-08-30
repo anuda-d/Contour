@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { getSeedGraph } from "../src/seed.js";
+import { getSeedGraph } from "../../../src/adapters/seed/prototype-seed.ts";
 
 test("the seed contains only owner, Thought, Book, and Film node semantics", () => {
   const graph = getSeedGraph();
@@ -34,17 +34,25 @@ test("every published Thought is media-grounded and every edge resolves", () => 
 test("the seed graph is returned as a fresh editable copy", () => {
   const first = getSeedGraph();
   const second = getSeedGraph();
+  const firstOwner = first.nodes.find((node) => node.type === "user");
+  const firstThought = first.nodes.find((node) => node.type === "thought");
+
+  assert.ok(firstOwner);
+  assert.ok(firstThought);
   first.profile.displayName = "Changed locally";
   first.profile.featuredMediaIds.push("local-only");
-  first.nodes[0].label = "Changed locally";
-  first.nodes.find((node) => node.type === "thought").anchors.push("local-only");
+  firstOwner.label = "Changed locally";
+  firstThought.anchors.push("local-only");
   assert.notEqual(first.profile.displayName, second.profile.displayName);
   assert.ok(!second.profile.featuredMediaIds.includes("local-only"));
-  assert.notEqual(first.nodes[0].label, second.nodes[0].label);
+  assert.notEqual(
+    firstOwner.label,
+    second.nodes.find((node) => node.type === "user")?.label,
+  );
   assert.ok(
     second.nodes
       .filter((node) => node.type === "thought")
-      .every((node) => !node.anchors.includes("local-only")),
+      .every((thought) => !thought.anchors.includes("local-only")),
   );
 });
 

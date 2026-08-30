@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { layoutGraph } from "../src/layout.js";
-import { getSeedGraph } from "../src/seed.js";
+import { getSeedGraph } from "../src/adapters/seed/prototype-seed.ts";
 
 test("the generated layout is deterministic and finite", () => {
   const graph = getSeedGraph();

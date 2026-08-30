@@ -34,7 +34,7 @@ import {
   toggleMediaSelection,
 } from "./product/taste/selection.ts";
 import { toggleFeaturedMedia } from "./product/taste/featured.ts";
-import { getSeedGraph } from "./seed.js";
+import { getSeedGraph } from "./adapters/seed/prototype-seed.ts";
 import { ThoughtCapture } from "./thought-capture.js";
 import { WorkChooser } from "./work-chooser.js";
 

@@ -39,7 +39,7 @@ import {
   toggleMediaSelection,
 } from "../src/product/taste/selection.ts";
 import { toggleFeaturedMedia } from "../src/product/taste/featured.ts";
-import { getSeedGraph } from "../src/seed.js";
+import { getSeedGraph } from "../src/adapters/seed/prototype-seed.ts";
 
 function memoryStorage() {
   const values = new Map();

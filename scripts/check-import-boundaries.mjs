@@ -11,7 +11,6 @@ const legacyLayers = new Map([
   ["map.js", "ui"],
   ["thought-capture.js", "ui"],
   ["work-chooser.js", "ui"],
-  ["seed.js", "product"],
   ["graph-projection.ts", "product"],
   ["layout.js", "product"],
 ]);
