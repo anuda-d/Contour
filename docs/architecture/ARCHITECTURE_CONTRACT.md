@@ -84,7 +84,7 @@ They are explicit in the import checker so a new top-level source file cannot si
 | `src/app.js` | composition | `src/composition/main.ts` | concrete browser wiring only |
 | `src/map.js`, `src/thought-capture.js`, `src/work-chooser.js` | UI | `src/ui/` | DOM rendering and event translation |
 | `src/seed.js` | seed transition | `src/adapters/seed/` plus current identity, authorship, taste, and Map contracts | validated seeded owner, Media, Thoughts, authored relationships, public choices, and spatial inputs |
-| `src/layout.js`, `src/graph-projection.js` | product transition | `src/product/map/`, `src/application/`, and `src/ui/` | rebuildable projections and spatial presentation inputs |
+| `src/layout.js`, `src/graph-projection.ts` | product transition | `src/product/map/`, `src/application/`, and `src/ui/` | rebuildable projections and spatial presentation inputs |
 
 ## Migrated seams
 
@@ -95,6 +95,7 @@ They are explicit in the import checker so a new top-level source file cannot si
 | Taste featured Media | `src/product/taste/featured.ts` and `src/adapters/browser/featured-local-storage.ts` | Typed deliberate public presentation choices and injected browser-storage persistence |
 | Map pinned positions | `src/product/map/pinned-positions.ts` and `src/adapters/browser/pinned-local-storage.ts` | Typed spatial pin rules and injected V1 browser-storage persistence without semantic authorship effects |
 | Authored Thoughts | `src/product/authorship/draft-state.ts` and `src/adapters/browser/authored-local-storage.ts` | Typed Draft lifecycle, immutable authored-state merge, and injected V2, V1, and legacy-Draft browser-storage compatibility |
+| Map public projection | `src/graph-projection.ts` | Typed owner and visitor projection plus capability inputs while the application still owns final read-model separation |
 
 The temporary `src/map.js` visitor filter and `composeGraphWithDrafts` graph composition are migration seams, not enduring privacy or product-authority mechanisms.
 Owner and visitor read models will become structurally separate application outputs.

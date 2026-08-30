@@ -20,7 +20,7 @@ import {
   getModeCapabilities,
   getPublicMediaIds,
   projectGraphForMode,
-} from "../src/graph-projection.js";
+} from "../src/graph-projection.ts";
 import {
   loadPinnedState,
   savePinnedState,

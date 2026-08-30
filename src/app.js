@@ -15,7 +15,7 @@ import {
   loadFeaturedState,
   saveFeaturedState,
 } from "./adapters/browser/featured-local-storage.ts";
-import { getPublicMediaIds } from "./graph-projection.js";
+import { getPublicMediaIds } from "./graph-projection.ts";
 import { ThoughtMap } from "./map.js?v=editorial-constellation-15";
 import {
   loadPinnedState,
