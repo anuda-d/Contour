@@ -27,14 +27,14 @@ Status: active shared state; standing scheduled owner authorization.
 | Criterion | Status | Accepted evidence |
 | --- | --- | --- |
 | AF-1 Enforced architecture contract | accepted | Architecture decision records, six-key compatibility inventory, and the checked import-boundary gate were accepted after 30 focused and 112 repository tests plus clean fresh review. |
-| AF-2 Complete strict TypeScript | open | Partial: strict browser and Node-test type environments, reproducible Vite build, and the catalogue, selection, featured-Media, pinned-position, authored-Thought, public-projection, and prototype-seed seams plus their tests are accepted; the remaining maintained files are not yet migrated. |
+| AF-2 Complete strict TypeScript | open | Partial: strict browser and Node-test type environments, reproducible Vite build, and the catalogue, selection, featured-Media, pinned-position, authored-Thought, public-projection, prototype-seed, and deterministic-layout seams plus their tests are accepted; the remaining maintained files are not yet migrated. |
 | AF-3 Deep product modules | open | Partial: authored Thought lifecycle, anchors, publication, and immutable merge now live in a cohesive strict TypeScript product module; other product facts remain in prototype seams. |
 | AF-4 Application use cases | open | None yet. |
 | AF-5 Isolated effects and validated boundaries | open | Partial: selection, featured-Media, pinned-position, and authored-Thought persistence now cross injected browser-storage ports, untrusted JSON is normalized before entering typed product state, and the authored lifecycle no longer reads the wall clock; other effects remain un-migrated. |
 | AF-6 Explicit projections and privacy | open | Partial: the owner and visitor graph projection now has strict TypeScript ownership and focused evidence for Draft and draft-only Media exclusion, publication-derived public eligibility, dangling-edge filtering, and owner capability removal; application-level structurally separate read models remain open. |
 | AF-7 Durable compatibility | open | Partial: authored V2, V1, and legacy-Draft browser storage now has typed precedence, normalization, migration, recovery, and read-merge-write evidence; other persisted state remains to be completed. |
 | AF-8 Frozen visible behavior | open | None yet. |
-| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, and 126 discovered tests, including product and browser-adapter selection, featured-Media, pinned-position, authored-Thought, public-projection, and prototype-seed coverage; later migrated seams and final coverage remain open. |
+| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, and 127 discovered tests, including product and browser-adapter selection, featured-Media, pinned-position, authored-Thought, public-projection, prototype-seed, and deterministic-layout coverage; later migrated seams and final coverage remain open. |
 | AF-10 Durable completion walkthrough | open | None yet. |
 
 This table records accepted evidence only.
@@ -60,14 +60,15 @@ queue.
 
 ## Current run
 
-- State: none; `af-2-prototype-seed-typescript-seam` is accepted and no current unit is selected.
+- State: none; `af-2-layout-typescript-seam` is accepted and no current unit is selected.
 - Criterion: AF-2 Complete strict TypeScript and AF-9 Layered test and quality gates.
-- Claim: the deterministic prototype seed moved into the typed seed adapter location while preserving its exact profile, Book and Film catalogue facts, published Thoughts, authored edges, featured public Media, and editable fresh-copy semantics.
-- Focused evidence: `npx tsx --test tests/adapters/seed/prototype-seed.test.ts tests/layout.test.mjs tests/acceptance-walkthrough.test.mjs` passed 9 tests.
-- Full evidence: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, the Vite production build, and 126 tests with zero failures; `git diff --check -- .` passed.
-- Interpretation: typed seed templates are frozen while `getSeedGraph()` returns independent editable profile, node, Thought-anchor, and edge copies. This is bounded AF-2 and AF-9 evidence, not an AF-5 claim for runtime seed validation.
-- Exact owned diff: `src/adapters/seed/prototype-seed.ts`, `tests/adapters/seed/prototype-seed.test.ts`, direct app and test importers, the architecture checker and contract, this implementation state, `CURRENT.md`, and the deleted legacy seed source and test mirror.
+- Intended result: migrate the deterministic spatial layout implementation and its direct test to strict TypeScript while preserving generated coordinates, the owner origin, authored-edge influence, and collision separation.
+- Evidence claim: focused layout behavior tests, strict browser and test typechecks, architecture enforcement, the Vite production build, and the full repository check demonstrate a behavior-preserving pure layout migration.
+- Exact owned diff: `src/layout.ts`, `tests/layout.test.ts`, direct layout importers, the architecture checker and contract if required for the typed top-level product seam, this implementation state, and `CURRENT.md`, with the retired JavaScript source and test mirror removed.
 - UI checkpoint: not incremented because this unit preserves presentation, interaction, styles, and rendered behavior.
+- Risks and assumptions: typed layout inputs must describe only the current `user`, `thought`, and `media` graph facts without creating a generic graph abstraction or changing spatial semantics.
+- Focused evidence: `npx tsx --test tests/layout.test.ts` passed 5 focused tests, including an exact accepted-seed coordinate snapshot; `npm run typecheck` and `npm run check:architecture` passed.
+- Full evidence: `./scripts/check.sh` passed strict browser and test typechecks, the Vite production build, architecture enforcement, and 127 tests with zero failures; `git diff --check -- .` passed.
 - Acceptance: partial evidence is recorded for AF-2 and AF-9; both remain open because maintained source migration and final coverage are still incomplete.
 - Independent review: a fresh `gpt-5.6-sol` high-reasoning reviewer returned clean with no P0-P3 finding or unresolved blocker.
 
@@ -144,14 +145,13 @@ without discarding uncommitted work or inferring missing decisions.
 
 - State: accepted; no current unit.
 - Criterion: AF-2 Complete strict TypeScript and AF-9 Layered test and quality gates.
-- Intended result: move the deterministic prototype seed into `src/adapters/seed/prototype-seed.ts` and migrate its direct test to strict TypeScript while preserving exact seeded graph content and fresh editable copies.
-- Evidence claim: seed semantics, layout input, and persisted acceptance walkthrough behavior remain covered by focused tests, strict type checks, the Vite build, import-boundary enforcement, and the full repository check.
-- Focused validation: `npx tsx --test tests/adapters/seed/prototype-seed.test.ts tests/layout.test.mjs tests/acceptance-walkthrough.test.mjs` passed 9 tests.
-- Full validation: `./scripts/check.sh` passed strict typecheck, Vite build, architecture enforcement, and all 126 tests with zero failures; `git diff --check -- .` passed.
+- Intended result: migrate the pure deterministic layout and its direct test to strict TypeScript while preserving the accepted spatial presentation inputs.
+- Evidence claim: the exact seeded coordinate snapshot, determinism, owner origin, authored-edge influence, and collision separation all remain covered after the migration.
+- Focused validation: `npx tsx --test tests/layout.test.ts` passed 5 tests; `npm run typecheck` and `npm run check:architecture` passed.
+- Full validation: `./scripts/check.sh` passed strict browser and test typechecks, the Vite production build, architecture enforcement, and 127 tests with zero failures; `git diff --check -- .` passed.
 - Rendered validation: not due; no UI surface or interaction changed and the UI checkpoint count remains zero.
 - Remaining risk: remaining maintained source and tests are still JavaScript, and effect isolation, read-model separation, and complete migration remain open.
 - Independent review: a fresh `gpt-5.6-sol` high-reasoning reviewer returned clean with no P0-P3 finding or unresolved blocker.
-- Acceptance basis: standing owner authorization permits local acceptance after focused and full validation plus clean fresh independent review.
 
 ## Goal-readiness evidence
 
@@ -289,6 +289,12 @@ Routine work-unit completion does not require owner review.
   matching seed, layout, and acceptance-walkthrough coverage, nine-test focused
   evidence, full 126-test repository validation, and a clean fresh independent
   review support the bounded claim while both criteria remain open.
+- AF-2 and AF-9 partial unit `af-2-layout-typescript-seam` accepted on
+  2026-08-29.
+  Strict TypeScript deterministic spatial layout, an exact accepted-seed
+  coordinate snapshot, matching behavior coverage, five-test focused evidence,
+  full 127-test repository validation, and a clean fresh independent review
+  support the bounded claim while both criteria remain open.
 
 ## Administratively closed run log
 

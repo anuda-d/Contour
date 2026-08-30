@@ -83,7 +83,7 @@ They are explicit in the import checker so a new top-level source file cannot si
 | --- | --- | --- | --- |
 | `src/app.js` | composition | `src/composition/main.ts` | concrete browser wiring only |
 | `src/map.js`, `src/thought-capture.js`, `src/work-chooser.js` | UI | `src/ui/` | DOM rendering and event translation |
-| `src/layout.js`, `src/graph-projection.ts` | product transition | `src/product/map/`, `src/application/`, and `src/ui/` | rebuildable projections and spatial presentation inputs |
+| `src/layout.ts`, `src/graph-projection.ts` | product transition | `src/product/map/`, `src/application/`, and `src/ui/` | rebuildable projections and spatial presentation inputs |
 
 ## Migrated seams
 

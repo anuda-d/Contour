@@ -12,7 +12,7 @@ const legacyLayers = new Map([
   ["thought-capture.js", "ui"],
   ["work-chooser.js", "ui"],
   ["graph-projection.ts", "product"],
-  ["layout.js", "product"],
+  ["layout.ts", "product"],
 ]);
 const permittedTargets = {
   kernel: new Set(["kernel"]),

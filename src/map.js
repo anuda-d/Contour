@@ -1,4 +1,4 @@
-import { layoutGraph } from "./layout.js";
+import { layoutGraph } from "./layout.ts";
 import {
   MAP_MODES,
   getModeCapabilities,
