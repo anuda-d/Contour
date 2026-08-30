@@ -9,7 +9,6 @@ const layers = new Set(["kernel", "product", "application", "adapters", "ui", "c
 const legacyLayers = new Map([
   ["app.js", "composition"],
   ["map.js", "ui"],
-  ["work-chooser.js", "ui"],
   ["graph-projection.ts", "product"],
   ["layout.ts", "product"],
 ]);

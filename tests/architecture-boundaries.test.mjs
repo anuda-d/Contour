@@ -317,6 +317,15 @@ test("architecture boundary check rejects the retired top-level Thought Capture 
   assert.match(result.output, /src\/thought-capture\.js: source file is not assigned to a permitted layer/);
 });
 
+test("architecture boundary check rejects the retired top-level Work Chooser path", () => {
+  const root = createFixture({
+    "src/work-chooser.js": "export const stale = true;\n",
+  });
+  const result = runChecker(root);
+  assert.equal(result.status, 1, result.output);
+  assert.match(result.output, /src\/work-chooser\.js: source file is not assigned to a permitted layer/);
+});
+
 test("architecture boundary check rejects a directory import without an index source file", () => {
   const root = createFixture({
     "src/product/catalog/catalog.ts": 'import "../../adapters/browser";\n',

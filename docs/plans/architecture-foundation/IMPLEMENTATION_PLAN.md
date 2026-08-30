@@ -27,14 +27,14 @@ Status: active shared state; standing scheduled owner authorization.
 | Criterion | Status | Accepted evidence |
 | --- | --- | --- |
 | AF-1 Enforced architecture contract | accepted | Architecture decision records, six-key compatibility inventory, and the checked import-boundary gate were accepted after 30 focused and 112 repository tests plus clean fresh review. |
-| AF-2 Complete strict TypeScript | open | Partial: strict browser and Node-test type environments, reproducible Vite build, and the catalogue, selection, featured-Media, pinned-position, authored-Thought, public-projection, prototype-seed, deterministic-layout, and Thought Capture UI seams plus their tests are accepted; the remaining maintained files are not yet migrated. |
+| AF-2 Complete strict TypeScript | open | Partial: strict browser and Node-test type environments, reproducible Vite build, and the catalogue, selection, featured-Media, pinned-position, authored-Thought, public-projection, prototype-seed, deterministic-layout, Thought Capture, and Work Chooser UI seams plus their tests are accepted; the remaining maintained files are not yet migrated. |
 | AF-3 Deep product modules | open | Partial: authored Thought lifecycle, anchors, publication, and immutable merge now live in a cohesive strict TypeScript product module; other product facts remain in prototype seams. |
 | AF-4 Application use cases | open | None yet. |
 | AF-5 Isolated effects and validated boundaries | open | Partial: selection, featured-Media, pinned-position, and authored-Thought persistence now cross injected browser-storage ports, untrusted JSON is normalized before entering typed product state, and the authored lifecycle no longer reads the wall clock; other effects remain un-migrated. |
 | AF-6 Explicit projections and privacy | open | Partial: the owner and visitor graph projection now has strict TypeScript ownership and focused evidence for Draft and draft-only Media exclusion, publication-derived public eligibility, dangling-edge filtering, and owner capability removal; application-level structurally separate read models remain open. |
 | AF-7 Durable compatibility | open | Partial: authored V2, V1, and legacy-Draft browser storage now has typed precedence, normalization, migration, recovery, and read-merge-write evidence; other persisted state remains to be completed. |
 | AF-8 Frozen visible behavior | open | None yet. |
-| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, and 128 discovered tests, including product and browser-adapter selection, featured-Media, pinned-position, authored-Thought, public-projection, prototype-seed, deterministic-layout, and Thought Capture coverage; later migrated seams and final coverage remain open. |
+| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, and 132 discovered tests, including product and browser-adapter selection, featured-Media, pinned-position, authored-Thought, public-projection, prototype-seed, deterministic-layout, Thought Capture, and Work Chooser coverage; later migrated seams and final coverage remain open. |
 | AF-10 Durable completion walkthrough | open | None yet. |
 
 This table records accepted evidence only.
@@ -61,19 +61,21 @@ queue.
 ## Current run
 
 - State: accepted; no successor unit selected.
+- Unit id: af-2-work-chooser-typescript-seam.
 - Criterion: AF-2 Complete strict TypeScript and AF-9 Layered test and quality gates.
-- Intended result: migrate the private Thought Capture native-DOM dialog and its direct test to strict TypeScript while preserving anchored Draft creation and editing, bridge-only secondary anchors, validation failure focus, Escape and Tab behavior, inert surroundings, and focus restoration.
-- Evidence claim: the migrated focused dialog test, strict browser and test typechecks, architecture enforcement, the Vite production build, and the full repository check demonstrate a behavior-preserving UI-adapter migration.
-- Exact owned diff: `src/thought-capture.js` moved to `src/ui/thought-capture.dom.ts`, `tests/thought-capture.test.mjs` moved to `tests/ui/thought-capture.dom.test.ts`, the direct composition importer and import-boundary transition record as required, this implementation state, and `CURRENT.md`, with no maintained JavaScript mirror.
-- UI checkpoint: not incremented if the rendered output and interaction behavior remain unchanged.
-- Risks and assumptions: UI-owned structural input and callback types must not import product types because the `ui` layer cannot import product modules; existing authored-product validation remains the sole policy authority for submitted values.
-- Focused evidence: `npx tsx --test tests/ui/thought-capture.dom.test.ts tests/architecture-boundaries.test.mjs` passed 36 tests, including the 4 dialog-contract tests and the new retired-flat-Thought-Capture boundary regression; `npm run typecheck` and `npm run check:architecture` passed.
-- Full evidence: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, the Vite production build, and 128 tests with zero failures; `git diff --check -- .` passed.
-- Candidate evidence: the direct importer resolves the strict `ui` adapter; the prior JavaScript source and direct MJS test are removed; the UI adapter imports no product or browser-adapter source; the checker rejects reintroduction of the retired flat source; and the generic opaque success result preserves composition-owned fields through `onSaved` without a UI-to-product import.
-- Rendered evidence: not due because the unit changes no presentation, interaction, or style behavior; the UI checkpoint remains zero.
-- Design review: not applicable because the work preserves the existing private dialog markup and interaction without a Map presentation, interaction, visibility, responsive-layout, design-token, or reusable frontend-foundation change.
+- Intended result: migrate the private Work Chooser native-DOM adapter and direct behavioral coverage to strict TypeScript while preserving private selection, catalogue search, confirmation, message updates, modal inertness, Escape and Tab handling, and focus restoration.
+- Evidence claim: focused Work Chooser source-contract and retired-boundary coverage, strict browser and test typechecks, architecture enforcement, the Vite production build, and the full repository check demonstrate a strict UI-adapter migration with source-level parity evidence; they do not provide a DOM-runtime interaction proof.
+- Exact owned diff: `src/work-chooser.js` moved to `src/ui/work-chooser.dom.ts`; `tests/ui/work-chooser.dom.test.ts` adds direct source-contract coverage; the composition importer, retired-source architecture guard, and transition record move only the existing UI boundary; this implementation state and `CURRENT.md` record evidence; no maintained JavaScript mirror remains.
+- UI checkpoint: not incremented if rendered output and interaction behavior remain unchanged.
+- Risks and assumptions: UI-owned structural input and callbacks must remain opaque and may not import product types because the `ui` layer cannot import product modules; selection policy remains owned by the existing composition and product seams.
+- Focused evidence: `npx tsx --test tests/ui/work-chooser.dom.test.ts tests/architecture-boundaries.test.mjs` passed 36 tests, including three Work Chooser source-contract tests and the retired-flat-Work-Chooser boundary regression; `npm run typecheck` and `npm run check:architecture` passed.
+- Full evidence: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, the Vite production build, and 132 tests with zero failures; `git diff --check -- .` passed.
+- Candidate evidence: the direct importer resolves the strict `ui` adapter; the prior JavaScript source is removed; the UI adapter imports no product or browser-adapter source; the checker rejects reintroduction of the retired flat source; and source-contract tests assert opaque callback delegation, escaped private chooser rendering, modal inertness, focus behavior, Escape, and Tab handling.
+- Rendered evidence: not due unless the migration reveals a concrete behavior risk; the UI checkpoint remains zero.
+- Design review: not applicable if the work preserves the existing private chooser markup and interaction without a Map presentation, interaction, visibility, responsive-layout, design-token, or reusable frontend-foundation change.
+- Evidence limit: the repository has no DOM-runtime test environment, so the focused chooser coverage is source-contract coverage rather than executable DOM behavior coverage, matching the accepted Thought Capture seam.
 - Acceptance: partial evidence is recorded for AF-2 and AF-9; both remain open because maintained source migration and final coverage are still incomplete.
-- Independent review: the first fresh reviewer found two P2 findings: the retired flat `thought-capture.js` remained exempt in the boundary checker, and the UI adapter erased opaque successful-save payload fields before forwarding them. The exemption is removed and protected by a regression test, and the callback now forwards a generic opaque success result. A new fresh `gpt-5.6-sol` high-reasoning reviewer returned clean with no P0-P3 finding or unresolved blocker. The focused test remains source-contract rather than DOM-runtime evidence, matching the prior coverage and not blocking this behavior-preserving migration.
+- Independent review: the first fresh reviewer found a P2 evidence overclaim because the focused chooser tests are source-contract checks rather than DOM-runtime behavior tests; the test names and evidence wording now state that limit explicitly, focused and full validation were repeated, and a new fresh `gpt-5.6-sol` high-reasoning reviewer returned clean with no P0-P3 finding or unresolved blocker.
 
 ## Owner authorization
 
@@ -118,7 +120,7 @@ queue.
 
 ## Fresh-task handoff state
 
-- Latest accepted unit: af-2-thought-capture-typescript-seam
+- Latest accepted unit: af-2-work-chooser-typescript-seam
 - Latest implementation commit: recorded in this accepted unit's handoff.
 - Latest temporary handoff: the post-commit handoff records this accepted unit.
 - Next unit selected: no
@@ -305,6 +307,13 @@ Routine work-unit completion does not require owner review.
   dialog-contract coverage, focused 36-test evidence, full 128-test repository
   validation, and a clean fresh independent review support the bounded claim
   while both criteria remain open.
+- AF-2 and AF-9 partial unit `af-2-work-chooser-typescript-seam` accepted on
+  2026-08-30.
+  Strict TypeScript native-DOM private selection dialog rendering, opaque
+  callback delegation, retired-flat-file boundary rejection, matching
+  source-contract coverage, focused 36-test evidence, full 132-test repository
+  validation, and a clean final fresh independent review after evidence-limit
+  correction support the bounded claim while both criteria remain open.
 
 ## Administratively closed run log
 
