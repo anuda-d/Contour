@@ -82,7 +82,7 @@ They are explicit in the import checker so a new top-level source file cannot si
 | Current file | Temporary classification | Migration destination | Preserved responsibility |
 | --- | --- | --- | --- |
 | `src/app.js` | composition | `src/composition/main.ts` | concrete browser wiring only |
-| `src/map.js`, `src/thought-capture.js`, `src/work-chooser.js` | UI | `src/ui/` | DOM rendering and event translation |
+| `src/map.js`, `src/work-chooser.js` | UI | `src/ui/` | DOM rendering and event translation |
 | `src/layout.ts`, `src/graph-projection.ts` | product transition | `src/product/map/`, `src/application/`, and `src/ui/` | rebuildable projections and spatial presentation inputs |
 
 ## Migrated seams
@@ -96,6 +96,7 @@ They are explicit in the import checker so a new top-level source file cannot si
 | Authored Thoughts | `src/product/authorship/draft-state.ts` and `src/adapters/browser/authored-local-storage.ts` | Typed Draft lifecycle, immutable authored-state merge, and injected V2, V1, and legacy-Draft browser-storage compatibility |
 | Map public projection | `src/graph-projection.ts` | Typed owner and visitor projection plus capability inputs while the application still owns final read-model separation |
 | Prototype seed | `src/adapters/seed/prototype-seed.ts` | Typed deterministic seeded owner, Media, published Thoughts, authored relationships, public choices, and spatial inputs |
+| Thought Capture | `src/ui/thought-capture.dom.ts` | Typed native-DOM private Draft and bridge dialog rendering plus event translation through opaque callbacks |
 
 The temporary `src/map.js` visitor filter and `composeGraphWithDrafts` graph composition are migration seams, not enduring privacy or product-authority mechanisms.
 Owner and visitor read models will become structurally separate application outputs.

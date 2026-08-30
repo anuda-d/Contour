@@ -35,7 +35,7 @@ import {
 } from "./product/taste/selection.ts";
 import { toggleFeaturedMedia } from "./product/taste/featured.ts";
 import { getSeedGraph } from "./adapters/seed/prototype-seed.ts";
-import { ThoughtCapture } from "./thought-capture.js";
+import { ThoughtCapture } from "./ui/thought-capture.dom.ts";
 import { WorkChooser } from "./work-chooser.js";
 
 const root = document.querySelector("#app");
