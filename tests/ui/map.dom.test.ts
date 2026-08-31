@@ -8,9 +8,9 @@ import {
   hasExceededDragThreshold,
   mergeGraphPositions,
   positionFromDrag,
-} from "../src/map.js";
+} from "../../src/ui/map.dom.ts";
 
-const mapSource = await readFile(new URL("../src/map.js", import.meta.url), "utf8");
+const mapSource = await readFile(new URL("../../src/ui/map.dom.ts", import.meta.url), "utf8");
 
 test("semantic zoom reveals content through stable bands", () => {
   assert.equal(getZoomBand(0.3), "far");
@@ -96,7 +96,7 @@ test("publishing is an owner-only Draft action that preserves the current camera
     /node\.status === "draft" && this\.capabilities\.canCaptureThoughts/,
   );
   assert.match(mapSource, /this\.options\.onPublishDraft\?\./);
-  assert.match(mapSource, /updateGraph\(graph, \{ focusId = null, selectId = null, message = "" \} = \{\}\)/);
+  assert.match(mapSource, /updateGraph\(\s*graph: unknown,/);
   assert.match(mapSource, /if \(selectId && this\.nodeById\.has\(selectId\)\) this\.selectedId = selectId/);
   assert.doesNotMatch(
     mapSource,
@@ -109,7 +109,7 @@ test("a private single-anchor Draft exposes one owner-only bridge action", () =>
   assert.match(mapSource, /node\.anchors\.length === 1/);
   assert.match(mapSource, /this\.options\.selectionState\?\.confirmed/);
   assert.match(mapSource, /this\.options\.onConnectDraft\?\./);
-  assert.match(mapSource, /focusDraftConnect\(id\)/);
+  assert.match(mapSource, /focusDraftConnect\(id: string\)/);
 });
 
 test("selection changes refresh open detail so an unavailable bridge action disappears", () => {
@@ -141,10 +141,12 @@ test("visitor framing presents one public profile without duplicating owner chro
   const visitor = {
     mode: "visitor",
     graph: { profile },
+    presentation: { modes: { owner: "owner", visitor: "visitor" } },
   };
   const owner = {
     mode: "owner",
     graph: { profile },
+    presentation: { modes: { owner: "owner", visitor: "visitor" } },
     options: { selectionState: { confirmed: true }, draftMessage: "" },
     selectionEntryLabel: () => "3 works ready",
   };
@@ -170,12 +172,12 @@ test("visitor framing presents one public profile without duplicating owner chro
 });
 
 test("visitor mode keeps the same camera and positions while restoring mode focus", () => {
-  const setModeSource = mapSource.match(/setMode\(mode\) \{([\s\S]*?)\n  \}\n\n  handleNodeClick/)?.[1] ?? "";
+  const setModeSource = mapSource.match(/setMode\(mode: string\): void \{([\s\S]*?)\n  \}\n\n  handleNodeClick/)?.[1] ?? "";
   assert.doesNotMatch(setModeSource, /this\.view\s*=/);
   assert.doesNotMatch(setModeSource, /this\.positions\s*=/);
   assert.match(setModeSource, /this\.render\(\)/);
   assert.match(setModeSource, /this\.applyTransform\(\)/);
-  assert.match(setModeSource, /nextMode === MAP_MODES\.visitor \? "\[data-mode-exit\]"/);
+  assert.match(setModeSource, /nextMode === this\.presentation\.modes\.visitor \? "\[data-mode-exit\]"/);
 });
 
 test("Published Thought detail derives authorship from the active profile", () => {

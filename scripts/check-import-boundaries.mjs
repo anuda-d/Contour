@@ -8,7 +8,6 @@ const sourceExtensions = new Set([".js", ".mjs", ".cjs", ".jsx", ".ts", ".mts", 
 const layers = new Set(["kernel", "product", "application", "adapters", "ui", "composition"]);
 const legacyLayers = new Map([
   ["app.js", "composition"],
-  ["map.js", "ui"],
   ["graph-projection.ts", "product"],
   ["layout.ts", "product"],
 ]);

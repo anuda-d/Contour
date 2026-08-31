@@ -16,15 +16,12 @@ import {
   saveFeaturedState,
 } from "./adapters/browser/featured-local-storage.ts";
 import { getPublicMediaIds } from "./graph-projection.ts";
-import { ThoughtMap } from "./map.js?v=editorial-constellation-15";
+import { ThoughtMap } from "./ui/map.dom.ts";
 import {
   loadPinnedState,
   savePinnedState,
 } from "./adapters/browser/pinned-local-storage.ts";
-import {
-  pinPosition,
-  unpinPosition,
-} from "./product/map/pinned-positions.ts";
+import { pinPosition, unpinPosition } from "./product/map/pinned-positions.ts";
 import {
   loadSelection,
   saveSelection,
@@ -35,10 +32,12 @@ import {
 } from "./product/taste/selection.ts";
 import { toggleFeaturedMedia } from "./product/taste/featured.ts";
 import { getSeedGraph } from "./adapters/seed/prototype-seed.ts";
+import { createMapPresentation } from "./composition/map-presentation.ts";
 import { ThoughtCapture } from "./ui/thought-capture.dom.ts";
 import { WorkChooser } from "./ui/work-chooser.dom.ts";
 
 const root = document.querySelector("#app");
+const mapPresentation = createMapPresentation();
 
 try {
   const baseGraph = getSeedGraph();
@@ -296,6 +295,7 @@ try {
     `;
   } else {
     map = new ThoughtMap(root, graph, {
+      presentation: mapPresentation,
       mode: mapMode,
       selectionState,
       featuredState,

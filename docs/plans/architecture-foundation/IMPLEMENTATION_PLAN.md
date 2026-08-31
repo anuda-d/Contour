@@ -27,14 +27,14 @@ Status: active shared state; standing scheduled owner authorization.
 | Criterion | Status | Accepted evidence |
 | --- | --- | --- |
 | AF-1 Enforced architecture contract | accepted | Architecture decision records, six-key compatibility inventory, and the checked import-boundary gate were accepted after 30 focused and 112 repository tests plus clean fresh review. |
-| AF-2 Complete strict TypeScript | open | Partial: strict browser and Node-test type environments, reproducible Vite build, and the catalogue, selection, featured-Media, pinned-position, authored-Thought, public-projection, prototype-seed, deterministic-layout, Thought Capture, and Work Chooser UI seams plus their tests are accepted; the remaining maintained files are not yet migrated. |
+| AF-2 Complete strict TypeScript | open | Partial: strict browser and Node-test type environments, reproducible Vite build, and the catalogue, selection, featured-Media, pinned-position, authored-Thought, public-projection, prototype-seed, deterministic-layout, Thought Capture, Work Chooser, and Map DOM seams plus their tests are accepted; the remaining maintained files are not yet migrated. |
 | AF-3 Deep product modules | open | Partial: authored Thought lifecycle, anchors, publication, and immutable merge now live in a cohesive strict TypeScript product module; other product facts remain in prototype seams. |
 | AF-4 Application use cases | open | None yet. |
 | AF-5 Isolated effects and validated boundaries | open | Partial: selection, featured-Media, pinned-position, and authored-Thought persistence now cross injected browser-storage ports, untrusted JSON is normalized before entering typed product state, and the authored lifecycle no longer reads the wall clock; other effects remain un-migrated. |
 | AF-6 Explicit projections and privacy | open | Partial: the owner and visitor graph projection now has strict TypeScript ownership and focused evidence for Draft and draft-only Media exclusion, publication-derived public eligibility, dangling-edge filtering, and owner capability removal; application-level structurally separate read models remain open. |
 | AF-7 Durable compatibility | open | Partial: authored V2, V1, and legacy-Draft browser storage now has typed precedence, normalization, migration, recovery, and read-merge-write evidence; other persisted state remains to be completed. |
 | AF-8 Frozen visible behavior | open | None yet. |
-| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, and 132 discovered tests, including product and browser-adapter selection, featured-Media, pinned-position, authored-Thought, public-projection, prototype-seed, deterministic-layout, Thought Capture, and Work Chooser coverage; later migrated seams and final coverage remain open. |
+| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, and Map composition, DOM-source-contract, product, and browser-adapter coverage; later migrated seams and final coverage remain open. |
 | AF-10 Durable completion walkthrough | open | None yet. |
 
 This table records accepted evidence only.
@@ -61,21 +61,22 @@ queue.
 ## Current run
 
 - State: accepted; no successor unit selected.
-- Unit id: af-2-work-chooser-typescript-seam.
+- Unit id: af-2-map-dom-typescript-seam.
 - Criterion: AF-2 Complete strict TypeScript and AF-9 Layered test and quality gates.
-- Intended result: migrate the private Work Chooser native-DOM adapter and direct behavioral coverage to strict TypeScript while preserving private selection, catalogue search, confirmation, message updates, modal inertness, Escape and Tab handling, and focus restoration.
-- Evidence claim: focused Work Chooser source-contract and retired-boundary coverage, strict browser and test typechecks, architecture enforcement, the Vite production build, and the full repository check demonstrate a strict UI-adapter migration with source-level parity evidence; they do not provide a DOM-runtime interaction proof.
-- Exact owned diff: `src/work-chooser.js` moved to `src/ui/work-chooser.dom.ts`; `tests/ui/work-chooser.dom.test.ts` adds direct source-contract coverage; the composition importer, retired-source architecture guard, and transition record move only the existing UI boundary; this implementation state and `CURRENT.md` record evidence; no maintained JavaScript mirror remains.
-- UI checkpoint: not incremented if rendered output and interaction behavior remain unchanged.
-- Risks and assumptions: UI-owned structural input and callbacks must remain opaque and may not import product types because the `ui` layer cannot import product modules; selection policy remains owned by the existing composition and product seams.
-- Focused evidence: `npx tsx --test tests/ui/work-chooser.dom.test.ts tests/architecture-boundaries.test.mjs` passed 36 tests, including three Work Chooser source-contract tests and the retired-flat-Work-Chooser boundary regression; `npm run typecheck` and `npm run check:architecture` passed.
-- Full evidence: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, the Vite production build, and 132 tests with zero failures; `git diff --check -- .` passed.
-- Candidate evidence: the direct importer resolves the strict `ui` adapter; the prior JavaScript source is removed; the UI adapter imports no product or browser-adapter source; the checker rejects reintroduction of the retired flat source; and source-contract tests assert opaque callback delegation, escaped private chooser rendering, modal inertness, focus behavior, Escape, and Tab handling.
-- Rendered evidence: not due unless the migration reveals a concrete behavior risk; the UI checkpoint remains zero.
-- Design review: not applicable if the work preserves the existing private chooser markup and interaction without a Map presentation, interaction, visibility, responsive-layout, design-token, or reusable frontend-foundation change.
-- Evidence limit: the repository has no DOM-runtime test environment, so the focused chooser coverage is source-contract coverage rather than executable DOM behavior coverage, matching the accepted Thought Capture seam.
-- Acceptance: partial evidence is recorded for AF-2 and AF-9; both remain open because maintained source migration and final coverage are still incomplete.
-- Independent review: the first fresh reviewer found a P2 evidence overclaim because the focused chooser tests are source-contract checks rather than DOM-runtime behavior tests; the test names and evidence wording now state that limit explicitly, focused and full validation were repeated, and a new fresh `gpt-5.6-sol` high-reasoning reviewer returned clean with no P0-P3 finding or unresolved blocker.
+- Intended result: move the existing Map native-DOM adapter and its direct coverage to strict TypeScript without changing accepted markup, interaction, camera, or owner and visitor capabilities.
+- Evidence claim: a structural UI-owned Map read model and injected presentation operations preserve the existing DOM adapter while preventing a `ui` import of product modules; focused source-contract coverage, retired-boundary enforcement, strict typechecks, the production build, and the full repository check demonstrate the typed seam, not DOM-runtime interaction behavior.
+- Exact owned diff: move `src/map.js` to `src/ui/map.dom.ts`, migrate `tests/map.test.mjs` to strict TypeScript, replace direct product imports with a narrow injected presentation port, update the composition import and retired-flat-source guard, and record selection and resulting evidence here.
+- UI checkpoint: not incremented when the implementation preserves rendered output and interaction behavior exactly.
+- Design read: preserve-mode native Map interaction for individual discovery, with an editorial constellation language; no visual redesign is authorized.
+- Design dials: `DESIGN_VARIANCE` matches the accepted Map, `MOTION_INTENSITY` matches existing gesture feedback, and `VISUAL_DENSITY` matches the accepted layout. No dials will be changed.
+- Redesign audit: preserve profile hierarchy, graph spatial relationship cues, pointer, keyboard, touch, focus, light and dark behavior, and existing CSS tokens. Retire no visual pattern.
+- Pre-flight scope: frozen existing product UI rather than a landing-page build. Applicable checks are no visual strings or CSS changes, no new motion, no new icon or asset system, preserved focus and interaction semantics, and no design-system change.
+- Risks and assumptions: the UI layer owns structural read-model types and opaque callbacks only. Composition supplies projection, layout, and position resolution so the adapter does not depend on product modules. Existing focused Map tests are source-contract and helper coverage, not executable DOM-runtime proof.
+- Accepted evidence: `src/ui/map.dom.ts` is strict TypeScript and has no product or adapter import. `src/composition/map-presentation.ts` is a checked composition port that validates current graph data into the UI structural read model and complete positions before DOM use. The retired `src/map.js` is absent and the architecture gate rejects its reintroduction. `tests/ui/map.dom.test.ts` preserves helper, Map markup, capability, owner and visitor source-contract coverage, and `tests/composition/map-presentation.test.ts` proves a composed private Draft remains in the owner projection and is absent from the visitor projection. `npm run typecheck`, the 49-test focused suite, `npm run check:architecture`, `./scripts/check.sh`, and `git diff --check -- .` passed. The repository-wide check completed the strict browser and test typechecks, architecture enforcement, Vite build, and all discovered tests with zero failures.
+- Candidate design review: Design Read is preserve-mode editorial constellation Map for individual discovery. Dials remain unchanged, the audit found no markup, CSS, copy, token, layout, color, motion, or interaction-intent change, and the applicable preserve-mode pre-flight checks passed by source inspection. Rendered validation is not due for this architecture-only migration, so UI checkpoint remains zero.
+- Review correction: a fresh reviewer found that the initial JavaScript composition root did not typecheck the concrete presentation port. The correction exports the UI port and adds `src/composition/map-presentation.ts`, which validates the generic projection into the UI structural read model and ensures every resolved position exists before it reaches the DOM adapter. `src/app.js` now consumes that checked factory. Focused and full validation were rerun after the correction; a new fresh review is required before acceptance.
+- Review correction two: the first projection converter over-required fields that valid current seed Media and Thoughts do not carry, which would have activated the existing application error state on startup. The UI structural model now contains only fields the renderer consumes. `tests/composition/map-presentation.test.ts` directly proves current seed owner and visitor projections, visitor Draft exclusion, and complete position resolution. Focused and full validation were rerun after this correction; a new fresh review is required before acceptance.
+- Review correction three: a reviewer found that the initial visitor assertion was vacuous because the seed has only published Thoughts. The composition factory test now composes a valid private Draft, proves owner inclusion and visitor exclusion, and runs through the same unknown input boundary used by the Map adapter. Focused and full validation were rerun after this correction, and a new fresh reviewer returned clean with no P0-P3 finding.
 
 ## Owner authorization
 
@@ -314,6 +315,13 @@ Routine work-unit completion does not require owner review.
   source-contract coverage, focused 36-test evidence, full 132-test repository
   validation, and a clean final fresh independent review after evidence-limit
   correction support the bounded claim while both criteria remain open.
+- AF-2 and AF-9 partial unit `af-2-map-dom-typescript-seam` accepted on
+  2026-08-30.
+  Strict TypeScript Map DOM rendering and interaction, a checked composition
+  presentation port, owner and visitor projection boundary coverage with a
+  composed private Draft, retired-flat-Map boundary rejection, focused 49-test
+  evidence, full repository validation, and a clean fresh independent review
+  support the bounded claim while both criteria remain open.
 
 ## Administratively closed run log
 

@@ -82,7 +82,6 @@ They are explicit in the import checker so a new top-level source file cannot si
 | Current file | Temporary classification | Migration destination | Preserved responsibility |
 | --- | --- | --- | --- |
 | `src/app.js` | composition | `src/composition/main.ts` | concrete browser wiring only |
-| `src/map.js` | UI | `src/ui/` | DOM rendering and event translation |
 | `src/layout.ts`, `src/graph-projection.ts` | product transition | `src/product/map/`, `src/application/`, and `src/ui/` | rebuildable projections and spatial presentation inputs |
 
 ## Migrated seams
@@ -98,8 +97,9 @@ They are explicit in the import checker so a new top-level source file cannot si
 | Prototype seed | `src/adapters/seed/prototype-seed.ts` | Typed deterministic seeded owner, Media, published Thoughts, authored relationships, public choices, and spatial inputs |
 | Thought Capture | `src/ui/thought-capture.dom.ts` | Typed native-DOM private Draft and bridge dialog rendering plus event translation through opaque callbacks |
 | Work Chooser | `src/ui/work-chooser.dom.ts` | Typed native-DOM private selection dialog rendering plus event translation through opaque callbacks |
+| Map | `src/ui/map.dom.ts` | Typed native-DOM Map rendering and interaction through structural read models, opaque callbacks, and a composition-injected presentation port |
 
-The temporary `src/map.js` visitor filter and `composeGraphWithDrafts` graph composition are migration seams, not enduring privacy or product-authority mechanisms.
+The composition-injected Map presentation port and `composeGraphWithDrafts` graph composition are migration seams, not enduring privacy or product-authority mechanisms.
 Owner and visitor read models will become structurally separate application outputs.
 Spatial pins and movement remain presentation facts and never create authored relationships.
 
