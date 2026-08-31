@@ -1,4 +1,34 @@
-const escapeHtml = (value) =>
+type ChoosableWork = {
+  id: string;
+  format: string;
+  title: string;
+  creator: string;
+  year: number;
+};
+
+type ChooserSelectionState = {
+  selectedMediaIds: readonly string[];
+};
+
+type ToggleResult = {
+  state: ChooserSelectionState;
+  message: string;
+};
+
+type ConfirmResult = ToggleResult & {
+  confirmed: boolean;
+};
+
+type WorkChooserOptions = {
+  persistent: boolean;
+  initialMessage?: string;
+  onToggle: (id: string) => ToggleResult;
+  onConfirm: () => ConfirmResult;
+  onClose: () => void;
+  restoreFocus: () => void;
+};
+
+const escapeHtml = (value: unknown) =>
   String(value)
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
@@ -7,26 +37,34 @@ const escapeHtml = (value) =>
     .replaceAll("'", "&#039;");
 
 export class WorkChooser {
-  constructor(shell, catalogue, state, options) {
-    this.shell = shell;
-    this.catalogue = catalogue;
+  private readonly catalogueById: Map<string, ChoosableWork>;
+  private message: string;
+  private readonly overlay: HTMLDivElement;
+  private query: string;
+  private state: ChooserSelectionState;
+
+  constructor(
+    private readonly shell: HTMLElement,
+    private readonly catalogue: readonly ChoosableWork[],
+    state: ChooserSelectionState,
+    private readonly options: WorkChooserOptions,
+  ) {
     this.catalogueById = new Map(catalogue.map((item) => [item.id, item]));
     this.state = state;
-    this.options = options;
     this.query = "";
     this.message = options.initialMessage ?? "";
     this.overlay = document.createElement("div");
     this.overlay.className = "chooser-overlay";
     this.shell.append(this.overlay);
-    this.shell.querySelector(".topbar").inert = true;
-    this.shell.querySelector(".map-page").inert = true;
+    this.requiredShellElement(".topbar").inert = true;
+    this.requiredShellElement(".map-page").inert = true;
     this.render({ focusSearch: true });
   }
 
-  render({ focusId = null, focusSearch = false } = {}) {
+  render({ focusId = null, focusSearch = false }: { focusId?: string | null; focusSearch?: boolean } = {}) {
     const selectedItems = this.state.selectedMediaIds
       .map((id) => this.catalogueById.get(id))
-      .filter(Boolean);
+      .filter((item): item is ChoosableWork => Boolean(item));
     const selectedIds = new Set(this.state.selectedMediaIds);
     const isFull = selectedItems.length === 3;
     const normalizedQuery = this.query.trim().toLowerCase();
@@ -87,18 +125,18 @@ export class WorkChooser {
 
     this.bindEvents();
     if (focusSearch) {
-      const input = this.overlay.querySelector("#catalogue-search");
+      const input = this.requiredOverlayElement<HTMLInputElement>("#catalogue-search");
       input.focus();
       input.setSelectionRange(input.value.length, input.value.length);
     } else if (focusId) {
-      const matchingWork = [...this.overlay.querySelectorAll("[data-media-id]")].find(
+      const matchingWork = [...this.overlay.querySelectorAll<HTMLElement>("[data-media-id]")].find(
         (element) => element.dataset.mediaId === focusId,
       );
-      (matchingWork ?? this.overlay.querySelector("#catalogue-search")).focus();
+      (matchingWork ?? this.requiredOverlayElement<HTMLInputElement>("#catalogue-search")).focus();
     }
   }
 
-  renderSelectedItem(item, index) {
+  private renderSelectedItem(item: ChoosableWork | undefined, index: number) {
     if (!item) {
       return `
         <span class="selected-slot" aria-label="Selection ${index + 1} is empty">
@@ -119,7 +157,7 @@ export class WorkChooser {
     `;
   }
 
-  renderCatalogueItem(item, selectedIds, isFull) {
+  private renderCatalogueItem(item: ChoosableWork, selectedIds: ReadonlySet<string>, isFull: boolean) {
     const selected = selectedIds.has(item.id);
     const unavailable = isFull && !selected;
     return `
@@ -137,38 +175,41 @@ export class WorkChooser {
     `;
   }
 
-  bindEvents() {
-    this.overlay.querySelector("[data-chooser-close]").addEventListener("click", () => this.close());
-    this.overlay.querySelector("[data-chooser-confirm]").addEventListener("click", () => {
+  private bindEvents() {
+    this.requiredOverlayElement<HTMLElement>("[data-chooser-close]").addEventListener("click", () => this.close());
+    this.requiredOverlayElement<HTMLElement>("[data-chooser-confirm]").addEventListener("click", () => {
       const result = this.options.onConfirm();
       this.state = result.state;
       this.message = result.message;
       if (result.confirmed) this.close();
       else this.render();
     });
-    this.overlay.querySelectorAll("[data-media-id], [data-remove-id]").forEach((button) => {
+    this.overlay.querySelectorAll<HTMLElement>("[data-media-id], [data-remove-id]").forEach((button) => {
       button.addEventListener("click", () => {
         const id = button.dataset.mediaId ?? button.dataset.removeId;
+        if (!id) return;
         const result = this.options.onToggle(id);
         this.state = result.state;
         this.message = result.message;
         this.render({ focusId: id });
       });
     });
-    this.overlay.querySelector("#catalogue-search").addEventListener("input", (event) => {
-      this.query = event.currentTarget.value;
+    const search = this.requiredOverlayElement<HTMLInputElement>("#catalogue-search");
+    search.addEventListener("input", () => {
+      this.query = search.value;
       this.render({ focusSearch: true });
     });
-    this.overlay.querySelector(".work-chooser").addEventListener("keydown", (event) => {
+    this.requiredOverlayElement<HTMLElement>(".work-chooser").addEventListener("keydown", (event) => {
       if (event.key === "Escape") {
         event.preventDefault();
         this.close();
         return;
       }
       if (event.key !== "Tab") return;
-      const focusable = [...this.overlay.querySelectorAll("button:not([disabled]), input")];
+      const focusable = [...this.overlay.querySelectorAll<HTMLElement>("button:not([disabled]), input")];
       const first = focusable[0];
       const last = focusable.at(-1);
+      if (!first || !last) return;
       if (event.shiftKey && document.activeElement === first) {
         event.preventDefault();
         last.focus();
@@ -179,9 +220,21 @@ export class WorkChooser {
     });
   }
 
+  private requiredOverlayElement<T extends Element>(selector: string): T {
+    const element = this.overlay.querySelector<T>(selector);
+    if (!element) throw new Error(`Work Chooser is missing ${selector}.`);
+    return element;
+  }
+
+  private requiredShellElement(selector: string): HTMLElement {
+    const element = this.shell.querySelector<HTMLElement>(selector);
+    if (!element) throw new Error(`Work Chooser shell is missing ${selector}.`);
+    return element;
+  }
+
   close(restoreFocus = true) {
-    this.shell.querySelector(".topbar").inert = false;
-    this.shell.querySelector(".map-page").inert = false;
+    this.requiredShellElement(".topbar").inert = false;
+    this.requiredShellElement(".map-page").inert = false;
     this.overlay.remove();
     this.options.onClose();
     if (restoreFocus) this.options.restoreFocus();

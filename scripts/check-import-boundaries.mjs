@@ -8,14 +8,8 @@ const sourceExtensions = new Set([".js", ".mjs", ".cjs", ".jsx", ".ts", ".mts", 
 const layers = new Set(["kernel", "product", "application", "adapters", "ui", "composition"]);
 const legacyLayers = new Map([
   ["app.js", "composition"],
-  ["map.js", "ui"],
-  ["thought-capture.js", "ui"],
-  ["work-chooser.js", "ui"],
-  ["seed.js", "product"],
-  ["draft-state.js", "product"],
-  ["pinned-state.js", "product"],
-  ["graph-projection.js", "product"],
-  ["layout.js", "product"],
+  ["graph-projection.ts", "product"],
+  ["layout.ts", "product"],
 ]);
 const permittedTargets = {
   kernel: new Set(["kernel"]),

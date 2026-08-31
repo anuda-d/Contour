@@ -6,10 +6,13 @@ import {
   connectDraft,
   createDraft,
   emptyDraftState,
+  publishDraft,
+} from "../src/product/authorship/draft-state.ts";
+import {
+  type BrowserStorage,
   loadDraftState,
   persistDraftState,
-  publishDraft,
-} from "../src/draft-state.js";
+} from "../src/adapters/browser/authored-local-storage.ts";
 import {
   loadFeaturedState,
   saveFeaturedState,
@@ -18,13 +21,15 @@ import {
   getModeCapabilities,
   getPublicMediaIds,
   projectGraphForMode,
-} from "../src/graph-projection.js";
+} from "../src/graph-projection.ts";
+import {
+  loadPinnedState,
+  savePinnedState,
+} from "../src/adapters/browser/pinned-local-storage.ts";
 import {
   emptyPinnedState,
-  loadPinnedState,
   pinPosition,
-  savePinnedState,
-} from "../src/pinned-state.js";
+} from "../src/product/map/pinned-positions.ts";
 import {
   loadSelection,
   saveSelection,
@@ -35,10 +40,10 @@ import {
   toggleMediaSelection,
 } from "../src/product/taste/selection.ts";
 import { toggleFeaturedMedia } from "../src/product/taste/featured.ts";
-import { getSeedGraph } from "../src/seed.js";
+import { getSeedGraph } from "../src/adapters/seed/prototype-seed.ts";
 
-function memoryStorage() {
-  const values = new Map();
+function memoryStorage(): BrowserStorage {
+  const values = new Map<string, string>();
   return {
     getItem: (key) => values.get(key) ?? null,
     setItem: (key, value) => values.set(key, value),
@@ -83,6 +88,7 @@ test("the complete three-work walkthrough survives reload as one private-to-publ
       createdAt: "2026-08-24T14:02:00.000Z",
     },
   ];
+  const firstAuthoredInput = authoredInputs[0]!;
 
   let authored = emptyDraftState();
   authoredInputs.forEach((input) => {
@@ -96,7 +102,7 @@ test("the complete three-work walkthrough survives reload as one private-to-publ
 
   const bridged = connectDraft(
     authored,
-    authoredInputs[0].id,
+    firstAuthoredInput.id,
     {
       secondaryMediaId: "arrival",
       statement: "Language and memory change which freedoms a person can imagine.",
@@ -105,7 +111,7 @@ test("the complete three-work walkthrough survives reload as one private-to-publ
   );
   assert.equal(bridged.changed, true);
   authored = persistDraftState(storage, bridged.state, catalogueIds, {
-    id: authoredInputs[0].id,
+    id: firstAuthoredInput.id,
     fields: ["secondaryMediaId", "statement"],
   }).state;
 
@@ -119,7 +125,7 @@ test("the complete three-work walkthrough survives reload as one private-to-publ
 
   let pinned = pinPosition(
     emptyPinnedState(),
-    authoredInputs[0].id,
+    firstAuthoredInput.id,
     { x: 186, y: -94 },
     new Set(privateGraph.nodes.map((node) => node.id)),
   ).state;
@@ -171,8 +177,8 @@ test("the complete three-work walkthrough survives reload as one private-to-publ
   assert.equal(selection.confirmed, true);
   assert.equal(authored.thoughts.length, 3);
   assert.equal(authored.thoughts.every((thought) => thought.status === "published"), true);
-  assert.deepEqual(authored.thoughts[0].secondaryMediaId, "arrival");
-  assert.deepEqual(pinned.pinnedPositions[authoredInputs[0].id], { x: 186, y: -94 });
+  assert.deepEqual(authored.thoughts[0]!.secondaryMediaId, "arrival");
+  assert.deepEqual(pinned.pinnedPositions[firstAuthoredInput.id], { x: 186, y: -94 });
   assert.deepEqual(featured.featuredMediaIds, [
     "dispossessed",
     "mood-for-love",

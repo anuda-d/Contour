@@ -2,15 +2,38 @@ const TYPE_RADIUS = {
   user: 0,
   thought: 205,
   media: 385,
-};
+} as const;
 
 const COLLISION_RADIUS = {
   user: 78,
   thought: 116,
   media: 88,
+} as const;
+
+type LayoutNodeType = keyof typeof TYPE_RADIUS;
+
+export type LayoutNode = {
+  readonly id: string;
+  readonly type: LayoutNodeType;
 };
 
-function stableHash(value) {
+export type LayoutEdge = {
+  readonly source: string;
+  readonly target: string;
+  readonly kind?: string;
+};
+
+export type LayoutOptions = {
+  readonly width?: number;
+  readonly height?: number;
+};
+
+export type LayoutPosition = {
+  x: number;
+  y: number;
+};
+
+function stableHash(value: string): number {
   let hash = 2166136261;
   for (const character of value) {
     hash ^= character.charCodeAt(0);
@@ -19,7 +42,7 @@ function stableHash(value) {
   return hash >>> 0;
 }
 
-function initialPosition(node, index, count) {
+function initialPosition(node: LayoutNode, index: number, count: number): LayoutPosition {
   if (node.type === "user") return { x: 0, y: 0 };
 
   const typeOffset = node.type === "thought" ? 0.25 : -0.15;
@@ -36,12 +59,16 @@ function initialPosition(node, index, count) {
   };
 }
 
-export function layoutGraph(nodes, edges, options = {}) {
+export function layoutGraph(
+  nodes: readonly LayoutNode[],
+  edges: readonly LayoutEdge[],
+  options: LayoutOptions = {},
+): Record<string, LayoutPosition> {
   const width = options.width ?? 1080;
   const height = options.height ?? 720;
   const movable = nodes.filter((node) => node.type !== "user");
-  const positions = new Map();
-  const velocity = new Map();
+  const positions = new Map<string, LayoutPosition>();
+  const velocity = new Map<string, LayoutPosition>();
 
   nodes.forEach((node) => {
     const typeIndex = movable.findIndex((candidate) => candidate.id === node.id);
@@ -50,12 +77,20 @@ export function layoutGraph(nodes, edges, options = {}) {
   });
 
   for (let iteration = 0; iteration < 220; iteration += 1) {
-    const forces = new Map(nodes.map((node) => [node.id, { x: 0, y: 0 }]));
+    const forces = new Map<string, LayoutPosition>(
+      nodes.map((node) => [node.id, { x: 0, y: 0 }]),
+    );
 
     for (let left = 0; left < nodes.length; left += 1) {
       for (let right = left + 1; right < nodes.length; right += 1) {
-        const a = positions.get(nodes[left].id);
-        const b = positions.get(nodes[right].id);
+        const leftNode = nodes[left];
+        const rightNode = nodes[right];
+        if (!leftNode || !rightNode) continue;
+        const a = positions.get(leftNode.id);
+        const b = positions.get(rightNode.id);
+        const leftForce = forces.get(leftNode.id);
+        const rightForce = forces.get(rightNode.id);
+        if (!a || !b || !leftForce || !rightForce) continue;
         let dx = a.x - b.x;
         let dy = a.y - b.y;
         if (dx === 0 && dy === 0) dx = 0.01;
@@ -64,17 +99,19 @@ export function layoutGraph(nodes, edges, options = {}) {
         const magnitude = 14500 / distanceSquared;
         const fx = (dx / distance) * magnitude;
         const fy = (dy / distance) * magnitude;
-        forces.get(nodes[left].id).x += fx;
-        forces.get(nodes[left].id).y += fy;
-        forces.get(nodes[right].id).x -= fx;
-        forces.get(nodes[right].id).y -= fy;
+        leftForce.x += fx;
+        leftForce.y += fy;
+        rightForce.x -= fx;
+        rightForce.y -= fy;
       }
     }
 
     edges.forEach((edge) => {
       const source = positions.get(edge.source);
       const target = positions.get(edge.target);
-      if (!source || !target) return;
+      const sourceForce = forces.get(edge.source);
+      const targetForce = forces.get(edge.target);
+      if (!source || !target || !sourceForce || !targetForce) return;
       const dx = target.x - source.x;
       const dy = target.y - source.y;
       const distance = Math.max(Math.hypot(dx, dy), 1);
@@ -82,19 +119,20 @@ export function layoutGraph(nodes, edges, options = {}) {
       const magnitude = (distance - desired) * 0.014;
       const fx = (dx / distance) * magnitude;
       const fy = (dy / distance) * magnitude;
-      forces.get(edge.source).x += fx;
-      forces.get(edge.source).y += fy;
-      forces.get(edge.target).x -= fx;
-      forces.get(edge.target).y -= fy;
+      sourceForce.x += fx;
+      sourceForce.y += fy;
+      targetForce.x -= fx;
+      targetForce.y -= fy;
     });
 
     nodes.forEach((node) => {
       if (node.type === "user") return;
       const point = positions.get(node.id);
       const force = forces.get(node.id);
+      const speed = velocity.get(node.id);
+      if (!point || !force || !speed) return;
       force.x += -point.x * 0.0018;
       force.y += -point.y * 0.0018;
-      const speed = velocity.get(node.id);
       speed.x = (speed.x + force.x) * 0.78;
       speed.y = (speed.y + force.y) * 0.78;
       point.x += speed.x;
@@ -109,8 +147,10 @@ export function layoutGraph(nodes, edges, options = {}) {
       for (let right = left + 1; right < nodes.length; right += 1) {
         const leftNode = nodes[left];
         const rightNode = nodes[right];
+        if (!leftNode || !rightNode) continue;
         const a = positions.get(leftNode.id);
         const b = positions.get(rightNode.id);
+        if (!a || !b) continue;
         let dx = b.x - a.x;
         let dy = b.y - a.y;
         if (dx === 0 && dy === 0) {
@@ -136,10 +176,8 @@ export function layoutGraph(nodes, edges, options = {}) {
     }
   }
 
-  positions.set(
-    nodes.find((node) => node.type === "user")?.id,
-    { x: 0, y: 0 },
-  );
+  const owner = nodes.find((node) => node.type === "user");
+  if (owner) positions.set(owner.id, { x: 0, y: 0 });
 
   return Object.fromEntries(
     [...positions.entries()].map(([id, point]) => [

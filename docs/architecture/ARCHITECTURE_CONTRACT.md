@@ -82,10 +82,7 @@ They are explicit in the import checker so a new top-level source file cannot si
 | Current file | Temporary classification | Migration destination | Preserved responsibility |
 | --- | --- | --- | --- |
 | `src/app.js` | composition | `src/composition/main.ts` | concrete browser wiring only |
-| `src/map.js`, `src/thought-capture.js`, `src/work-chooser.js` | UI | `src/ui/` | DOM rendering and event translation |
-| `src/seed.js` | seed transition | `src/adapters/seed/` plus current identity, authorship, taste, and Map contracts | validated seeded owner, Media, Thoughts, authored relationships, public choices, and spatial inputs |
-| `src/draft-state.js` | product transition | `src/product/authorship/` and `src/adapters/browser/` | Thought rules separated from storage |
-| `src/pinned-state.js`, `src/layout.js`, `src/graph-projection.js` | product transition | `src/product/map/`, `src/application/`, and `src/ui/` | rebuildable projections and spatial presentation inputs |
+| `src/layout.ts`, `src/graph-projection.ts` | product transition | `src/product/map/`, `src/application/`, and `src/ui/` | rebuildable projections and spatial presentation inputs |
 
 ## Migrated seams
 
@@ -94,8 +91,15 @@ They are explicit in the import checker so a new top-level source file cannot si
 | Catalogue | `src/product/catalogue/catalogue.ts` | Typed Book and Film facts and fresh editable catalogue reads |
 | Taste selection | `src/product/taste/selection.ts` and `src/adapters/browser/selection-local-storage.ts` | Typed private three-work selection rules and injected browser-storage persistence |
 | Taste featured Media | `src/product/taste/featured.ts` and `src/adapters/browser/featured-local-storage.ts` | Typed deliberate public presentation choices and injected browser-storage persistence |
+| Map pinned positions | `src/product/map/pinned-positions.ts` and `src/adapters/browser/pinned-local-storage.ts` | Typed spatial pin rules and injected V1 browser-storage persistence without semantic authorship effects |
+| Authored Thoughts | `src/product/authorship/draft-state.ts` and `src/adapters/browser/authored-local-storage.ts` | Typed Draft lifecycle, immutable authored-state merge, and injected V2, V1, and legacy-Draft browser-storage compatibility |
+| Map public projection | `src/graph-projection.ts` | Typed owner and visitor projection plus capability inputs while the application still owns final read-model separation |
+| Prototype seed | `src/adapters/seed/prototype-seed.ts` | Typed deterministic seeded owner, Media, published Thoughts, authored relationships, public choices, and spatial inputs |
+| Thought Capture | `src/ui/thought-capture.dom.ts` | Typed native-DOM private Draft and bridge dialog rendering plus event translation through opaque callbacks |
+| Work Chooser | `src/ui/work-chooser.dom.ts` | Typed native-DOM private selection dialog rendering plus event translation through opaque callbacks |
+| Map | `src/ui/map.dom.ts` | Typed native-DOM Map rendering and interaction through structural read models, opaque callbacks, and a composition-injected presentation port |
 
-The temporary `src/map.js` visitor filter and `composeGraphWithDrafts` graph composition are migration seams, not enduring privacy or product-authority mechanisms.
+The composition-injected Map presentation port and `composeGraphWithDrafts` graph composition are migration seams, not enduring privacy or product-authority mechanisms.
 Owner and visitor read models will become structurally separate application outputs.
 Spatial pins and movement remain presentation facts and never create authored relationships.
 

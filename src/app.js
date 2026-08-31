@@ -4,23 +4,24 @@ import {
   connectDraft,
   createDraft,
   editDraft,
+  publishDraft,
+} from "./product/authorship/draft-state.ts";
+import {
   loadDraftState,
   persistDraftState,
-  publishDraft,
   THOUGHT_STORAGE_KEY,
-} from "./draft-state.js";
+} from "./adapters/browser/authored-local-storage.ts";
 import {
   loadFeaturedState,
   saveFeaturedState,
 } from "./adapters/browser/featured-local-storage.ts";
-import { getPublicMediaIds } from "./graph-projection.js";
-import { ThoughtMap } from "./map.js?v=editorial-constellation-15";
+import { getPublicMediaIds } from "./graph-projection.ts";
+import { ThoughtMap } from "./ui/map.dom.ts";
 import {
   loadPinnedState,
-  pinPosition,
   savePinnedState,
-  unpinPosition,
-} from "./pinned-state.js";
+} from "./adapters/browser/pinned-local-storage.ts";
+import { pinPosition, unpinPosition } from "./product/map/pinned-positions.ts";
 import {
   loadSelection,
   saveSelection,
@@ -30,11 +31,13 @@ import {
   toggleMediaSelection,
 } from "./product/taste/selection.ts";
 import { toggleFeaturedMedia } from "./product/taste/featured.ts";
-import { getSeedGraph } from "./seed.js";
-import { ThoughtCapture } from "./thought-capture.js";
-import { WorkChooser } from "./work-chooser.js";
+import { getSeedGraph } from "./adapters/seed/prototype-seed.ts";
+import { createMapPresentation } from "./composition/map-presentation.ts";
+import { ThoughtCapture } from "./ui/thought-capture.dom.ts";
+import { WorkChooser } from "./ui/work-chooser.dom.ts";
 
 const root = document.querySelector("#app");
+const mapPresentation = createMapPresentation();
 
 try {
   const baseGraph = getSeedGraph();
@@ -292,6 +295,7 @@ try {
     `;
   } else {
     map = new ThoughtMap(root, graph, {
+      presentation: mapPresentation,
       mode: mapMode,
       selectionState,
       featuredState,

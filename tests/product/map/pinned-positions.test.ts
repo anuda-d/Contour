@@ -1,28 +1,17 @@
-import test from "node:test";
 import assert from "node:assert/strict";
+import test from "node:test";
 import {
-  PINNED_STORAGE_KEY,
   PINNED_VERSION,
   emptyPinnedState,
-  loadPinnedState,
   normalizePinnedState,
   pinPosition,
   resolvePositions,
-  savePinnedState,
   unpinPosition,
-} from "../src/pinned-state.js";
+} from "../../../src/product/map/pinned-positions.ts";
 
 const validIds = new Set(["thought-a", "book-a", "draft-a"]);
 
-function memoryStorage(initial = {}) {
-  const values = new Map(Object.entries(initial));
-  return {
-    getItem: (key) => values.get(key) ?? null,
-    setItem: (key, value) => values.set(key, value),
-  };
-}
-
-test("pinned state keeps known finite positions and clamps them to the Map", () => {
+test("pinned positions keep known finite coordinates and clamp them to the Map", () => {
   const normalized = normalizePinnedState(
     {
       version: 0,
@@ -46,8 +35,8 @@ test("pinned state keeps known finite positions and clamps them to the Map", () 
   assert.equal(normalized.recovered, true);
 });
 
-test("version-current state still recovers a malformed positions container", () => {
-  for (const pinnedPositions of [null, [], "invalid"]) {
+test("pinned positions recover malformed containers, including a current-version envelope", () => {
+  for (const pinnedPositions of [undefined, null, [], "invalid"]) {
     const normalized = normalizePinnedState(
       { version: PINNED_VERSION, pinnedPositions },
       validIds,
@@ -72,28 +61,6 @@ test("pin and unpin are immutable and reject unknown nodes", () => {
   assert.equal(unpinned.changed, true);
   assert.deepEqual(unpinned.state, emptyPinnedState());
   assert.deepEqual(pinned.state.pinnedPositions["thought-a"], { x: 48, y: -24 });
-});
-
-test("pinned state round trips and recovers corrupt or unavailable storage", () => {
-  const storage = memoryStorage();
-  const state = pinPosition(
-    emptyPinnedState(),
-    "book-a",
-    { x: -80, y: 42 },
-    validIds,
-  ).state;
-  assert.equal(savePinnedState(storage, state), true);
-  assert.match(storage.getItem(PINNED_STORAGE_KEY), /book-a/);
-  assert.deepEqual(loadPinnedState(storage, validIds).state, state);
-
-  storage.setItem(PINNED_STORAGE_KEY, "not json");
-  const recovered = loadPinnedState(storage, validIds);
-  assert.deepEqual(recovered.state, emptyPinnedState());
-  assert.equal(recovered.recovered, true);
-  assert.equal(recovered.persistent, true);
-
-  assert.equal(loadPinnedState(null, validIds).storageError, true);
-  assert.equal(savePinnedState(null, state), false);
 });
 
 test("resolved positions prefer pins, then temporary movement, then generated layout", () => {
