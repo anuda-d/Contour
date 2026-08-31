@@ -61,22 +61,19 @@ queue.
 ## Current run
 
 - State: accepted; no successor unit selected.
-- Unit id: af-2-map-dom-typescript-seam.
+- Unit id: af-2-styles-test-typescript-seam.
 - Criterion: AF-2 Complete strict TypeScript and AF-9 Layered test and quality gates.
-- Intended result: move the existing Map native-DOM adapter and its direct coverage to strict TypeScript without changing accepted markup, interaction, camera, or owner and visitor capabilities.
-- Evidence claim: a structural UI-owned Map read model and injected presentation operations preserve the existing DOM adapter while preventing a `ui` import of product modules; focused source-contract coverage, retired-boundary enforcement, strict typechecks, the production build, and the full repository check demonstrate the typed seam, not DOM-runtime interaction behavior.
-- Exact owned diff: move `src/map.js` to `src/ui/map.dom.ts`, migrate `tests/map.test.mjs` to strict TypeScript, replace direct product imports with a narrow injected presentation port, update the composition import and retired-flat-source guard, and record selection and resulting evidence here.
-- UI checkpoint: not incremented when the implementation preserves rendered output and interaction behavior exactly.
-- Design read: preserve-mode native Map interaction for individual discovery, with an editorial constellation language; no visual redesign is authorized.
-- Design dials: `DESIGN_VARIANCE` matches the accepted Map, `MOTION_INTENSITY` matches existing gesture feedback, and `VISUAL_DENSITY` matches the accepted layout. No dials will be changed.
-- Redesign audit: preserve profile hierarchy, graph spatial relationship cues, pointer, keyboard, touch, focus, light and dark behavior, and existing CSS tokens. Retire no visual pattern.
-- Pre-flight scope: frozen existing product UI rather than a landing-page build. Applicable checks are no visual strings or CSS changes, no new motion, no new icon or asset system, preserved focus and interaction semantics, and no design-system change.
-- Risks and assumptions: the UI layer owns structural read-model types and opaque callbacks only. Composition supplies projection, layout, and position resolution so the adapter does not depend on product modules. Existing focused Map tests are source-contract and helper coverage, not executable DOM-runtime proof.
-- Accepted evidence: `src/ui/map.dom.ts` is strict TypeScript and has no product or adapter import. `src/composition/map-presentation.ts` is a checked composition port that validates current graph data into the UI structural read model and complete positions before DOM use. The retired `src/map.js` is absent and the architecture gate rejects its reintroduction. `tests/ui/map.dom.test.ts` preserves helper, Map markup, capability, owner and visitor source-contract coverage, and `tests/composition/map-presentation.test.ts` proves a composed private Draft remains in the owner projection and is absent from the visitor projection. `npm run typecheck`, the 49-test focused suite, `npm run check:architecture`, `./scripts/check.sh`, and `git diff --check -- .` passed. The repository-wide check completed the strict browser and test typechecks, architecture enforcement, Vite build, and all discovered tests with zero failures.
-- Candidate design review: Design Read is preserve-mode editorial constellation Map for individual discovery. Dials remain unchanged, the audit found no markup, CSS, copy, token, layout, color, motion, or interaction-intent change, and the applicable preserve-mode pre-flight checks passed by source inspection. Rendered validation is not due for this architecture-only migration, so UI checkpoint remains zero.
-- Review correction: a fresh reviewer found that the initial JavaScript composition root did not typecheck the concrete presentation port. The correction exports the UI port and adds `src/composition/map-presentation.ts`, which validates the generic projection into the UI structural read model and ensures every resolved position exists before it reaches the DOM adapter. `src/app.js` now consumes that checked factory. Focused and full validation were rerun after the correction; a new fresh review is required before acceptance.
-- Review correction two: the first projection converter over-required fields that valid current seed Media and Thoughts do not carry, which would have activated the existing application error state on startup. The UI structural model now contains only fields the renderer consumes. `tests/composition/map-presentation.test.ts` directly proves current seed owner and visitor projections, visitor Draft exclusion, and complete position resolution. Focused and full validation were rerun after this correction; a new fresh review is required before acceptance.
-- Review correction three: a reviewer found that the initial visitor assertion was vacuous because the seed has only published Thoughts. The composition factory test now composes a valid private Draft, proves owner inclusion and visitor exclusion, and runs through the same unknown input boundary used by the Map adapter. Focused and full validation were rerun after this correction, and a new fresh reviewer returned clean with no P0-P3 finding.
+- Intended result: migrate the standalone CSS-regression test to strict TypeScript without changing its current assertions, CSS contract, rendered product behavior, or visual design.
+- Evidence claim: `tests/styles.test.ts` remains direct coverage for the accepted CSS interaction, contrast, responsive, and Draft-visibility contracts; the retired `.mjs` test is absent; strict test typechecking, focused execution, architecture enforcement, the production build, and the full repository check all pass.
+- Exact owned diff: rename `tests/styles.test.mjs` to `tests/styles.test.ts`, add only the strict types required by its existing helpers and regex extraction, retain each existing assertion and test name, update this run record and accepted evidence, and add the task-local completion ledger.
+- UI checkpoint: not incremented because the test-only migration changes no rendered UI surface, behavior, interaction, or CSS.
+- Design read: preserve-mode editorial constellation Map. The unit does not alter markup, CSS, design tokens, copy, hierarchy, light or dark appearance, motion, or interaction intent.
+- Design dials: `DESIGN_VARIANCE`, `MOTION_INTENSITY`, and `VISUAL_DENSITY` remain exactly at the accepted baseline.
+- Redesign audit: not applicable beyond source inspection because no product-facing file changes. Retire no visual pattern.
+- Pre-flight scope: frozen UI test coverage only. Verify no CSS changes, no newly introduced visual behavior, preserved existing test names and assertions, and no design-system change.
+- Risks and assumptions: this is intentionally a small, test-only migration seam. It advances the complete test migration contract but does not prove the remaining application composition or broader compatibility work.
+- Accepted evidence: `npx tsx --test tests/styles.test.ts` passed all 13 existing CSS-contract tests. `npm run typecheck` and `npm run check:architecture` passed. `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, the Vite production build, and 135 tests with zero failures. Source inspection and the diff confirm that `src/styles.css` is unchanged, every existing test name and assertion remains, and `tests/styles.test.mjs` is retired in favor of strict `tests/styles.test.ts`. `git diff --check -- .` passed. Rendered validation is not due because this unit changes only direct static CSS-test coverage, so UI checkpoint remains zero.
+- Independent review: a fresh `gpt-5.6-sol` high-reasoning reviewer returned clean with no P0-P3 finding. It independently confirmed the strict test configuration, all 13 preserved test names and assertions, unchanged CSS and product behavior, and the focused, type, architecture, full-check, build, and diff evidence.
 
 ## Owner authorization
 
@@ -121,7 +118,7 @@ queue.
 
 ## Fresh-task handoff state
 
-- Latest accepted unit: af-2-work-chooser-typescript-seam
+- Latest accepted unit: af-2-styles-test-typescript-seam
 - Latest implementation commit: recorded in this accepted unit's handoff.
 - Latest temporary handoff: the post-commit handoff records this accepted unit.
 - Next unit selected: no
@@ -322,6 +319,14 @@ Routine work-unit completion does not require owner review.
   composed private Draft, retired-flat-Map boundary rejection, focused 49-test
   evidence, full repository validation, and a clean fresh independent review
   support the bounded claim while both criteria remain open.
+
+- AF-2 and AF-9 partial unit `af-2-styles-test-typescript-seam` accepted on
+  2026-08-30.
+  Strict TypeScript CSS-regression coverage preserves all 13 accepted static
+  UI-contract tests and their assertions without changing CSS or product
+  behavior; focused 13-test evidence, the 135-test repository validation, and
+  a clean fresh independent review support the bounded claim while both
+  criteria remain open.
 
 ## Administratively closed run log
 

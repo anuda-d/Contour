@@ -7,7 +7,7 @@ const styles = await readFile(new URL("../src/styles.css", import.meta.url), "ut
 test("pressing a node cannot replace its spatial placement transform", () => {
   const rules = [...styles.matchAll(/([^{}]+)\{([^{}]*)\}/g)];
   const activeNodeRules = rules.filter(([, selectors]) =>
-    selectors
+    requiredCapture(selectors, "Map-node selectors")
       .split(",")
       .map((selector) => selector.trim())
       .includes(".map-node:active"),
@@ -16,48 +16,54 @@ test("pressing a node cannot replace its spatial placement transform", () => {
   assert.ok(activeNodeRules.length > 0, "expected an explicit pressed state for Map nodes");
   activeNodeRules.forEach(([, , declarations]) => {
     assert.doesNotMatch(
-      declarations,
+      requiredCapture(declarations, "Map-node pressed declarations"),
       /(^|;)\s*transform\s*:/,
       "the pressed state must not override the transform that positions the node",
     );
   });
 });
 
-const readVariable = (block, name) =>
-  block.match(new RegExp(`--${name}:\\s*(#[0-9a-f]{6})`, "i"))?.[1];
-
-const relativeLuminance = (hex) => {
-  const channels = hex
-    .slice(1)
-    .match(/.{2}/g)
-    .map((channel) => Number.parseInt(channel, 16) / 255)
-    .map((channel) =>
-      channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4,
-    );
-  return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
+const requiredCapture = (capture: string | undefined, name: string): string => {
+  if (capture === undefined) throw new Error(`expected ${name}`);
+  return capture;
 };
 
-const contrastRatio = (first, second) => {
-  const luminances = [relativeLuminance(first), relativeLuminance(second)].sort(
-    (left, right) => right - left,
-  );
-  return (luminances[0] + 0.05) / (luminances[1] + 0.05);
+const readVariable = (block: string, name: string): string =>
+  requiredCapture(block.match(new RegExp(`--${name}:\\s*(#[0-9a-f]{6})`, "i"))?.[1], name);
+
+const hexChannels = (hex: string): readonly [number, number, number] => {
+  const pairs = hex.slice(1).match(/.{2}/g);
+  if (!pairs || pairs.length !== 3) throw new Error(`Expected a six-digit hex color: ${hex}`);
+  return [
+    Number.parseInt(pairs[0]!, 16),
+    Number.parseInt(pairs[1]!, 16),
+    Number.parseInt(pairs[2]!, 16),
+  ];
 };
 
-const compositeHex = (foreground, background, opacity) => {
-  const channels = [foreground, background].map((hex) =>
-    hex
-      .slice(1)
-      .match(/.{2}/g)
-      .map((channel) => Number.parseInt(channel, 16)),
-  );
-  return `#${channels[0]
-    .map((channel, index) =>
-      Math.round(channel * opacity + channels[1][index] * (1 - opacity))
-        .toString(16)
-        .padStart(2, "0"),
-    )
-    .join("")}`;
+const relativeLuminance = (hex: string): number => {
+  const [red, green, blue] = hexChannels(hex).map((channel) => {
+    const normalized = channel / 255;
+    return normalized <= 0.04045
+      ? normalized / 12.92
+      : ((normalized + 0.055) / 1.055) ** 2.4;
+  }) as [number, number, number];
+  return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+};
+
+const contrastRatio = (first: string, second: string): number => {
+  const firstLuminance = relativeLuminance(first);
+  const secondLuminance = relativeLuminance(second);
+  return (Math.max(firstLuminance, secondLuminance) + 0.05) /
+    (Math.min(firstLuminance, secondLuminance) + 0.05);
+};
+
+const compositeHex = (foreground: string, background: string, opacity: number): string => {
+  const [foregroundRed, foregroundGreen, foregroundBlue] = hexChannels(foreground);
+  const [backgroundRed, backgroundGreen, backgroundBlue] = hexChannels(background);
+  const compositeChannel = (front: number, back: number): string =>
+    Math.round(front * opacity + back * (1 - opacity)).toString(16).padStart(2, "0");
+  return `#${compositeChannel(foregroundRed, backgroundRed)}${compositeChannel(foregroundGreen, backgroundGreen)}${compositeChannel(foregroundBlue, backgroundBlue)}`;
 };
 
 test("primary coral actions retain readable text in both themes", () => {
