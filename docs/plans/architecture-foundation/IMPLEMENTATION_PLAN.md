@@ -27,14 +27,14 @@ Status: active shared state; standing scheduled owner authorization.
 | Criterion | Status | Accepted evidence |
 | --- | --- | --- |
 | AF-1 Enforced architecture contract | accepted | Architecture decision records, six-key compatibility inventory, and the checked import-boundary gate were accepted after 30 focused and 112 repository tests plus clean fresh review. |
-| AF-2 Complete strict TypeScript | open | Partial: strict browser and Node-test type environments, reproducible Vite build, and the catalogue, selection, featured-Media, pinned-position, authored-Thought, public-projection, prototype-seed, deterministic-layout, Thought Capture, Work Chooser, and Map DOM seams plus their tests are accepted; the remaining maintained files are not yet migrated. |
+| AF-2 Complete strict TypeScript | open | Partial: strict browser and Node-test type environments, reproducible Vite build, and the catalogue, selection, featured-Media, pinned-position, authored-Thought, public-projection, prototype-seed, deterministic-layout, Thought Capture, Work Chooser, Map DOM, CSS-regression, and acceptance-walkthrough seams plus their tests are accepted; the remaining maintained files are not yet migrated. |
 | AF-3 Deep product modules | open | Partial: authored Thought lifecycle, anchors, publication, and immutable merge now live in a cohesive strict TypeScript product module; other product facts remain in prototype seams. |
 | AF-4 Application use cases | open | None yet. |
 | AF-5 Isolated effects and validated boundaries | open | Partial: selection, featured-Media, pinned-position, and authored-Thought persistence now cross injected browser-storage ports, untrusted JSON is normalized before entering typed product state, and the authored lifecycle no longer reads the wall clock; other effects remain un-migrated. |
 | AF-6 Explicit projections and privacy | open | Partial: the owner and visitor graph projection now has strict TypeScript ownership and focused evidence for Draft and draft-only Media exclusion, publication-derived public eligibility, dangling-edge filtering, and owner capability removal; application-level structurally separate read models remain open. |
 | AF-7 Durable compatibility | open | Partial: authored V2, V1, and legacy-Draft browser storage now has typed precedence, normalization, migration, recovery, and read-merge-write evidence; other persisted state remains to be completed. |
 | AF-8 Frozen visible behavior | open | None yet. |
-| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, and Map composition, DOM-source-contract, product, and browser-adapter coverage; later migrated seams and final coverage remain open. |
+| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, and Map composition, DOM-source-contract, product, browser-adapter, CSS-regression, and end-to-end acceptance coverage; later migrated seams and final coverage remain open. |
 | AF-10 Durable completion walkthrough | open | None yet. |
 
 This table records accepted evidence only.
@@ -61,19 +61,20 @@ queue.
 ## Current run
 
 - State: accepted; no successor unit selected.
-- Unit id: af-2-styles-test-typescript-seam.
+- Unit id: af-2-acceptance-walkthrough-test-typescript-seam.
 - Criterion: AF-2 Complete strict TypeScript and AF-9 Layered test and quality gates.
-- Intended result: migrate the standalone CSS-regression test to strict TypeScript without changing its current assertions, CSS contract, rendered product behavior, or visual design.
-- Evidence claim: `tests/styles.test.ts` remains direct coverage for the accepted CSS interaction, contrast, responsive, and Draft-visibility contracts; the retired `.mjs` test is absent; strict test typechecking, focused execution, architecture enforcement, the production build, and the full repository check all pass.
-- Exact owned diff: rename `tests/styles.test.mjs` to `tests/styles.test.ts`, add only the strict types required by its existing helpers and regex extraction, retain each existing assertion and test name, update this run record and accepted evidence, and add the task-local completion ledger.
+- Intended result: migrate the end-to-end private-to-public Map acceptance walkthrough to strict TypeScript without changing its assertions, persisted-state coverage, product behavior, or visual design.
+- Evidence claim: `tests/acceptance-walkthrough.test.ts` retains direct end-to-end coverage of selection, private Drafts, bridges, publication, featured Media, pinned positions, reload durability, and visitor privacy; the retired `.mjs` test is absent; strict test typechecking, focused execution, architecture enforcement, the production build, and the full repository check pass.
+- Exact owned diff: rename `tests/acceptance-walkthrough.test.mjs` to `tests/acceptance-walkthrough.test.ts`, add only strict types needed by its in-memory storage helper and indexed values, correct the existing authored-graph input type to accept the valid seed-graph shape it already composes at runtime, preserve the sole existing test name and assertions, update this run record and accepted evidence, and append this task's accepted run record.
 - UI checkpoint: not incremented because the test-only migration changes no rendered UI surface, behavior, interaction, or CSS.
 - Design read: preserve-mode editorial constellation Map. The unit does not alter markup, CSS, design tokens, copy, hierarchy, light or dark appearance, motion, or interaction intent.
 - Design dials: `DESIGN_VARIANCE`, `MOTION_INTENSITY`, and `VISUAL_DENSITY` remain exactly at the accepted baseline.
 - Redesign audit: not applicable beyond source inspection because no product-facing file changes. Retire no visual pattern.
-- Pre-flight scope: frozen UI test coverage only. Verify no CSS changes, no newly introduced visual behavior, preserved existing test names and assertions, and no design-system change.
-- Risks and assumptions: this is intentionally a small, test-only migration seam. It advances the complete test migration contract but does not prove the remaining application composition or broader compatibility work.
-- Accepted evidence: `npx tsx --test tests/styles.test.ts` passed all 13 existing CSS-contract tests. `npm run typecheck` and `npm run check:architecture` passed. `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, the Vite production build, and 135 tests with zero failures. Source inspection and the diff confirm that `src/styles.css` is unchanged, every existing test name and assertion remains, and `tests/styles.test.mjs` is retired in favor of strict `tests/styles.test.ts`. `git diff --check -- .` passed. Rendered validation is not due because this unit changes only direct static CSS-test coverage, so UI checkpoint remains zero.
-- Independent review: a fresh `gpt-5.6-sol` high-reasoning reviewer returned clean with no P0-P3 finding. It independently confirmed the strict test configuration, all 13 preserved test names and assertions, unchanged CSS and product behavior, and the focused, type, architecture, full-check, build, and diff evidence.
+- Pre-flight scope: frozen end-to-end test coverage only. Verify no CSS or behavior-source change, preserved test name and assertions, and no design-system change.
+- Risks and assumptions: this is intentionally a small migration seam. It strengthens the complete test migration contract, corrects a strict input type that was narrower than its existing runtime behavior, and exercises existing privacy plus persistence behavior, but does not prove the remaining application composition or broader compatibility work.
+- Exploration: one read-only explorer found the walkthrough required only typed in-memory storage plus safe indexed reads; a second independently confirmed that the remaining architecture-boundary suite is a separate strict-test seam and was not changed.
+- Accepted evidence: `npx tsx --test tests/acceptance-walkthrough.test.ts` passed the unchanged private-to-public walkthrough. `npm run typecheck` initially exposed that `composeGraphWithDrafts` rejected the valid seeded graph solely because its input type demanded incidental index signatures; its input contract now requires only the fields it reads and returns the existing broader output shape. The repeated focused test, `npm run typecheck`, and `npm run check:architecture` passed. `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, the Vite production build, and all 135 tests with zero failures. `git diff --check -- .` passed. Source inspection confirms no CSS, markup, copy, DOM adapter, storage behavior, or assertion changed; only the accepted test's strict types and the authored composition input type changed.
+- Independent review: a fresh `gpt-5.6-sol` high-reasoning reviewer returned clean with no P0-P3 finding.
 
 ## Owner authorization
 
@@ -118,7 +119,7 @@ queue.
 
 ## Fresh-task handoff state
 
-- Latest accepted unit: af-2-styles-test-typescript-seam
+- Latest accepted unit: af-2-acceptance-walkthrough-test-typescript-seam
 - Latest implementation commit: recorded in this accepted unit's handoff.
 - Latest temporary handoff: the post-commit handoff records this accepted unit.
 - Next unit selected: no
@@ -148,13 +149,13 @@ without discarding uncommitted work or inferring missing decisions.
 
 - State: accepted; no current unit.
 - Criterion: AF-2 Complete strict TypeScript and AF-9 Layered test and quality gates.
-- Intended result: migrate the pure deterministic layout and its direct test to strict TypeScript while preserving the accepted spatial presentation inputs.
-- Evidence claim: the exact seeded coordinate snapshot, determinism, owner origin, authored-edge influence, and collision separation all remain covered after the migration.
-- Focused validation: `npx tsx --test tests/layout.test.ts` passed 5 tests; `npm run typecheck` and `npm run check:architecture` passed.
-- Full validation: `./scripts/check.sh` passed strict browser and test typechecks, the Vite production build, architecture enforcement, and 127 tests with zero failures; `git diff --check -- .` passed.
-- Rendered validation: not due; no UI surface or interaction changed and the UI checkpoint count remains zero.
+- Intended result: migrate the end-to-end private-to-public Map acceptance walkthrough to strict TypeScript while preserving its existing product, privacy, and reload-durability assertions.
+- Evidence claim: the exact accepted walkthrough remains direct coverage after strict test migration.
+- Focused validation: `npx tsx --test tests/acceptance-walkthrough.test.ts`, `npm run typecheck`, and `npm run check:architecture` passed.
+- Full validation: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, the Vite production build, and all 135 tests with zero failures; `git diff --check -- .` passed.
+- Rendered validation: not due because no UI surface or interaction changes are authorized for this test-only unit.
 - Remaining risk: remaining maintained source and tests are still JavaScript, and effect isolation, read-model separation, and complete migration remain open.
-- Independent review: a fresh `gpt-5.6-sol` high-reasoning reviewer returned clean with no P0-P3 finding or unresolved blocker.
+- Independent review: a fresh `gpt-5.6-sol` high-reasoning reviewer returned clean with no P0-P3 finding.
 
 ## Goal-readiness evidence
 
@@ -327,6 +328,15 @@ Routine work-unit completion does not require owner review.
   behavior; focused 13-test evidence, the 135-test repository validation, and
   a clean fresh independent review support the bounded claim while both
   criteria remain open.
+- AF-2 and AF-9 partial unit
+  `af-2-acceptance-walkthrough-test-typescript-seam` accepted on 2026-08-30.
+  Strict TypeScript end-to-end coverage preserves the complete existing
+  three-work private-to-public Map walkthrough, including Draft privacy,
+  publication, featuring, pinning, and reload durability; a type-only authored
+  composition input correction accepts the valid seed shape already supported
+  at runtime; focused evidence, the 135-test repository validation, and a
+  clean fresh independent review support the bounded claim while both criteria
+  remain open.
 
 ## Administratively closed run log
 

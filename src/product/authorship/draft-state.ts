@@ -24,6 +24,11 @@ export type ThoughtMutation = {
 type RecordValue = Record<string, unknown>;
 type ThoughtGraphNode = { id: string; type: string; anchors?: string[]; [key: string]: unknown };
 type ThoughtGraphEdge = { id: string; source: string; target: string; kind: string; [key: string]: unknown };
+type ThoughtGraphInput = {
+  profile: { featuredMediaIds?: string[] };
+  nodes: Array<{ id: string; type: string; anchors?: string[] }>;
+  edges: Array<{ id: string; source: string; target: string; kind: string }>;
+};
 export type ThoughtGraph = {
   profile: { featuredMediaIds?: string[]; [key: string]: unknown };
   nodes: ThoughtGraphNode[];
@@ -263,7 +268,7 @@ export function publishDraft(
   return { state: { ...state, thoughts }, thought, changed: true, message: "Thought published. Visitor preview now shows it." };
 }
 
-export function composeGraphWithDrafts(baseGraph: ThoughtGraph, state: ThoughtState): ThoughtGraph {
+export function composeGraphWithDrafts(baseGraph: ThoughtGraphInput, state: ThoughtState): ThoughtGraph {
   const graph: ThoughtGraph = {
     profile: { ...baseGraph.profile, ...(baseGraph.profile.featuredMediaIds ? { featuredMediaIds: [...baseGraph.profile.featuredMediaIds] } : {}) },
     nodes: baseGraph.nodes.map((node) => ({ ...node, ...(node.anchors ? { anchors: [...node.anchors] } : {}) })),
