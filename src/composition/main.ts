@@ -9,10 +9,12 @@ import {
   type ThoughtMutation,
 } from "../product/authorship/draft-state.ts";
 import {
+  createAuthoredThoughtReloadPort,
   loadDraftState,
   persistDraftState,
   THOUGHT_STORAGE_KEY,
 } from "../adapters/browser/authored-local-storage.ts";
+import { reloadAuthoredThoughts } from "../application/authorship/reload-authored-thoughts.ts";
 import type { KeyValueStoragePort } from "../kernel/key-value-storage.ts";
 import type { ClockPort } from "../kernel/clock.ts";
 import type { IdentifierPort } from "../kernel/identifier.ts";
@@ -75,6 +77,7 @@ try {
   } catch {
     storage = null;
   }
+  const authoredThoughts = createAuthoredThoughtReloadPort(storage, validCatalogueIds);
 
   const loaded = loadSelection(storage, validCatalogueIds);
   const loadedFeatured = loadFeaturedState(
@@ -408,11 +411,11 @@ try {
     });
     window.thoughtMap = map;
     storageChanges.onChange(THOUGHT_STORAGE_KEY, () => {
-      const synced = loadDraftState(storage, validCatalogueIds);
-      if (synced.storageError) return;
+      const synced = reloadAuthoredThoughts(baseGraph, authoredThoughts);
+      if (synced.kind === "storage-unavailable") return;
       draftState = synced.state;
-      graph = composeGraphWithDrafts(baseGraph, draftState);
-      activeMap().updateGraph(graph, { message: "Authored Thoughts updated from another tab." });
+      graph = synced.graph;
+      activeMap().updateGraph(graph, { message: synced.message });
     });
   }
 } catch (error) {

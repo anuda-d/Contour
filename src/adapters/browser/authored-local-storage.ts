@@ -7,6 +7,7 @@ import {
   type ThoughtState,
 } from "../../product/authorship/draft-state.ts";
 import type { KeyValueStoragePort } from "../../kernel/key-value-storage.ts";
+import type { AuthoredThoughtReloadPort } from "../../application/authorship/reload-authored-thoughts.ts";
 
 export const THOUGHT_STORAGE_KEY = "thought-map.prototype.authored-thoughts.v2";
 export const THOUGHT_V1_STORAGE_KEY = "thought-map.prototype.authored-thoughts.v1";
@@ -57,6 +58,24 @@ export function loadDraftState(
   } catch {
     return { state: emptyDraftState(), persistent: false, recovered: false, storageError: true };
   }
+}
+
+/**
+ * Adapts browser-backed authored Thought storage to the narrowly scoped reload
+ * use case without exposing localStorage or persistence recovery details inward.
+ */
+export function createAuthoredThoughtReloadPort(
+  storage: KeyValueStoragePort | null,
+  validMediaIds: MediaIds,
+): AuthoredThoughtReloadPort {
+  return {
+    load: () => {
+      const loaded = loadDraftState(storage, validMediaIds);
+      return loaded.storageError
+        ? { kind: "storage-unavailable" }
+        : { kind: "loaded", state: loaded.state };
+    },
+  };
 }
 
 export function persistDraftState(

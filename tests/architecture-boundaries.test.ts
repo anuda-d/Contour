@@ -45,6 +45,16 @@ test("architecture boundary check rejects a product import of a browser adapter"
   assert.match(result.output, /product -> adapters import is forbidden/);
 });
 
+test("architecture boundary check rejects an application import of a browser adapter", () => {
+  const root = createFixture({
+    "src/application/authorship/reload.ts": 'import { read } from "../../adapters/browser/local-storage.ts";\nexport { read };\n',
+    "src/adapters/browser/local-storage.ts": "export const read = () => null;\n",
+  });
+  const result = runChecker(root);
+  assert.equal(result.status, 1, result.output);
+  assert.match(result.output, /application -> adapters import is forbidden/);
+});
+
 test("architecture boundary check rejects a template-literal product import of a browser adapter", () => {
   const root = createFixture({
     "src/product/catalog/catalog.ts": "export const load = () => import(`../../adapters/browser/local-storage.ts`);\n",

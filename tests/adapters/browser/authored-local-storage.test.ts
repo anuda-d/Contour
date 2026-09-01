@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   DRAFT_STORAGE_KEY,
+  createAuthoredThoughtReloadPort,
   loadDraftState,
   persistDraftState,
   THOUGHT_STORAGE_KEY,
@@ -59,6 +60,20 @@ test("unavailable storage degrades to the current visit", () => {
   const state = createDraft(emptyDraftState(), input, validIds).state;
   assert.equal(loadDraftState(null, validIds).storageError, true);
   assert.equal(persistDraftState(null, state, validIds).saved, false);
+});
+
+test("the authored reload adapter exposes only loaded state or unavailable storage", () => {
+  const storage = memoryStorage();
+  const state = createDraft(emptyDraftState(), input, validIds).state;
+  persistDraftState(storage, state, validIds);
+
+  assert.deepEqual(createAuthoredThoughtReloadPort(storage, validIds).load(), {
+    kind: "loaded",
+    state,
+  });
+  assert.deepEqual(createAuthoredThoughtReloadPort(null, validIds).load(), {
+    kind: "storage-unavailable",
+  });
 });
 
 test("legacy Drafts migrate to authored V2 without immediately overwriting their key", () => {

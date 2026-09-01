@@ -36,10 +36,12 @@ test("the composition root wires authored storage changes through a browser even
 
   assert.match(source, /import type \{ StorageChangePort \} from "\.\.\/kernel\/storage-change\.ts"/);
   assert.match(source, /import \{ createBrowserStorageChangePort \} from "\.\.\/adapters\/browser\/browser-storage-change\.ts"/);
+  assert.match(source, /import \{ reloadAuthoredThoughts \} from "\.\.\/application\/authorship\/reload-authored-thoughts\.ts"/);
+  assert.match(source, /createAuthoredThoughtReloadPort\(storage, validCatalogueIds\)/);
   assert.match(source, /const storageChanges: StorageChangePort = createBrowserStorageChangePort\(window\);/);
   assert.match(source, /storageChanges\.onChange\(THOUGHT_STORAGE_KEY, \(\) => \{/);
-  assert.match(source, /const synced = loadDraftState\(storage, validCatalogueIds\);/);
-  assert.match(source, /if \(synced\.storageError\) return;/);
-  assert.match(source, /activeMap\(\)\.updateGraph\(graph, \{ message: "Authored Thoughts updated from another tab\." \}\);/);
+  assert.match(source, /const synced = reloadAuthoredThoughts\(baseGraph, authoredThoughts\);/);
+  assert.match(source, /if \(synced\.kind === "storage-unavailable"\) return;/);
+  assert.match(source, /activeMap\(\)\.updateGraph\(graph, \{ message: synced\.message \}\);/);
   assert.doesNotMatch(source, /window\.addEventListener\("storage"/);
 });
