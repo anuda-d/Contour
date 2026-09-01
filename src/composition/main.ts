@@ -16,6 +16,7 @@ import {
 import type { KeyValueStoragePort } from "../kernel/key-value-storage.ts";
 import type { ClockPort } from "../kernel/clock.ts";
 import type { IdentifierPort } from "../kernel/identifier.ts";
+import type { StorageChangePort } from "../kernel/storage-change.ts";
 import {
   loadFeaturedState,
   saveFeaturedState,
@@ -42,6 +43,7 @@ import { ThoughtCapture } from "../ui/thought-capture.dom.ts";
 import { WorkChooser } from "../ui/work-chooser.dom.ts";
 import { browserClock } from "../adapters/browser/browser-clock.ts";
 import { browserIdentifier } from "../adapters/browser/browser-identifier.ts";
+import { createBrowserStorageChangePort } from "../adapters/browser/browser-storage-change.ts";
 
 declare global {
   interface Window {
@@ -60,6 +62,7 @@ if (!root) throw new Error("Expected application root.");
 const mapPresentation = createMapPresentation();
 const clock: ClockPort = browserClock;
 const identifier: IdentifierPort = browserIdentifier;
+const storageChanges: StorageChangePort = createBrowserStorageChangePort(window);
 
 try {
   const baseGraph = getSeedGraph();
@@ -404,8 +407,7 @@ try {
       },
     });
     window.thoughtMap = map;
-    window.addEventListener("storage", (event) => {
-      if (event.key !== THOUGHT_STORAGE_KEY) return;
+    storageChanges.onChange(THOUGHT_STORAGE_KEY, () => {
       const synced = loadDraftState(storage, validCatalogueIds);
       if (synced.storageError) return;
       draftState = synced.state;

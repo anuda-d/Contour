@@ -30,3 +30,16 @@ test("the composition root wires authored timestamps and UUIDs through browser e
   assert.doesNotMatch(source, /crypto\.randomUUID\(\)/);
   assert.doesNotMatch(source, /new Date\(\)\.toISOString\(\)/);
 });
+
+test("the composition root wires authored storage changes through a browser event port", () => {
+  const source = readFileSync(resolve("src/composition/main.ts"), "utf8");
+
+  assert.match(source, /import type \{ StorageChangePort \} from "\.\.\/kernel\/storage-change\.ts"/);
+  assert.match(source, /import \{ createBrowserStorageChangePort \} from "\.\.\/adapters\/browser\/browser-storage-change\.ts"/);
+  assert.match(source, /const storageChanges: StorageChangePort = createBrowserStorageChangePort\(window\);/);
+  assert.match(source, /storageChanges\.onChange\(THOUGHT_STORAGE_KEY, \(\) => \{/);
+  assert.match(source, /const synced = loadDraftState\(storage, validCatalogueIds\);/);
+  assert.match(source, /if \(synced\.storageError\) return;/);
+  assert.match(source, /activeMap\(\)\.updateGraph\(graph, \{ message: "Authored Thoughts updated from another tab\." \}\);/);
+  assert.doesNotMatch(source, /window\.addEventListener\("storage"/);
+});

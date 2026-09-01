@@ -30,7 +30,7 @@ Status: active shared state; standing scheduled owner authorization.
 | AF-2 Complete strict TypeScript | accepted | Every maintained application source and automated test is strict TypeScript. Separate browser and Node-test typechecks, the Vite build, and the checked `src/composition/main.ts` native entrypoint are accepted with no maintained application JavaScript mirror. |
 | AF-3 Deep product modules | open | Partial: authored Thought lifecycle, anchors, publication, and immutable merge now live in a cohesive strict TypeScript product module; other product facts remain in prototype seams. |
 | AF-4 Application use cases | open | None yet. |
-| AF-5 Isolated effects and validated boundaries | open | Partial: browser storage, wall-clock access, and UUID generation now cross narrow inward kernel ports; selection, featured-Media, pinned-position, and authored-Thought persistence remain injected and normalized at their trust boundaries, while browser events, seed input, and form-input boundaries remain open. |
+| AF-5 Isolated effects and validated boundaries | open | Partial: browser storage, wall-clock access, UUID generation, and the authored-Thought cross-tab storage event now cross narrow inward kernel ports; selection, featured-Media, pinned-position, and authored-Thought persistence remain injected and normalized at their trust boundaries, while other browser events, seed input, and form-input boundaries remain open. |
 | AF-6 Explicit projections and privacy | open | Partial: the owner and visitor graph projection now has strict TypeScript ownership and focused evidence for Draft and draft-only Media exclusion, publication-derived public eligibility, dangling-edge filtering, and owner capability removal; application-level structurally separate read models remain open. |
 | AF-7 Durable compatibility | open | Partial: authored V2, V1, and legacy-Draft browser storage now has typed precedence, normalization, migration, recovery, and read-merge-write evidence; other persisted state remains to be completed. |
 | AF-8 Frozen visible behavior | open | None yet. |
@@ -61,21 +61,22 @@ queue.
 ## Current run
 
 - State: accepted; no successor unit selected.
-- Unit id: af-5-clock-and-identifier-ports.
+- Unit id: af-5-storage-change-event-port.
 - Criterion: AF-5 Isolated effects and validated boundaries, with AF-9 focused coverage.
-- Intended result: replace the composition root's direct wall-clock and browser UUID calls with narrow, injected effect ports that retain the current ISO timestamp and `draft-` UUID behavior.
-- Evidence claim: private Draft creation and publication obtain timestamps and identifiers through narrow kernel contracts and browser adapters without changing authored lifecycle inputs, storage representations, public eligibility, rendering, or copy.
-- Exact owned diff: `ClockPort` and `IdentifierPort` define the minimal inward capabilities.
-  Browser adapters provide canonical ISO timestamps and UUID values, while the composition root wires them exclusively into new private Draft creation and publication.
-  Focused adapter and source-contract tests verify this ownership and call path.
-- Focused validation: 25 focused adapter, composition, authorship, authored-storage, and private-to-public reload acceptance tests passed.
-  `npm run typecheck`, `npm run check:architecture`, and `npm run build` passed.
-- Full validation: `./scripts/check.sh` and `git diff --check -- .` passed.
-- Rendered validation: not due because the unit changes no rendered surface, interaction, CSS, copy, or persisted representation.
+- Intended result: replace the composition root's direct browser `storage` listener registration with one typed outward adapter port while retaining current cross-tab authored-Thought synchronization behavior.
+- Evidence claim: the composition root reacts only to the authored-Thought storage key through a narrow injected contract, preserves safe storage-error recovery, and retains the exact graph refresh and message without changing persisted state, public eligibility, rendering, or copy.
+- Exact owned diff: `StorageChangePort` defines a zero-payload inward subscription for the current authored-Thought storage key.
+  The browser adapter filters the native `StorageEvent` at its trust boundary, and the composition root wires the adapter while retaining its prior reload workflow.
+- Focused validation: 14 targeted adapter, composition, authored-storage, and private-to-public reload acceptance tests passed.
+  Separate strict typechecks, architecture enforcement, the Vite production build, and `git diff --check -- .` passed.
+- Full validation: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, the Vite production build, and 142 tests with zero failures.
+  `git diff --check -- .` passed.
+- Accepted evidence: `StorageChangePort` now defines the only inward browser storage-event capability used by the current authored-Thought cross-tab workflow.
+  The browser adapter forwards no event payload and invokes its listener only for the exact V2 authored-Thought key.
+  Composition retains the existing safe reload, storage-error early return, graph recomposition, and exact update message without direct browser listener registration.
 - Independent review: a fresh read-only `gpt-5.6-sol` high-reasoning reviewer found no P0-P3 finding or commit blocker.
-- Accepted evidence: AF-5 now has bounded evidence that creation and publication use narrow browser clock and UUID effects without changing authored lifecycle behavior.
-  AF-9 now has focused adapter and composition source coverage for those effects.
-  AF-5 and AF-9 remain open for their broader required evidence.
+- Rendered validation: not expected because the unit must change no rendered surface, interaction, CSS, copy, or persisted representation.
+- Risks and assumptions: the port must preserve browser listener semantics and avoid extending beyond the existing authored-Thought storage event.
 
 ## Owner authorization
 
@@ -361,6 +362,10 @@ Routine work-unit completion does not require owner review.
   Narrow kernel clock and identifier ports now separate browser wall-clock and UUID generation from the composition root's authored create and publish calls.
   The unit preserves exact `draft-` UUID IDs, canonical ISO timestamps, lifecycle inputs, storage representation, privacy, copy, rendering, and visual behavior.
   Focused 25-test evidence, strict typechecks, architecture enforcement, a Vite build, full repository validation, and a clean fresh independent review support bounded AF-5 and AF-9 evidence.
+- AF-5 and AF-9 partial unit `af-5-storage-change-event-port` accepted on 2026-09-01.
+  A narrow kernel storage-change port and browser adapter now isolate the composition root from native cross-tab storage events for authored Thoughts.
+  The unit preserves V2-only key filtering, browser timing, safe unavailable-storage handling, storage representation, private and public projection behavior, graph refresh, copy, rendering, and visual behavior.
+  Focused 14-test evidence, strict typechecks, architecture enforcement, a Vite build, full 142-test repository validation, and a clean fresh independent review support bounded AF-5 and AF-9 evidence.
 
 ## Administratively closed run log
 
