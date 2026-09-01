@@ -27,7 +27,7 @@ Status: active shared state; standing scheduled owner authorization.
 | Criterion | Status | Accepted evidence |
 | --- | --- | --- |
 | AF-1 Enforced architecture contract | accepted | Architecture decision records, six-key compatibility inventory, and the checked import-boundary gate were accepted after 30 focused and 112 repository tests plus clean fresh review. |
-| AF-2 Complete strict TypeScript | open | Partial: strict browser and Node-test type environments, reproducible Vite build, and the catalogue, selection, featured-Media, pinned-position, authored-Thought, public-projection, prototype-seed, deterministic-layout, Thought Capture, Work Chooser, Map DOM, CSS-regression, acceptance-walkthrough, and architecture-boundary seams plus their tests are accepted; only the composition root remains a maintained JavaScript source. |
+| AF-2 Complete strict TypeScript | accepted | Every maintained application source and automated test is strict TypeScript. Separate browser and Node-test typechecks, the Vite build, and the checked `src/composition/main.ts` native entrypoint are accepted with no maintained application JavaScript mirror. |
 | AF-3 Deep product modules | open | Partial: authored Thought lifecycle, anchors, publication, and immutable merge now live in a cohesive strict TypeScript product module; other product facts remain in prototype seams. |
 | AF-4 Application use cases | open | None yet. |
 | AF-5 Isolated effects and validated boundaries | open | Partial: selection, featured-Media, pinned-position, and authored-Thought persistence now cross injected browser-storage ports, untrusted JSON is normalized before entering typed product state, and the authored lifecycle no longer reads the wall clock; other effects remain un-migrated. |
@@ -61,21 +61,21 @@ queue.
 ## Current run
 
 - State: accepted; no successor unit selected.
-- Unit id: af-2-architecture-boundary-test-typescript-seam.
+- Unit id: af-2-composition-root-typescript-seam.
 - Criterion: AF-2 Complete strict TypeScript and AF-9 Layered test and quality gates.
-- Intended result: migrate the architecture import-boundary suite to strict TypeScript without changing the checker, fixtures, assertions, frozen behavior, or visual design.
-- Evidence claim: `tests/architecture-boundaries.test.ts` retains every current source-tree and forbidden-dependency assertion, `tests/architecture-boundaries.test.mjs` is absent, strict test typechecking includes the suite, and focused execution plus the full repository check pass.
-- Exact owned diff: rename the architecture-boundary test from `.mjs` to `.ts`; add only strict types required for fixture files and checker results; preserve every test name, fixture, checker invocation, and assertion; update only this unit's run and acceptance evidence.
-- UI checkpoint: not incremented because this test-only migration changes no rendered UI surface, behavior, interaction, CSS, or product source.
-- Design read: preserve-mode editorial constellation Map. The unit changes no markup, CSS, design tokens, copy, hierarchy, appearance, motion, or interaction intent.
-- Design dials: `DESIGN_VARIANCE`, `MOTION_INTENSITY`, and `VISUAL_DENSITY` remain exactly at the accepted baseline.
-- Redesign audit: not applicable beyond source inspection because no product-facing file changes. Retire no visual pattern.
-- Pre-flight scope: frozen architecture-test coverage only. Verify the test names and assertions remain unchanged, no product-facing file changes, and no design-system change.
-- Risks and assumptions: this is a small strict-test migration seam. It strengthens AF-2 and AF-9 coverage but does not migrate the remaining `src/app.js` composition root or prove broader application-layer behavior.
-- Exploration: two independent read-only `gpt-5.6-terra` high-reasoning explorers found that the conversion needs only typed fixture and checker-result helpers. They confirmed all 34 tests, fixture text, checker invocation, source and configuration boundaries must remain unchanged, and no non-test source change is justified.
-- Candidate evidence: renamed `tests/architecture-boundaries.test.mjs` to `tests/architecture-boundaries.test.ts` and added only `FixtureFiles`, `CheckerResult`, and strict helper parameter and return types. `npx tsx --test tests/architecture-boundaries.test.ts` passed all 34 preserved cases. `npm run typecheck` and `npm run check:architecture` passed. `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, the Vite production build, and all 135 tests with zero failures. `git diff --check -- .` passed. Source inspection confirms no product, UI, CSS, DOM, persistence, checker, configuration, fixture, test-name, or assertion change.
-- Independent review: a fresh read-only `gpt-5.6-sol` high-reasoning reviewer returned clean with no P0-P3 finding or unresolved blocker. It verified the exact rename, only strict helper types, preservation of all 34 tests, 34 fixture calls, 67 assertions, checker invocations, and fixture content, as well as the recorded validation evidence.
-- Accepted evidence: the strict architecture-boundary suite now has TypeScript ownership without a maintained JavaScript mirror. Focused 34-case execution, strict typechecking, architecture enforcement, the production build, and all 135 repository tests pass. This test-only migration changes no visible behavior or design and does not increment the UI checkpoint.
+- Intended result: migrate the sole browser composition root from `src/app.js` to strict `src/composition/main.ts`, update the native entrypoint, and preserve every current startup, storage-recovery, authoring, projection, Map, and cross-tab behavior.
+- Evidence claim: no maintained application JavaScript remains; the native browser entrypoint loads the strict TypeScript composition root; focused composition and acceptance coverage, strict typechecking, architecture enforcement, the reproducible browser build, and the full repository check pass without a product or visual change.
+- Exact owned diff: relocate the existing composition root to `src/composition/main.ts`, add only types and strict-safe DOM guards required by TypeScript, update the static entrypoint and relevant source-contract coverage, retire `src/app.js`, and update this unit's run and acceptance evidence.
+- UI checkpoint: not incremented if source and focused behavior evidence confirm no rendered UI surface, interaction, CSS, or visible content changes.
+- Design read: preserve-mode editorial constellation Map. Preserve markup, CSS, design tokens, copy, hierarchy, appearance, motion, and interaction intent exactly.
+- Design dials: `DESIGN_VARIANCE`, `MOTION_INTENSITY`, and `VISUAL_DENSITY` remain at the accepted baseline.
+- Redesign audit: not applicable unless source inspection reveals an unintended rendered behavior change. Retire no visual pattern.
+- Pre-flight scope: strict composition-root migration only. Verify the entrypoint, source layout, startup and cross-tab contracts, and no product-facing file change beyond the entry script path.
+- Risks and assumptions: the relocated composition root still coordinates effects and UI callbacks directly. This unit changes its language and location only; it does not claim application-use-case isolation or structurally separate projections.
+- Exploration: two independent read-only `gpt-5.6-terra` high-reasoning explorers confirmed that composition may depend on every current layer, identified the obsolete `app.js` legacy exemption and fixture, and scoped the strict conversion to DOM, storage, callback, result-union, and entrypoint typing without changing startup behavior.
+- Candidate evidence: moved `src/app.js` to strict `src/composition/main.ts`, rebased only its imports, preserved all current composition callbacks and recovery flows, and changed the native module entrypoint to the new source path. A narrow `PublicMediaSource` query contract replaces the rejected seed-to-projection assertion while retaining the exact public-Media eligibility rule. The entrypoint test asserts that `index.html` loads `src/composition/main.ts` with the existing cache-buster and no longer references `src/app.js`; the architecture checker no longer exempts the retired legacy root, while its remaining-legacy fixture still proves import resolution occurs before exemption. The first independent review found and blocked an unsafe double assertion plus weakened legacy coverage; both were corrected. Repeat focused 57-test validation passed the entrypoint contract, full private-to-public acceptance walkthrough, Graph projection, Map presentation, DOM behavior, and architecture boundaries. `npm run typecheck`, `npm run check:architecture`, `npm run build`, repeated `./scripts/check.sh`, and `git diff --check -- .` all passed. The repeated full repository check passed 136 tests with zero failures. No rendered surface, CSS, interaction contract, or persisted storage representation changed.
+- Independent review: the first fresh `gpt-5.6-sol` high-reasoning reviewer identified and blocked the unsafe assertion and weakened remaining-legacy fixture. After correction and repeat validation, a new fresh `gpt-5.6-sol` high-reasoning reviewer returned clean with no P0-P3 finding or commit blocker. It verified the assertion-free public-Media query, remaining legacy import-resolution coverage, and preserved behavior, privacy, and storage contracts.
+- Accepted evidence: AF-2 is accepted. The sole maintained JavaScript composition root is retired, every maintained source and automated test is TypeScript, and the native browser entrypoint reaches the strict composition root. AF-9 remains open because later application, adapter, projection, compatibility, and final-walkthrough seams still need proportionate coverage.
 
 ## Owner authorization
 
@@ -150,13 +150,13 @@ without discarding uncommitted work or inferring missing decisions.
 
 - State: accepted; no current unit.
 - Criterion: AF-2 Complete strict TypeScript and AF-9 Layered test and quality gates.
-- Intended result: migrate the end-to-end private-to-public Map acceptance walkthrough to strict TypeScript while preserving its existing product, privacy, and reload-durability assertions.
-- Evidence claim: the exact accepted walkthrough remains direct coverage after strict test migration.
-- Focused validation: `npx tsx --test tests/acceptance-walkthrough.test.ts`, `npm run typecheck`, and `npm run check:architecture` passed.
-- Full validation: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, the Vite production build, and all 135 tests with zero failures; `git diff --check -- .` passed.
-- Rendered validation: not due because no UI surface or interaction changes are authorized for this test-only unit.
-- Remaining risk: remaining maintained source and tests are still JavaScript, and effect isolation, read-model separation, and complete migration remain open.
-- Independent review: a fresh `gpt-5.6-sol` high-reasoning reviewer returned clean with no P0-P3 finding.
+- Intended result: migrate the sole browser composition root to strict TypeScript and retire the last maintained application JavaScript source without changing accepted behavior.
+- Evidence claim: the native entrypoint, strict typechecks, import enforcement, behavior coverage, and production build directly support complete TypeScript ownership.
+- Focused validation: the repeated 57-test source, acceptance, projection, Map, and architecture suite plus `npm run typecheck`, `npm run check:architecture`, and `npm run build` passed.
+- Full validation: repeated `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, the Vite production build, and all 136 tests with zero failures; `git diff --check -- .` passed.
+- Rendered validation: not due because the accepted unit changes no rendered surface, interaction, CSS, or visual design.
+- Remaining risk: direct composition callbacks, application-use-case isolation, read-model separation, adapter-port completion, storage compatibility completion, frozen-flow validation, and the final walkthrough remain open under their respective criteria.
+- Independent review: after correction, a fresh `gpt-5.6-sol` high-reasoning reviewer returned clean with no P0-P3 finding or commit blocker.
 
 ## Goal-readiness evidence
 
@@ -164,14 +164,14 @@ without discarding uncommitted work or inferring missing decisions.
   complete strict TypeScript migration, native DOM and CSS preservation, Vite,
   full localStorage compatibility, an architecture-first entry unit, current
   feature scope only, and the scheduled fresh-task relay.
-- Architecture audit: the current graph-shaped seed and `app.js` orchestration
+- Architecture audit: the current graph-shaped seed and composition-root orchestration
   are suitable prototype implementations but are not safe product-wide sources
   of truth.
   The Map must become one projection over product facts.
 - State audit: selection, Draft lifecycle, featured works, pinned positions,
   public projection, and layout already contain deterministic behavior that can
   migrate behind explicit seams.
-- UI audit: `app.js` coordinates storage, use cases, projection, rendering, and
+- UI audit: the composition root coordinates storage, use cases, projection, rendering, and
   cross-tab recovery, while `map.js` combines spatial interaction and chrome.
   These are migration targets, not permission for a redesign.
 - Privacy audit: Draft privacy currently depends partly on graph projection.
@@ -345,6 +345,14 @@ Routine work-unit completion does not require owner review.
   assertions; focused 34-case evidence, the 135-test repository validation,
   and a clean fresh independent review support the bounded claim while both
   criteria remain open.
+- AF-2 and AF-9 unit `af-2-composition-root-typescript-seam` accepted on
+  2026-08-31.
+  Strict `src/composition/main.ts` replaces the final maintained JavaScript
+  root, the native entrypoint and architecture checker enforce its new location,
+  and a narrow public-Media query removes the composition assertion without
+  changing eligibility. Repeated focused evidence, the repeated 136-test
+  repository validation, and a clean fresh review after two corrected blockers
+  support AF-2 acceptance while AF-9 remains open.
 
 ## Administratively closed run log
 

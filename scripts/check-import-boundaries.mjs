@@ -7,7 +7,6 @@ import traverse from "@babel/traverse";
 const sourceExtensions = new Set([".js", ".mjs", ".cjs", ".jsx", ".ts", ".mts", ".cts", ".tsx"]);
 const layers = new Set(["kernel", "product", "application", "adapters", "ui", "composition"]);
 const legacyLayers = new Map([
-  ["app.js", "composition"],
   ["graph-projection.ts", "product"],
   ["layout.ts", "product"],
 ]);

@@ -299,7 +299,7 @@ test("architecture boundary check rejects Vite worker URL dependencies across a 
 
 test("architecture boundary check validates legacy import resolution before exempting direction", () => {
   const root = createFixture({
-    "src/app.js": 'import "./missing.js";\n',
+    "src/graph-projection.ts": 'import "./missing.ts";\n',
   });
   const result = runChecker(root);
   assert.equal(result.status, 1, result.output);
