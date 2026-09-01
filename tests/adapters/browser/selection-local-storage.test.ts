@@ -4,13 +4,13 @@ import {
   SELECTION_STORAGE_KEY,
   loadSelection,
   saveSelection,
-  type SelectionStorage,
 } from "../../../src/adapters/browser/selection-local-storage.ts";
+import type { KeyValueStoragePort } from "../../../src/kernel/key-value-storage.ts";
 import { emptySelection, type SelectionState } from "../../../src/product/taste/selection.ts";
 
 const validIds = new Set(["a", "b", "c", "d"]);
 
-class MemoryStorage implements SelectionStorage {
+class MemoryStorage implements KeyValueStoragePort {
   readonly values = new Map<string, string>();
 
   getItem(key: string): string | null {
@@ -58,7 +58,7 @@ test("missing and malformed storage retain their distinct selection recovery beh
 });
 
 test("unavailable storage falls back to a safe session state", () => {
-  const storage: SelectionStorage = {
+  const storage: KeyValueStoragePort = {
     getItem() {
       throw new Error("unavailable");
     },

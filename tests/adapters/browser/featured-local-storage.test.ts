@@ -4,8 +4,8 @@ import {
   FEATURED_STORAGE_KEY,
   loadFeaturedState,
   saveFeaturedState,
-  type FeaturedStorage,
 } from "../../../src/adapters/browser/featured-local-storage.ts";
+import type { KeyValueStoragePort } from "../../../src/kernel/key-value-storage.ts";
 import {
   FEATURED_VERSION,
   createFeaturedState,
@@ -14,7 +14,7 @@ import {
 
 const eligibleIds = new Set(["book-a", "film-a", "book-b", "film-b"]);
 
-class MemoryStorage implements FeaturedStorage {
+class MemoryStorage implements KeyValueStoragePort {
   readonly values = new Map<string, string>();
 
   getItem(key: string): string | null {
@@ -63,7 +63,7 @@ test("featured state round-trips and corrupted data recovers to valid defaults",
 });
 
 test("unavailable storage falls back to visit-only defaults", () => {
-  const storage: FeaturedStorage = {
+  const storage: KeyValueStoragePort = {
     getItem() {
       throw new Error("blocked");
     },

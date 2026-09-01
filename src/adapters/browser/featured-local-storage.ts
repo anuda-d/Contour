@@ -3,13 +3,9 @@ import {
   normalizeFeaturedState,
   type FeaturedState,
 } from "../../product/taste/featured.ts";
+import type { KeyValueStoragePort } from "../../kernel/key-value-storage.ts";
 
 export const FEATURED_STORAGE_KEY = "thought-map.prototype.featured-media.v1";
-
-export type FeaturedStorage = {
-  getItem(key: string): string | null;
-  setItem(key: string, value: string): void;
-};
 
 export type FeaturedLoadResult = {
   state: FeaturedState;
@@ -19,7 +15,7 @@ export type FeaturedLoadResult = {
 };
 
 export function loadFeaturedState(
-  storage: FeaturedStorage | null | undefined,
+  storage: KeyValueStoragePort | null | undefined,
   eligibleIds: Iterable<string> | ReadonlySet<string>,
   defaultIds: string[] = [],
 ): FeaturedLoadResult {
@@ -68,7 +64,7 @@ export function loadFeaturedState(
 }
 
 export function saveFeaturedState(
-  storage: FeaturedStorage | null | undefined,
+  storage: KeyValueStoragePort | null | undefined,
   state: FeaturedState,
 ): boolean {
   if (!storage) return false;

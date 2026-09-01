@@ -30,11 +30,11 @@ Status: active shared state; standing scheduled owner authorization.
 | AF-2 Complete strict TypeScript | accepted | Every maintained application source and automated test is strict TypeScript. Separate browser and Node-test typechecks, the Vite build, and the checked `src/composition/main.ts` native entrypoint are accepted with no maintained application JavaScript mirror. |
 | AF-3 Deep product modules | open | Partial: authored Thought lifecycle, anchors, publication, and immutable merge now live in a cohesive strict TypeScript product module; other product facts remain in prototype seams. |
 | AF-4 Application use cases | open | None yet. |
-| AF-5 Isolated effects and validated boundaries | open | Partial: selection, featured-Media, pinned-position, and authored-Thought persistence now cross injected browser-storage ports, untrusted JSON is normalized before entering typed product state, and the authored lifecycle no longer reads the wall clock; other effects remain un-migrated. |
+| AF-5 Isolated effects and validated boundaries | open | Partial: all four current browser-storage adapters now share one narrow kernel key-value effect port, selection, featured-Media, pinned-position, and authored-Thought persistence remain injected and normalized at their trust boundaries, and the authored lifecycle no longer reads the wall clock; other effects remain un-migrated. |
 | AF-6 Explicit projections and privacy | open | Partial: the owner and visitor graph projection now has strict TypeScript ownership and focused evidence for Draft and draft-only Media exclusion, publication-derived public eligibility, dangling-edge filtering, and owner capability removal; application-level structurally separate read models remain open. |
 | AF-7 Durable compatibility | open | Partial: authored V2, V1, and legacy-Draft browser storage now has typed precedence, normalization, migration, recovery, and read-merge-write evidence; other persisted state remains to be completed. |
 | AF-8 Frozen visible behavior | open | None yet. |
-| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, and Map composition, DOM-source-contract, product, browser-adapter, CSS-regression, end-to-end acceptance, and architecture-boundary coverage; later migrated seams and final coverage remain open. |
+| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, shared storage-port source coverage, and Map composition, DOM-source-contract, product, browser-adapter, CSS-regression, end-to-end acceptance, and architecture-boundary coverage; later migrated seams and final coverage remain open. |
 | AF-10 Durable completion walkthrough | open | None yet. |
 
 This table records accepted evidence only.
@@ -61,21 +61,25 @@ queue.
 ## Current run
 
 - State: accepted; no successor unit selected.
-- Unit id: af-2-composition-root-typescript-seam.
-- Criterion: AF-2 Complete strict TypeScript and AF-9 Layered test and quality gates.
-- Intended result: migrate the sole browser composition root from `src/app.js` to strict `src/composition/main.ts`, update the native entrypoint, and preserve every current startup, storage-recovery, authoring, projection, Map, and cross-tab behavior.
-- Evidence claim: no maintained application JavaScript remains; the native browser entrypoint loads the strict TypeScript composition root; focused composition and acceptance coverage, strict typechecking, architecture enforcement, the reproducible browser build, and the full repository check pass without a product or visual change.
-- Exact owned diff: relocate the existing composition root to `src/composition/main.ts`, add only types and strict-safe DOM guards required by TypeScript, update the static entrypoint and relevant source-contract coverage, retire `src/app.js`, and update this unit's run and acceptance evidence.
-- UI checkpoint: not incremented if source and focused behavior evidence confirm no rendered UI surface, interaction, CSS, or visible content changes.
-- Design read: preserve-mode editorial constellation Map. Preserve markup, CSS, design tokens, copy, hierarchy, appearance, motion, and interaction intent exactly.
-- Design dials: `DESIGN_VARIANCE`, `MOTION_INTENSITY`, and `VISUAL_DENSITY` remain at the accepted baseline.
-- Redesign audit: not applicable unless source inspection reveals an unintended rendered behavior change. Retire no visual pattern.
-- Pre-flight scope: strict composition-root migration only. Verify the entrypoint, source layout, startup and cross-tab contracts, and no product-facing file change beyond the entry script path.
-- Risks and assumptions: the relocated composition root still coordinates effects and UI callbacks directly. This unit changes its language and location only; it does not claim application-use-case isolation or structurally separate projections.
-- Exploration: two independent read-only `gpt-5.6-terra` high-reasoning explorers confirmed that composition may depend on every current layer, identified the obsolete `app.js` legacy exemption and fixture, and scoped the strict conversion to DOM, storage, callback, result-union, and entrypoint typing without changing startup behavior.
-- Candidate evidence: moved `src/app.js` to strict `src/composition/main.ts`, rebased only its imports, preserved all current composition callbacks and recovery flows, and changed the native module entrypoint to the new source path. A narrow `PublicMediaSource` query contract replaces the rejected seed-to-projection assertion while retaining the exact public-Media eligibility rule. The entrypoint test asserts that `index.html` loads `src/composition/main.ts` with the existing cache-buster and no longer references `src/app.js`; the architecture checker no longer exempts the retired legacy root, while its remaining-legacy fixture still proves import resolution occurs before exemption. The first independent review found and blocked an unsafe double assertion plus weakened legacy coverage; both were corrected. Repeat focused 57-test validation passed the entrypoint contract, full private-to-public acceptance walkthrough, Graph projection, Map presentation, DOM behavior, and architecture boundaries. `npm run typecheck`, `npm run check:architecture`, `npm run build`, repeated `./scripts/check.sh`, and `git diff --check -- .` all passed. The repeated full repository check passed 136 tests with zero failures. No rendered surface, CSS, interaction contract, or persisted storage representation changed.
-- Independent review: the first fresh `gpt-5.6-sol` high-reasoning reviewer identified and blocked the unsafe assertion and weakened remaining-legacy fixture. After correction and repeat validation, a new fresh `gpt-5.6-sol` high-reasoning reviewer returned clean with no P0-P3 finding or commit blocker. It verified the assertion-free public-Media query, remaining legacy import-resolution coverage, and preserved behavior, privacy, and storage contracts.
-- Accepted evidence: AF-2 is accepted. The sole maintained JavaScript composition root is retired, every maintained source and automated test is TypeScript, and the native browser entrypoint reaches the strict composition root. AF-9 remains open because later application, adapter, projection, compatibility, and final-walkthrough seams still need proportionate coverage.
+- Unit id: af-5-shared-storage-port.
+- Criterion: AF-5 Isolated effects and validated boundaries, with AF-9 focused coverage.
+- Intended result: define one narrow inward key-value storage port used by all four current browser-storage adapters.
+  The persisted-state contracts no longer depend on the concrete DOM `Storage` type or duplicate local port definitions.
+- Evidence claim: all existing selection, featured-Media, pinned-position, and authored-Thought codecs retain their exact keys, version precedence, normalization, recovery, and write behavior while importing one shared kernel effect contract.
+  Strict typechecking, focused adapter coverage, architecture enforcement, the reproducible browser build, and full repository validation passed without a product or visual change.
+- Exact owned diff: `src/kernel/key-value-storage.ts` owns the minimal `getItem` and `setItem` effect contract.
+  The four browser adapters and composition root use it, while tests directly verify its source ownership and actual parameter use.
+- Focused validation: 20 storage-port, storage-adapter, and private-to-public acceptance tests passed.
+  The suite covers authored V2-to-V1-to-legacy precedence, malformed and unavailable storage recovery, read-merge-write protection, and reload durability.
+- Full validation: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, the Vite build, and 137 tests with zero failures.
+  `git diff --check -- .` passed.
+- Rendered validation: not due because the unit changes no rendered surface, interaction, CSS, copy, or persisted representation.
+- Independent review: two first-pass reviews found a bypassable source-contract assertion and remaining multi-sentence plan bullets.
+  Both were corrected with repeated focused and full validation after each material correction.
+  A fresh third `gpt-5.6-sol` high-reasoning review was clean with no P0-P3 finding or commit blocker.
+- Accepted evidence: AF-5 now has bounded evidence that the four current browser-storage adapters share one inward kernel effect contract without behavior or compatibility changes.
+  AF-9 now has focused source-contract coverage for that shared port.
+  AF-5 and AF-9 remain open for their broader required evidence.
 
 ## Owner authorization
 
@@ -120,7 +124,7 @@ queue.
 
 ## Fresh-task handoff state
 
-- Latest accepted unit: af-2-architecture-boundary-test-typescript-seam
+- Latest accepted unit: af-5-shared-storage-port.
 - Latest implementation commit: recorded in this accepted unit's post-commit handoff.
 - Latest temporary handoff: written after this accepted unit commits.
 - Next unit selected: no
@@ -353,6 +357,10 @@ Routine work-unit completion does not require owner review.
   changing eligibility. Repeated focused evidence, the repeated 136-test
   repository validation, and a clean fresh review after two corrected blockers
   support AF-2 acceptance while AF-9 remains open.
+- AF-5 and AF-9 partial unit `af-5-shared-storage-port` accepted on 2026-08-31.
+  A narrow kernel key-value storage port now serves all four current browser-storage adapters and the composition root.
+  The unit preserves each existing storage key, version precedence, normalization, recovery behavior, write path, public and private boundary, and persisted representation.
+  Focused 20-test evidence, repeated full 137-test repository validation, and a fresh clean independent review after two corrected review findings support bounded AF-5 and AF-9 evidence.
 
 ## Administratively closed run log
 

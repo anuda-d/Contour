@@ -87,6 +87,7 @@ They are explicit in the import checker so a new top-level source file cannot si
 
 | Current owner | Migrated source | Preserved responsibility |
 | --- | --- | --- |
+| Shared storage effect port | `src/kernel/key-value-storage.ts` | Narrow injected key-value persistence capability shared by the current browser-storage adapters |
 | Catalogue | `src/product/catalogue/catalogue.ts` | Typed Book and Film facts and fresh editable catalogue reads |
 | Taste selection | `src/product/taste/selection.ts` and `src/adapters/browser/selection-local-storage.ts` | Typed private three-work selection rules and injected browser-storage persistence |
 | Taste featured Media | `src/product/taste/featured.ts` and `src/adapters/browser/featured-local-storage.ts` | Typed deliberate public presentation choices and injected browser-storage persistence |

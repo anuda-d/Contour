@@ -3,13 +3,9 @@ import {
   normalizePinnedState,
   type PinnedState,
 } from "../../product/map/pinned-positions.ts";
+import type { KeyValueStoragePort } from "../../kernel/key-value-storage.ts";
 
 export const PINNED_STORAGE_KEY = "thought-map.prototype.pinned-positions.v1";
-
-export type PinnedStorage = Readonly<{
-  getItem(key: string): string | null;
-  setItem(key: string, value: string): void;
-}>;
 
 export type PinnedLoadResult = Readonly<{
   state: PinnedState;
@@ -19,7 +15,7 @@ export type PinnedLoadResult = Readonly<{
 }>;
 
 export function loadPinnedState(
-  storage: PinnedStorage | null | undefined,
+  storage: KeyValueStoragePort | null | undefined,
   validIds: Iterable<string>,
 ): PinnedLoadResult {
   if (!storage) {
@@ -66,7 +62,7 @@ export function loadPinnedState(
 }
 
 export function savePinnedState(
-  storage: PinnedStorage | null | undefined,
+  storage: KeyValueStoragePort | null | undefined,
   state: PinnedState,
 ): boolean {
   if (!storage) return false;

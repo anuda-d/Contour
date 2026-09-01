@@ -4,13 +4,13 @@ import {
   PINNED_STORAGE_KEY,
   loadPinnedState,
   savePinnedState,
-  type PinnedStorage,
 } from "../../../src/adapters/browser/pinned-local-storage.ts";
+import type { KeyValueStoragePort } from "../../../src/kernel/key-value-storage.ts";
 import { emptyPinnedState, pinPosition } from "../../../src/product/map/pinned-positions.ts";
 
 const validIds = new Set(["thought-a", "book-a", "draft-a"]);
 
-function memoryStorage(initial: Record<string, string> = {}): PinnedStorage {
+function memoryStorage(initial: Record<string, string> = {}): KeyValueStoragePort {
   const values = new Map(Object.entries(initial));
   return {
     getItem: (key) => values.get(key) ?? null,
@@ -65,13 +65,13 @@ test("pinned positions distinguish missing keys, malformed payloads, and unavail
 
 test("pinned adapter recovers read failures and reports write failures without throwing", () => {
   const state = emptyPinnedState();
-  const readFailure: PinnedStorage = {
+  const readFailure: KeyValueStoragePort = {
     getItem: () => {
       throw new Error("storage blocked");
     },
     setItem: () => undefined,
   };
-  const writeFailure: PinnedStorage = {
+  const writeFailure: KeyValueStoragePort = {
     getItem: () => null,
     setItem: () => {
       throw new Error("quota reached");

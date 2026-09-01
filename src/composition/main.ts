@@ -9,11 +9,11 @@ import {
   type ThoughtMutation,
 } from "../product/authorship/draft-state.ts";
 import {
-  type BrowserStorage,
   loadDraftState,
   persistDraftState,
   THOUGHT_STORAGE_KEY,
 } from "../adapters/browser/authored-local-storage.ts";
+import type { KeyValueStoragePort } from "../kernel/key-value-storage.ts";
 import {
   loadFeaturedState,
   saveFeaturedState,
@@ -60,7 +60,7 @@ try {
   const catalogue = getCatalogue();
   const validCatalogueIds = new Set(catalogue.map((item) => item.id));
   const publicMediaIds = getPublicMediaIds(baseGraph);
-  let storage: BrowserStorage | null = null;
+  let storage: KeyValueStoragePort | null = null;
   try {
     storage = window.localStorage;
   } catch {

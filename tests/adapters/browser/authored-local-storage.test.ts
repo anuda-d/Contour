@@ -6,13 +6,13 @@ import {
   persistDraftState,
   THOUGHT_STORAGE_KEY,
   THOUGHT_V1_STORAGE_KEY,
-  type BrowserStorage,
 } from "../../../src/adapters/browser/authored-local-storage.ts";
+import type { KeyValueStoragePort } from "../../../src/kernel/key-value-storage.ts";
 import { createDraft, emptyDraftState, publishDraft } from "../../../src/product/authorship/draft-state.ts";
 
 const validIds = new Set(["left-hand", "arrival"]);
 const input = { id: "draft-one", primaryMediaId: "left-hand", statement: "A private thought.", createdAt: "2026-08-23T12:00:00.000Z" };
-function memoryStorage(): BrowserStorage {
+function memoryStorage(): KeyValueStoragePort {
   const values = new Map<string, string>();
   return { getItem: (key) => values.get(key) ?? null, setItem: (key, value) => { values.set(key, value); } };
 }
@@ -82,8 +82,8 @@ test("a current envelope without Thoughts stays empty without a recovery notice"
 
 test("read and write errors return safe visit-only outcomes", () => {
   const state = createDraft(emptyDraftState(), input, validIds).state;
-  const readFailure: BrowserStorage = { getItem: () => { throw new Error("read"); }, setItem: () => {} };
-  const writeFailure: BrowserStorage = { getItem: () => null, setItem: () => { throw new Error("write"); } };
+  const readFailure: KeyValueStoragePort = { getItem: () => { throw new Error("read"); }, setItem: () => {} };
+  const writeFailure: KeyValueStoragePort = { getItem: () => null, setItem: () => { throw new Error("write"); } };
   assert.equal(loadDraftState(readFailure, validIds).storageError, true);
   assert.equal(persistDraftState(writeFailure, state, validIds).saved, false);
 });

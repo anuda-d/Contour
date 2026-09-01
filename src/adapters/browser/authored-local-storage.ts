@@ -6,13 +6,13 @@ import {
   type ThoughtMutation,
   type ThoughtState,
 } from "../../product/authorship/draft-state.ts";
+import type { KeyValueStoragePort } from "../../kernel/key-value-storage.ts";
 
 export const THOUGHT_STORAGE_KEY = "thought-map.prototype.authored-thoughts.v2";
 export const THOUGHT_V1_STORAGE_KEY = "thought-map.prototype.authored-thoughts.v1";
 export const DRAFT_VERSION = 1;
 export const DRAFT_STORAGE_KEY = "thought-map.prototype.drafts.v1";
 
-export type BrowserStorage = Pick<Storage, "getItem" | "setItem">;
 type MediaIds = ReadonlySet<string> | Iterable<string>;
 export type AuthoredThoughtLoadResult = {
   state: ThoughtState;
@@ -24,7 +24,7 @@ export type AuthoredThoughtLoadResult = {
 };
 
 export function loadDraftState(
-  storage: BrowserStorage | null,
+  storage: KeyValueStoragePort | null,
   validMediaIds: MediaIds,
 ): AuthoredThoughtLoadResult {
   if (!storage) return { state: emptyDraftState(), persistent: false, recovered: false, storageError: true };
@@ -60,7 +60,7 @@ export function loadDraftState(
 }
 
 export function persistDraftState(
-  storage: BrowserStorage | null,
+  storage: KeyValueStoragePort | null,
   state: ThoughtState,
   validMediaIds: MediaIds,
   mutation: ThoughtMutation | null = null,

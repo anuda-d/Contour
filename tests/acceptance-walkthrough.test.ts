@@ -9,10 +9,10 @@ import {
   publishDraft,
 } from "../src/product/authorship/draft-state.ts";
 import {
-  type BrowserStorage,
   loadDraftState,
   persistDraftState,
 } from "../src/adapters/browser/authored-local-storage.ts";
+import type { KeyValueStoragePort } from "../src/kernel/key-value-storage.ts";
 import {
   loadFeaturedState,
   saveFeaturedState,
@@ -42,7 +42,7 @@ import {
 import { toggleFeaturedMedia } from "../src/product/taste/featured.ts";
 import { getSeedGraph } from "../src/adapters/seed/prototype-seed.ts";
 
-function memoryStorage(): BrowserStorage {
+function memoryStorage(): KeyValueStoragePort {
   const values = new Map<string, string>();
   return {
     getItem: (key) => values.get(key) ?? null,
