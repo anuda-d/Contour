@@ -7,7 +7,14 @@ import test from "node:test";
 
 const checker = resolve("scripts/check-import-boundaries.mjs");
 
-function createFixture(files) {
+type FixtureFiles = Record<string, string>;
+
+type CheckerResult = {
+  status: number | null;
+  output: string;
+};
+
+function createFixture(files: FixtureFiles): string {
   const root = mkdtempSync(resolve(tmpdir(), "contour-boundaries-"));
   for (const [file, source] of Object.entries(files)) {
     const path = resolve(root, file);
@@ -17,7 +24,7 @@ function createFixture(files) {
   return root;
 }
 
-function runChecker(root) {
+function runChecker(root: string): CheckerResult {
   const result = spawnSync(process.execPath, [checker, "--root", root], { encoding: "utf8" });
   return { status: result.status, output: `${result.stdout ?? ""}${result.stderr ?? ""}` };
 }
