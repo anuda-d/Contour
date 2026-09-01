@@ -30,11 +30,11 @@ Status: active shared state; standing scheduled owner authorization.
 | AF-2 Complete strict TypeScript | accepted | Every maintained application source and automated test is strict TypeScript. Separate browser and Node-test typechecks, the Vite build, and the checked `src/composition/main.ts` native entrypoint are accepted with no maintained application JavaScript mirror. |
 | AF-3 Deep product modules | open | Partial: authored Thought lifecycle, anchors, publication, and immutable merge now live in a cohesive strict TypeScript product module; other product facts remain in prototype seams. |
 | AF-4 Application use cases | open | None yet. |
-| AF-5 Isolated effects and validated boundaries | open | Partial: all four current browser-storage adapters now share one narrow kernel key-value effect port, selection, featured-Media, pinned-position, and authored-Thought persistence remain injected and normalized at their trust boundaries, and the authored lifecycle no longer reads the wall clock; other effects remain un-migrated. |
+| AF-5 Isolated effects and validated boundaries | open | Partial: browser storage, wall-clock access, and UUID generation now cross narrow inward kernel ports; selection, featured-Media, pinned-position, and authored-Thought persistence remain injected and normalized at their trust boundaries, while browser events, seed input, and form-input boundaries remain open. |
 | AF-6 Explicit projections and privacy | open | Partial: the owner and visitor graph projection now has strict TypeScript ownership and focused evidence for Draft and draft-only Media exclusion, publication-derived public eligibility, dangling-edge filtering, and owner capability removal; application-level structurally separate read models remain open. |
 | AF-7 Durable compatibility | open | Partial: authored V2, V1, and legacy-Draft browser storage now has typed precedence, normalization, migration, recovery, and read-merge-write evidence; other persisted state remains to be completed. |
 | AF-8 Frozen visible behavior | open | None yet. |
-| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, shared storage-port source coverage, and Map composition, DOM-source-contract, product, browser-adapter, CSS-regression, end-to-end acceptance, and architecture-boundary coverage; later migrated seams and final coverage remain open. |
+| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, shared effect-port source coverage, and Map composition, DOM-source-contract, product, browser-adapter, CSS-regression, end-to-end acceptance, and architecture-boundary coverage; later migrated seams and final coverage remain open. |
 | AF-10 Durable completion walkthrough | open | None yet. |
 
 This table records accepted evidence only.
@@ -61,24 +61,20 @@ queue.
 ## Current run
 
 - State: accepted; no successor unit selected.
-- Unit id: af-5-shared-storage-port.
+- Unit id: af-5-clock-and-identifier-ports.
 - Criterion: AF-5 Isolated effects and validated boundaries, with AF-9 focused coverage.
-- Intended result: define one narrow inward key-value storage port used by all four current browser-storage adapters.
-  The persisted-state contracts no longer depend on the concrete DOM `Storage` type or duplicate local port definitions.
-- Evidence claim: all existing selection, featured-Media, pinned-position, and authored-Thought codecs retain their exact keys, version precedence, normalization, recovery, and write behavior while importing one shared kernel effect contract.
-  Strict typechecking, focused adapter coverage, architecture enforcement, the reproducible browser build, and full repository validation passed without a product or visual change.
-- Exact owned diff: `src/kernel/key-value-storage.ts` owns the minimal `getItem` and `setItem` effect contract.
-  The four browser adapters and composition root use it, while tests directly verify its source ownership and actual parameter use.
-- Focused validation: 20 storage-port, storage-adapter, and private-to-public acceptance tests passed.
-  The suite covers authored V2-to-V1-to-legacy precedence, malformed and unavailable storage recovery, read-merge-write protection, and reload durability.
-- Full validation: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, the Vite build, and 137 tests with zero failures.
-  `git diff --check -- .` passed.
+- Intended result: replace the composition root's direct wall-clock and browser UUID calls with narrow, injected effect ports that retain the current ISO timestamp and `draft-` UUID behavior.
+- Evidence claim: private Draft creation and publication obtain timestamps and identifiers through narrow kernel contracts and browser adapters without changing authored lifecycle inputs, storage representations, public eligibility, rendering, or copy.
+- Exact owned diff: `ClockPort` and `IdentifierPort` define the minimal inward capabilities.
+  Browser adapters provide canonical ISO timestamps and UUID values, while the composition root wires them exclusively into new private Draft creation and publication.
+  Focused adapter and source-contract tests verify this ownership and call path.
+- Focused validation: 25 focused adapter, composition, authorship, authored-storage, and private-to-public reload acceptance tests passed.
+  `npm run typecheck`, `npm run check:architecture`, and `npm run build` passed.
+- Full validation: `./scripts/check.sh` and `git diff --check -- .` passed.
 - Rendered validation: not due because the unit changes no rendered surface, interaction, CSS, copy, or persisted representation.
-- Independent review: two first-pass reviews found a bypassable source-contract assertion and remaining multi-sentence plan bullets.
-  Both were corrected with repeated focused and full validation after each material correction.
-  A fresh third `gpt-5.6-sol` high-reasoning review was clean with no P0-P3 finding or commit blocker.
-- Accepted evidence: AF-5 now has bounded evidence that the four current browser-storage adapters share one inward kernel effect contract without behavior or compatibility changes.
-  AF-9 now has focused source-contract coverage for that shared port.
+- Independent review: a fresh read-only `gpt-5.6-sol` high-reasoning reviewer found no P0-P3 finding or commit blocker.
+- Accepted evidence: AF-5 now has bounded evidence that creation and publication use narrow browser clock and UUID effects without changing authored lifecycle behavior.
+  AF-9 now has focused adapter and composition source coverage for those effects.
   AF-5 and AF-9 remain open for their broader required evidence.
 
 ## Owner authorization
@@ -361,6 +357,10 @@ Routine work-unit completion does not require owner review.
   A narrow kernel key-value storage port now serves all four current browser-storage adapters and the composition root.
   The unit preserves each existing storage key, version precedence, normalization, recovery behavior, write path, public and private boundary, and persisted representation.
   Focused 20-test evidence, repeated full 137-test repository validation, and a fresh clean independent review after two corrected review findings support bounded AF-5 and AF-9 evidence.
+- AF-5 and AF-9 partial unit `af-5-clock-and-identifier-ports` accepted on 2026-09-01.
+  Narrow kernel clock and identifier ports now separate browser wall-clock and UUID generation from the composition root's authored create and publish calls.
+  The unit preserves exact `draft-` UUID IDs, canonical ISO timestamps, lifecycle inputs, storage representation, privacy, copy, rendering, and visual behavior.
+  Focused 25-test evidence, strict typechecks, architecture enforcement, a Vite build, full repository validation, and a clean fresh independent review support bounded AF-5 and AF-9 evidence.
 
 ## Administratively closed run log
 

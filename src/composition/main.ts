@@ -14,6 +14,8 @@ import {
   THOUGHT_STORAGE_KEY,
 } from "../adapters/browser/authored-local-storage.ts";
 import type { KeyValueStoragePort } from "../kernel/key-value-storage.ts";
+import type { ClockPort } from "../kernel/clock.ts";
+import type { IdentifierPort } from "../kernel/identifier.ts";
 import {
   loadFeaturedState,
   saveFeaturedState,
@@ -38,6 +40,8 @@ import { getSeedGraph } from "../adapters/seed/prototype-seed.ts";
 import { createMapPresentation } from "./map-presentation.ts";
 import { ThoughtCapture } from "../ui/thought-capture.dom.ts";
 import { WorkChooser } from "../ui/work-chooser.dom.ts";
+import { browserClock } from "../adapters/browser/browser-clock.ts";
+import { browserIdentifier } from "../adapters/browser/browser-identifier.ts";
 
 declare global {
   interface Window {
@@ -54,6 +58,8 @@ type SavedThought = {
 const root = document.querySelector<HTMLElement>("#app");
 if (!root) throw new Error("Expected application root.");
 const mapPresentation = createMapPresentation();
+const clock: ClockPort = browserClock;
+const identifier: IdentifierPort = browserIdentifier;
 
 try {
   const baseGraph = getSeedGraph();
@@ -206,10 +212,10 @@ try {
           : createDraft(
               draftState,
               {
-                id: `draft-${crypto.randomUUID()}`,
+                id: `draft-${identifier.randomUuid()}`,
                 primaryMediaId,
                 statement,
-                createdAt: new Date().toISOString(),
+                createdAt: clock.now(),
               },
               new Set(selectionState.selectedMediaIds),
             );
@@ -337,7 +343,7 @@ try {
         const result = publishDraft(
           draftState,
           id,
-          new Date().toISOString(),
+          clock.now(),
           validCatalogueIds,
         );
         if (!result.changed || !("message" in result)) return result;

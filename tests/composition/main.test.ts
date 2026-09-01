@@ -14,3 +14,19 @@ test("the native browser entrypoint loads the strict TypeScript composition root
   );
   assert.doesNotMatch(entrypoint, /src\/app\.js/);
 });
+
+test("the composition root wires authored timestamps and UUIDs through browser effect ports", () => {
+  const source = readFileSync(resolve("src/composition/main.ts"), "utf8");
+
+  assert.match(source, /import type \{ ClockPort \} from "\.\.\/kernel\/clock\.ts"/);
+  assert.match(source, /import type \{ IdentifierPort \} from "\.\.\/kernel\/identifier\.ts"/);
+  assert.match(source, /import \{ browserClock \} from "\.\.\/adapters\/browser\/browser-clock\.ts"/);
+  assert.match(source, /import \{ browserIdentifier \} from "\.\.\/adapters\/browser\/browser-identifier\.ts"/);
+  assert.match(source, /const clock: ClockPort = browserClock;/);
+  assert.match(source, /const identifier: IdentifierPort = browserIdentifier;/);
+  assert.match(source, /id: `draft-\$\{identifier\.randomUuid\(\)\}`/);
+  assert.match(source, /createdAt: clock\.now\(\),/);
+  assert.match(source, /publishDraft\(\s*\n\s*draftState,\s*\n\s*id,\s*\n\s*clock\.now\(\),/);
+  assert.doesNotMatch(source, /crypto\.randomUUID\(\)/);
+  assert.doesNotMatch(source, /new Date\(\)\.toISOString\(\)/);
+});
