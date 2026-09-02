@@ -29,12 +29,12 @@ Status: active shared state; standing scheduled owner authorization.
 | AF-1 Enforced architecture contract | accepted | Architecture decision records, six-key compatibility inventory, and the checked import-boundary gate were accepted after 30 focused and 112 repository tests plus clean fresh review. |
 | AF-2 Complete strict TypeScript | accepted | Every maintained application source and automated test is strict TypeScript. Separate browser and Node-test typechecks, the Vite build, and the checked `src/composition/main.ts` native entrypoint are accepted with no maintained application JavaScript mirror. |
 | AF-3 Deep product modules | open | Partial: authored Thought lifecycle, anchors, publication, and immutable merge now live in a cohesive strict TypeScript product module; other product facts remain in prototype seams. |
-| AF-4 Application use cases | open | Partial: authored-Thought cross-tab reload, deliberate selection toggle or confirmation, and public featured-Media toggle now use screen-neutral application outcomes through specific typed persistence ports; other current workflows remain composition-owned. |
-| AF-5 Isolated effects and validated boundaries | open | Partial: browser localStorage, DOM-root acquisition, Map resize listening, Map drag-click suppression timing, the existing Map debug-global publication, storage adapters, wall-clock access, UUID generation, authored-Thought cross-tab events, authored-Thought reload, selection persistence, and featured-Media persistence now cross narrow inward ports; pinned-position, other browser events, seed input, and form-input boundaries remain open. |
+| AF-4 Application use cases | open | Partial: authored-Thought cross-tab reload and publication, deliberate selection toggle or confirmation, public featured-Media toggle, and spatial pin or unpin commands now use screen-neutral application outcomes through specific typed persistence ports; other current workflows remain composition-owned. |
+| AF-5 Isolated effects and validated boundaries | open | Partial: browser localStorage, DOM-root acquisition, Map resize listening, Map drag-click suppression timing, the existing Map debug-global publication, storage adapters, wall-clock access, UUID generation, authored-Thought cross-tab events, authored-Thought reload and publication persistence, selection persistence, featured-Media persistence, and pinned-position persistence now cross narrow inward ports; other browser events, seed input, and form-input boundaries remain open. |
 | AF-6 Explicit projections and privacy | open | Partial: the owner and visitor graph projection now has strict TypeScript ownership and focused evidence for Draft and draft-only Media exclusion, publication-derived public eligibility, dangling-edge filtering, and owner capability removal; application-level structurally separate read models remain open. |
 | AF-7 Durable compatibility | open | Partial: authored V2, V1, and legacy-Draft browser storage now has typed precedence, normalization, migration, recovery, and read-merge-write evidence; other persisted state remains to be completed. |
 | AF-8 Frozen visible behavior | open | None yet. |
-| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, shared effect-port source coverage, browser-root, browser-resize, browser-clock, browser-Map-global, selection and featured-Media application and adapter coverage, plus Map composition, DOM-source-contract, product, application-use-case, browser-adapter, CSS-regression, end-to-end acceptance, and architecture-boundary coverage; later migrated seams and final coverage remain open. |
+| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, shared effect-port source coverage, browser-root, browser-resize, browser-clock, browser-Map-global, authored-publication, selection, featured-Media, and pinned-position application and adapter coverage, plus Map composition, DOM-source-contract, product, CSS-regression, end-to-end acceptance, and architecture-boundary coverage; later migrated seams and final coverage remain open. |
 | AF-10 Durable completion walkthrough | open | None yet. |
 
 This table records accepted evidence only.
@@ -61,17 +61,19 @@ queue.
 ## Current run
 
 - State: accepted; no current unit.
-- Unit id: af-4-pinned-position-use-case.
+- Unit id: af-4-publish-authored-thought-use-case.
 - Criterion: AF-4 Application use cases, AF-5 Isolated effects and validated boundaries, and AF-9 Layered test and quality gates.
-- Accepted evidence: pin and unpin now coordinate existing spatial policy and persistence through screen-neutral application use cases with an injected narrow port while composition retains browser wiring and Map rendering.
-- Exact owned diff: pinned-position application use cases and persistence port, browser adapter factory, composition callback delegation and startup-recovery rewrite, focused application, adapter, and composition source-contract tests, and synchronized operational evidence.
-- Focused validation: 21 pinned product, application, adapter, and composition checks passed.
-  Strict browser and test typechecks, architecture enforcement, Vite production build, and `git diff --check --` passed.
-- Full validation: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, Vite production build, and 177 tests with zero failures.
-- Rendered validation: not required because the owned diff changes no rendered surface, CSS, copy, persisted representation, or interaction policy.
-- Explorer evidence: three independent read-only audits confirmed V1 same-key normalization, current composable non-user eligibility including private Drafts, silent startup recovery rewrite behavior, exact pin and unpin fallback copy, no-op non-persistence, and the smallest application-port seam.
-- Independent review: fresh read-only `gpt-5.6-sol` high-reasoning review was clean with no P0-P3 finding or commit blocker.
-- Scope guard: this changes no rendered surface, interaction behavior, persisted state, public or private projection, CSS, copy, or design tokens.
+- Intended result: a screen-neutral authored-Thought publication use case coordinates the existing lifecycle command and exact read-merge-write persistence mutation through a narrow injected port while composition retains graph rebuilding and Map rendering.
+- Evidence claim: deterministic application tests with a fake clock and persistence port, the existing authored-storage adapter contract, and focused composition coverage demonstrate that the Map callback no longer coordinates publication mutation and persistence directly.
+- Explorer evidence: three independent read-only audits identified publication as the smallest remaining composition-owned transaction and confirmed its exact success, failure, no-op, privacy, mutation-field, and selected-node refresh behavior.
+- Exact owned diff: authored-Thought publication use case and persistence port, browser adapter factory, composition callback delegation, focused application, adapter, and composition source-contract tests, and synchronized operational evidence.
+- Focused validation: 58 authored product, application, adapter, projection, composition, and Map interaction checks passed.
+  Strict browser and test typechecks, architecture enforcement, and `git diff --check -- .` passed.
+- Full validation: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, the Vite production build, and 183 tests with zero failures.
+- Scope guard: no rendered surface, interaction policy, CSS, copy, storage key or representation, public or private projection rule, camera behavior, or design token may change.
+- Rendered validation: not required because the owned diff changes no rendered surface, CSS, copy, storage representation, projection rule, camera behavior, or interaction policy.
+- Independent review: the first fresh reviewer found one P2 operational-evidence inconsistency and no code-level finding.
+  After correction and repeated validation, a second fresh `gpt-5.6-sol` high-reasoning review returned clean with no P0-P3 finding or commit blocker.
 
 ## Owner authorization
 
@@ -116,7 +118,7 @@ queue.
 
 ## Fresh-task handoff state
 
-- Latest accepted unit: af-4-pinned-position-use-case.
+- Latest accepted unit: af-4-publish-authored-thought-use-case.
 - Latest implementation commit: recorded in this accepted unit's post-commit handoff.
 - Latest temporary handoff: written after this accepted unit commits.
 - Next unit selected: no.
@@ -145,19 +147,20 @@ without discarding uncommitted work or inferring missing decisions.
 ## Current unit evidence
 
 - State: accepted; no current unit.
-- Unit id: af-4-pinned-position-use-case.
+- Unit id: af-4-publish-authored-thought-use-case.
 - Criterion: AF-4 Application use cases, AF-5 Isolated effects and validated boundaries, and AF-9 Layered test and quality gates.
-- Intended result: screen-neutral pinned-position application use cases coordinate existing pin and unpin policy through a narrow injected persistence port while composition retains browser wiring and Map rendering.
-- Evidence claim: deterministic application tests with a fake persistence port and focused composition coverage demonstrate that Map callbacks no longer coordinate pinned-position mutation and persistence directly.
-- Exact owned diff: pinned-position application use cases and persistence port, browser adapter factory, composition callback delegation and startup-recovery rewrite, focused application, adapter, and composition source-contract tests, and synchronized operational evidence.
-- Explorer evidence: three independent read-only audits confirmed V1 same-key normalization, current composable non-user eligibility including private Drafts, silent startup recovery rewrite behavior, exact pin and unpin fallback copy, no-op non-persistence, and the smallest application-port seam.
-- Focused validation: 21 pinned product, application, adapter, and composition checks passed.
-  Strict browser and test typechecks, architecture enforcement, Vite production build, and `git diff --check --` passed.
-- Full validation: `./scripts/check.sh` passed.
-  The repository test suite also passed 177 tests with zero failures.
-- Scope guard: no rendered surface, interaction policy, CSS, copy, persisted representation, public or private projection, or design token may change.
-- Rendered validation: not required because the selected seam preserves the current UI callback contract and changes no rendered surface, CSS, copy, persisted representation, or interaction policy.
-- Independent review: fresh read-only `gpt-5.6-sol` high-reasoning review was clean with no P0-P3 finding or commit blocker.
+- Intended result: a screen-neutral authored-Thought publication use case coordinates the existing lifecycle command and exact read-merge-write persistence mutation through a narrow injected port while composition retains graph rebuilding and Map rendering.
+- Evidence claim: deterministic application tests with a fake clock and persistence port, the existing authored-storage adapter contract, and focused composition coverage demonstrate that the Map callback no longer coordinates publication mutation and persistence directly.
+- Exact owned diff: authored-Thought publication use case and persistence port, browser adapter factory, composition callback delegation, focused application, adapter, and composition source-contract tests, and synchronized operational evidence.
+- Explorer evidence: three independent read-only audits identified publication as the smallest remaining composition-owned transaction.
+  They confirmed the canonical clock timestamp, exact product outcomes, no-op non-persistence, `["status", "publishedAt"]` mutation scope, stale-write merge protection, visit-only fallback copy, and selected-node Map refresh that must remain unchanged.
+- Focused validation: 58 authored product, application, adapter, projection, composition, and Map interaction checks passed.
+  Strict browser and test typechecks, architecture enforcement, and `git diff --check -- .` passed.
+- Full validation: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, the Vite production build, and 183 tests with zero failures.
+- Scope guard: no rendered surface, interaction policy, CSS, copy, storage key or representation, public or private projection rule, camera behavior, or design token may change.
+- Rendered validation: not required because the owned diff changes no rendered surface, CSS, copy, storage representation, projection rule, camera behavior, or interaction policy.
+- Independent review: the first fresh reviewer found one P2 operational-evidence inconsistency and no code-level finding.
+  After correction and repeated validation, a second fresh `gpt-5.6-sol` high-reasoning review returned clean with no P0-P3 finding or commit blocker.
 
 ## Goal-readiness evidence
 
@@ -398,6 +401,10 @@ Routine work-unit completion does not require owner review.
   Screen-neutral pin and unpin application use cases now coordinate the existing spatial policy through an injected persistence port.
   They preserve current composable non-user eligibility including private Drafts, V1 same-key normalization and recovery, silent startup rewrite behavior, exact product and visit-only fallback messages, no-op non-persistence, current UI callback behavior, and spatial-only meaning.
   Focused 21-check evidence, full 177-test repository validation, and a clean fresh independent review support bounded AF-4, AF-5, and AF-9 evidence.
+- AF-4, AF-5, and AF-9 partial unit `af-4-publish-authored-thought-use-case` accepted on 2026-09-02.
+  A screen-neutral publication use case now coordinates the existing authored-Thought lifecycle command, canonical clock timestamp, exact read-merge-write persistence mutation, no-op outcomes, and visit-only fallback through an injected narrow port.
+  It preserves irreversible publication, concurrent authored state, exact product and persistence messages, visitor eligibility, selected-node Map refresh, camera behavior, storage compatibility, and private Draft boundaries.
+  Repeated focused 58-check evidence, repeated full 183-test repository validation, and a clean second fresh independent review after correcting operational evidence support bounded AF-4, AF-5, and AF-9 evidence.
 
 ## Administratively closed run log
 

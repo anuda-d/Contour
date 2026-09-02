@@ -27,7 +27,7 @@ test("the composition root wires authored timestamps and UUIDs through browser e
   assert.match(source, /id: `draft-\$\{identifier\.randomUuid\(\)\}`/);
   assert.match(source, /createdAt: clock\.now\(\),/);
   assert.match(source, /map = new ThoughtMap\(root, graph, \{[\s\S]*?clock,/);
-  assert.match(source, /publishDraft\(\s*\n\s*draftState,\s*\n\s*id,\s*\n\s*clock\.now\(\),/);
+  assert.match(source, /publishAuthoredThought\(\s*\n\s*draftState,\s*\n\s*id,\s*\n\s*validCatalogueIds,\s*\n\s*clock,/);
   assert.doesNotMatch(source, /crypto\.randomUUID\(\)/);
   assert.doesNotMatch(source, /new Date\(\)\.toISOString\(\)/);
 });
@@ -157,4 +157,29 @@ test("the composition root delegates pinned-position mutation and persistence to
   assert.match(source, /const result = unpinPosition\(pinnedState, id, pinnedPersistence\);/);
   assert.doesNotMatch(source, /from "\.\.\/product\/map\/pinned-positions\.ts"/);
   assert.doesNotMatch(source, /savePinnedState\(/);
+});
+
+test("the composition root delegates authored publication and persistence to the application use case", () => {
+  const source = readFileSync(resolve("src/composition/main.ts"), "utf8");
+
+  assert.match(
+    source,
+    /import \{ publishAuthoredThought \} from "\.\.\/application\/authorship\/publish-authored-thought\.ts"/,
+  );
+  assert.match(
+    source,
+    /const authoredThoughtPersistence = createAuthoredThoughtPersistencePort\(storage, validCatalogueIds\);/,
+  );
+  assert.match(
+    source,
+    /onPublishDraft: \(id\) => \{\s*const result = publishAuthoredThought\(\s*draftState,\s*id,\s*validCatalogueIds,\s*clock,\s*authoredThoughtPersistence,\s*\);/,
+  );
+  assert.match(source, /activeMap\(\)\.updateGraph\(graph, \{ selectId: id, message: draftMessage \}\);/);
+
+  const publishCallback = source.match(
+    /onPublishDraft: \(id\) => \{([\s\S]*?)\n\s*\},\n\s*onToggleFeatured:/,
+  )?.[1] ?? "";
+  assert.doesNotMatch(publishCallback, /publishDraft\(/);
+  assert.doesNotMatch(publishCallback, /persistDraftState\(/);
+  assert.doesNotMatch(publishCallback, /clock\.now\(/);
 });

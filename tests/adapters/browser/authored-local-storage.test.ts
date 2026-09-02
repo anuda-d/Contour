@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   DRAFT_STORAGE_KEY,
+  createAuthoredThoughtPersistencePort,
   createAuthoredThoughtReloadPort,
   loadDraftState,
   persistDraftState,
@@ -54,6 +55,38 @@ test("read-merge-write retains new Thoughts and prevents stale unpublication", (
   const staleWithNew = createDraft(initial, { id: "draft-two", primaryMediaId: "arrival", statement: "Another private thought.", createdAt: "2026-08-24T09:31:00.000Z" }, validIds).state;
   const saved = persistDraftState(storage, staleWithNew, validIds, { id: "draft-two", fields: [] });
   assert.deepEqual(saved.state.thoughts.map((thought) => ({ id: thought.id, status: thought.status })), [{ id: "draft-one", status: "published" }, { id: "draft-two", status: "draft" }]);
+});
+
+test("the authored persistence port retains concurrent state through read-merge-write", () => {
+  const storage = memoryStorage();
+  const initial = createDraft(emptyDraftState(), input, validIds).state;
+  persistDraftState(storage, initial, validIds);
+  const remote = createDraft(
+    initial,
+    {
+      id: "draft-two",
+      primaryMediaId: "arrival",
+      statement: "Another private thought.",
+      createdAt: "2026-08-24T09:31:00.000Z",
+    },
+    validIds,
+  ).state;
+  persistDraftState(storage, remote, validIds, { id: "draft-two", fields: [] });
+  const published = publishDraft(initial, input.id, "2026-08-24T09:32:00.000Z", validIds).state;
+
+  const saved = createAuthoredThoughtPersistencePort(storage, validIds).save(published, {
+    id: input.id,
+    fields: ["status", "publishedAt"],
+  });
+
+  assert.equal(saved.saved, true);
+  assert.deepEqual(
+    saved.state.thoughts.map((thought) => ({ id: thought.id, status: thought.status })),
+    [
+      { id: "draft-one", status: "published" },
+      { id: "draft-two", status: "draft" },
+    ],
+  );
 });
 
 test("unavailable storage degrades to the current visit", () => {

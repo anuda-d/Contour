@@ -4,17 +4,18 @@ import {
   connectDraft,
   createDraft,
   editDraft,
-  publishDraft,
   type Thought,
   type ThoughtMutation,
 } from "../product/authorship/draft-state.ts";
 import {
+  createAuthoredThoughtPersistencePort,
   createAuthoredThoughtReloadPort,
   loadDraftState,
   persistDraftState,
   THOUGHT_STORAGE_KEY,
 } from "../adapters/browser/authored-local-storage.ts";
 import { reloadAuthoredThoughts } from "../application/authorship/reload-authored-thoughts.ts";
+import { publishAuthoredThought } from "../application/authorship/publish-authored-thought.ts";
 import type { KeyValueStoragePort } from "../kernel/key-value-storage.ts";
 import type { ClockPort } from "../kernel/clock.ts";
 import type { IdentifierPort } from "../kernel/identifier.ts";
@@ -75,6 +76,7 @@ try {
   const publicMediaIds = getPublicMediaIds(baseGraph);
   const storage: KeyValueStoragePort | null = getBrowserKeyValueStorage(window);
   const authoredThoughts = createAuthoredThoughtReloadPort(storage, validCatalogueIds);
+  const authoredThoughtPersistence = createAuthoredThoughtPersistencePort(storage, validCatalogueIds);
   const selectionPersistence = createSelectionPersistencePort(storage);
   const featuredPersistence = createFeaturedPersistencePort(storage);
   const pinnedPersistence = createPinnedPositionPersistencePort(storage);
@@ -338,25 +340,19 @@ try {
       onEditDraft: (id) => openCapture(id),
       onConnectDraft: (id) => openBridge(id),
       onPublishDraft: (id) => {
-        const result = publishDraft(
+        const result = publishAuthoredThought(
           draftState,
           id,
-          clock.now(),
           validCatalogueIds,
+          clock,
+          authoredThoughtPersistence,
         );
         if (!result.changed || !("message" in result)) return result;
         draftState = result.state;
-        const persisted = persistDraftState(storage, draftState, validCatalogueIds, {
-          id,
-          fields: ["status", "publishedAt"],
-        });
-        draftState = persisted.state;
-        draftMessage = persisted.saved
-          ? result.message
-          : "Thought published for this visit. The saved Draft was not changed.";
+        draftMessage = result.message;
         graph = composeGraphWithDrafts(baseGraph, draftState);
         activeMap().updateGraph(graph, { selectId: id, message: draftMessage });
-        return { ...result, state: draftState, message: draftMessage };
+        return result;
       },
       onToggleFeatured: (id) => {
         const media = graph.nodes.find((node) => node.id === id && node.type === "media");
