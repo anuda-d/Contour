@@ -30,11 +30,11 @@ Status: active shared state; standing scheduled owner authorization.
 | AF-2 Complete strict TypeScript | accepted | Every maintained application source and automated test is strict TypeScript. Separate browser and Node-test typechecks, the Vite build, and the checked `src/composition/main.ts` native entrypoint are accepted with no maintained application JavaScript mirror. |
 | AF-3 Deep product modules | open | Partial: authored Thought lifecycle, anchors, publication, and immutable merge now live in a cohesive strict TypeScript product module; other product facts remain in prototype seams. |
 | AF-4 Application use cases | open | Partial: the authored-Thought cross-tab reload workflow now has a screen-neutral application use case that returns an explicit unavailable-storage outcome or a recomposed graph and message through a specific typed persistence port; other current workflows remain composition-owned. |
-| AF-5 Isolated effects and validated boundaries | open | Partial: browser localStorage, DOM-root acquisition, Map resize listening, and the existing Map debug-global publication, storage adapters, wall-clock access, UUID generation, authored-Thought cross-tab events, and the authored-Thought reload adapter now cross narrow inward ports; selection, featured-Media, pinned-position, and authored-Thought persistence remain injected and normalized at their trust boundaries, while other browser events, seed input, and form-input boundaries remain open. |
+| AF-5 Isolated effects and validated boundaries | open | Partial: browser localStorage, DOM-root acquisition, Map resize listening, Map drag-click suppression timing, and the existing Map debug-global publication, storage adapters, wall-clock access, UUID generation, authored-Thought cross-tab events, and the authored-Thought reload adapter now cross narrow inward ports; selection, featured-Media, pinned-position, and authored-Thought persistence remain injected and normalized at their trust boundaries, while other browser events, seed input, and form-input boundaries remain open. |
 | AF-6 Explicit projections and privacy | open | Partial: the owner and visitor graph projection now has strict TypeScript ownership and focused evidence for Draft and draft-only Media exclusion, publication-derived public eligibility, dangling-edge filtering, and owner capability removal; application-level structurally separate read models remain open. |
 | AF-7 Durable compatibility | open | Partial: authored V2, V1, and legacy-Draft browser storage now has typed precedence, normalization, migration, recovery, and read-merge-write evidence; other persisted state remains to be completed. |
 | AF-8 Frozen visible behavior | open | None yet. |
-| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, shared effect-port source coverage, browser-root, browser-resize, and browser-Map-global adapter coverage, and Map composition, DOM-source-contract, product, application-use-case, browser-adapter, CSS-regression, end-to-end acceptance, and architecture-boundary coverage; later migrated seams and final coverage remain open. |
+| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, shared effect-port source coverage, browser-root, browser-resize, browser-clock, and browser-Map-global adapter coverage, and Map composition, DOM-source-contract, product, application-use-case, browser-adapter, CSS-regression, end-to-end acceptance, and architecture-boundary coverage; later migrated seams and final coverage remain open. |
 | AF-10 Durable completion walkthrough | open | None yet. |
 
 This table records accepted evidence only.
@@ -61,16 +61,16 @@ queue.
 ## Current run
 
 - State: accepted; no current unit.
-- Unit id: af-5-browser-resize-event-port.
+- Unit id: af-5-map-click-suppression-clock-port.
 - Criterion: AF-5 Isolated effects and validated boundaries and AF-9 Layered test and quality gates.
-- Accepted evidence: the typed browser resize port owns the existing passive remove-then-add listener replacement while `ThoughtMap` consumes only the injected port.
-- Exact owned diff: a narrow kernel resize port and browser adapter preserve the existing remove-then-add passive listener replacement, while the Map consumes the injected port and composition performs the only concrete browser wiring.
-- Focused validation: adapter, Map UI, and composition source-contract suites passed 22 tests.
-  Strict browser and test typechecks, architecture enforcement, the Vite production build, and `git diff --check -- .` passed.
-- Full validation: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, the Vite production build, and 158 tests with zero failures.
+- Accepted evidence: the browser clock adapter now owns Map drag-click suppression time, while `ThoughtMap` consumes its injected port for the existing 500 ms inclusive deadline.
+- Exact owned diff: the shared clock port, browser clock adapter, Map and composition wiring, focused source-contract tests, and synchronized operational evidence.
+- Focused validation: browser-clock, Map UI, and composition coverage passed 24 focused checks.
+  Strict browser and test typechecks, architecture enforcement, Vite production build, and `git diff --check --` passed.
+- Full validation: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, Vite production build, and 160 tests with zero failures after the review correction.
 - Rendered validation: not required because the owned diff changes no rendered surface, CSS, copy, persisted representation, or interaction policy.
-- Explorer evidence: two independent read-only audits confirmed the Map is the sole resize listener, the handler only reapplies the existing transform, and listener replacement remains synchronous, passive, and teardown-free.
-- Independent review: the first fresh review found a P2 contradiction between the current active run and `CURRENT.md` stop condition; it was corrected, focused and full validation were repeated, and a second fresh review was clean with no P0-P3 finding or commit blocker.
+- Explorer evidence: the selected direct-effect seam has only the two existing Map timestamp reads; form input remains runtime-validated in product commands and a publish use case is a larger later seam.
+- Independent review: the first fresh review found one P2 operational-state contradiction and two P3 stale descriptions; after correction and repeated full validation, the second fresh review was clean with no P0-P3 finding or commit blocker.
 - Scope guard: this changes no rendered surface, interaction behavior, persisted state, public or private projection, CSS, copy, or design tokens.
 
 ## Owner authorization
@@ -116,10 +116,10 @@ queue.
 
 ## Fresh-task handoff state
 
-- Latest accepted unit: af-5-browser-resize-event-port.
+- Latest accepted unit: af-5-map-click-suppression-clock-port.
 - Latest implementation commit: recorded in this accepted unit's post-commit handoff.
 - Latest temporary handoff: written after this accepted unit commits.
-- Next unit selected: no
+- Next unit selected: no.
 
 Every unit task writes a compact redacted handoff document in the operating
 system temporary directory and then stops.
@@ -146,18 +146,17 @@ without discarding uncommitted work or inferring missing decisions.
 
 - State: accepted; no current unit.
 - Criterion: AF-5 Isolated effects and validated boundaries and AF-9 Layered test and quality gates.
-- Accepted evidence: a narrow typed resize port replaces direct `window` access in the Map UI adapter without changing listener timing or the frozen interaction contract.
-- Exact owned diff: `src/kernel/resize-event.ts`, `src/adapters/browser/browser-resize-event.ts`, Map and composition wiring, plus adapter and source-contract tests.
-- Observed evidence: the adapter test proves same-listener synchronous `removeEventListener("resize", listener)` before passive `addEventListener`; Map source consumes only `resizeEvents.replaceListener`; composition injects the typed browser adapter.
-- Focused validation: 22 adapter, Map UI, and composition contract tests passed.
-  Strict browser and test typechecks, architecture enforcement, Vite production build, and `git diff --check -- .` passed.
-- Full validation: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, Vite production build, and 158 tests with zero failures.
+- Accepted evidence: Map drag-click suppression now uses the injected browser clock port and preserves the exact 500 ms inclusive deadline.
+- Focused validation: browser-clock, Map, and composition coverage passed 24 focused checks.
+  Strict typechecks, architecture enforcement, Vite production build, and `git diff --check --` passed.
+- Full validation: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, Vite production build, and 160 tests with zero failures after the review correction.
 - Rendered validation: not required because the selected seam changes no rendered surface, CSS, copy, persisted representation, or interaction policy.
-- Explorer evidence: two independent read-only audits confirmed the Map is the sole resize listener and the replacement ordering, passive option, stable callback identity, and no-teardown behavior are frozen requirements.
-- Independent review: the first fresh review found the stale `CURRENT.md` stop condition; after correction and repeated validation, the second fresh `gpt-5.6-sol` high-reasoning review was clean with no P0-P3 finding or commit blocker.
-- Design Read: preserved Editorial Constellation Map for thoughtful cultural discovery; the existing spatial interaction language remains exact.
-- Design dials: variance 7, motion 4, density 4, preserved from the accepted foundation.
-- Design audit and pre-flight: no visual change is intended; preserve existing responsive, pointer, keyboard, light-mode, and dark-mode behavior.
+- Scope guard: no rendered surface, interaction policy, CSS, copy, persisted state, public or private projection, or design token may change.
+- Explorer evidence: one audit identified this as the smallest remaining direct-effect seam; form callbacks already forward raw input to product-owned runtime validation; a publication use case is a larger viable future unit.
+- Design Read: preserve-mode Editorial Constellation Map for thoughtful cultural discovery, retaining the native DOM and CSS interaction language.
+- Design dials: variance 7, motion 4, density 4, unchanged.
+- Design audit and pre-flight: no visual change is intended; preserve responsive, pointer, keyboard, light-mode, and dark-mode behavior. The selected effect seam does not introduce new design-system, layout, copy, color, or motion work.
+- Independent review: the first fresh review found a P2 stale `CURRENT.md` stop condition plus two P3 stale candidate descriptions; after correction and repeated validation, the second fresh review was clean with no P0-P3 finding or commit blocker.
 
 ## Goal-readiness evidence
 
@@ -383,6 +382,9 @@ Routine work-unit completion does not require owner review.
 - AF-5 and AF-9 partial unit `af-5-browser-resize-event-port` accepted on 2026-09-01.
   A narrow kernel resize port and browser adapter now own the native Map's synchronous passive remove-then-add listener replacement while `ThoughtMap` has no direct browser-global resize access.
   Focused 22-test evidence, repeated full 158-test repository validation after the review-driven operational-state correction, and a clean second fresh independent review support bounded AF-5 and AF-9 evidence.
+- AF-5 and AF-9 partial unit `af-5-map-click-suppression-clock-port` accepted on 2026-09-01.
+  The shared browser clock now owns the Map's numeric timestamp reads, while `ThoughtMap` retains the exact 500 ms post-drag suppression and inclusive deadline comparison through its injected port.
+  Focused 24-check evidence, repeated full 160-test repository validation after review-driven documentation correction, and a clean second fresh independent review support bounded AF-5 and AF-9 evidence.
 
 ## Administratively closed run log
 

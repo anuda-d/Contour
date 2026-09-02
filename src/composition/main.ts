@@ -329,6 +329,7 @@ try {
   } else {
     map = new ThoughtMap(root, graph, {
       presentation: mapPresentation,
+      clock,
       resizeEvents,
       mode: mapMode,
       selectionState,

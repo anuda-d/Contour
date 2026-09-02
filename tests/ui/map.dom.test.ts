@@ -12,6 +12,14 @@ import {
 
 const mapSource = await readFile(new URL("../../src/ui/map.dom.ts", import.meta.url), "utf8");
 
+test("Map drag-click suppression reads time through the injected clock port", () => {
+  assert.match(mapSource, /import type \{ ClockPort \} from "\.\.\/kernel\/clock\.ts"/);
+  assert.match(mapSource, /clock: ClockPort;/);
+  assert.match(mapSource, /this\.options\.clock\.nowMilliseconds\(\) <= this\.suppressedClick\.until/);
+  assert.match(mapSource, /until: this\.options\.clock\.nowMilliseconds\(\) \+ 500/);
+  assert.doesNotMatch(mapSource, /Date\.now\(\)/);
+});
+
 test("Map resize listening is injected through a typed port with frozen replacement timing", () => {
   assert.match(mapSource, /import type \{ ResizeEventPort \} from "\.\.\/kernel\/resize-event\.ts"/);
   assert.match(mapSource, /resizeEvents: ResizeEventPort;/);

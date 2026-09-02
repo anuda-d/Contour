@@ -26,6 +26,7 @@ test("the composition root wires authored timestamps and UUIDs through browser e
   assert.match(source, /const identifier: IdentifierPort = browserIdentifier;/);
   assert.match(source, /id: `draft-\$\{identifier\.randomUuid\(\)\}`/);
   assert.match(source, /createdAt: clock\.now\(\),/);
+  assert.match(source, /map = new ThoughtMap\(root, graph, \{[\s\S]*?clock,/);
   assert.match(source, /publishDraft\(\s*\n\s*draftState,\s*\n\s*id,\s*\n\s*clock\.now\(\),/);
   assert.doesNotMatch(source, /crypto\.randomUUID\(\)/);
   assert.doesNotMatch(source, /new Date\(\)\.toISOString\(\)/);

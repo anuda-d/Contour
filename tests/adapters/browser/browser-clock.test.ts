@@ -7,3 +7,7 @@ test("the browser clock produces canonical ISO timestamps", () => {
 
   assert.equal(new Date(timestamp).toISOString(), timestamp);
 });
+
+test("the browser clock produces a finite current millisecond value", () => {
+  assert.ok(Number.isFinite(browserClock.nowMilliseconds()));
+});
