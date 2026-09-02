@@ -12,6 +12,7 @@ import {
 } from "../adapters/browser/authored-local-storage.ts";
 import { reloadAuthoredThoughts } from "../application/authorship/reload-authored-thoughts.ts";
 import { recoverAuthoredThoughts } from "../application/authorship/recover-authored-thoughts.ts";
+import { recoverSelection } from "../application/taste/recover-selection.ts";
 import { publishAuthoredThought } from "../application/authorship/publish-authored-thought.ts";
 import { saveAuthoredDraft } from "../application/authorship/save-authored-draft.ts";
 import type { KeyValueStoragePort } from "../kernel/key-value-storage.ts";
@@ -35,6 +36,7 @@ import {
 } from "../application/map/update-pinned-positions.ts";
 import {
   createSelectionPersistencePort,
+  createSelectionRecoveryPersistencePort,
   loadSelection,
 } from "../adapters/browser/selection-local-storage.ts";
 import {
@@ -80,6 +82,7 @@ try {
     validCatalogueIds,
   );
   const selectionPersistence = createSelectionPersistencePort(storage);
+  const selectionRecoveryPersistence = createSelectionRecoveryPersistencePort(storage);
   const featuredPersistence = createFeaturedPersistencePort(storage);
   const pinnedPersistence = createPinnedPositionPersistencePort(storage);
 
@@ -131,7 +134,9 @@ try {
   };
 
   if (loaded.recovered && loaded.persistent) {
-    persistent = selectionPersistence.save(selectionState);
+    const recoveredSelection = recoverSelection(selectionState, selectionRecoveryPersistence);
+    selectionState = recoveredSelection.state;
+    persistent = recoveredSelection.saved;
   }
   if (loadedFeatured.recovered && loadedFeatured.persistent) {
     if (!featuredPersistence.save(featuredState)) {

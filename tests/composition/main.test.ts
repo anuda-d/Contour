@@ -123,7 +123,7 @@ test("the composition root delegates selection mutation and persistence to the a
 
   assert.match(
     source,
-    /import \{\s*createSelectionPersistencePort,\s*loadSelection,\s*\} from "\.\.\/adapters\/browser\/selection-local-storage\.ts"/,
+    /import \{\s*createSelectionPersistencePort,\s*createSelectionRecoveryPersistencePort,\s*loadSelection,\s*\} from "\.\.\/adapters\/browser\/selection-local-storage\.ts"/,
   );
   assert.match(
     source,
@@ -135,6 +135,25 @@ test("the composition root delegates selection mutation and persistence to the a
   assert.match(source, /if \(result\.saved !== null\) \{\s*persistent = result\.saved;\s*map\?\.updateSelectionState\(selectionState\);/);
   assert.doesNotMatch(source, /toggleMediaSelection\(/);
   assert.doesNotMatch(source, /saveSelection\(/);
+});
+
+test("the composition root delegates selection startup recovery persistence to the application use case", () => {
+  const source = readFileSync(resolve("src/composition/main.ts"), "utf8");
+
+  assert.match(
+    source,
+    /import \{ recoverSelection \} from "\.\.\/application\/taste\/recover-selection\.ts"/,
+  );
+  assert.match(
+    source,
+    /createSelectionRecoveryPersistencePort,/
+  );
+  assert.match(source, /const selectionRecoveryPersistence = createSelectionRecoveryPersistencePort\(storage\);/);
+  assert.match(
+    source,
+    /if \(loaded\.recovered && loaded\.persistent\) \{\s*const recoveredSelection = recoverSelection\(selectionState, selectionRecoveryPersistence\);\s*selectionState = recoveredSelection\.state;\s*persistent = recoveredSelection\.saved;\s*\}/,
+  );
+  assert.doesNotMatch(source, /selectionPersistence\.save\(selectionState\)/);
 });
 
 test("the composition root delegates featured mutation and persistence to the application use case", () => {

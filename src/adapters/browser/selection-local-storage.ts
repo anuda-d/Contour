@@ -4,6 +4,7 @@ import {
   type SelectionState,
 } from "../../product/taste/selection.ts";
 import type { SelectionPersistencePort } from "../../application/taste/update-selection.ts";
+import type { SelectionRecoveryPersistencePort } from "../../application/taste/recover-selection.ts";
 import type { KeyValueStoragePort } from "../../kernel/key-value-storage.ts";
 
 export const SELECTION_STORAGE_KEY = "thought-map.prototype.media-selection.v1";
@@ -68,5 +69,17 @@ export function createSelectionPersistencePort(
 ): SelectionPersistencePort {
   return {
     save: (state) => saveSelection(storage, state),
+  };
+}
+
+/**
+ * Adapts the existing same-key normalized selection rewrite to the narrowly
+ * scoped startup recovery use case without exposing browser storage inward.
+ */
+export function createSelectionRecoveryPersistencePort(
+  storage: KeyValueStoragePort | null | undefined,
+): SelectionRecoveryPersistencePort {
+  return {
+    recover: (state) => saveSelection(storage, state),
   };
 }
