@@ -5,12 +5,13 @@ import {
 } from "../product/authorship/draft-state.ts";
 import {
   createAuthoredThoughtPersistencePort,
+  createAuthoredThoughtRecoveryPersistencePort,
   createAuthoredThoughtReloadPort,
   loadDraftState,
-  persistDraftState,
   THOUGHT_STORAGE_KEY,
 } from "../adapters/browser/authored-local-storage.ts";
 import { reloadAuthoredThoughts } from "../application/authorship/reload-authored-thoughts.ts";
+import { recoverAuthoredThoughts } from "../application/authorship/recover-authored-thoughts.ts";
 import { publishAuthoredThought } from "../application/authorship/publish-authored-thought.ts";
 import { saveAuthoredDraft } from "../application/authorship/save-authored-draft.ts";
 import type { KeyValueStoragePort } from "../kernel/key-value-storage.ts";
@@ -74,6 +75,10 @@ try {
   const storage: KeyValueStoragePort | null = getBrowserKeyValueStorage(window);
   const authoredThoughts = createAuthoredThoughtReloadPort(storage, validCatalogueIds);
   const authoredThoughtPersistence = createAuthoredThoughtPersistencePort(storage, validCatalogueIds);
+  const authoredThoughtRecoveryPersistence = createAuthoredThoughtRecoveryPersistencePort(
+    storage,
+    validCatalogueIds,
+  );
   const selectionPersistence = createSelectionPersistencePort(storage);
   const featuredPersistence = createFeaturedPersistencePort(storage);
   const pinnedPersistence = createPinnedPositionPersistencePort(storage);
@@ -134,7 +139,10 @@ try {
     }
   }
   if (loadedDrafts.recovered && loadedDrafts.persistent) {
-    const persistedDrafts = persistDraftState(storage, draftState, validCatalogueIds);
+    const persistedDrafts = recoverAuthoredThoughts(
+      draftState,
+      authoredThoughtRecoveryPersistence,
+    );
     draftState = persistedDrafts.state;
     graph = composeGraphWithDrafts(baseGraph, draftState);
     if (!persistedDrafts.saved) {

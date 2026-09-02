@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import {
   DRAFT_STORAGE_KEY,
   createAuthoredThoughtPersistencePort,
+  createAuthoredThoughtRecoveryPersistencePort,
   createAuthoredThoughtReloadPort,
   loadDraftState,
   persistDraftState,
@@ -87,6 +88,28 @@ test("the authored persistence port retains concurrent state through read-merge-
       { id: "draft-two", status: "draft" },
     ],
   );
+});
+
+test("the authored startup recovery port preserves authoritative merge-safe recovery writes", () => {
+  const storage = memoryStorage();
+  const initial = createDraft(emptyDraftState(), input, validIds).state;
+  persistDraftState(storage, initial, validIds);
+  const concurrent = createDraft(
+    initial,
+    {
+      id: "draft-two",
+      primaryMediaId: "arrival",
+      statement: "A concurrent private thought.",
+      createdAt: "2026-08-24T09:31:00.000Z",
+    },
+    validIds,
+  ).state;
+  persistDraftState(storage, concurrent, validIds, { id: "draft-two", fields: [] });
+
+  const saved = createAuthoredThoughtRecoveryPersistencePort(storage, validIds).recover(initial);
+
+  assert.equal(saved.saved, true);
+  assert.deepEqual(saved.state.thoughts.map((thought) => thought.id), ["draft-one", "draft-two"]);
 });
 
 test("unavailable storage degrades to the current visit", () => {

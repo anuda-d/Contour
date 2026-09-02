@@ -204,3 +204,18 @@ test("the composition root delegates authored publication and persistence to the
   assert.doesNotMatch(publishCallback, /persistDraftState\(/);
   assert.doesNotMatch(publishCallback, /clock\.now\(/);
 });
+
+test("the composition root delegates authored startup recovery persistence to the application use case", () => {
+  const source = readFileSync(resolve("src/composition/main.ts"), "utf8");
+
+  assert.match(
+    source,
+    /import \{ recoverAuthoredThoughts \} from "\.\.\/application\/authorship\/recover-authored-thoughts\.ts"/,
+  );
+  assert.match(source, /createAuthoredThoughtRecoveryPersistencePort\(\s*storage,\s*validCatalogueIds,\s*\)/);
+  assert.match(
+    source,
+    /const persistedDrafts = recoverAuthoredThoughts\(\s*draftState,\s*authoredThoughtRecoveryPersistence,\s*\);/,
+  );
+  assert.doesNotMatch(source, /persistDraftState\(/);
+});
