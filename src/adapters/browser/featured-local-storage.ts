@@ -3,6 +3,7 @@ import {
   normalizeFeaturedState,
   type FeaturedState,
 } from "../../product/taste/featured.ts";
+import type { FeaturedPersistencePort } from "../../application/taste/update-featured.ts";
 import type { KeyValueStoragePort } from "../../kernel/key-value-storage.ts";
 
 export const FEATURED_STORAGE_KEY = "thought-map.prototype.featured-media.v1";
@@ -74,4 +75,12 @@ export function saveFeaturedState(
   } catch {
     return false;
   }
+}
+
+export function createFeaturedPersistencePort(
+  storage: KeyValueStoragePort | null | undefined,
+): FeaturedPersistencePort {
+  return {
+    save: (state) => saveFeaturedState(storage, state),
+  };
 }

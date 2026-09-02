@@ -21,8 +21,8 @@ import type { IdentifierPort } from "../kernel/identifier.ts";
 import type { StorageChangePort } from "../kernel/storage-change.ts";
 import type { ResizeEventPort } from "../kernel/resize-event.ts";
 import {
+  createFeaturedPersistencePort,
   loadFeaturedState,
-  saveFeaturedState,
 } from "../adapters/browser/featured-local-storage.ts";
 import { getPublicMediaIds } from "../graph-projection.ts";
 import { ThoughtMap } from "../ui/map.dom.ts";
@@ -39,7 +39,7 @@ import {
   confirmSelection,
   toggleSelection,
 } from "../application/taste/update-selection.ts";
-import { toggleFeaturedMedia } from "../product/taste/featured.ts";
+import { toggleFeatured } from "../application/taste/update-featured.ts";
 import { getSeedGraph } from "../adapters/seed/prototype-seed.ts";
 import { createMapPresentation } from "./map-presentation.ts";
 import { ThoughtCapture } from "../ui/thought-capture.dom.ts";
@@ -73,6 +73,7 @@ try {
   const storage: KeyValueStoragePort | null = getBrowserKeyValueStorage(window);
   const authoredThoughts = createAuthoredThoughtReloadPort(storage, validCatalogueIds);
   const selectionPersistence = createSelectionPersistencePort(storage);
+  const featuredPersistence = createFeaturedPersistencePort(storage);
 
   const loaded = loadSelection(storage, validCatalogueIds);
   const loadedFeatured = loadFeaturedState(
@@ -95,7 +96,6 @@ try {
     : loaded.recovered
       ? "Unavailable saved works were removed."
       : "";
-  let featuredPersistent = loadedFeatured.persistent;
   let featuredMessage = loadedFeatured.storageError
     ? "Featured Media will last for this visit."
     : loadedFeatured.recovered
@@ -126,8 +126,7 @@ try {
     persistent = selectionPersistence.save(selectionState);
   }
   if (loadedFeatured.recovered && loadedFeatured.persistent) {
-    featuredPersistent = saveFeaturedState(storage, featuredState);
-    if (!featuredPersistent) {
+    if (!featuredPersistence.save(featuredState)) {
       featuredMessage = "Unavailable featured works were removed. Changes will last for this visit.";
     }
   }
@@ -357,19 +356,16 @@ try {
       },
       onToggleFeatured: (id) => {
         const media = graph.nodes.find((node) => node.id === id && node.type === "media");
-        const result = toggleFeaturedMedia(
+        const result = toggleFeatured(
           featuredState,
           id,
           publicMediaIds,
           typeof media?.title === "string" ? media.title : "This work",
+          featuredPersistence,
         );
         featuredState = result.state;
-        const saved = !result.changed || saveFeaturedState(storage, featuredState);
-        featuredPersistent = featuredPersistent && saved;
-        featuredMessage = saved
-          ? result.message
-          : `${result.message} This change will last for this visit.`;
-        return { ...result, state: featuredState, message: featuredMessage };
+        featuredMessage = result.message;
+        return result;
       },
       onPinPosition: (id, position) => {
         const result = pinPosition(pinnedState, id, position, pinnableIds());

@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   FEATURED_STORAGE_KEY,
+  createFeaturedPersistencePort,
   loadFeaturedState,
   saveFeaturedState,
 } from "../../../src/adapters/browser/featured-local-storage.ts";
@@ -80,4 +81,13 @@ test("unavailable storage falls back to visit-only defaults", () => {
   });
   assert.equal(saveFeaturedState(null, expected), false);
   assert.equal(saveFeaturedState(storage, expected), false);
+});
+
+test("featured persistence port preserves adapter write outcomes", () => {
+  const state = createFeaturedState(["book-a"], eligibleIds);
+  const storage = new MemoryStorage();
+
+  assert.equal(createFeaturedPersistencePort(storage).save(state), true);
+  assert.equal(createFeaturedPersistencePort(null).save(state), false);
+  assert.equal(storage.values.get(FEATURED_STORAGE_KEY), JSON.stringify(state));
 });

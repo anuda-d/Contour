@@ -115,3 +115,24 @@ test("the composition root delegates selection mutation and persistence to the a
   assert.doesNotMatch(source, /toggleMediaSelection\(/);
   assert.doesNotMatch(source, /saveSelection\(/);
 });
+
+test("the composition root delegates featured mutation and persistence to the application use case", () => {
+  const source = readFileSync(resolve("src/composition/main.ts"), "utf8");
+
+  assert.match(
+    source,
+    /import \{\s*createFeaturedPersistencePort,\s*loadFeaturedState,\s*\} from "\.\.\/adapters\/browser\/featured-local-storage\.ts"/,
+  );
+  assert.match(
+    source,
+    /import \{ toggleFeatured \} from "\.\.\/application\/taste\/update-featured\.ts"/,
+  );
+  assert.match(source, /const featuredPersistence = createFeaturedPersistencePort\(storage\);/);
+  assert.match(
+    source,
+    /const result = toggleFeatured\(\s*featuredState,\s*id,\s*publicMediaIds,\s*typeof media\?\.title === "string" \? media\.title : "This work",\s*featuredPersistence,\s*\);/,
+  );
+  assert.match(source, /featuredMessage = result\.message;/);
+  assert.doesNotMatch(source, /toggleFeaturedMedia\(/);
+  assert.doesNotMatch(source, /saveFeaturedState\(/);
+});
