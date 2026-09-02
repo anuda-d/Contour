@@ -30,7 +30,7 @@ Status: active shared state; standing scheduled owner authorization.
 | AF-2 Complete strict TypeScript | accepted | Every maintained application source and automated test is strict TypeScript. Separate browser and Node-test typechecks, the Vite build, and the checked `src/composition/main.ts` native entrypoint are accepted with no maintained application JavaScript mirror. |
 | AF-3 Deep product modules | open | Partial: authored Thought lifecycle, anchors, publication, and immutable merge now live in a cohesive strict TypeScript product module; other product facts remain in prototype seams. |
 | AF-4 Application use cases | open | Partial: the authored-Thought cross-tab reload workflow now has a screen-neutral application use case that returns an explicit unavailable-storage outcome or a recomposed graph and message through a specific typed persistence port; other current workflows remain composition-owned. |
-| AF-5 Isolated effects and validated boundaries | open | Partial: browser storage, wall-clock access, UUID generation, authored-Thought cross-tab events, and the authored-Thought reload adapter now cross narrow inward ports; selection, featured-Media, pinned-position, and authored-Thought persistence remain injected and normalized at their trust boundaries, while other browser events, seed input, and form-input boundaries remain open. |
+| AF-5 Isolated effects and validated boundaries | open | Partial: browser localStorage acquisition, storage adapters, wall-clock access, UUID generation, authored-Thought cross-tab events, and the authored-Thought reload adapter now cross narrow inward ports; selection, featured-Media, pinned-position, and authored-Thought persistence remain injected and normalized at their trust boundaries, while other browser events, seed input, and form-input boundaries remain open. |
 | AF-6 Explicit projections and privacy | open | Partial: the owner and visitor graph projection now has strict TypeScript ownership and focused evidence for Draft and draft-only Media exclusion, publication-derived public eligibility, dangling-edge filtering, and owner capability removal; application-level structurally separate read models remain open. |
 | AF-7 Durable compatibility | open | Partial: authored V2, V1, and legacy-Draft browser storage now has typed precedence, normalization, migration, recovery, and read-merge-write evidence; other persisted state remains to be completed. |
 | AF-8 Frozen visible behavior | open | None yet. |
@@ -61,20 +61,19 @@ queue.
 ## Current run
 
 - State: accepted; no successor unit selected.
-- Unit id: af-4-authored-thought-reload-use-case.
-- Criterion: AF-4 Application use cases, AF-5 Isolated effects and validated boundaries, and AF-9 Layered test and quality gates.
-- Intended result: move the existing authored-Thought cross-tab reload workflow from the composition root into a screen-neutral application use case with a typed persistence port.
-- Evidence claim: the application use case owns the typed reload and derived graph outcome, while composition only wires it to the existing storage-change port and renders the unchanged result.
-- Exact owned diff: `reloadAuthoredThoughts` accepts a specific application-owned `load()` port and returns either explicit unavailable storage or the normalized Thought state, recomposed graph, and unchanged update message.
-  The browser adapter maps existing authored-storage loading into that port, while composition retains only V2 event wiring, state assignment, and rendering.
-- Focused validation: 52 application, authored-storage adapter, storage-change adapter, composition, and architecture-boundary tests passed.
+- Unit id: af-5-browser-storage-acquisition-port.
+- Criterion: AF-5 Isolated effects and validated boundaries and AF-9 Layered test and quality gates.
+- Intended result: acquire browser localStorage through a narrow outward adapter so composition receives either the native typed storage port or `null` without directly touching the browser global property.
+- Evidence claim: localStorage getter failure retains the existing visit-only fallback, while successful acquisition preserves native storage identity and every existing storage key, migration, recovery, and write path.
+- Exact owned diff: `getBrowserKeyValueStorage` in the convention-compliant `browser-local-storage.ts` adapter owns the potentially failing browser property access; composition delegates acquisition to it and keeps the existing downstream adapters and startup recovery logic unchanged.
+- Focused validation: six new and related browser-adapter and composition tests passed.
   Strict browser and test typechecks, architecture enforcement, the Vite production build, and `git diff --check -- .` passed.
-- Full validation: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, the Vite production build, and 147 tests with zero failures.
+- Full validation: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, the Vite production build, and 150 tests with zero failures.
   `git diff --check -- .` passed.
-- Accepted evidence: remote Draft reload remains owner-only, remote Published Thought reload remains visitor-visible, unavailable storage produces no reload outcome, and the exact existing update message remains a composition-rendered result.
-- Independent review: a fresh read-only `gpt-5.6-sol` high-reasoning reviewer found no P0-P3 finding or commit blocker.
+- Accepted evidence: direct composition access to `window.localStorage` is eliminated; the adapter returns the exact native port when available and `null` when acquisition throws, retaining the established visit-only fallback.
+- Independent review: a fresh read-only `gpt-5.6-sol` high-reasoning reviewer found no P0-P3 finding or commit blocker after the initial review's naming and run-status findings were corrected and revalidated.
 - Rendered validation: not required because the unit changes no rendered surface, interaction, CSS, copy, or persisted representation.
-- Risks and assumptions: broader application workflow extraction, other effect ports, read-model separation, full storage compatibility, frozen-flow validation, and the final walkthrough remain open.
+- Risks and assumptions: cross-tab synchronization for selection, featured Media, and pinned positions remains intentionally out of scope; broader application workflow extraction, read-model separation, storage compatibility completion, frozen-flow validation, and the final walkthrough remain open.
 
 ## Owner authorization
 
@@ -119,7 +118,7 @@ queue.
 
 ## Fresh-task handoff state
 
-- Latest accepted unit: af-4-authored-thought-reload-use-case.
+- Latest accepted unit: af-5-browser-storage-acquisition-port.
 - Latest implementation commit: recorded in this accepted unit's post-commit handoff.
 - Latest temporary handoff: written after this accepted unit commits.
 - Next unit selected: no
@@ -148,14 +147,14 @@ without discarding uncommitted work or inferring missing decisions.
 ## Current unit evidence
 
 - State: accepted; no current unit.
-- Criterion: AF-4 Application use cases, AF-5 Isolated effects and validated boundaries, and AF-9 Layered test and quality gates.
-- Intended result: extract the authored-Thought cross-tab reload workflow into a screen-neutral application use case without changing accepted behavior.
-- Evidence claim: the application-owned port and explicit reload outcome isolate browser persistence loading from composition while retaining the exact graph and update result.
-- Focused validation: 52 targeted application, adapter, composition, and architecture-boundary tests plus strict typechecks, architecture enforcement, and the Vite build passed.
-- Full validation: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, the Vite production build, and 147 tests with zero failures; `git diff --check -- .` passed.
-- Rendered validation: not due because the accepted unit changes no rendered surface, interaction, CSS, or visual design.
+- Criterion: AF-5 Isolated effects and validated boundaries and AF-9 Layered test and quality gates.
+- Intended result: isolate the final direct runtime browser localStorage acquisition from the composition root without changing storage behavior.
+- Evidence claim: successful acquisition returns the exact native storage port, a throwing localStorage getter yields the existing `null` visit-only path, and composition contains no direct `window.localStorage` access.
+- Focused validation: six browser-adapter and composition tests plus strict typechecks, architecture enforcement, and the Vite build passed.
+- Full validation: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, the Vite production build, and 150 tests with zero failures; `git diff --check -- .` passed.
+- Rendered validation: not required because the unit changes no rendered surface, interaction, CSS, or visual design.
 - Remaining risk: broader application workflow extraction, remaining effect boundaries, read-model separation, storage compatibility completion, frozen-flow validation, and the final walkthrough remain open under their respective criteria.
-- Independent review: a fresh `gpt-5.6-sol` high-reasoning reviewer returned clean with no P0-P3 finding or commit blocker.
+- Independent review: the first reviewer found an invalid candidate run status and filename convention violation; both were corrected, focused and full validation were repeated, and a fresh final `gpt-5.6-sol` high-reasoning review returned clean with no P0-P3 finding or commit blocker.
 
 ## Goal-readiness evidence
 
@@ -367,6 +366,9 @@ Routine work-unit completion does not require owner review.
 - AF-4, AF-5, and AF-9 partial unit `af-4-authored-thought-reload-use-case` accepted on 2026-09-01.
   A screen-neutral authored-Thought reload use case now receives a specific typed persistence port and returns either explicit unavailable storage or the normalized Thought state, rebuildable graph, and exact existing update message.
   The browser adapter preserves V2-first validation and recovery while composition retains only event wiring and rendering; focused 52-test evidence, full 147-test repository validation, and a clean fresh independent review support bounded AF-4, AF-5, and AF-9 evidence.
+- AF-5 and AF-9 partial unit `af-5-browser-storage-acquisition-port` accepted on 2026-09-01.
+  A convention-compliant browser localStorage adapter now owns the potentially failing global acquisition, returning the native typed port unchanged or `null` for the existing visit-only fallback.
+  Composition no longer directly accesses `window.localStorage`; focused six-test evidence, repeated full 150-test repository validation, and a clean fresh independent review after correcting the candidate run status and filename convention support bounded AF-5 and AF-9 evidence.
 
 ## Administratively closed run log
 

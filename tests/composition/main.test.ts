@@ -31,6 +31,17 @@ test("the composition root wires authored timestamps and UUIDs through browser e
   assert.doesNotMatch(source, /new Date\(\)\.toISOString\(\)/);
 });
 
+test("the composition root acquires browser storage through its outward adapter", () => {
+  const source = readFileSync(resolve("src/composition/main.ts"), "utf8");
+
+  assert.match(
+    source,
+    /import \{ getBrowserKeyValueStorage \} from "\.\.\/adapters\/browser\/browser-local-storage\.ts"/,
+  );
+  assert.match(source, /const storage: KeyValueStoragePort \| null = getBrowserKeyValueStorage\(window\);/);
+  assert.doesNotMatch(source, /window\.localStorage/);
+});
+
 test("the composition root wires authored storage changes through a browser event port", () => {
   const source = readFileSync(resolve("src/composition/main.ts"), "utf8");
 

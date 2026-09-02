@@ -46,6 +46,7 @@ import { WorkChooser } from "../ui/work-chooser.dom.ts";
 import { browserClock } from "../adapters/browser/browser-clock.ts";
 import { browserIdentifier } from "../adapters/browser/browser-identifier.ts";
 import { createBrowserStorageChangePort } from "../adapters/browser/browser-storage-change.ts";
+import { getBrowserKeyValueStorage } from "../adapters/browser/browser-local-storage.ts";
 
 declare global {
   interface Window {
@@ -71,12 +72,7 @@ try {
   const catalogue = getCatalogue();
   const validCatalogueIds = new Set(catalogue.map((item) => item.id));
   const publicMediaIds = getPublicMediaIds(baseGraph);
-  let storage: KeyValueStoragePort | null = null;
-  try {
-    storage = window.localStorage;
-  } catch {
-    storage = null;
-  }
+  const storage: KeyValueStoragePort | null = getBrowserKeyValueStorage(window);
   const authoredThoughts = createAuthoredThoughtReloadPort(storage, validCatalogueIds);
 
   const loaded = loadSelection(storage, validCatalogueIds);
