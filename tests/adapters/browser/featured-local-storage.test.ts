@@ -2,10 +2,11 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   FEATURED_STORAGE_KEY,
+  createFeaturedPersistencePort,
   loadFeaturedState,
   saveFeaturedState,
-  type FeaturedStorage,
 } from "../../../src/adapters/browser/featured-local-storage.ts";
+import type { KeyValueStoragePort } from "../../../src/kernel/key-value-storage.ts";
 import {
   FEATURED_VERSION,
   createFeaturedState,
@@ -14,7 +15,7 @@ import {
 
 const eligibleIds = new Set(["book-a", "film-a", "book-b", "film-b"]);
 
-class MemoryStorage implements FeaturedStorage {
+class MemoryStorage implements KeyValueStoragePort {
   readonly values = new Map<string, string>();
 
   getItem(key: string): string | null {
@@ -63,7 +64,7 @@ test("featured state round-trips and corrupted data recovers to valid defaults",
 });
 
 test("unavailable storage falls back to visit-only defaults", () => {
-  const storage: FeaturedStorage = {
+  const storage: KeyValueStoragePort = {
     getItem() {
       throw new Error("blocked");
     },
@@ -80,4 +81,13 @@ test("unavailable storage falls back to visit-only defaults", () => {
   });
   assert.equal(saveFeaturedState(null, expected), false);
   assert.equal(saveFeaturedState(storage, expected), false);
+});
+
+test("featured persistence port preserves adapter write outcomes", () => {
+  const state = createFeaturedState(["book-a"], eligibleIds);
+  const storage = new MemoryStorage();
+
+  assert.equal(createFeaturedPersistencePort(storage).save(state), true);
+  assert.equal(createFeaturedPersistencePort(null).save(state), false);
+  assert.equal(storage.values.get(FEATURED_STORAGE_KEY), JSON.stringify(state));
 });

@@ -1,55 +1,83 @@
-import { getCatalogue } from "./product/catalogue/catalogue.ts";
+import { getCatalogue, type CatalogueWork } from "../product/catalogue/catalogue.ts";
 import {
   composeGraphWithDrafts,
   connectDraft,
   createDraft,
   editDraft,
   publishDraft,
-} from "./product/authorship/draft-state.ts";
+  type Thought,
+  type ThoughtMutation,
+} from "../product/authorship/draft-state.ts";
 import {
+  createAuthoredThoughtReloadPort,
   loadDraftState,
   persistDraftState,
   THOUGHT_STORAGE_KEY,
-} from "./adapters/browser/authored-local-storage.ts";
+} from "../adapters/browser/authored-local-storage.ts";
+import { reloadAuthoredThoughts } from "../application/authorship/reload-authored-thoughts.ts";
+import type { KeyValueStoragePort } from "../kernel/key-value-storage.ts";
+import type { ClockPort } from "../kernel/clock.ts";
+import type { IdentifierPort } from "../kernel/identifier.ts";
+import type { StorageChangePort } from "../kernel/storage-change.ts";
+import type { ResizeEventPort } from "../kernel/resize-event.ts";
 import {
+  createFeaturedPersistencePort,
   loadFeaturedState,
-  saveFeaturedState,
-} from "./adapters/browser/featured-local-storage.ts";
-import { getPublicMediaIds } from "./graph-projection.ts";
-import { ThoughtMap } from "./ui/map.dom.ts";
+} from "../adapters/browser/featured-local-storage.ts";
+import { getPublicMediaIds } from "../graph-projection.ts";
+import { ThoughtMap } from "../ui/map.dom.ts";
 import {
+  createPinnedPositionPersistencePort,
   loadPinnedState,
-  savePinnedState,
-} from "./adapters/browser/pinned-local-storage.ts";
-import { pinPosition, unpinPosition } from "./product/map/pinned-positions.ts";
+} from "../adapters/browser/pinned-local-storage.ts";
 import {
+  pinPosition,
+  unpinPosition,
+} from "../application/map/update-pinned-positions.ts";
+import {
+  createSelectionPersistencePort,
   loadSelection,
-  saveSelection,
-} from "./adapters/browser/selection-local-storage.ts";
+} from "../adapters/browser/selection-local-storage.ts";
 import {
   confirmSelection,
-  toggleMediaSelection,
-} from "./product/taste/selection.ts";
-import { toggleFeaturedMedia } from "./product/taste/featured.ts";
-import { getSeedGraph } from "./adapters/seed/prototype-seed.ts";
-import { createMapPresentation } from "./composition/map-presentation.ts";
-import { ThoughtCapture } from "./ui/thought-capture.dom.ts";
-import { WorkChooser } from "./ui/work-chooser.dom.ts";
+  toggleSelection,
+} from "../application/taste/update-selection.ts";
+import { toggleFeatured } from "../application/taste/update-featured.ts";
+import { getSeedGraph } from "../adapters/seed/prototype-seed.ts";
+import { createMapPresentation } from "./map-presentation.ts";
+import { ThoughtCapture } from "../ui/thought-capture.dom.ts";
+import { WorkChooser } from "../ui/work-chooser.dom.ts";
+import { browserClock } from "../adapters/browser/browser-clock.ts";
+import { browserIdentifier } from "../adapters/browser/browser-identifier.ts";
+import { createBrowserStorageChangePort } from "../adapters/browser/browser-storage-change.ts";
+import { createBrowserResizeEventPort } from "../adapters/browser/browser-resize-event.ts";
+import { getBrowserKeyValueStorage } from "../adapters/browser/browser-local-storage.ts";
+import { getBrowserRoot } from "../adapters/browser/browser-root.ts";
+import { publishBrowserThoughtMap } from "../adapters/browser/browser-map-global.ts";
 
-const root = document.querySelector("#app");
+type SavedThought = {
+  saved: true;
+  draft: Thought;
+  message: string;
+};
+
+const root = getBrowserRoot(document);
 const mapPresentation = createMapPresentation();
+const clock: ClockPort = browserClock;
+const identifier: IdentifierPort = browserIdentifier;
+const storageChanges: StorageChangePort = createBrowserStorageChangePort(window);
+const resizeEvents: ResizeEventPort = createBrowserResizeEventPort(window);
 
 try {
   const baseGraph = getSeedGraph();
   const catalogue = getCatalogue();
   const validCatalogueIds = new Set(catalogue.map((item) => item.id));
   const publicMediaIds = getPublicMediaIds(baseGraph);
-  let storage = null;
-  try {
-    storage = window.localStorage;
-  } catch {
-    storage = null;
-  }
+  const storage: KeyValueStoragePort | null = getBrowserKeyValueStorage(window);
+  const authoredThoughts = createAuthoredThoughtReloadPort(storage, validCatalogueIds);
+  const selectionPersistence = createSelectionPersistencePort(storage);
+  const featuredPersistence = createFeaturedPersistencePort(storage);
+  const pinnedPersistence = createPinnedPositionPersistencePort(storage);
 
   const loaded = loadSelection(storage, validCatalogueIds);
   const loadedFeatured = loadFeaturedState(
@@ -72,7 +100,6 @@ try {
     : loaded.recovered
       ? "Unavailable saved works were removed."
       : "";
-  let featuredPersistent = loadedFeatured.persistent;
   let featuredMessage = loadedFeatured.storageError
     ? "Featured Media will last for this visit."
     : loadedFeatured.recovered
@@ -84,17 +111,26 @@ try {
       ? "Saved authored Thoughts were recovered safely."
       : "";
   let draftMessage = initialDraftMessage;
-  let chooser = null;
-  let capture = null;
-  let map = null;
-  let mapMode = "owner";
+  let chooser: WorkChooser | null = null;
+  let capture: ThoughtCapture<SavedThought> | null = null;
+  let map: ThoughtMap | null = null;
+  let mapMode: "owner" | "visitor" = "owner";
+
+  const activeMap = (): ThoughtMap => {
+    if (!map) throw new Error("Expected initialized Map.");
+    return map;
+  };
+  const appShell = (): HTMLElement => {
+    const shell = root.querySelector<HTMLElement>(".app-shell");
+    if (!shell) throw new Error("Expected application shell.");
+    return shell;
+  };
 
   if (loaded.recovered && loaded.persistent) {
-    persistent = saveSelection(storage, selectionState);
+    persistent = selectionPersistence.save(selectionState);
   }
   if (loadedFeatured.recovered && loadedFeatured.persistent) {
-    featuredPersistent = saveFeaturedState(storage, featuredState);
-    if (!featuredPersistent) {
+    if (!featuredPersistence.save(featuredState)) {
       featuredMessage = "Unavailable featured works were removed. Changes will last for this visit.";
     }
   }
@@ -109,54 +145,46 @@ try {
     }
   }
   if (loadedPinned.recovered && loadedPinned.persistent) {
-    savePinnedState(storage, pinnedState);
+    pinnedPersistence.save(pinnedState);
   }
-
-  const persistSelection = () => {
-    persistent = saveSelection(storage, selectionState);
-    map?.updateSelectionState(selectionState);
-    return persistent;
-  };
 
   const openChooser = () => {
     if (chooser || capture || mapMode !== "owner") return;
-    chooser = new WorkChooser(root.querySelector(".app-shell"), catalogue, selectionState, {
+    chooser = new WorkChooser(appShell(), catalogue, selectionState, {
       persistent,
       initialMessage: initialChooserMessage,
       onToggle: (id) => {
-        const result = toggleMediaSelection(selectionState, id, validCatalogueIds);
+        const result = toggleSelection(selectionState, id, validCatalogueIds, selectionPersistence);
         selectionState = result.state;
-        const saved = !result.changed || persistSelection();
-        return {
-          ...result,
-          state: selectionState,
-          message: saved ? result.message : "Selection saved for this visit only.",
-        };
+        if (result.saved !== null) {
+          persistent = result.saved;
+          map?.updateSelectionState(selectionState);
+        }
+        return result;
       },
       onConfirm: () => {
-        const result = confirmSelection(selectionState);
+        const result = confirmSelection(selectionState, selectionPersistence);
         selectionState = result.state;
-        const saved = !result.confirmed || persistSelection();
-        return {
-          ...result,
-          state: selectionState,
-          message: saved ? result.message : "Three works are ready for this visit.",
-        };
+        if (result.saved !== null) {
+          persistent = result.saved;
+          map?.updateSelectionState(selectionState);
+        }
+        return result;
       },
       onClose: () => {
         chooser = null;
-        map.updateSelectionState(selectionState);
+        activeMap().updateSelectionState(selectionState);
       },
-      restoreFocus: () => map.focusChooserEntry(),
+      restoreFocus: () => activeMap().focusChooserEntry(),
     });
     initialChooserMessage = "";
   };
 
-  const openCapture = (draftId = null) => {
+  const openCapture = (draftId: string | null = null) => {
     if (capture || chooser || mapMode !== "owner") return;
-    const draft = draftId
+    const draft = (draftId
       ? draftState.thoughts.find((item) => item.id === draftId && item.status === "draft")
-      : null;
+      : null) ?? null;
     if (draftId && !draft) return;
     if (!draft && !selectionState.confirmed) return;
 
@@ -168,10 +196,10 @@ try {
       : selectionState.selectedMediaIds;
     const works = workIds
       .map((id) => catalogue.find((item) => item.id === id))
-      .filter(Boolean);
+      .filter((item): item is CatalogueWork => item !== undefined);
     if (!works.length) return;
 
-    capture = new ThoughtCapture(root.querySelector(".app-shell"), works, {
+    capture = new ThoughtCapture<SavedThought>(appShell(), works, {
       draft,
       initialMessage: draft ? "" : initialDraftMessage,
       onSave: ({ draftId: editingId, primaryMediaId, statement }) => {
@@ -180,14 +208,14 @@ try {
           : createDraft(
               draftState,
               {
-                id: `draft-${crypto.randomUUID()}`,
+                id: `draft-${identifier.randomUuid()}`,
                 primaryMediaId,
                 statement,
-                createdAt: new Date().toISOString(),
+                createdAt: clock.now(),
               },
               new Set(selectionState.selectedMediaIds),
             );
-        if (result.error) return { saved: false, message: result.error };
+        if ("error" in result) return { saved: false, message: result.error };
 
         draftState = result.state;
         const persisted = result.changed
@@ -212,20 +240,20 @@ try {
       },
       onSaved: (result) => {
         graph = composeGraphWithDrafts(baseGraph, draftState);
-        map.updateGraph(graph, { focusId: result.draft.id, message: result.message });
+        activeMap().updateGraph(graph, { focusId: result.draft.id, message: result.message });
       },
       onClose: () => {
         capture = null;
       },
       restoreFocus: () => {
-        if (draft) map.focusDraftEdit(draft.id);
-        else map.focusCaptureEntry();
+        if (draft) activeMap().focusDraftEdit(draft.id);
+        else activeMap().focusCaptureEntry();
       },
     });
     initialDraftMessage = "";
   };
 
-  const openBridge = (draftId) => {
+  const openBridge = (draftId: string) => {
     if (capture || chooser || mapMode !== "owner" || !selectionState.confirmed) return;
     const draft = draftState.thoughts.find(
       (thought) =>
@@ -236,11 +264,11 @@ try {
     const otherWorks = selectionState.selectedMediaIds
       .filter((id) => id !== draft.primaryMediaId)
       .map((id) => catalogue.find((item) => item.id === id))
-      .filter(Boolean);
+      .filter((item): item is CatalogueWork => item !== undefined);
     if (!primaryWork || !otherWorks.length) return;
     const works = [primaryWork, ...otherWorks];
 
-    capture = new ThoughtCapture(root.querySelector(".app-shell"), works, {
+    capture = new ThoughtCapture<SavedThought>(appShell(), works, {
       draft,
       bridgeMode: true,
       onSave: ({ secondaryMediaId, statement }) => {
@@ -250,15 +278,16 @@ try {
           { secondaryMediaId, statement },
           validCatalogueIds,
         );
-        if (result.error) return { saved: false, message: result.error };
+        if ("error" in result) return { saved: false, message: result.error };
         draftState = result.state;
+        const bridgeMutationFields: ThoughtMutation["fields"] =
+          result.draft.statement === draft.statement
+            ? ["secondaryMediaId"]
+            : ["secondaryMediaId", "statement"];
         const persisted = result.changed
           ? persistDraftState(storage, draftState, validCatalogueIds, {
               id: draft.id,
-              fields: [
-                "secondaryMediaId",
-                ...(result.draft.statement === draft.statement ? [] : ["statement"]),
-              ],
+              fields: bridgeMutationFields,
             })
           : { saved: true, state: draftState };
         draftState = persisted.state;
@@ -277,12 +306,12 @@ try {
       },
       onSaved: (result) => {
         graph = composeGraphWithDrafts(baseGraph, draftState);
-        map.updateGraph(graph, { selectId: result.draft.id, message: result.message });
+        activeMap().updateGraph(graph, { selectId: result.draft.id, message: result.message });
       },
       onClose: () => {
         capture = null;
       },
-      restoreFocus: () => map.focusDraftConnect(draft.id),
+      restoreFocus: () => activeMap().focusDraftConnect(draft.id),
     });
   };
 
@@ -296,6 +325,8 @@ try {
   } else {
     map = new ThoughtMap(root, graph, {
       presentation: mapPresentation,
+      clock,
+      resizeEvents,
       mode: mapMode,
       selectionState,
       featuredState,
@@ -310,10 +341,10 @@ try {
         const result = publishDraft(
           draftState,
           id,
-          new Date().toISOString(),
+          clock.now(),
           validCatalogueIds,
         );
-        if (!result.changed) return result;
+        if (!result.changed || !("message" in result)) return result;
         draftState = result.state;
         const persisted = persistDraftState(storage, draftState, validCatalogueIds, {
           id,
@@ -324,60 +355,44 @@ try {
           ? result.message
           : "Thought published for this visit. The saved Draft was not changed.";
         graph = composeGraphWithDrafts(baseGraph, draftState);
-        map.updateGraph(graph, { selectId: id, message: draftMessage });
+        activeMap().updateGraph(graph, { selectId: id, message: draftMessage });
         return { ...result, state: draftState, message: draftMessage };
       },
       onToggleFeatured: (id) => {
         const media = graph.nodes.find((node) => node.id === id && node.type === "media");
-        const result = toggleFeaturedMedia(
+        const result = toggleFeatured(
           featuredState,
           id,
           publicMediaIds,
-          media?.title ?? "This work",
+          typeof media?.title === "string" ? media.title : "This work",
+          featuredPersistence,
         );
         featuredState = result.state;
-        const saved = !result.changed || saveFeaturedState(storage, featuredState);
-        featuredPersistent = featuredPersistent && saved;
-        featuredMessage = saved
-          ? result.message
-          : `${result.message} This change will last for this visit.`;
-        return { ...result, state: featuredState, message: featuredMessage };
+        featuredMessage = result.message;
+        return result;
       },
       onPinPosition: (id, position) => {
-        const result = pinPosition(pinnedState, id, position, pinnableIds());
+        const result = pinPosition(pinnedState, id, position, pinnableIds(), pinnedPersistence);
         pinnedState = result.state;
-        const saved = !result.changed || savePinnedState(storage, pinnedState);
-        return {
-          ...result,
-          state: pinnedState,
-          message: saved ? result.message : "Position pinned for this visit.",
-        };
+        return result;
       },
       onUnpinPosition: (id) => {
-        const result = unpinPosition(pinnedState, id);
+        const result = unpinPosition(pinnedState, id, pinnedPersistence);
         pinnedState = result.state;
-        const saved = !result.changed || savePinnedState(storage, pinnedState);
-        return {
-          ...result,
-          state: pinnedState,
-          message: saved
-            ? result.message
-            : "Position returned for this visit. The saved pin could not be changed.",
-        };
+        return result;
       },
       onModeChange: (nextMode) => {
         mapMode = nextMode;
-        map.setMode(nextMode);
+        activeMap().setMode(nextMode);
       },
     });
-    window.thoughtMap = map;
-    window.addEventListener("storage", (event) => {
-      if (event.key !== THOUGHT_STORAGE_KEY) return;
-      const synced = loadDraftState(storage, validCatalogueIds);
-      if (synced.storageError) return;
+    publishBrowserThoughtMap(window, map);
+    storageChanges.onChange(THOUGHT_STORAGE_KEY, () => {
+      const synced = reloadAuthoredThoughts(baseGraph, authoredThoughts);
+      if (synced.kind === "storage-unavailable") return;
       draftState = synced.state;
-      graph = composeGraphWithDrafts(baseGraph, draftState);
-      map.updateGraph(graph, { message: "Authored Thoughts updated from another tab." });
+      graph = synced.graph;
+      activeMap().updateGraph(graph, { message: synced.message });
     });
   }
 } catch (error) {

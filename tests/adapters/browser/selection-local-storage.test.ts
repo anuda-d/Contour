@@ -2,15 +2,16 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   SELECTION_STORAGE_KEY,
+  createSelectionPersistencePort,
   loadSelection,
   saveSelection,
-  type SelectionStorage,
 } from "../../../src/adapters/browser/selection-local-storage.ts";
+import type { KeyValueStoragePort } from "../../../src/kernel/key-value-storage.ts";
 import { emptySelection, type SelectionState } from "../../../src/product/taste/selection.ts";
 
 const validIds = new Set(["a", "b", "c", "d"]);
 
-class MemoryStorage implements SelectionStorage {
+class MemoryStorage implements KeyValueStoragePort {
   readonly values = new Map<string, string>();
 
   getItem(key: string): string | null {
@@ -58,7 +59,7 @@ test("missing and malformed storage retain their distinct selection recovery beh
 });
 
 test("unavailable storage falls back to a safe session state", () => {
-  const storage: SelectionStorage = {
+  const storage: KeyValueStoragePort = {
     getItem() {
       throw new Error("unavailable");
     },
@@ -73,4 +74,13 @@ test("unavailable storage falls back to a safe session state", () => {
     storageError: true,
   });
   assert.equal(saveSelection(storage, emptySelection()), false);
+});
+
+test("selection persistence port preserves the adapter write outcome", () => {
+  const storage = new MemoryStorage();
+  const state = { ...emptySelection(), selectedMediaIds: ["a"] };
+
+  assert.equal(createSelectionPersistencePort(storage).save(state), true);
+  assert.equal(storage.values.get(SELECTION_STORAGE_KEY), JSON.stringify(state));
+  assert.equal(createSelectionPersistencePort(null).save(state), false);
 });

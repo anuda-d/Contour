@@ -7,7 +7,14 @@ import test from "node:test";
 
 const checker = resolve("scripts/check-import-boundaries.mjs");
 
-function createFixture(files) {
+type FixtureFiles = Record<string, string>;
+
+type CheckerResult = {
+  status: number | null;
+  output: string;
+};
+
+function createFixture(files: FixtureFiles): string {
   const root = mkdtempSync(resolve(tmpdir(), "contour-boundaries-"));
   for (const [file, source] of Object.entries(files)) {
     const path = resolve(root, file);
@@ -17,7 +24,7 @@ function createFixture(files) {
   return root;
 }
 
-function runChecker(root) {
+function runChecker(root: string): CheckerResult {
   const result = spawnSync(process.execPath, [checker, "--root", root], { encoding: "utf8" });
   return { status: result.status, output: `${result.stdout ?? ""}${result.stderr ?? ""}` };
 }
@@ -36,6 +43,16 @@ test("architecture boundary check rejects a product import of a browser adapter"
   const result = runChecker(root);
   assert.equal(result.status, 1, result.output);
   assert.match(result.output, /product -> adapters import is forbidden/);
+});
+
+test("architecture boundary check rejects an application import of a browser adapter", () => {
+  const root = createFixture({
+    "src/application/authorship/reload.ts": 'import { read } from "../../adapters/browser/local-storage.ts";\nexport { read };\n',
+    "src/adapters/browser/local-storage.ts": "export const read = () => null;\n",
+  });
+  const result = runChecker(root);
+  assert.equal(result.status, 1, result.output);
+  assert.match(result.output, /application -> adapters import is forbidden/);
 });
 
 test("architecture boundary check rejects a template-literal product import of a browser adapter", () => {
@@ -292,7 +309,7 @@ test("architecture boundary check rejects Vite worker URL dependencies across a 
 
 test("architecture boundary check validates legacy import resolution before exempting direction", () => {
   const root = createFixture({
-    "src/app.js": 'import "./missing.js";\n',
+    "src/graph-projection.ts": 'import "./missing.ts";\n',
   });
   const result = runChecker(root);
   assert.equal(result.status, 1, result.output);

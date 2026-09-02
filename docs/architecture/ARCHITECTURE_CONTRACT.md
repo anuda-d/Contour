@@ -81,13 +81,17 @@ They are explicit in the import checker so a new top-level source file cannot si
 
 | Current file | Temporary classification | Migration destination | Preserved responsibility |
 | --- | --- | --- | --- |
-| `src/app.js` | composition | `src/composition/main.ts` | concrete browser wiring only |
 | `src/layout.ts`, `src/graph-projection.ts` | product transition | `src/product/map/`, `src/application/`, and `src/ui/` | rebuildable projections and spatial presentation inputs |
 
 ## Migrated seams
 
 | Current owner | Migrated source | Preserved responsibility |
 | --- | --- | --- |
+| Shared storage effect port | `src/kernel/key-value-storage.ts` | Narrow injected key-value persistence capability shared by the current browser-storage adapters |
+| Clock effect port | `src/kernel/clock.ts` and `src/adapters/browser/browser-clock.ts` | Narrow injected canonical ISO timestamp capability for current authored create and publish workflows |
+| Identifier effect port | `src/kernel/identifier.ts` and `src/adapters/browser/browser-identifier.ts` | Narrow injected UUID capability for current authored Draft creation |
+| Browser root acquisition | `src/adapters/browser/browser-root.ts` | Typed `#app` startup-root lookup with the existing missing-root failure semantics |
+| Map browser resize event | `src/kernel/resize-event.ts` and `src/adapters/browser/browser-resize-event.ts` | Typed listener-replacement capability that preserves the native Map's synchronous passive remove-then-add resize registration |
 | Catalogue | `src/product/catalogue/catalogue.ts` | Typed Book and Film facts and fresh editable catalogue reads |
 | Taste selection | `src/product/taste/selection.ts` and `src/adapters/browser/selection-local-storage.ts` | Typed private three-work selection rules and injected browser-storage persistence |
 | Taste featured Media | `src/product/taste/featured.ts` and `src/adapters/browser/featured-local-storage.ts` | Typed deliberate public presentation choices and injected browser-storage persistence |
@@ -98,6 +102,7 @@ They are explicit in the import checker so a new top-level source file cannot si
 | Thought Capture | `src/ui/thought-capture.dom.ts` | Typed native-DOM private Draft and bridge dialog rendering plus event translation through opaque callbacks |
 | Work Chooser | `src/ui/work-chooser.dom.ts` | Typed native-DOM private selection dialog rendering plus event translation through opaque callbacks |
 | Map | `src/ui/map.dom.ts` | Typed native-DOM Map rendering and interaction through structural read models, opaque callbacks, and a composition-injected presentation port |
+| Composition root | `src/composition/main.ts` | Typed concrete browser startup, current browser-effect wiring, and native-DOM callback composition |
 
 The composition-injected Map presentation port and `composeGraphWithDrafts` graph composition are migration seams, not enduring privacy or product-authority mechanisms.
 Owner and visitor read models will become structurally separate application outputs.

@@ -3,13 +3,10 @@ import {
   normalizeSelection,
   type SelectionState,
 } from "../../product/taste/selection.ts";
+import type { SelectionPersistencePort } from "../../application/taste/update-selection.ts";
+import type { KeyValueStoragePort } from "../../kernel/key-value-storage.ts";
 
 export const SELECTION_STORAGE_KEY = "thought-map.prototype.media-selection.v1";
-
-export type SelectionStorage = {
-  getItem(key: string): string | null;
-  setItem(key: string, value: string): void;
-};
 
 export type SelectionLoadResult = {
   state: SelectionState;
@@ -19,7 +16,7 @@ export type SelectionLoadResult = {
 };
 
 export function loadSelection(
-  storage: SelectionStorage | null | undefined,
+  storage: KeyValueStoragePort | null | undefined,
   validIds: Iterable<string> | ReadonlySet<string>,
 ): SelectionLoadResult {
   if (!storage) {
@@ -54,7 +51,7 @@ export function loadSelection(
 }
 
 export function saveSelection(
-  storage: SelectionStorage | null | undefined,
+  storage: KeyValueStoragePort | null | undefined,
   state: SelectionState,
 ): boolean {
   if (!storage) return false;
@@ -64,4 +61,12 @@ export function saveSelection(
   } catch {
     return false;
   }
+}
+
+export function createSelectionPersistencePort(
+  storage: KeyValueStoragePort | null | undefined,
+): SelectionPersistencePort {
+  return {
+    save: (state) => saveSelection(storage, state),
+  };
 }

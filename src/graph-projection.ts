@@ -31,6 +31,15 @@ export type GraphInput = Readonly<{
   edges: readonly GraphEdge[];
 }>;
 
+export type PublicMediaSource = Readonly<{
+  nodes: readonly Readonly<{
+    id: string;
+    type: string;
+    status?: string;
+    anchors?: readonly string[];
+  }>[];
+}>;
+
 export type ProjectedGraph = {
   profile: {
     featuredMediaIds?: string[];
@@ -99,10 +108,19 @@ function copyGraph(
   };
 }
 
-export function getPublicMediaIds(graph: GraphInput): Set<string> {
+export function getPublicMediaIds(graph: PublicMediaSource): Set<string> {
+  const visibleIds = new Set(
+    graph.nodes.filter((node) => node.type === "user").map((node) => node.id),
+  );
+  graph.nodes
+    .filter((node) => node.type === "thought" && node.status === "published")
+    .forEach((thought) => {
+      visibleIds.add(thought.id);
+      thought.anchors?.forEach((id) => visibleIds.add(id));
+    });
   return new Set(
-    projectGraphForMode(graph, MAP_MODES.visitor)
-      .nodes.filter((node) => node.type === "media")
+    graph.nodes
+      .filter((node) => node.type === "media" && visibleIds.has(node.id))
       .map((node) => node.id),
   );
 }

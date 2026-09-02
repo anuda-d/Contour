@@ -1,3 +1,6 @@
+import type { ResizeEventPort } from "../kernel/resize-event.ts";
+import type { ClockPort } from "../kernel/clock.ts";
+
 type MapMode = "owner" | "visitor";
 
 type Point = { x: number; y: number };
@@ -74,6 +77,8 @@ export type MapPresentation = {
 };
 type MapOptions = {
   presentation: MapPresentation;
+  clock: ClockPort;
+  resizeEvents: ResizeEventPort;
   mode?: string;
   selectionState?: SelectionState;
   featuredState?: FeaturedState;
@@ -716,8 +721,7 @@ export class ThoughtMap {
     this.canvas.addEventListener("pointerup", (event) => this.endCanvasGesture(event));
     this.canvas.addEventListener("pointercancel", (event) => this.endCanvasGesture(event));
     this.canvas.addEventListener("keydown", (event) => this.handleKeyboard(event));
-    window.removeEventListener("resize", this.onWindowResize);
-    window.addEventListener("resize", this.onWindowResize, { passive: true });
+    this.options.resizeEvents.replaceListener(this.onWindowResize);
   }
 
   rebindNodeEvents(): void {
@@ -869,7 +873,7 @@ export class ThoughtMap {
 
   handleNodeClick(event: MouseEvent, element: HTMLElement): void {
     const id = datasetValue(element, "nodeId");
-    if (this.suppressedClick?.id === id && Date.now() <= this.suppressedClick.until) {
+    if (this.suppressedClick?.id === id && this.options.clock.nowMilliseconds() <= this.suppressedClick.until) {
       event.preventDefault();
       this.suppressedClick = null;
       return;
@@ -1087,7 +1091,7 @@ export class ThoughtMap {
       if (crossed) {
         this.movedNodes.add(id);
         element.dataset.moved = "true";
-        this.suppressedClick = { id, until: Date.now() + 500 };
+        this.suppressedClick = { id, until: this.options.clock.nowMilliseconds() + 500 };
         this.renderDetails();
       }
     };

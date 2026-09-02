@@ -2,17 +2,18 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   DRAFT_STORAGE_KEY,
+  createAuthoredThoughtReloadPort,
   loadDraftState,
   persistDraftState,
   THOUGHT_STORAGE_KEY,
   THOUGHT_V1_STORAGE_KEY,
-  type BrowserStorage,
 } from "../../../src/adapters/browser/authored-local-storage.ts";
+import type { KeyValueStoragePort } from "../../../src/kernel/key-value-storage.ts";
 import { createDraft, emptyDraftState, publishDraft } from "../../../src/product/authorship/draft-state.ts";
 
 const validIds = new Set(["left-hand", "arrival"]);
 const input = { id: "draft-one", primaryMediaId: "left-hand", statement: "A private thought.", createdAt: "2026-08-23T12:00:00.000Z" };
-function memoryStorage(): BrowserStorage {
+function memoryStorage(): KeyValueStoragePort {
   const values = new Map<string, string>();
   return { getItem: (key) => values.get(key) ?? null, setItem: (key, value) => { values.set(key, value); } };
 }
@@ -61,6 +62,20 @@ test("unavailable storage degrades to the current visit", () => {
   assert.equal(persistDraftState(null, state, validIds).saved, false);
 });
 
+test("the authored reload adapter exposes only loaded state or unavailable storage", () => {
+  const storage = memoryStorage();
+  const state = createDraft(emptyDraftState(), input, validIds).state;
+  persistDraftState(storage, state, validIds);
+
+  assert.deepEqual(createAuthoredThoughtReloadPort(storage, validIds).load(), {
+    kind: "loaded",
+    state,
+  });
+  assert.deepEqual(createAuthoredThoughtReloadPort(null, validIds).load(), {
+    kind: "storage-unavailable",
+  });
+});
+
 test("legacy Drafts migrate to authored V2 without immediately overwriting their key", () => {
   const storage = memoryStorage();
   const legacy = JSON.stringify({ version: 1, drafts: [{ ...input, mediaId: "left-hand" }] });
@@ -82,8 +97,8 @@ test("a current envelope without Thoughts stays empty without a recovery notice"
 
 test("read and write errors return safe visit-only outcomes", () => {
   const state = createDraft(emptyDraftState(), input, validIds).state;
-  const readFailure: BrowserStorage = { getItem: () => { throw new Error("read"); }, setItem: () => {} };
-  const writeFailure: BrowserStorage = { getItem: () => null, setItem: () => { throw new Error("write"); } };
+  const readFailure: KeyValueStoragePort = { getItem: () => { throw new Error("read"); }, setItem: () => {} };
+  const writeFailure: KeyValueStoragePort = { getItem: () => null, setItem: () => { throw new Error("write"); } };
   assert.equal(loadDraftState(readFailure, validIds).storageError, true);
   assert.equal(persistDraftState(writeFailure, state, validIds).saved, false);
 });
