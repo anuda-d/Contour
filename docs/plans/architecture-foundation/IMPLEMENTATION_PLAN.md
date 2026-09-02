@@ -61,15 +61,15 @@ queue.
 ## Current run
 
 - State: accepted; no current unit.
-- Unit id: af-4-featured-media-use-case.
+- Unit id: af-4-pinned-position-use-case.
 - Criterion: AF-4 Application use cases, AF-5 Isolated effects and validated boundaries, and AF-9 Layered test and quality gates.
-- Accepted evidence: the featured-Media toggle now coordinates product policy and persistence through a screen-neutral use case with an injected narrow port while composition retains browser wiring and Map rendering.
-- Exact owned diff: the featured-Media application use case and persistence port, browser adapter implementation, composition callback delegation and startup-recovery rewrite, focused application, adapter, and composition source-contract tests, and synchronized operational evidence.
-- Focused validation: 20 featured product, application, adapter, and composition checks passed.
+- Accepted evidence: pin and unpin now coordinate existing spatial policy and persistence through screen-neutral application use cases with an injected narrow port while composition retains browser wiring and Map rendering.
+- Exact owned diff: pinned-position application use cases and persistence port, browser adapter factory, composition callback delegation and startup-recovery rewrite, focused application, adapter, and composition source-contract tests, and synchronized operational evidence.
+- Focused validation: 21 pinned product, application, adapter, and composition checks passed.
   Strict browser and test typechecks, architecture enforcement, Vite production build, and `git diff --check --` passed.
-- Full validation: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, Vite production build, and 172 tests with zero failures.
+- Full validation: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, Vite production build, and 177 tests with zero failures.
 - Rendered validation: not required because the owned diff changes no rendered surface, CSS, copy, persisted representation, or interaction policy.
-- Explorer evidence: three independent read-only audits confirmed changed toggles alone persist, rejected product messages remain exact, failed writes retain the changed in-memory state with the existing visit-only suffix, startup recovery keeps its exact message, and public eligibility and cross-tab scope remain unchanged.
+- Explorer evidence: three independent read-only audits confirmed V1 same-key normalization, current composable non-user eligibility including private Drafts, silent startup recovery rewrite behavior, exact pin and unpin fallback copy, no-op non-persistence, and the smallest application-port seam.
 - Independent review: fresh read-only `gpt-5.6-sol` high-reasoning review was clean with no P0-P3 finding or commit blocker.
 - Scope guard: this changes no rendered surface, interaction behavior, persisted state, public or private projection, CSS, copy, or design tokens.
 
@@ -116,7 +116,7 @@ queue.
 
 ## Fresh-task handoff state
 
-- Latest accepted unit: af-4-featured-media-use-case.
+- Latest accepted unit: af-4-pinned-position-use-case.
 - Latest implementation commit: recorded in this accepted unit's post-commit handoff.
 - Latest temporary handoff: written after this accepted unit commits.
 - Next unit selected: no.
@@ -145,19 +145,18 @@ without discarding uncommitted work or inferring missing decisions.
 ## Current unit evidence
 
 - State: accepted; no current unit.
-- Unit id: af-4-featured-media-use-case.
+- Unit id: af-4-pinned-position-use-case.
 - Criterion: AF-4 Application use cases, AF-5 Isolated effects and validated boundaries, and AF-9 Layered test and quality gates.
-- Intended result: a screen-neutral featured-Media application use case coordinates the existing public-Media toggle through a narrow injected persistence port while composition retains browser wiring and Map rendering.
-- Evidence claim: deterministic application tests with a fake persistence port and focused composition coverage demonstrate that the UI callback no longer coordinates featured-Media mutation and persistence directly.
-- Exact owned diff: the featured-Media application use case and persistence port, browser adapter implementation, composition callback delegation and startup-recovery rewrite, focused application, adapter, and composition source-contract tests, and synchronized operational evidence.
-- Explorer evidence: three independent read-only audits confirmed that changed toggles alone persist, rejected product messages remain exact, failed writes retain the changed in-memory state with the existing visit-only suffix, startup recovery keeps its exact message, and public eligibility and cross-tab scope remain unchanged.
-- Focused validation: 20 featured product, application, adapter, and composition checks passed.
+- Intended result: screen-neutral pinned-position application use cases coordinate existing pin and unpin policy through a narrow injected persistence port while composition retains browser wiring and Map rendering.
+- Evidence claim: deterministic application tests with a fake persistence port and focused composition coverage demonstrate that Map callbacks no longer coordinate pinned-position mutation and persistence directly.
+- Exact owned diff: pinned-position application use cases and persistence port, browser adapter factory, composition callback delegation and startup-recovery rewrite, focused application, adapter, and composition source-contract tests, and synchronized operational evidence.
+- Explorer evidence: three independent read-only audits confirmed V1 same-key normalization, current composable non-user eligibility including private Drafts, silent startup recovery rewrite behavior, exact pin and unpin fallback copy, no-op non-persistence, and the smallest application-port seam.
+- Focused validation: 21 pinned product, application, adapter, and composition checks passed.
   Strict browser and test typechecks, architecture enforcement, Vite production build, and `git diff --check --` passed.
 - Full validation: `./scripts/check.sh` passed.
-  The repository test suite also passed 172 tests with zero failures.
+  The repository test suite also passed 177 tests with zero failures.
 - Scope guard: no rendered surface, interaction policy, CSS, copy, persisted representation, public or private projection, or design token may change.
 - Rendered validation: not required because the selected seam preserves the current UI callback contract and changes no rendered surface, CSS, copy, persisted representation, or interaction policy.
-- Design pre-flight: preserve-mode Design Read completed with frozen editorial-constellation dials; no design-system, layout, color, type, motion, DOM, or CSS changes were made.
 - Independent review: fresh read-only `gpt-5.6-sol` high-reasoning review was clean with no P0-P3 finding or commit blocker.
 
 ## Goal-readiness evidence
@@ -395,6 +394,10 @@ Routine work-unit completion does not require owner review.
   A screen-neutral featured-Media application use case now coordinates the existing public-Media toggle through an injected persistence port.
   It preserves public-only eligibility, ordered three-work curation, product messages, no-op non-persistence, v1 storage compatibility, startup recovery, visit-only fallback copy, and the current UI callback contract.
   Focused 20-check evidence, full 172-test repository validation, and a clean fresh independent review support bounded AF-4, AF-5, and AF-9 evidence.
+- AF-4, AF-5, and AF-9 partial unit `af-4-pinned-position-use-case` accepted on 2026-09-01.
+  Screen-neutral pin and unpin application use cases now coordinate the existing spatial policy through an injected persistence port.
+  They preserve current composable non-user eligibility including private Drafts, V1 same-key normalization and recovery, silent startup rewrite behavior, exact product and visit-only fallback messages, no-op non-persistence, current UI callback behavior, and spatial-only meaning.
+  Focused 21-check evidence, full 177-test repository validation, and a clean fresh independent review support bounded AF-4, AF-5, and AF-9 evidence.
 
 ## Administratively closed run log
 

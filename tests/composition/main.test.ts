@@ -136,3 +136,25 @@ test("the composition root delegates featured mutation and persistence to the ap
   assert.doesNotMatch(source, /toggleFeaturedMedia\(/);
   assert.doesNotMatch(source, /saveFeaturedState\(/);
 });
+
+test("the composition root delegates pinned-position mutation and persistence to the application use case", () => {
+  const source = readFileSync(resolve("src/composition/main.ts"), "utf8");
+
+  assert.match(
+    source,
+    /import \{\s*createPinnedPositionPersistencePort,\s*loadPinnedState,\s*\} from "\.\.\/adapters\/browser\/pinned-local-storage\.ts"/,
+  );
+  assert.match(
+    source,
+    /import \{\s*pinPosition,\s*unpinPosition,\s*\} from "\.\.\/application\/map\/update-pinned-positions\.ts"/,
+  );
+  assert.match(source, /const pinnedPersistence = createPinnedPositionPersistencePort\(storage\);/);
+  assert.match(source, /pinnedPersistence\.save\(pinnedState\);/);
+  assert.match(
+    source,
+    /const result = pinPosition\(pinnedState, id, position, pinnableIds\(\), pinnedPersistence\);/,
+  );
+  assert.match(source, /const result = unpinPosition\(pinnedState, id, pinnedPersistence\);/);
+  assert.doesNotMatch(source, /from "\.\.\/product\/map\/pinned-positions\.ts"/);
+  assert.doesNotMatch(source, /savePinnedState\(/);
+});

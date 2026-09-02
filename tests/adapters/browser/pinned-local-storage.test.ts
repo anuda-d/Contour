@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   PINNED_STORAGE_KEY,
+  createPinnedPositionPersistencePort,
   loadPinnedState,
   savePinnedState,
 } from "../../../src/adapters/browser/pinned-local-storage.ts";
@@ -86,4 +87,13 @@ test("pinned adapter recovers read failures and reports write failures without t
   });
   assert.equal(savePinnedState(writeFailure, state), false);
   assert.equal(savePinnedState(null, state), false);
+});
+
+test("pinned-position persistence port preserves adapter write outcomes", () => {
+  const state = emptyPinnedState();
+  const storage = memoryStorage();
+
+  assert.equal(createPinnedPositionPersistencePort(storage).save(state), true);
+  assert.equal(createPinnedPositionPersistencePort(null).save(state), false);
+  assert.equal(storage.getItem(PINNED_STORAGE_KEY), JSON.stringify(state));
 });

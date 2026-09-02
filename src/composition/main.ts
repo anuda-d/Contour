@@ -27,10 +27,13 @@ import {
 import { getPublicMediaIds } from "../graph-projection.ts";
 import { ThoughtMap } from "../ui/map.dom.ts";
 import {
+  createPinnedPositionPersistencePort,
   loadPinnedState,
-  savePinnedState,
 } from "../adapters/browser/pinned-local-storage.ts";
-import { pinPosition, unpinPosition } from "../product/map/pinned-positions.ts";
+import {
+  pinPosition,
+  unpinPosition,
+} from "../application/map/update-pinned-positions.ts";
 import {
   createSelectionPersistencePort,
   loadSelection,
@@ -74,6 +77,7 @@ try {
   const authoredThoughts = createAuthoredThoughtReloadPort(storage, validCatalogueIds);
   const selectionPersistence = createSelectionPersistencePort(storage);
   const featuredPersistence = createFeaturedPersistencePort(storage);
+  const pinnedPersistence = createPinnedPositionPersistencePort(storage);
 
   const loaded = loadSelection(storage, validCatalogueIds);
   const loadedFeatured = loadFeaturedState(
@@ -141,7 +145,7 @@ try {
     }
   }
   if (loadedPinned.recovered && loadedPinned.persistent) {
-    savePinnedState(storage, pinnedState);
+    pinnedPersistence.save(pinnedState);
   }
 
   const openChooser = () => {
@@ -368,26 +372,14 @@ try {
         return result;
       },
       onPinPosition: (id, position) => {
-        const result = pinPosition(pinnedState, id, position, pinnableIds());
+        const result = pinPosition(pinnedState, id, position, pinnableIds(), pinnedPersistence);
         pinnedState = result.state;
-        const saved = !result.changed || savePinnedState(storage, pinnedState);
-        return {
-          ...result,
-          state: pinnedState,
-          message: saved ? result.message : "Position pinned for this visit.",
-        };
+        return result;
       },
       onUnpinPosition: (id) => {
-        const result = unpinPosition(pinnedState, id);
+        const result = unpinPosition(pinnedState, id, pinnedPersistence);
         pinnedState = result.state;
-        const saved = !result.changed || savePinnedState(storage, pinnedState);
-        return {
-          ...result,
-          state: pinnedState,
-          message: saved
-            ? result.message
-            : "Position returned for this visit. The saved pin could not be changed.",
-        };
+        return result;
       },
       onModeChange: (nextMode) => {
         mapMode = nextMode;
