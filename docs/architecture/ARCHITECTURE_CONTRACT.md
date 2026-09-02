@@ -91,6 +91,7 @@ They are explicit in the import checker so a new top-level source file cannot si
 | Clock effect port | `src/kernel/clock.ts` and `src/adapters/browser/browser-clock.ts` | Narrow injected canonical ISO timestamp capability for current authored create and publish workflows |
 | Identifier effect port | `src/kernel/identifier.ts` and `src/adapters/browser/browser-identifier.ts` | Narrow injected UUID capability for current authored Draft creation |
 | Browser root acquisition | `src/adapters/browser/browser-root.ts` | Typed `#app` startup-root lookup with the existing missing-root failure semantics |
+| Map browser resize event | `src/kernel/resize-event.ts` and `src/adapters/browser/browser-resize-event.ts` | Typed listener-replacement capability that preserves the native Map's synchronous passive remove-then-add resize registration |
 | Catalogue | `src/product/catalogue/catalogue.ts` | Typed Book and Film facts and fresh editable catalogue reads |
 | Taste selection | `src/product/taste/selection.ts` and `src/adapters/browser/selection-local-storage.ts` | Typed private three-work selection rules and injected browser-storage persistence |
 | Taste featured Media | `src/product/taste/featured.ts` and `src/adapters/browser/featured-local-storage.ts` | Typed deliberate public presentation choices and injected browser-storage persistence |

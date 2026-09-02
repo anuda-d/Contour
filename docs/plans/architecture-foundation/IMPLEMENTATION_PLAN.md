@@ -30,11 +30,11 @@ Status: active shared state; standing scheduled owner authorization.
 | AF-2 Complete strict TypeScript | accepted | Every maintained application source and automated test is strict TypeScript. Separate browser and Node-test typechecks, the Vite build, and the checked `src/composition/main.ts` native entrypoint are accepted with no maintained application JavaScript mirror. |
 | AF-3 Deep product modules | open | Partial: authored Thought lifecycle, anchors, publication, and immutable merge now live in a cohesive strict TypeScript product module; other product facts remain in prototype seams. |
 | AF-4 Application use cases | open | Partial: the authored-Thought cross-tab reload workflow now has a screen-neutral application use case that returns an explicit unavailable-storage outcome or a recomposed graph and message through a specific typed persistence port; other current workflows remain composition-owned. |
-| AF-5 Isolated effects and validated boundaries | open | Partial: browser localStorage, DOM-root acquisition, and the existing Map debug-global publication, storage adapters, wall-clock access, UUID generation, authored-Thought cross-tab events, and the authored-Thought reload adapter now cross narrow inward ports; selection, featured-Media, pinned-position, and authored-Thought persistence remain injected and normalized at their trust boundaries, while other browser events, seed input, and form-input boundaries remain open. |
+| AF-5 Isolated effects and validated boundaries | open | Partial: browser localStorage, DOM-root acquisition, Map resize listening, and the existing Map debug-global publication, storage adapters, wall-clock access, UUID generation, authored-Thought cross-tab events, and the authored-Thought reload adapter now cross narrow inward ports; selection, featured-Media, pinned-position, and authored-Thought persistence remain injected and normalized at their trust boundaries, while other browser events, seed input, and form-input boundaries remain open. |
 | AF-6 Explicit projections and privacy | open | Partial: the owner and visitor graph projection now has strict TypeScript ownership and focused evidence for Draft and draft-only Media exclusion, publication-derived public eligibility, dangling-edge filtering, and owner capability removal; application-level structurally separate read models remain open. |
 | AF-7 Durable compatibility | open | Partial: authored V2, V1, and legacy-Draft browser storage now has typed precedence, normalization, migration, recovery, and read-merge-write evidence; other persisted state remains to be completed. |
 | AF-8 Frozen visible behavior | open | None yet. |
-| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, shared effect-port source coverage, browser-root and browser-Map-global adapter coverage, and Map composition, DOM-source-contract, product, application-use-case, browser-adapter, CSS-regression, end-to-end acceptance, and architecture-boundary coverage; later migrated seams and final coverage remain open. |
+| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, shared effect-port source coverage, browser-root, browser-resize, and browser-Map-global adapter coverage, and Map composition, DOM-source-contract, product, application-use-case, browser-adapter, CSS-regression, end-to-end acceptance, and architecture-boundary coverage; later migrated seams and final coverage remain open. |
 | AF-10 Durable completion walkthrough | open | None yet. |
 
 This table records accepted evidence only.
@@ -60,19 +60,18 @@ queue.
 
 ## Current run
 
-- State: accepted; no successor unit selected.
-- Unit id: af-5-browser-map-global-adapter-port.
+- State: accepted; no current unit.
+- Unit id: af-5-browser-resize-event-port.
 - Criterion: AF-5 Isolated effects and validated boundaries and AF-9 Layered test and quality gates.
-- Intended result: publish the existing `ThoughtMap` browser debug handle through a narrow outward adapter so the composition root no longer writes to `window` directly.
-- Evidence claim: the adapter exposes the exact `ThoughtMap` instance under the existing `window.thoughtMap` name, composition contains no `window.thoughtMap` assignment, and focused contract tests protect the unchanged browser-global behavior.
-- Exact owned diff: a generic browser-global adapter synchronously overwrites only `thoughtMap`; composition imports and calls it at the existing assignment point and no longer augments or assigns `Window.thoughtMap` directly.
-- Focused validation: the new adapter identity-and-replacement contract plus all composition source-contract tests passed (7 tests).
+- Accepted evidence: the typed browser resize port owns the existing passive remove-then-add listener replacement while `ThoughtMap` consumes only the injected port.
+- Exact owned diff: a narrow kernel resize port and browser adapter preserve the existing remove-then-add passive listener replacement, while the Map consumes the injected port and composition performs the only concrete browser wiring.
+- Focused validation: adapter, Map UI, and composition source-contract suites passed 22 tests.
   Strict browser and test typechecks, architecture enforcement, the Vite production build, and `git diff --check -- .` passed.
-- Full validation: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, the Vite production build, and 155 tests with zero failures.
-  The focused suite, full check, and `git diff --check -- .` were repeated after the review-driven source-order contract correction and passed.
-- Explorer evidence: two independent read-only audits found no other repository consumer of the global and confirmed a generic adapter avoids the forbidden adapters-to-UI dependency while preserving assignment timing and overwrite semantics.
-- Independent review: the first fresh review identified three evidence-record gaps, all corrected; the required second fresh read-only `gpt-5.6-sol` high-reasoning review was clean with no P0-P3 finding or commit blocker.
-- Scope guard: this changes no rendered surface, interaction, persisted state, public or private projection, or browser-event behavior.
+- Full validation: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, the Vite production build, and 158 tests with zero failures.
+- Rendered validation: not required because the owned diff changes no rendered surface, CSS, copy, persisted representation, or interaction policy.
+- Explorer evidence: two independent read-only audits confirmed the Map is the sole resize listener, the handler only reapplies the existing transform, and listener replacement remains synchronous, passive, and teardown-free.
+- Independent review: the first fresh review found a P2 contradiction between the current active run and `CURRENT.md` stop condition; it was corrected, focused and full validation were repeated, and a second fresh review was clean with no P0-P3 finding or commit blocker.
+- Scope guard: this changes no rendered surface, interaction behavior, persisted state, public or private projection, CSS, copy, or design tokens.
 
 ## Owner authorization
 
@@ -117,7 +116,7 @@ queue.
 
 ## Fresh-task handoff state
 
-- Latest accepted unit: af-5-browser-map-global-adapter-port.
+- Latest accepted unit: af-5-browser-resize-event-port.
 - Latest implementation commit: recorded in this accepted unit's post-commit handoff.
 - Latest temporary handoff: written after this accepted unit commits.
 - Next unit selected: no
@@ -147,14 +146,18 @@ without discarding uncommitted work or inferring missing decisions.
 
 - State: accepted; no current unit.
 - Criterion: AF-5 Isolated effects and validated boundaries and AF-9 Layered test and quality gates.
-- Accepted evidence: `publishBrowserThoughtMap` owns the existing synchronous `window.thoughtMap` publication, preserving exact-instance exposure and replacement while composition has no direct global assignment.
-- Observed evidence: the adapter identity-and-replacement contract and composition source contract pass; source-contract ordering confirms construction, publication, then storage subscription; strict typechecks, architecture enforcement, production build, and diff whitespace check pass.
-- Full validation: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, the Vite production build, and 155 tests with zero failures.
-  The focused suite, full check, and `git diff --check -- .` were repeated after the review-driven source-order contract correction and passed.
-- Rendered validation: not required because no rendered surface, interaction, CSS, copy, or persisted representation changes.
-- Explorer evidence: two independent read-only audits found no other repository consumer and confirmed the generic adapter avoids a forbidden adapter-to-UI dependency.
-- Independent review: the first fresh review found stale operational wording and missing source-order protection, which were corrected and revalidated; the required second fresh read-only review was clean with no P0-P3 finding or commit blocker.
-- Remaining risk: this retains a browser-only debug handle by frozen behavior rather than treating it as product state; other browser effects, form input, seed input, projections, storage compatibility, frozen-flow validation, and final walkthrough work remain open.
+- Accepted evidence: a narrow typed resize port replaces direct `window` access in the Map UI adapter without changing listener timing or the frozen interaction contract.
+- Exact owned diff: `src/kernel/resize-event.ts`, `src/adapters/browser/browser-resize-event.ts`, Map and composition wiring, plus adapter and source-contract tests.
+- Observed evidence: the adapter test proves same-listener synchronous `removeEventListener("resize", listener)` before passive `addEventListener`; Map source consumes only `resizeEvents.replaceListener`; composition injects the typed browser adapter.
+- Focused validation: 22 adapter, Map UI, and composition contract tests passed.
+  Strict browser and test typechecks, architecture enforcement, Vite production build, and `git diff --check -- .` passed.
+- Full validation: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, Vite production build, and 158 tests with zero failures.
+- Rendered validation: not required because the selected seam changes no rendered surface, CSS, copy, persisted representation, or interaction policy.
+- Explorer evidence: two independent read-only audits confirmed the Map is the sole resize listener and the replacement ordering, passive option, stable callback identity, and no-teardown behavior are frozen requirements.
+- Independent review: the first fresh review found the stale `CURRENT.md` stop condition; after correction and repeated validation, the second fresh `gpt-5.6-sol` high-reasoning review was clean with no P0-P3 finding or commit blocker.
+- Design Read: preserved Editorial Constellation Map for thoughtful cultural discovery; the existing spatial interaction language remains exact.
+- Design dials: variance 7, motion 4, density 4, preserved from the accepted foundation.
+- Design audit and pre-flight: no visual change is intended; preserve existing responsive, pointer, keyboard, light-mode, and dark-mode behavior.
 
 ## Goal-readiness evidence
 
@@ -377,6 +380,9 @@ Routine work-unit completion does not require owner review.
   A generic browser adapter now owns the existing synchronous `window.thoughtMap` debug publication without importing UI code.
   It preserves exact-instance replacement and the existing construction, publication, then storage-subscription order while composition has no direct global assignment.
   Focused seven-test evidence, repeated full 155-test repository validation after review-driven source-order coverage, and a clean second fresh independent review support bounded AF-5 and AF-9 evidence.
+- AF-5 and AF-9 partial unit `af-5-browser-resize-event-port` accepted on 2026-09-01.
+  A narrow kernel resize port and browser adapter now own the native Map's synchronous passive remove-then-add listener replacement while `ThoughtMap` has no direct browser-global resize access.
+  Focused 22-test evidence, repeated full 158-test repository validation after the review-driven operational-state correction, and a clean second fresh independent review support bounded AF-5 and AF-9 evidence.
 
 ## Administratively closed run log
 

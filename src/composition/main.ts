@@ -19,6 +19,7 @@ import type { KeyValueStoragePort } from "../kernel/key-value-storage.ts";
 import type { ClockPort } from "../kernel/clock.ts";
 import type { IdentifierPort } from "../kernel/identifier.ts";
 import type { StorageChangePort } from "../kernel/storage-change.ts";
+import type { ResizeEventPort } from "../kernel/resize-event.ts";
 import {
   loadFeaturedState,
   saveFeaturedState,
@@ -46,6 +47,7 @@ import { WorkChooser } from "../ui/work-chooser.dom.ts";
 import { browserClock } from "../adapters/browser/browser-clock.ts";
 import { browserIdentifier } from "../adapters/browser/browser-identifier.ts";
 import { createBrowserStorageChangePort } from "../adapters/browser/browser-storage-change.ts";
+import { createBrowserResizeEventPort } from "../adapters/browser/browser-resize-event.ts";
 import { getBrowserKeyValueStorage } from "../adapters/browser/browser-local-storage.ts";
 import { getBrowserRoot } from "../adapters/browser/browser-root.ts";
 import { publishBrowserThoughtMap } from "../adapters/browser/browser-map-global.ts";
@@ -61,6 +63,7 @@ const mapPresentation = createMapPresentation();
 const clock: ClockPort = browserClock;
 const identifier: IdentifierPort = browserIdentifier;
 const storageChanges: StorageChangePort = createBrowserStorageChangePort(window);
+const resizeEvents: ResizeEventPort = createBrowserResizeEventPort(window);
 
 try {
   const baseGraph = getSeedGraph();
@@ -326,6 +329,7 @@ try {
   } else {
     map = new ThoughtMap(root, graph, {
       presentation: mapPresentation,
+      resizeEvents,
       mode: mapMode,
       selectionState,
       featuredState,

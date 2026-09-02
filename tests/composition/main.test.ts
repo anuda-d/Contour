@@ -86,3 +86,12 @@ test("the composition root wires authored storage changes through a browser even
   assert.match(source, /activeMap\(\)\.updateGraph\(graph, \{ message: synced\.message \}\);/);
   assert.doesNotMatch(source, /window\.addEventListener\("storage"/);
 });
+
+test("the composition root wires Map resize listening through a browser event port", () => {
+  const source = readFileSync(resolve("src/composition/main.ts"), "utf8");
+
+  assert.match(source, /import type \{ ResizeEventPort \} from "\.\.\/kernel\/resize-event\.ts"/);
+  assert.match(source, /import \{ createBrowserResizeEventPort \} from "\.\.\/adapters\/browser\/browser-resize-event\.ts"/);
+  assert.match(source, /const resizeEvents: ResizeEventPort = createBrowserResizeEventPort\(window\);/);
+  assert.match(source, /map = new ThoughtMap\(root, graph, \{[\s\S]*?resizeEvents,/);
+});

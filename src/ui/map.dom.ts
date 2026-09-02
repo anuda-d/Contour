@@ -1,3 +1,5 @@
+import type { ResizeEventPort } from "../kernel/resize-event.ts";
+
 type MapMode = "owner" | "visitor";
 
 type Point = { x: number; y: number };
@@ -74,6 +76,7 @@ export type MapPresentation = {
 };
 type MapOptions = {
   presentation: MapPresentation;
+  resizeEvents: ResizeEventPort;
   mode?: string;
   selectionState?: SelectionState;
   featuredState?: FeaturedState;
@@ -716,8 +719,7 @@ export class ThoughtMap {
     this.canvas.addEventListener("pointerup", (event) => this.endCanvasGesture(event));
     this.canvas.addEventListener("pointercancel", (event) => this.endCanvasGesture(event));
     this.canvas.addEventListener("keydown", (event) => this.handleKeyboard(event));
-    window.removeEventListener("resize", this.onWindowResize);
-    window.addEventListener("resize", this.onWindowResize, { passive: true });
+    this.options.resizeEvents.replaceListener(this.onWindowResize);
   }
 
   rebindNodeEvents(): void {
