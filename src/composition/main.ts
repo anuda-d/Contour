@@ -1,11 +1,7 @@
 import { getCatalogue, type CatalogueWork } from "../product/catalogue/catalogue.ts";
 import {
   composeGraphWithDrafts,
-  connectDraft,
-  createDraft,
-  editDraft,
   type Thought,
-  type ThoughtMutation,
 } from "../product/authorship/draft-state.ts";
 import {
   createAuthoredThoughtPersistencePort,
@@ -16,6 +12,7 @@ import {
 } from "../adapters/browser/authored-local-storage.ts";
 import { reloadAuthoredThoughts } from "../application/authorship/reload-authored-thoughts.ts";
 import { publishAuthoredThought } from "../application/authorship/publish-authored-thought.ts";
+import { saveAuthoredDraft } from "../application/authorship/save-authored-draft.ts";
 import type { KeyValueStoragePort } from "../kernel/key-value-storage.ts";
 import type { ClockPort } from "../kernel/clock.ts";
 import type { IdentifierPort } from "../kernel/identifier.ts";
@@ -205,38 +202,28 @@ try {
       draft,
       initialMessage: draft ? "" : initialDraftMessage,
       onSave: ({ draftId: editingId, primaryMediaId, statement }) => {
-        const result = editingId
-          ? editDraft(draftState, editingId, statement)
-          : createDraft(
-              draftState,
-              {
-                id: `draft-${identifier.randomUuid()}`,
+        const result = saveAuthoredDraft(
+          draftState,
+          editingId
+            ? { kind: "edit", id: editingId, statement }
+            : {
+                kind: "create",
                 primaryMediaId,
                 statement,
-                createdAt: clock.now(),
+                selectedMediaIds: new Set(selectionState.selectedMediaIds),
+                clock,
+                identifier,
               },
-              new Set(selectionState.selectedMediaIds),
-            );
+          validCatalogueIds,
+          authoredThoughtPersistence,
+        );
         if ("error" in result) return { saved: false, message: result.error };
 
         draftState = result.state;
-        const persisted = result.changed
-          ? persistDraftState(storage, draftState, validCatalogueIds, {
-              id: result.draft.id,
-              fields: editingId ? ["statement"] : [],
-            })
-          : { saved: true, state: draftState };
-        draftState = persisted.state;
-        const currentThought = draftState.thoughts.find((thought) => thought.id === result.draft.id);
-        const publishedElsewhere = editingId && currentThought?.status === "published";
-        draftMessage = publishedElsewhere
-          ? "This Thought was already published in another tab. The private edit was not saved."
-          : persisted.saved
-            ? result.message
-            : `${result.message} This Draft will last for this visit.`;
+        draftMessage = result.message;
         return {
           saved: true,
-          draft: currentThought ?? result.draft,
+          draft: result.thought,
           message: draftMessage,
         };
       },
@@ -274,35 +261,24 @@ try {
       draft,
       bridgeMode: true,
       onSave: ({ secondaryMediaId, statement }) => {
-        const result = connectDraft(
+        const result = saveAuthoredDraft(
           draftState,
-          draft.id,
-          { secondaryMediaId, statement },
+          {
+            kind: "bridge",
+            id: draft.id,
+            secondaryMediaId,
+            statement,
+            statementAtOpen: draft.statement,
+          },
           validCatalogueIds,
+          authoredThoughtPersistence,
         );
         if ("error" in result) return { saved: false, message: result.error };
         draftState = result.state;
-        const bridgeMutationFields: ThoughtMutation["fields"] =
-          result.draft.statement === draft.statement
-            ? ["secondaryMediaId"]
-            : ["secondaryMediaId", "statement"];
-        const persisted = result.changed
-          ? persistDraftState(storage, draftState, validCatalogueIds, {
-              id: draft.id,
-              fields: bridgeMutationFields,
-            })
-          : { saved: true, state: draftState };
-        draftState = persisted.state;
-        const currentThought = draftState.thoughts.find((thought) => thought.id === draft.id);
-        const publishedElsewhere = currentThought?.status === "published";
-        draftMessage = publishedElsewhere
-          ? "This Thought was already published in another tab. The bridge was not saved."
-          : persisted.saved
-            ? result.message
-            : `${result.message} This bridge will last for this visit.`;
+        draftMessage = result.message;
         return {
           saved: true,
-          draft: currentThought ?? result.draft,
+          draft: result.thought,
           message: draftMessage,
         };
       },

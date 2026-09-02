@@ -1,18 +1,11 @@
 import type { ClockPort } from "../../kernel/clock.ts";
 import {
   publishDraft,
-  type ThoughtMutation,
   type ThoughtState,
 } from "../../product/authorship/draft-state.ts";
+import type { AuthoredThoughtPersistencePort } from "./authored-thought-persistence.ts";
 
-export type AuthoredThoughtPersistenceResult = Readonly<{
-  saved: boolean;
-  state: ThoughtState;
-}>;
-
-export type AuthoredThoughtPersistencePort = Readonly<{
-  save(state: ThoughtState, mutation: ThoughtMutation): AuthoredThoughtPersistenceResult;
-}>;
+export type { AuthoredThoughtPersistencePort } from "./authored-thought-persistence.ts";
 
 /**
  * Coordinates irreversible authored-Thought publication with durable

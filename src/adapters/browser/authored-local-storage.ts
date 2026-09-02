@@ -8,7 +8,7 @@ import {
 } from "../../product/authorship/draft-state.ts";
 import type { KeyValueStoragePort } from "../../kernel/key-value-storage.ts";
 import type { AuthoredThoughtReloadPort } from "../../application/authorship/reload-authored-thoughts.ts";
-import type { AuthoredThoughtPersistencePort } from "../../application/authorship/publish-authored-thought.ts";
+import type { AuthoredThoughtPersistencePort } from "../../application/authorship/authored-thought-persistence.ts";
 
 export const THOUGHT_STORAGE_KEY = "thought-map.prototype.authored-thoughts.v2";
 export const THOUGHT_V1_STORAGE_KEY = "thought-map.prototype.authored-thoughts.v1";

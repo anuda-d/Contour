@@ -29,12 +29,12 @@ Status: active shared state; standing scheduled owner authorization.
 | AF-1 Enforced architecture contract | accepted | Architecture decision records, six-key compatibility inventory, and the checked import-boundary gate were accepted after 30 focused and 112 repository tests plus clean fresh review. |
 | AF-2 Complete strict TypeScript | accepted | Every maintained application source and automated test is strict TypeScript. Separate browser and Node-test typechecks, the Vite build, and the checked `src/composition/main.ts` native entrypoint are accepted with no maintained application JavaScript mirror. |
 | AF-3 Deep product modules | open | Partial: authored Thought lifecycle, anchors, publication, and immutable merge now live in a cohesive strict TypeScript product module; other product facts remain in prototype seams. |
-| AF-4 Application use cases | open | Partial: authored-Thought cross-tab reload and publication, deliberate selection toggle or confirmation, public featured-Media toggle, and spatial pin or unpin commands now use screen-neutral application outcomes through specific typed persistence ports; other current workflows remain composition-owned. |
-| AF-5 Isolated effects and validated boundaries | open | Partial: browser localStorage, DOM-root acquisition, Map resize listening, Map drag-click suppression timing, the existing Map debug-global publication, storage adapters, wall-clock access, UUID generation, authored-Thought cross-tab events, authored-Thought reload and publication persistence, selection persistence, featured-Media persistence, and pinned-position persistence now cross narrow inward ports; other browser events, seed input, and form-input boundaries remain open. |
+| AF-4 Application use cases | open | Partial: authored-Thought reload, capture, and publication, deliberate selection toggle or confirmation, public featured-Media toggle, and spatial pin or unpin commands now use screen-neutral application outcomes through specific typed persistence ports; other current workflows remain composition-owned. |
+| AF-5 Isolated effects and validated boundaries | open | Partial: browser localStorage, DOM-root acquisition, Map resize listening, Map drag-click suppression timing, the existing Map debug-global publication, storage adapters, wall-clock access, UUID generation, authored-Thought cross-tab events, capture, reload, and publication persistence, selection persistence, featured-Media persistence, and pinned-position persistence now cross narrow inward ports; other browser events, seed input, and form-input boundaries remain open. |
 | AF-6 Explicit projections and privacy | open | Partial: the owner and visitor graph projection now has strict TypeScript ownership and focused evidence for Draft and draft-only Media exclusion, publication-derived public eligibility, dangling-edge filtering, and owner capability removal; application-level structurally separate read models remain open. |
 | AF-7 Durable compatibility | open | Partial: authored V2, V1, and legacy-Draft browser storage now has typed precedence, normalization, migration, recovery, and read-merge-write evidence; other persisted state remains to be completed. |
 | AF-8 Frozen visible behavior | open | None yet. |
-| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, shared effect-port source coverage, browser-root, browser-resize, browser-clock, browser-Map-global, authored-publication, selection, featured-Media, and pinned-position application and adapter coverage, plus Map composition, DOM-source-contract, product, CSS-regression, end-to-end acceptance, and architecture-boundary coverage; later migrated seams and final coverage remain open. |
+| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, shared effect-port source coverage, browser-root, browser-resize, browser-clock, browser-Map-global, authored capture and publication, selection, featured-Media, and pinned-position application and adapter coverage, plus Map composition, DOM-source-contract, product, CSS-regression, end-to-end acceptance, and architecture-boundary coverage; later migrated seams and final coverage remain open. |
 | AF-10 Durable completion walkthrough | open | None yet. |
 
 This table records accepted evidence only.
@@ -61,19 +61,11 @@ queue.
 ## Current run
 
 - State: accepted; no current unit.
-- Unit id: af-4-publish-authored-thought-use-case.
+- Unit id: af-4-authored-thought-capture-use-case.
 - Criterion: AF-4 Application use cases, AF-5 Isolated effects and validated boundaries, and AF-9 Layered test and quality gates.
-- Intended result: a screen-neutral authored-Thought publication use case coordinates the existing lifecycle command and exact read-merge-write persistence mutation through a narrow injected port while composition retains graph rebuilding and Map rendering.
-- Evidence claim: deterministic application tests with a fake clock and persistence port, the existing authored-storage adapter contract, and focused composition coverage demonstrate that the Map callback no longer coordinates publication mutation and persistence directly.
-- Explorer evidence: three independent read-only audits identified publication as the smallest remaining composition-owned transaction and confirmed its exact success, failure, no-op, privacy, mutation-field, and selected-node refresh behavior.
-- Exact owned diff: authored-Thought publication use case and persistence port, browser adapter factory, composition callback delegation, focused application, adapter, and composition source-contract tests, and synchronized operational evidence.
-- Focused validation: 58 authored product, application, adapter, projection, composition, and Map interaction checks passed.
-  Strict browser and test typechecks, architecture enforcement, and `git diff --check -- .` passed.
-- Full validation: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, the Vite production build, and 183 tests with zero failures.
+- Intended result: screen-neutral authored-Thought capture use cases coordinate existing create, edit, and bridge lifecycle commands with exact read-merge-write persistence while composition retains dialog ownership, graph rebuilding, and Map rendering.
+- Evidence claim: deterministic application tests with fake clock, identifier, and persistence ports, authored-storage adapter coverage, and focused composition source coverage demonstrate that capture callbacks no longer coordinate authored mutation and persistence directly.
 - Scope guard: no rendered surface, interaction policy, CSS, copy, storage key or representation, public or private projection rule, camera behavior, or design token may change.
-- Rendered validation: not required because the owned diff changes no rendered surface, CSS, copy, storage representation, projection rule, camera behavior, or interaction policy.
-- Independent review: the first fresh reviewer found one P2 operational-evidence inconsistency and no code-level finding.
-  After correction and repeated validation, a second fresh `gpt-5.6-sol` high-reasoning review returned clean with no P0-P3 finding or commit blocker.
 
 ## Owner authorization
 
@@ -147,20 +139,19 @@ without discarding uncommitted work or inferring missing decisions.
 ## Current unit evidence
 
 - State: accepted; no current unit.
-- Unit id: af-4-publish-authored-thought-use-case.
+- Unit id: af-4-authored-thought-capture-use-case.
 - Criterion: AF-4 Application use cases, AF-5 Isolated effects and validated boundaries, and AF-9 Layered test and quality gates.
-- Intended result: a screen-neutral authored-Thought publication use case coordinates the existing lifecycle command and exact read-merge-write persistence mutation through a narrow injected port while composition retains graph rebuilding and Map rendering.
-- Evidence claim: deterministic application tests with a fake clock and persistence port, the existing authored-storage adapter contract, and focused composition coverage demonstrate that the Map callback no longer coordinates publication mutation and persistence directly.
-- Exact owned diff: authored-Thought publication use case and persistence port, browser adapter factory, composition callback delegation, focused application, adapter, and composition source-contract tests, and synchronized operational evidence.
-- Explorer evidence: three independent read-only audits identified publication as the smallest remaining composition-owned transaction.
-  They confirmed the canonical clock timestamp, exact product outcomes, no-op non-persistence, `["status", "publishedAt"]` mutation scope, stale-write merge protection, visit-only fallback copy, and selected-node Map refresh that must remain unchanged.
-- Focused validation: 58 authored product, application, adapter, projection, composition, and Map interaction checks passed.
-  Strict browser and test typechecks, architecture enforcement, and `git diff --check -- .` passed.
-- Full validation: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, the Vite production build, and 183 tests with zero failures.
-- Scope guard: no rendered surface, interaction policy, CSS, copy, storage key or representation, public or private projection rule, camera behavior, or design token may change.
-- Rendered validation: not required because the owned diff changes no rendered surface, CSS, copy, storage representation, projection rule, camera behavior, or interaction policy.
-- Independent review: the first fresh reviewer found one P2 operational-evidence inconsistency and no code-level finding.
-  After correction and repeated validation, a second fresh `gpt-5.6-sol` high-reasoning review returned clean with no P0-P3 finding or commit blocker.
+- Intended result: screen-neutral authored-Thought capture use cases coordinate existing create, edit, and bridge commands with exact read-merge-write persistence while composition retains dialog ownership, graph rebuilding, and Map rendering.
+- Evidence claim: application commands own generated Draft identity and timestamp, selected-work validation, exact create/edit/bridge mutation fields, no-op non-persistence, visit-only fallback, and stale concurrent-publication protection.
+- Exact owned diff: shared authored persistence port, capture application command, publication-port migration, browser adapter type migration, composition callback delegation, focused application coverage, composition source coverage, and synchronized operational state.
+- Explorer evidence: three independent read-only audits confirmed the smallest safe seam, including the required bridge comparison against the Draft statement at dialog opening.
+- Focused validation: authored application, adapter, composition, product, projection, and Map coverage passed with 192 tests and zero failures; strict typechecks, architecture enforcement, Vite build, and `git diff --check -- .` passed.
+- Full validation: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, the Vite production build, and 192 tests with zero failures.
+- Scope guard: no rendered surface, interaction policy, CSS, copy, storage key or representation, public or private projection rule, camera behavior, or design token changed.
+- Rendered validation: not required because the owned diff changes no rendered surface or interaction behavior.
+- Independent review: the first fresh review found a P1 whitespace-only bridge merge regression and P2 gaps in field-scope and fallback coverage.
+  The correction compares the normalized product statement, adds real-adapter concurrent-state coverage, and adds direct exact-field plus create/edit/bridge fallback coverage.
+  A second fresh `gpt-5.6-sol` high-reasoning review was clean with no P0-P3 finding or commit blocker.
 
 ## Goal-readiness evidence
 
@@ -405,6 +396,10 @@ Routine work-unit completion does not require owner review.
   A screen-neutral publication use case now coordinates the existing authored-Thought lifecycle command, canonical clock timestamp, exact read-merge-write persistence mutation, no-op outcomes, and visit-only fallback through an injected narrow port.
   It preserves irreversible publication, concurrent authored state, exact product and persistence messages, visitor eligibility, selected-node Map refresh, camera behavior, storage compatibility, and private Draft boundaries.
   Repeated focused 58-check evidence, repeated full 183-test repository validation, and a clean second fresh independent review after correcting operational evidence support bounded AF-4, AF-5, and AF-9 evidence.
+- AF-4, AF-5, and AF-9 partial unit `af-4-authored-thought-capture-use-case` accepted on 2026-09-02.
+  Screen-neutral create, edit, and bridge commands now own generated Draft identity and timestamp, selected-work validation, exact scoped read-merge-write persistence, no-op behavior, visit-only fallback, and stale publication protection.
+  The composition root retains dialog flow, graph rebuilding, focus versus selection refresh, and rendering.
+  Repeated focused evidence, full 192-test repository validation, and a clean second fresh independent review after correcting a whitespace-only concurrent bridge merge regression support bounded AF-4, AF-5, and AF-9 evidence.
 
 ## Administratively closed run log
 

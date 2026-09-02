@@ -15,7 +15,7 @@ test("the native browser entrypoint loads the strict TypeScript composition root
   assert.doesNotMatch(entrypoint, /src\/app\.js/);
 });
 
-test("the composition root wires authored timestamps and UUIDs through browser effect ports", () => {
+test("the composition root wires authored capture effects through browser ports", () => {
   const source = readFileSync(resolve("src/composition/main.ts"), "utf8");
 
   assert.match(source, /import type \{ ClockPort \} from "\.\.\/kernel\/clock\.ts"/);
@@ -24,12 +24,33 @@ test("the composition root wires authored timestamps and UUIDs through browser e
   assert.match(source, /import \{ browserIdentifier \} from "\.\.\/adapters\/browser\/browser-identifier\.ts"/);
   assert.match(source, /const clock: ClockPort = browserClock;/);
   assert.match(source, /const identifier: IdentifierPort = browserIdentifier;/);
-  assert.match(source, /id: `draft-\$\{identifier\.randomUuid\(\)\}`/);
-  assert.match(source, /createdAt: clock\.now\(\),/);
+  assert.match(source, /import \{ saveAuthoredDraft \} from "\.\.\/application\/authorship\/save-authored-draft\.ts"/);
+  assert.match(source, /kind: "create",[\s\S]*?clock,[\s\S]*?identifier,/);
   assert.match(source, /map = new ThoughtMap\(root, graph, \{[\s\S]*?clock,/);
   assert.match(source, /publishAuthoredThought\(\s*\n\s*draftState,\s*\n\s*id,\s*\n\s*validCatalogueIds,\s*\n\s*clock,/);
   assert.doesNotMatch(source, /crypto\.randomUUID\(\)/);
   assert.doesNotMatch(source, /new Date\(\)\.toISOString\(\)/);
+});
+
+test("the composition root delegates authored capture mutation and persistence to the application use case", () => {
+  const source = readFileSync(resolve("src/composition/main.ts"), "utf8");
+
+  assert.match(source, /const authoredThoughtPersistence = createAuthoredThoughtPersistencePort\(storage, validCatalogueIds\);/);
+  assert.match(source, /const result = saveAuthoredDraft\([\s\S]*?kind: "create"/);
+  assert.match(source, /kind: "edit", id: editingId, statement/);
+  assert.match(source, /kind: "bridge",[\s\S]*?statementAtOpen: draft\.statement,/);
+  assert.match(source, /activeMap\(\)\.updateGraph\(graph, \{ focusId: result\.draft\.id, message: result\.message \}\);/);
+  assert.match(source, /activeMap\(\)\.updateGraph\(graph, \{ selectId: result\.draft\.id, message: result\.message \}\);/);
+
+  const captureCallbacks = source.match(
+    /const openCapture =[\s\S]*?\n  const openBridge =[\s\S]*?\n  if \(!graph\.nodes\.length\)/,
+  )?.[0] ?? "";
+  assert.doesNotMatch(captureCallbacks, /createDraft\(/);
+  assert.doesNotMatch(captureCallbacks, /editDraft\(/);
+  assert.doesNotMatch(captureCallbacks, /connectDraft\(/);
+  assert.doesNotMatch(captureCallbacks, /persistDraftState\(/);
+  assert.doesNotMatch(captureCallbacks, /clock\.now\(/);
+  assert.doesNotMatch(captureCallbacks, /identifier\.randomUuid\(/);
 });
 
 test("the composition root acquires browser storage through its outward adapter", () => {
