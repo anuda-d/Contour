@@ -47,6 +47,7 @@ import { browserClock } from "../adapters/browser/browser-clock.ts";
 import { browserIdentifier } from "../adapters/browser/browser-identifier.ts";
 import { createBrowserStorageChangePort } from "../adapters/browser/browser-storage-change.ts";
 import { getBrowserKeyValueStorage } from "../adapters/browser/browser-local-storage.ts";
+import { getBrowserRoot } from "../adapters/browser/browser-root.ts";
 
 declare global {
   interface Window {
@@ -60,8 +61,7 @@ type SavedThought = {
   message: string;
 };
 
-const root = document.querySelector<HTMLElement>("#app");
-if (!root) throw new Error("Expected application root.");
+const root = getBrowserRoot(document);
 const mapPresentation = createMapPresentation();
 const clock: ClockPort = browserClock;
 const identifier: IdentifierPort = browserIdentifier;

@@ -30,11 +30,11 @@ Status: active shared state; standing scheduled owner authorization.
 | AF-2 Complete strict TypeScript | accepted | Every maintained application source and automated test is strict TypeScript. Separate browser and Node-test typechecks, the Vite build, and the checked `src/composition/main.ts` native entrypoint are accepted with no maintained application JavaScript mirror. |
 | AF-3 Deep product modules | open | Partial: authored Thought lifecycle, anchors, publication, and immutable merge now live in a cohesive strict TypeScript product module; other product facts remain in prototype seams. |
 | AF-4 Application use cases | open | Partial: the authored-Thought cross-tab reload workflow now has a screen-neutral application use case that returns an explicit unavailable-storage outcome or a recomposed graph and message through a specific typed persistence port; other current workflows remain composition-owned. |
-| AF-5 Isolated effects and validated boundaries | open | Partial: browser localStorage acquisition, storage adapters, wall-clock access, UUID generation, authored-Thought cross-tab events, and the authored-Thought reload adapter now cross narrow inward ports; selection, featured-Media, pinned-position, and authored-Thought persistence remain injected and normalized at their trust boundaries, while other browser events, seed input, and form-input boundaries remain open. |
+| AF-5 Isolated effects and validated boundaries | open | Partial: browser localStorage and DOM-root acquisition, storage adapters, wall-clock access, UUID generation, authored-Thought cross-tab events, and the authored-Thought reload adapter now cross narrow inward ports; selection, featured-Media, pinned-position, and authored-Thought persistence remain injected and normalized at their trust boundaries, while other browser events, seed input, and form-input boundaries remain open. |
 | AF-6 Explicit projections and privacy | open | Partial: the owner and visitor graph projection now has strict TypeScript ownership and focused evidence for Draft and draft-only Media exclusion, publication-derived public eligibility, dangling-edge filtering, and owner capability removal; application-level structurally separate read models remain open. |
 | AF-7 Durable compatibility | open | Partial: authored V2, V1, and legacy-Draft browser storage now has typed precedence, normalization, migration, recovery, and read-merge-write evidence; other persisted state remains to be completed. |
 | AF-8 Frozen visible behavior | open | None yet. |
-| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, shared effect-port source coverage, and Map composition, DOM-source-contract, product, application-use-case, browser-adapter, CSS-regression, end-to-end acceptance, and architecture-boundary coverage; later migrated seams and final coverage remain open. |
+| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, shared effect-port source coverage, browser-root adapter coverage, and Map composition, DOM-source-contract, product, application-use-case, browser-adapter, CSS-regression, end-to-end acceptance, and architecture-boundary coverage; later migrated seams and final coverage remain open. |
 | AF-10 Durable completion walkthrough | open | None yet. |
 
 This table records accepted evidence only.
@@ -61,19 +61,20 @@ queue.
 ## Current run
 
 - State: accepted; no successor unit selected.
-- Unit id: af-5-browser-storage-acquisition-port.
+- Unit id: af-5-browser-root-acquisition-port.
 - Criterion: AF-5 Isolated effects and validated boundaries and AF-9 Layered test and quality gates.
-- Intended result: acquire browser localStorage through a narrow outward adapter so composition receives either the native typed storage port or `null` without directly touching the browser global property.
-- Evidence claim: localStorage getter failure retains the existing visit-only fallback, while successful acquisition preserves native storage identity and every existing storage key, migration, recovery, and write path.
-- Exact owned diff: `getBrowserKeyValueStorage` in the convention-compliant `browser-local-storage.ts` adapter owns the potentially failing browser property access; composition delegates acquisition to it and keeps the existing downstream adapters and startup recovery logic unchanged.
-- Focused validation: six new and related browser-adapter and composition tests passed.
+- Intended result: acquire the existing `#app` DOM root through a narrow browser adapter so composition receives the existing typed root without directly reading the browser document.
+- Evidence claim: a matching root is returned unchanged, a missing root preserves the existing startup failure, and composition has no direct `document.querySelector` access.
+- Exact owned diff: a convention-compliant `browser-root.ts` outward adapter owns `document.querySelector` plus the existing missing-root validation; composition delegates only root acquisition and retains its current rendering, callbacks, state, and browser-effect wiring.
+- Focused validation: seven browser-root adapter and composition tests passed.
   Strict browser and test typechecks, architecture enforcement, the Vite production build, and `git diff --check -- .` passed.
-- Full validation: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, the Vite production build, and 150 tests with zero failures.
+- Full validation: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, the Vite production build, and 153 tests with zero failures.
   `git diff --check -- .` passed.
-- Accepted evidence: direct composition access to `window.localStorage` is eliminated; the adapter returns the exact native port when available and `null` when acquisition throws, retaining the established visit-only fallback.
-- Independent review: a fresh read-only `gpt-5.6-sol` high-reasoning reviewer found no P0-P3 finding or commit blocker after the initial review's naming and run-status findings were corrected and revalidated.
-- Rendered validation: not required because the unit changes no rendered surface, interaction, CSS, copy, or persisted representation.
-- Risks and assumptions: cross-tab synchronization for selection, featured Media, and pinned positions remains intentionally out of scope; broader application workflow extraction, read-model separation, storage compatibility completion, frozen-flow validation, and the final walkthrough remain open.
+- Accepted evidence: direct composition access to `document.querySelector` is eliminated; the adapter returns the exact matching root and preserves the exact missing-root error before startup continues.
+- Explorer evidence: two independent read-only audits confirmed the boundary is limited to startup acquisition and that no runtime HTMLElement validation exists in the frozen baseline, so this unit preserves only the existing missing-root failure semantics.
+- Independent review: a fresh read-only `gpt-5.6-sol` high-reasoning reviewer returned clean with no P0-P3 finding or commit blocker.
+- Rendered validation: not required if the adapter preserves the existing root and startup failure behavior without changing a rendered surface, interaction, CSS, copy, or persisted representation.
+- Risks and assumptions: direct browser error rendering stays in composition because this unit isolates only root acquisition; broader application workflow extraction, remaining effect boundaries, read-model separation, storage compatibility completion, frozen-flow validation, and the final walkthrough remain open.
 
 ## Owner authorization
 
@@ -148,13 +149,15 @@ without discarding uncommitted work or inferring missing decisions.
 
 - State: accepted; no current unit.
 - Criterion: AF-5 Isolated effects and validated boundaries and AF-9 Layered test and quality gates.
-- Intended result: isolate the final direct runtime browser localStorage acquisition from the composition root without changing storage behavior.
-- Evidence claim: successful acquisition returns the exact native storage port, a throwing localStorage getter yields the existing `null` visit-only path, and composition contains no direct `window.localStorage` access.
-- Focused validation: six browser-adapter and composition tests plus strict typechecks, architecture enforcement, and the Vite build passed.
-- Full validation: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, the Vite production build, and 150 tests with zero failures; `git diff --check -- .` passed.
-- Rendered validation: not required because the unit changes no rendered surface, interaction, CSS, or visual design.
-- Remaining risk: broader application workflow extraction, remaining effect boundaries, read-model separation, storage compatibility completion, frozen-flow validation, and the final walkthrough remain open under their respective criteria.
-- Independent review: the first reviewer found an invalid candidate run status and filename convention violation; both were corrected, focused and full validation were repeated, and a fresh final `gpt-5.6-sol` high-reasoning review returned clean with no P0-P3 finding or commit blocker.
+- Intended result: isolate direct browser document root acquisition from the composition root without changing startup behavior.
+- Evidence claim: successful acquisition returns the exact existing `#app` element, a missing root retains the current startup failure, and composition contains no direct `document.querySelector` access.
+- Focused validation: seven browser-root adapter and composition tests plus strict typechecks, architecture enforcement, Vite build, and `git diff --check -- .` passed.
+- Full validation: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, the Vite production build, and 153 tests with zero failures; `git diff --check -- .` passed.
+- Accepted evidence: `getBrowserRoot` owns the only `document.querySelector` call, returns the identical matching root, and throws the unchanged startup error when no root matches.
+- Explorer evidence: two independent read-only audits confirmed that runtime HTMLElement validation would tighten behavior outside this unit's scope, so the adapter keeps the exact existing missing-root check only.
+- Independent review: a fresh read-only `gpt-5.6-sol` high-reasoning reviewer returned clean with no P0-P3 finding or commit blocker.
+- Rendered validation: not required if source and contract tests establish no rendered, interaction, CSS, copy, or persisted-state change.
+- Remaining risk: direct browser error rendering remains composition-owned by design for this unit; broader application workflow extraction, remaining effect boundaries, read-model separation, storage compatibility completion, frozen-flow validation, and the final walkthrough remain open under their respective criteria.
 
 ## Goal-readiness evidence
 
@@ -369,6 +372,10 @@ Routine work-unit completion does not require owner review.
 - AF-5 and AF-9 partial unit `af-5-browser-storage-acquisition-port` accepted on 2026-09-01.
   A convention-compliant browser localStorage adapter now owns the potentially failing global acquisition, returning the native typed port unchanged or `null` for the existing visit-only fallback.
   Composition no longer directly accesses `window.localStorage`; focused six-test evidence, repeated full 150-test repository validation, and a clean fresh independent review after correcting the candidate run status and filename convention support bounded AF-5 and AF-9 evidence.
+- AF-5 and AF-9 partial unit `af-5-browser-root-acquisition-port` accepted on 2026-09-01.
+  A convention-compliant browser-root adapter now owns the composition startup lookup for `#app`.
+  It preserves matching-root identity and the exact pre-startup missing-root failure without adding a runtime HTMLElement check that would alter frozen behavior.
+  Focused seven-test evidence, full 153-test repository validation, and a clean fresh independent review support bounded AF-5 and AF-9 evidence.
 
 ## Administratively closed run log
 

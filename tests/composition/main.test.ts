@@ -42,6 +42,17 @@ test("the composition root acquires browser storage through its outward adapter"
   assert.doesNotMatch(source, /window\.localStorage/);
 });
 
+test("the composition root acquires the browser root through its outward adapter", () => {
+  const source = readFileSync(resolve("src/composition/main.ts"), "utf8");
+
+  assert.match(
+    source,
+    /import \{ getBrowserRoot \} from "\.\.\/adapters\/browser\/browser-root\.ts"/,
+  );
+  assert.match(source, /const root = getBrowserRoot\(document\);/);
+  assert.doesNotMatch(source, /document\.querySelector/);
+});
+
 test("the composition root wires authored storage changes through a browser event port", () => {
   const source = readFileSync(resolve("src/composition/main.ts"), "utf8");
 
