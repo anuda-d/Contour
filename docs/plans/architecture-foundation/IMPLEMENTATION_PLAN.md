@@ -29,12 +29,12 @@ Status: active shared state; standing scheduled owner authorization.
 | AF-1 Enforced architecture contract | accepted | Architecture decision records, six-key compatibility inventory, and the checked import-boundary gate were accepted after 30 focused and 112 repository tests plus clean fresh review. |
 | AF-2 Complete strict TypeScript | accepted | Every maintained application source and automated test is strict TypeScript. Separate browser and Node-test typechecks, the Vite build, and the checked `src/composition/main.ts` native entrypoint are accepted with no maintained application JavaScript mirror. |
 | AF-3 Deep product modules | open | Partial: authored Thought lifecycle, anchors, publication, and immutable merge now live in a cohesive strict TypeScript product module; other product facts remain in prototype seams. |
-| AF-4 Application use cases | open | Partial: the authored-Thought cross-tab reload workflow now has a screen-neutral application use case that returns an explicit unavailable-storage outcome or a recomposed graph and message through a specific typed persistence port; other current workflows remain composition-owned. |
-| AF-5 Isolated effects and validated boundaries | open | Partial: browser localStorage, DOM-root acquisition, Map resize listening, Map drag-click suppression timing, and the existing Map debug-global publication, storage adapters, wall-clock access, UUID generation, authored-Thought cross-tab events, and the authored-Thought reload adapter now cross narrow inward ports; selection, featured-Media, pinned-position, and authored-Thought persistence remain injected and normalized at their trust boundaries, while other browser events, seed input, and form-input boundaries remain open. |
+| AF-4 Application use cases | open | Partial: authored-Thought cross-tab reload and deliberate selection toggle or confirmation now use screen-neutral application outcomes through specific typed persistence ports; other current workflows remain composition-owned. |
+| AF-5 Isolated effects and validated boundaries | open | Partial: browser localStorage, DOM-root acquisition, Map resize listening, Map drag-click suppression timing, the existing Map debug-global publication, storage adapters, wall-clock access, UUID generation, authored-Thought cross-tab events, authored-Thought reload, and selection persistence now cross narrow inward ports; featured-Media, pinned-position, other browser events, seed input, and form-input boundaries remain open. |
 | AF-6 Explicit projections and privacy | open | Partial: the owner and visitor graph projection now has strict TypeScript ownership and focused evidence for Draft and draft-only Media exclusion, publication-derived public eligibility, dangling-edge filtering, and owner capability removal; application-level structurally separate read models remain open. |
 | AF-7 Durable compatibility | open | Partial: authored V2, V1, and legacy-Draft browser storage now has typed precedence, normalization, migration, recovery, and read-merge-write evidence; other persisted state remains to be completed. |
 | AF-8 Frozen visible behavior | open | None yet. |
-| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, shared effect-port source coverage, browser-root, browser-resize, browser-clock, and browser-Map-global adapter coverage, and Map composition, DOM-source-contract, product, application-use-case, browser-adapter, CSS-regression, end-to-end acceptance, and architecture-boundary coverage; later migrated seams and final coverage remain open. |
+| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, shared effect-port source coverage, browser-root, browser-resize, browser-clock, browser-Map-global, selection application, and selection adapter coverage, plus Map composition, DOM-source-contract, product, application-use-case, browser-adapter, CSS-regression, end-to-end acceptance, and architecture-boundary coverage; later migrated seams and final coverage remain open. |
 | AF-10 Durable completion walkthrough | open | None yet. |
 
 This table records accepted evidence only.
@@ -116,7 +116,7 @@ queue.
 
 ## Fresh-task handoff state
 
-- Latest accepted unit: af-5-map-click-suppression-clock-port.
+- Latest accepted unit: af-4-selection-use-case.
 - Latest implementation commit: recorded in this accepted unit's post-commit handoff.
 - Latest temporary handoff: written after this accepted unit commits.
 - Next unit selected: no.
@@ -145,18 +145,19 @@ without discarding uncommitted work or inferring missing decisions.
 ## Current unit evidence
 
 - State: accepted; no current unit.
-- Criterion: AF-5 Isolated effects and validated boundaries and AF-9 Layered test and quality gates.
-- Accepted evidence: Map drag-click suppression now uses the injected browser clock port and preserves the exact 500 ms inclusive deadline.
-- Focused validation: browser-clock, Map, and composition coverage passed 24 focused checks.
-  Strict typechecks, architecture enforcement, Vite production build, and `git diff --check --` passed.
-- Full validation: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, Vite production build, and 160 tests with zero failures after the review correction.
-- Rendered validation: not required because the selected seam changes no rendered surface, CSS, copy, persisted representation, or interaction policy.
-- Scope guard: no rendered surface, interaction policy, CSS, copy, persisted state, public or private projection, or design token may change.
-- Explorer evidence: one audit identified this as the smallest remaining direct-effect seam; form callbacks already forward raw input to product-owned runtime validation; a publication use case is a larger viable future unit.
-- Design Read: preserve-mode Editorial Constellation Map for thoughtful cultural discovery, retaining the native DOM and CSS interaction language.
-- Design dials: variance 7, motion 4, density 4, unchanged.
-- Design audit and pre-flight: no visual change is intended; preserve responsive, pointer, keyboard, light-mode, and dark-mode behavior. The selected effect seam does not introduce new design-system, layout, copy, color, or motion work.
-- Independent review: the first fresh review found a P2 stale `CURRENT.md` stop condition plus two P3 stale candidate descriptions; after correction and repeated validation, the second fresh review was clean with no P0-P3 finding or commit blocker.
+- Unit id: af-4-selection-use-case.
+- Criterion: AF-4 Application use cases, AF-5 Isolated effects and validated boundaries, and AF-9 Layered test and quality gates.
+- Intended result: a screen-neutral selection application use case coordinates the existing toggle and confirm commands through a narrow injected persistence port, preserving exact selection states, messages, and visit-only fallback while composition retains browser wiring and rendering.
+- Evidence claim: deterministic application tests with a fake persistence port and focused composition coverage demonstrate that UI callbacks no longer coordinate selection mutation and persistence directly.
+- Exact owned diff: the selection application use case and persistence port, browser adapter implementation, composition callback delegation, focused application, adapter, and composition source-contract tests, and synchronized operational evidence.
+- Explorer evidence: two independent read-only audits confirmed that the use case must persist only changed toggles and successful confirmations, retain all rejected product messages verbatim, preserve startup recovery and existing owner or visitor guards, and avoid selection cross-tab scope.
+- Focused validation: 21 selection product, application, adapter, and composition checks passed.
+  Strict browser and test typechecks, architecture enforcement, Vite production build, and `git diff --check --` passed.
+- Full validation: `./scripts/check.sh` passed.
+  The repository test suite also passed 167 tests with zero failures.
+- Scope guard: no rendered surface, interaction policy, CSS, copy, persisted representation, public or private projection, or design token may change.
+- Rendered validation: not required because the selected seam preserves the current UI callback contract and changes no rendered surface, CSS, copy, persisted representation, or interaction policy.
+- Independent review: fresh read-only `gpt-5.6-sol` high-reasoning review was clean with no P0-P3 finding or commit blocker.
 
 ## Goal-readiness evidence
 
@@ -385,6 +386,10 @@ Routine work-unit completion does not require owner review.
 - AF-5 and AF-9 partial unit `af-5-map-click-suppression-clock-port` accepted on 2026-09-01.
   The shared browser clock now owns the Map's numeric timestamp reads, while `ThoughtMap` retains the exact 500 ms post-drag suppression and inclusive deadline comparison through its injected port.
   Focused 24-check evidence, repeated full 160-test repository validation after review-driven documentation correction, and a clean second fresh independent review support bounded AF-5 and AF-9 evidence.
+- AF-4, AF-5, and AF-9 partial unit `af-4-selection-use-case` accepted on 2026-09-01.
+  A screen-neutral selection application use case now coordinates the existing toggle and exact-three confirmation policy through an injected persistence port.
+  It preserves selection state, all product messages, no-op non-persistence, visit-only fallback copy, storage compatibility, and the current UI callback contract.
+  Focused 21-check evidence, full 167-test repository validation, and a clean fresh independent review support bounded AF-4, AF-5, and AF-9 evidence.
 
 ## Administratively closed run log
 

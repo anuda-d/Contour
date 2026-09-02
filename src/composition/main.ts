@@ -32,13 +32,13 @@ import {
 } from "../adapters/browser/pinned-local-storage.ts";
 import { pinPosition, unpinPosition } from "../product/map/pinned-positions.ts";
 import {
+  createSelectionPersistencePort,
   loadSelection,
-  saveSelection,
 } from "../adapters/browser/selection-local-storage.ts";
 import {
   confirmSelection,
-  toggleMediaSelection,
-} from "../product/taste/selection.ts";
+  toggleSelection,
+} from "../application/taste/update-selection.ts";
 import { toggleFeaturedMedia } from "../product/taste/featured.ts";
 import { getSeedGraph } from "../adapters/seed/prototype-seed.ts";
 import { createMapPresentation } from "./map-presentation.ts";
@@ -72,6 +72,7 @@ try {
   const publicMediaIds = getPublicMediaIds(baseGraph);
   const storage: KeyValueStoragePort | null = getBrowserKeyValueStorage(window);
   const authoredThoughts = createAuthoredThoughtReloadPort(storage, validCatalogueIds);
+  const selectionPersistence = createSelectionPersistencePort(storage);
 
   const loaded = loadSelection(storage, validCatalogueIds);
   const loadedFeatured = loadFeaturedState(
@@ -122,7 +123,7 @@ try {
   };
 
   if (loaded.recovered && loaded.persistent) {
-    persistent = saveSelection(storage, selectionState);
+    persistent = selectionPersistence.save(selectionState);
   }
   if (loadedFeatured.recovered && loadedFeatured.persistent) {
     featuredPersistent = saveFeaturedState(storage, featuredState);
@@ -144,36 +145,28 @@ try {
     savePinnedState(storage, pinnedState);
   }
 
-  const persistSelection = () => {
-    persistent = saveSelection(storage, selectionState);
-    map?.updateSelectionState(selectionState);
-    return persistent;
-  };
-
   const openChooser = () => {
     if (chooser || capture || mapMode !== "owner") return;
     chooser = new WorkChooser(appShell(), catalogue, selectionState, {
       persistent,
       initialMessage: initialChooserMessage,
       onToggle: (id) => {
-        const result = toggleMediaSelection(selectionState, id, validCatalogueIds);
+        const result = toggleSelection(selectionState, id, validCatalogueIds, selectionPersistence);
         selectionState = result.state;
-        const saved = !result.changed || persistSelection();
-        return {
-          ...result,
-          state: selectionState,
-          message: saved ? result.message : "Selection saved for this visit only.",
-        };
+        if (result.saved !== null) {
+          persistent = result.saved;
+          map?.updateSelectionState(selectionState);
+        }
+        return result;
       },
       onConfirm: () => {
-        const result = confirmSelection(selectionState);
+        const result = confirmSelection(selectionState, selectionPersistence);
         selectionState = result.state;
-        const saved = !result.confirmed || persistSelection();
-        return {
-          ...result,
-          state: selectionState,
-          message: saved ? result.message : "Three works are ready for this visit.",
-        };
+        if (result.saved !== null) {
+          persistent = result.saved;
+          map?.updateSelectionState(selectionState);
+        }
+        return result;
       },
       onClose: () => {
         chooser = null;

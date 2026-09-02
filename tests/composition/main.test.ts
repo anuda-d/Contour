@@ -96,3 +96,22 @@ test("the composition root wires Map resize listening through a browser event po
   assert.match(source, /const resizeEvents: ResizeEventPort = createBrowserResizeEventPort\(window\);/);
   assert.match(source, /map = new ThoughtMap\(root, graph, \{[\s\S]*?resizeEvents,/);
 });
+
+test("the composition root delegates selection mutation and persistence to the application use case", () => {
+  const source = readFileSync(resolve("src/composition/main.ts"), "utf8");
+
+  assert.match(
+    source,
+    /import \{\s*createSelectionPersistencePort,\s*loadSelection,\s*\} from "\.\.\/adapters\/browser\/selection-local-storage\.ts"/,
+  );
+  assert.match(
+    source,
+    /import \{\s*confirmSelection,\s*toggleSelection,\s*\} from "\.\.\/application\/taste\/update-selection\.ts"/,
+  );
+  assert.match(source, /const selectionPersistence = createSelectionPersistencePort\(storage\);/);
+  assert.match(source, /const result = toggleSelection\(selectionState, id, validCatalogueIds, selectionPersistence\);/);
+  assert.match(source, /const result = confirmSelection\(selectionState, selectionPersistence\);/);
+  assert.match(source, /if \(result\.saved !== null\) \{\s*persistent = result\.saved;\s*map\?\.updateSelectionState\(selectionState\);/);
+  assert.doesNotMatch(source, /toggleMediaSelection\(/);
+  assert.doesNotMatch(source, /saveSelection\(/);
+});

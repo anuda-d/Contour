@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   SELECTION_STORAGE_KEY,
+  createSelectionPersistencePort,
   loadSelection,
   saveSelection,
 } from "../../../src/adapters/browser/selection-local-storage.ts";
@@ -73,4 +74,13 @@ test("unavailable storage falls back to a safe session state", () => {
     storageError: true,
   });
   assert.equal(saveSelection(storage, emptySelection()), false);
+});
+
+test("selection persistence port preserves the adapter write outcome", () => {
+  const storage = new MemoryStorage();
+  const state = { ...emptySelection(), selectedMediaIds: ["a"] };
+
+  assert.equal(createSelectionPersistencePort(storage).save(state), true);
+  assert.equal(storage.values.get(SELECTION_STORAGE_KEY), JSON.stringify(state));
+  assert.equal(createSelectionPersistencePort(null).save(state), false);
 });
