@@ -53,6 +53,25 @@ test("the composition root acquires the browser root through its outward adapter
   assert.doesNotMatch(source, /document\.querySelector/);
 });
 
+test("the composition root publishes its Map debug handle through a browser adapter", () => {
+  const source = readFileSync(resolve("src/composition/main.ts"), "utf8");
+
+  assert.match(
+    source,
+    /import \{ publishBrowserThoughtMap \} from "\.\.\/adapters\/browser\/browser-map-global\.ts"/,
+  );
+  assert.match(source, /publishBrowserThoughtMap\(window, map\);/);
+  assert.doesNotMatch(source, /window\.thoughtMap\s*=/);
+
+  const construction = source.indexOf("map = new ThoughtMap(");
+  const publication = source.indexOf("publishBrowserThoughtMap(window, map);");
+  const storageSubscription = source.indexOf("storageChanges.onChange(THOUGHT_STORAGE_KEY, () => {");
+
+  assert.ok(construction >= 0);
+  assert.ok(publication > construction);
+  assert.ok(storageSubscription > publication);
+});
+
 test("the composition root wires authored storage changes through a browser event port", () => {
   const source = readFileSync(resolve("src/composition/main.ts"), "utf8");
 

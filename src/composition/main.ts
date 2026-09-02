@@ -48,12 +48,7 @@ import { browserIdentifier } from "../adapters/browser/browser-identifier.ts";
 import { createBrowserStorageChangePort } from "../adapters/browser/browser-storage-change.ts";
 import { getBrowserKeyValueStorage } from "../adapters/browser/browser-local-storage.ts";
 import { getBrowserRoot } from "../adapters/browser/browser-root.ts";
-
-declare global {
-  interface Window {
-    thoughtMap?: ThoughtMap;
-  }
-}
+import { publishBrowserThoughtMap } from "../adapters/browser/browser-map-global.ts";
 
 type SavedThought = {
   saved: true;
@@ -405,7 +400,7 @@ try {
         activeMap().setMode(nextMode);
       },
     });
-    window.thoughtMap = map;
+    publishBrowserThoughtMap(window, map);
     storageChanges.onChange(THOUGHT_STORAGE_KEY, () => {
       const synced = reloadAuthoredThoughts(baseGraph, authoredThoughts);
       if (synced.kind === "storage-unavailable") return;

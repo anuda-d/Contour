@@ -30,11 +30,11 @@ Status: active shared state; standing scheduled owner authorization.
 | AF-2 Complete strict TypeScript | accepted | Every maintained application source and automated test is strict TypeScript. Separate browser and Node-test typechecks, the Vite build, and the checked `src/composition/main.ts` native entrypoint are accepted with no maintained application JavaScript mirror. |
 | AF-3 Deep product modules | open | Partial: authored Thought lifecycle, anchors, publication, and immutable merge now live in a cohesive strict TypeScript product module; other product facts remain in prototype seams. |
 | AF-4 Application use cases | open | Partial: the authored-Thought cross-tab reload workflow now has a screen-neutral application use case that returns an explicit unavailable-storage outcome or a recomposed graph and message through a specific typed persistence port; other current workflows remain composition-owned. |
-| AF-5 Isolated effects and validated boundaries | open | Partial: browser localStorage and DOM-root acquisition, storage adapters, wall-clock access, UUID generation, authored-Thought cross-tab events, and the authored-Thought reload adapter now cross narrow inward ports; selection, featured-Media, pinned-position, and authored-Thought persistence remain injected and normalized at their trust boundaries, while other browser events, seed input, and form-input boundaries remain open. |
+| AF-5 Isolated effects and validated boundaries | open | Partial: browser localStorage, DOM-root acquisition, and the existing Map debug-global publication, storage adapters, wall-clock access, UUID generation, authored-Thought cross-tab events, and the authored-Thought reload adapter now cross narrow inward ports; selection, featured-Media, pinned-position, and authored-Thought persistence remain injected and normalized at their trust boundaries, while other browser events, seed input, and form-input boundaries remain open. |
 | AF-6 Explicit projections and privacy | open | Partial: the owner and visitor graph projection now has strict TypeScript ownership and focused evidence for Draft and draft-only Media exclusion, publication-derived public eligibility, dangling-edge filtering, and owner capability removal; application-level structurally separate read models remain open. |
 | AF-7 Durable compatibility | open | Partial: authored V2, V1, and legacy-Draft browser storage now has typed precedence, normalization, migration, recovery, and read-merge-write evidence; other persisted state remains to be completed. |
 | AF-8 Frozen visible behavior | open | None yet. |
-| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, shared effect-port source coverage, browser-root adapter coverage, and Map composition, DOM-source-contract, product, application-use-case, browser-adapter, CSS-regression, end-to-end acceptance, and architecture-boundary coverage; later migrated seams and final coverage remain open. |
+| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, shared effect-port source coverage, browser-root and browser-Map-global adapter coverage, and Map composition, DOM-source-contract, product, application-use-case, browser-adapter, CSS-regression, end-to-end acceptance, and architecture-boundary coverage; later migrated seams and final coverage remain open. |
 | AF-10 Durable completion walkthrough | open | None yet. |
 
 This table records accepted evidence only.
@@ -61,20 +61,18 @@ queue.
 ## Current run
 
 - State: accepted; no successor unit selected.
-- Unit id: af-5-browser-root-acquisition-port.
+- Unit id: af-5-browser-map-global-adapter-port.
 - Criterion: AF-5 Isolated effects and validated boundaries and AF-9 Layered test and quality gates.
-- Intended result: acquire the existing `#app` DOM root through a narrow browser adapter so composition receives the existing typed root without directly reading the browser document.
-- Evidence claim: a matching root is returned unchanged, a missing root preserves the existing startup failure, and composition has no direct `document.querySelector` access.
-- Exact owned diff: a convention-compliant `browser-root.ts` outward adapter owns `document.querySelector` plus the existing missing-root validation; composition delegates only root acquisition and retains its current rendering, callbacks, state, and browser-effect wiring.
-- Focused validation: seven browser-root adapter and composition tests passed.
+- Intended result: publish the existing `ThoughtMap` browser debug handle through a narrow outward adapter so the composition root no longer writes to `window` directly.
+- Evidence claim: the adapter exposes the exact `ThoughtMap` instance under the existing `window.thoughtMap` name, composition contains no `window.thoughtMap` assignment, and focused contract tests protect the unchanged browser-global behavior.
+- Exact owned diff: a generic browser-global adapter synchronously overwrites only `thoughtMap`; composition imports and calls it at the existing assignment point and no longer augments or assigns `Window.thoughtMap` directly.
+- Focused validation: the new adapter identity-and-replacement contract plus all composition source-contract tests passed (7 tests).
   Strict browser and test typechecks, architecture enforcement, the Vite production build, and `git diff --check -- .` passed.
-- Full validation: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, the Vite production build, and 153 tests with zero failures.
-  `git diff --check -- .` passed.
-- Accepted evidence: direct composition access to `document.querySelector` is eliminated; the adapter returns the exact matching root and preserves the exact missing-root error before startup continues.
-- Explorer evidence: two independent read-only audits confirmed the boundary is limited to startup acquisition and that no runtime HTMLElement validation exists in the frozen baseline, so this unit preserves only the existing missing-root failure semantics.
-- Independent review: a fresh read-only `gpt-5.6-sol` high-reasoning reviewer returned clean with no P0-P3 finding or commit blocker.
-- Rendered validation: not required if the adapter preserves the existing root and startup failure behavior without changing a rendered surface, interaction, CSS, copy, or persisted representation.
-- Risks and assumptions: direct browser error rendering stays in composition because this unit isolates only root acquisition; broader application workflow extraction, remaining effect boundaries, read-model separation, storage compatibility completion, frozen-flow validation, and the final walkthrough remain open.
+- Full validation: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, the Vite production build, and 155 tests with zero failures.
+  The focused suite, full check, and `git diff --check -- .` were repeated after the review-driven source-order contract correction and passed.
+- Explorer evidence: two independent read-only audits found no other repository consumer of the global and confirmed a generic adapter avoids the forbidden adapters-to-UI dependency while preserving assignment timing and overwrite semantics.
+- Independent review: the first fresh review identified three evidence-record gaps, all corrected; the required second fresh read-only `gpt-5.6-sol` high-reasoning review was clean with no P0-P3 finding or commit blocker.
+- Scope guard: this changes no rendered surface, interaction, persisted state, public or private projection, or browser-event behavior.
 
 ## Owner authorization
 
@@ -119,7 +117,7 @@ queue.
 
 ## Fresh-task handoff state
 
-- Latest accepted unit: af-5-browser-storage-acquisition-port.
+- Latest accepted unit: af-5-browser-map-global-adapter-port.
 - Latest implementation commit: recorded in this accepted unit's post-commit handoff.
 - Latest temporary handoff: written after this accepted unit commits.
 - Next unit selected: no
@@ -149,15 +147,14 @@ without discarding uncommitted work or inferring missing decisions.
 
 - State: accepted; no current unit.
 - Criterion: AF-5 Isolated effects and validated boundaries and AF-9 Layered test and quality gates.
-- Intended result: isolate direct browser document root acquisition from the composition root without changing startup behavior.
-- Evidence claim: successful acquisition returns the exact existing `#app` element, a missing root retains the current startup failure, and composition contains no direct `document.querySelector` access.
-- Focused validation: seven browser-root adapter and composition tests plus strict typechecks, architecture enforcement, Vite build, and `git diff --check -- .` passed.
-- Full validation: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, the Vite production build, and 153 tests with zero failures; `git diff --check -- .` passed.
-- Accepted evidence: `getBrowserRoot` owns the only `document.querySelector` call, returns the identical matching root, and throws the unchanged startup error when no root matches.
-- Explorer evidence: two independent read-only audits confirmed that runtime HTMLElement validation would tighten behavior outside this unit's scope, so the adapter keeps the exact existing missing-root check only.
-- Independent review: a fresh read-only `gpt-5.6-sol` high-reasoning reviewer returned clean with no P0-P3 finding or commit blocker.
-- Rendered validation: not required if source and contract tests establish no rendered, interaction, CSS, copy, or persisted-state change.
-- Remaining risk: direct browser error rendering remains composition-owned by design for this unit; broader application workflow extraction, remaining effect boundaries, read-model separation, storage compatibility completion, frozen-flow validation, and the final walkthrough remain open under their respective criteria.
+- Accepted evidence: `publishBrowserThoughtMap` owns the existing synchronous `window.thoughtMap` publication, preserving exact-instance exposure and replacement while composition has no direct global assignment.
+- Observed evidence: the adapter identity-and-replacement contract and composition source contract pass; source-contract ordering confirms construction, publication, then storage subscription; strict typechecks, architecture enforcement, production build, and diff whitespace check pass.
+- Full validation: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, the Vite production build, and 155 tests with zero failures.
+  The focused suite, full check, and `git diff --check -- .` were repeated after the review-driven source-order contract correction and passed.
+- Rendered validation: not required because no rendered surface, interaction, CSS, copy, or persisted representation changes.
+- Explorer evidence: two independent read-only audits found no other repository consumer and confirmed the generic adapter avoids a forbidden adapter-to-UI dependency.
+- Independent review: the first fresh review found stale operational wording and missing source-order protection, which were corrected and revalidated; the required second fresh read-only review was clean with no P0-P3 finding or commit blocker.
+- Remaining risk: this retains a browser-only debug handle by frozen behavior rather than treating it as product state; other browser effects, form input, seed input, projections, storage compatibility, frozen-flow validation, and final walkthrough work remain open.
 
 ## Goal-readiness evidence
 
@@ -376,6 +373,10 @@ Routine work-unit completion does not require owner review.
   A convention-compliant browser-root adapter now owns the composition startup lookup for `#app`.
   It preserves matching-root identity and the exact pre-startup missing-root failure without adding a runtime HTMLElement check that would alter frozen behavior.
   Focused seven-test evidence, full 153-test repository validation, and a clean fresh independent review support bounded AF-5 and AF-9 evidence.
+- AF-5 and AF-9 partial unit `af-5-browser-map-global-adapter-port` accepted on 2026-09-01.
+  A generic browser adapter now owns the existing synchronous `window.thoughtMap` debug publication without importing UI code.
+  It preserves exact-instance replacement and the existing construction, publication, then storage-subscription order while composition has no direct global assignment.
+  Focused seven-test evidence, repeated full 155-test repository validation after review-driven source-order coverage, and a clean second fresh independent review support bounded AF-5 and AF-9 evidence.
 
 ## Administratively closed run log
 
