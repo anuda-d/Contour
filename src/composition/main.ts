@@ -13,6 +13,7 @@ import {
 import { reloadAuthoredThoughts } from "../application/authorship/reload-authored-thoughts.ts";
 import { recoverAuthoredThoughts } from "../application/authorship/recover-authored-thoughts.ts";
 import { recoverSelection } from "../application/taste/recover-selection.ts";
+import { recoverFeatured } from "../application/taste/recover-featured.ts";
 import { publishAuthoredThought } from "../application/authorship/publish-authored-thought.ts";
 import { saveAuthoredDraft } from "../application/authorship/save-authored-draft.ts";
 import type { KeyValueStoragePort } from "../kernel/key-value-storage.ts";
@@ -22,6 +23,7 @@ import type { StorageChangePort } from "../kernel/storage-change.ts";
 import type { ResizeEventPort } from "../kernel/resize-event.ts";
 import {
   createFeaturedPersistencePort,
+  createFeaturedRecoveryPersistencePort,
   loadFeaturedState,
 } from "../adapters/browser/featured-local-storage.ts";
 import { getPublicMediaIds } from "../graph-projection.ts";
@@ -84,6 +86,7 @@ try {
   const selectionPersistence = createSelectionPersistencePort(storage);
   const selectionRecoveryPersistence = createSelectionRecoveryPersistencePort(storage);
   const featuredPersistence = createFeaturedPersistencePort(storage);
+  const featuredRecoveryPersistence = createFeaturedRecoveryPersistencePort(storage);
   const pinnedPersistence = createPinnedPositionPersistencePort(storage);
 
   const loaded = loadSelection(storage, validCatalogueIds);
@@ -139,7 +142,9 @@ try {
     persistent = recoveredSelection.saved;
   }
   if (loadedFeatured.recovered && loadedFeatured.persistent) {
-    if (!featuredPersistence.save(featuredState)) {
+    const recoveredFeatured = recoverFeatured(featuredState, featuredRecoveryPersistence);
+    featuredState = recoveredFeatured.state;
+    if (!recoveredFeatured.saved) {
       featuredMessage = "Unavailable featured works were removed. Changes will last for this visit.";
     }
   }

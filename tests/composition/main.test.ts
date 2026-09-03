@@ -161,7 +161,7 @@ test("the composition root delegates featured mutation and persistence to the ap
 
   assert.match(
     source,
-    /import \{\s*createFeaturedPersistencePort,\s*loadFeaturedState,\s*\} from "\.\.\/adapters\/browser\/featured-local-storage\.ts"/,
+    /import \{\s*createFeaturedPersistencePort,\s*createFeaturedRecoveryPersistencePort,\s*loadFeaturedState,\s*\} from "\.\.\/adapters\/browser\/featured-local-storage\.ts"/,
   );
   assert.match(
     source,
@@ -175,6 +175,25 @@ test("the composition root delegates featured mutation and persistence to the ap
   assert.match(source, /featuredMessage = result\.message;/);
   assert.doesNotMatch(source, /toggleFeaturedMedia\(/);
   assert.doesNotMatch(source, /saveFeaturedState\(/);
+});
+
+test("the composition root delegates featured startup recovery persistence to the application use case", () => {
+  const source = readFileSync(resolve("src/composition/main.ts"), "utf8");
+
+  assert.match(
+    source,
+    /import \{ recoverFeatured \} from "\.\.\/application\/taste\/recover-featured\.ts"/,
+  );
+  assert.match(source, /createFeaturedRecoveryPersistencePort,/);
+  assert.match(
+    source,
+    /const featuredRecoveryPersistence = createFeaturedRecoveryPersistencePort\(storage\);/,
+  );
+  assert.match(
+    source,
+    /if \(loadedFeatured\.recovered && loadedFeatured\.persistent\) \{\s*const recoveredFeatured = recoverFeatured\(featuredState, featuredRecoveryPersistence\);\s*featuredState = recoveredFeatured\.state;\s*if \(!recoveredFeatured\.saved\) \{\s*featuredMessage = "Unavailable featured works were removed\. Changes will last for this visit\.";/,
+  );
+  assert.doesNotMatch(source, /featuredPersistence\.save\(featuredState\)/);
 });
 
 test("the composition root delegates pinned-position mutation and persistence to the application use case", () => {
