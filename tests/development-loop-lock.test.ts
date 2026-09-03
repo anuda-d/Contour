@@ -76,11 +76,19 @@ test("a recovery task can claim an idle checkout without task-list input", () =>
     assert.equal(result.status, 0, result.stderr);
     assert.equal(result.stdout, "ACQUIRED task-a\n");
     const record = JSON.parse(readFileSync(lockPath, "utf8")) as {
+      version: unknown;
+      claim_id: unknown;
       claimed_at: unknown;
       task_id: unknown;
     };
+    assert.equal(record.version, 1);
     assert.equal(record.task_id, "task-a");
+    assert.match(String(record.claim_id), /^[0-9a-f]{32}$/);
     assert.equal(typeof record.claimed_at, "number");
+    assert.deepEqual(
+      JSON.parse(runLock(lockPath, "status", "--json").stdout),
+      record,
+    );
   });
 });
 
@@ -129,22 +137,174 @@ test("a second task cannot replace the active checkout owner", () => {
   });
 });
 
-test("a recovery task cannot steal ownership from an idle recorded task", () => {
+test("a verified terminal owner can be atomically replaced by exact claim", () => {
   withLockFixture((lockPath) => {
     assert.equal(runLock(lockPath, "acquire", "--task-id", "task-a").status, 0);
+    const record = JSON.parse(readFileSync(lockPath, "utf8")) as {
+      claim_id: string;
+    };
 
-    const attemptedTakeover = runLock(
+    const unverified = runLock(
       lockPath,
-      "takeover",
+      "recover-stale",
       "--task-id",
       "task-b",
       "--expected-task-id",
       "task-a",
-      "--verified-inactive",
+      "--expected-claim-id",
+      record.claim_id,
     );
-    assert.equal(attemptedTakeover.status, 2);
-    assert.match(attemptedTakeover.stderr, /invalid choice: 'takeover'/);
+    assert.equal(unverified.status, 2);
+    assert.match(unverified.stderr, /--verified-terminal/);
     assert.equal(runLock(lockPath, "assert-owner", "--task-id", "task-a").status, 0);
+
+    const selfRecovery = runLock(
+      lockPath,
+      "recover-stale",
+      "--task-id",
+      "task-a",
+      "--expected-task-id",
+      "task-a",
+      "--expected-claim-id",
+      record.claim_id,
+      "--verified-terminal",
+    );
+    assert.equal(selfRecovery.status, 1);
+    assert.equal(selfRecovery.stderr, "SELF_RECOVERY_FORBIDDEN\n");
+    assert.equal(runLock(lockPath, "assert-owner", "--task-id", "task-a").status, 0);
+
+    const recovery = runLock(
+      lockPath,
+      "recover-stale",
+      "--task-id",
+      "task-b",
+      "--expected-task-id",
+      "task-a",
+      "--expected-claim-id",
+      record.claim_id,
+      "--verified-terminal",
+    );
+    assert.equal(recovery.status, 0, recovery.stderr);
+    assert.equal(recovery.stdout, "RECOVERED task-a TO task-b\n");
+    assert.equal(runLock(lockPath, "assert-owner", "--task-id", "task-a").status, 1);
+    assert.equal(runLock(lockPath, "assert-owner", "--task-id", "task-b").status, 0);
+  });
+});
+
+test("stale recovery rejects an outdated owner snapshot without changing it", () => {
+  withLockFixture((lockPath) => {
+    assert.equal(runLock(lockPath, "acquire", "--task-id", "task-a").status, 0);
+    const before = readFileSync(lockPath, "utf8");
+    const record = JSON.parse(before) as { claim_id: string };
+
+    const wrongOwner = runLock(
+      lockPath,
+      "recover-stale",
+      "--task-id",
+      "task-b",
+      "--expected-task-id",
+      "task-z",
+      "--expected-claim-id",
+      record.claim_id,
+      "--verified-terminal",
+    );
+    assert.equal(wrongOwner.status, 1);
+    assert.equal(wrongOwner.stderr, "OWNER_MISMATCH task-a\n");
+    assert.equal(readFileSync(lockPath, "utf8"), before);
+
+    const wrongClaim = runLock(
+      lockPath,
+      "recover-stale",
+      "--task-id",
+      "task-b",
+      "--expected-task-id",
+      "task-a",
+      "--expected-claim-id",
+      "outdated-claim",
+      "--verified-terminal",
+    );
+    assert.equal(wrongClaim.status, 1);
+    assert.equal(wrongClaim.stderr, "CLAIM_MISMATCH\n");
+    assert.equal(readFileSync(lockPath, "utf8"), before);
+  });
+});
+
+test("only one concurrent recovery can replace the verified stale claim", async () => {
+  const fixtureRoot = mkdtempSync(resolve(tmpdir(), "contour-loop-recovery-race-"));
+  const lockPath = resolve(fixtureRoot, "owner.json");
+  try {
+    assert.equal(runLock(lockPath, "acquire", "--task-id", "task-a").status, 0);
+    const record = JSON.parse(readFileSync(lockPath, "utf8")) as {
+      claim_id: string;
+    };
+    const results = await Promise.all(
+      ["task-b", "task-c"].map(
+        (taskId) =>
+          new Promise<LockResult>((resolveResult, reject) => {
+            const child = spawn(
+              "python3",
+              [
+                lockScript,
+                "--path",
+                lockPath,
+                "recover-stale",
+                "--task-id",
+                taskId,
+                "--expected-task-id",
+                "task-a",
+                "--expected-claim-id",
+                record.claim_id,
+                "--verified-terminal",
+              ],
+              { stdio: ["ignore", "pipe", "pipe"] },
+            );
+            let stdout = "";
+            let stderr = "";
+            child.stdout.setEncoding("utf8");
+            child.stderr.setEncoding("utf8");
+            child.stdout.on("data", (chunk: string) => {
+              stdout += chunk;
+            });
+            child.stderr.on("data", (chunk: string) => {
+              stderr += chunk;
+            });
+            child.on("error", reject);
+            child.on("close", (status) => {
+              resolveResult({ status, stdout, stderr });
+            });
+          }),
+      ),
+    );
+    assert.equal(results.filter((result) => result.status === 0).length, 1);
+    assert.equal(results.filter((result) => result.status === 1).length, 1);
+  } finally {
+    rmSync(fixtureRoot, { recursive: true, force: true });
+  }
+});
+
+test("an unversioned owner can release but cannot be recovered with a claim ID", () => {
+  withLockFixture((lockPath) => {
+    writeFileSync(
+      lockPath,
+      '{"task_id":"task-a","claim_id":"unversioned","claimed_at":1}\n',
+      "utf8",
+    );
+
+    const recovery = runLock(
+      lockPath,
+      "recover-stale",
+      "--task-id",
+      "task-b",
+      "--expected-task-id",
+      "task-a",
+      "--expected-claim-id",
+      "missing",
+      "--verified-terminal",
+    );
+    assert.equal(recovery.status, 1);
+    assert.equal(recovery.stderr, "LEGACY_LOCK_NOT_RECOVERABLE\n");
+    assert.equal(runLock(lockPath, "assert-owner", "--task-id", "task-a").status, 0);
+    assert.equal(runLock(lockPath, "release", "--task-id", "task-a").status, 0);
   });
 });
 

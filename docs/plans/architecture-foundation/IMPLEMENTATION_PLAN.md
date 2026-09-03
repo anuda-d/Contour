@@ -83,7 +83,7 @@ queue.
   handoff
 - Relay boundary: an accepted task before 23:00 creates one fresh successor in
   the same project; at or after 23:00 it does not relay
-- Recovery starts: scheduled hourly tasks atomically claim the durable checkout lock without calling the unscoped task listing; they exit when another lock owner exists, wake that exact idle owner instead of stealing ownership, resume a matching recorded current and incomplete run only as the owner, and stop on conflicting fields or unverifiable recorded ownership
+- Recovery starts: scheduled hourly tasks inspect read-only state without ownership, acquire immediately before the first repository mutation, recover only an exact unchanged claim after its owner clearly completes a documented terminal state, and stop on live ownership, conflicting fields, or uncertain state
 - Owner boundary: new goals and unresolved material product, visual, scope, or
   architecture decisions still require the owner
 - External actions: push, merge, deploy, publish, destructive cleanup, and
@@ -231,13 +231,20 @@ Routine work-unit completion does not require owner review.
 
 ## Administrative loop reliability
 
-- Criterion: a scheduled recovery start must preserve single-writer checkout ownership without treating an unavailable unscoped Codex task listing as proof that progress is unsafe.
-- Observed failure: three consecutive scheduled starts at approximately 19:04, 20:05, and 21:04 America/Toronto reached clean idle repository state but stopped because the task listing did not return.
-- Result: `scripts/development_loop_lock.py` uses an atomic local ownership record keyed by `CODEX_THREAD_ID`; the no-overlap gate does not call the unreliable unscoped task listing, a recovery task wakes an exact idle recorded owner instead of stealing its lock, and every repository-working task must assert and release ownership at the documented boundaries.
-- Exact change: the ownership utility and focused TypeScript test, the no-overlap rules in `AGENTS.md` and `docs/main/DEVELOPMENT_LOOP.md`, synchronized operational summaries in `docs/plans/CURRENT.md` and this implementation state, repository-check enforcement in `scripts/check.sh`, and the installed `bproject-autonomous-graph-loop` prompt.
-- Focused evidence: seven ownership tests pass, including environment task-ID resolution, twelve simultaneous claimants producing exactly one owner, second-owner and takeover rejection, release protection, and fail-closed corrupt-record handling; strict test TypeScript compilation also passes.
-- Full evidence after material corrections: `./scripts/check.sh` passes architecture enforcement, strict browser and test typechecks, the Vite production build, and 122 tests with zero failures; `git diff --check -- .` passes; and the installed active automation contains atomic ownership, exact-owner wakeup, assertion, and release instructions without any `list_threads` or takeover call.
-- Independent review: three fresh reviews found and drove correction of the stale installed prompt, listing-before-acquire blocking, stale-takeover TOCTOU, and unclassifiable advisory idle tasks; after removing the task-list gate and takeover path, the final fresh `gpt-5.6-sol` high-reasoning review returned clean with no P0-P3 finding.
+- Criterion: preserve atomic single-writer ownership without locking read-only work or allowing an abandoned terminal claim to strand the checkout.
+- Observed overhead: the prior policy acquired ownership before read-only explorers, repeated assertions before every mutation phase, and required the recorded owner to release every stale claim.
+- Owner-directed result: read-only work is lock-free; writers acquire immediately before their first repository mutation, assert only after resumption and before commit or relay, and release after terminal handoff or immediately before relay.
+- Recovery safety: a documented terminal owner's exact task ID and unique claim ID may be atomically transferred with explicit terminal verification; age alone never permits recovery, an outdated snapshot cannot replace a newer claim, and a legacy tokenless record remains owner-release only.
+- Exact change: the ownership utility and focused TypeScript tests, compact rules in `AGENTS.md` and `docs/main/DEVELOPMENT_LOOP.md`, synchronized summaries in `docs/plans/CURRENT.md` and this implementation state, repository-check enforcement in `scripts/check.sh`, and the installed `bproject-autonomous-graph-loop` prompt.
+- Candidate evidence: two independent read-only audits agree that the lock primitive is cheap and the surrounding gate was overbroad; Python compilation, ten focused ownership tests, JSON status inspection, owned-diff whitespace validation, strict typechecks, the Vite build, and the full 224-test repository check pass.
+- First review correction: the initial fresh review identified a stale-recovery race if a terminal owner resumed under its old claim and contradictory scheduler instructions that reacquired after successful recovery; the policy now forbids terminal-claim resumption and the scheduler branches between ordinary acquisition and recovery.
+- Repeated validation: ten focused ownership tests and the full repository check pass again with architecture enforcement, strict typechecks, the Vite build, and all 224 tests; owned-diff whitespace validation and the installed scheduler prompt inspection also pass.
+- Second review correction: the next fresh review found that the CLI still allowed self-recovery and recovery of unversioned records containing an arbitrary claim ID; both paths now fail closed with focused coverage.
+- Final correction validation: ten focused ownership tests and the full repository check pass again with architecture enforcement, strict typechecks, the Vite build, and all 224 tests; owned-diff whitespace validation also passes.
+- Third review correction: the next fresh review found that the installed scheduler rechecked candidate state before ownership rather than after it; the prompt now establishes ownership first, rechecks repository and run state while holding it, and reconfirms the candidate before mutation.
+- Final scheduler correction validation: ten focused ownership tests and the full repository check pass again with architecture enforcement, strict typechecks, the Vite build, and all 224 tests; direct inspection confirms the installed scheduler now acquires or recovers before its decisive recheck.
+- Final independent review: a fresh `gpt-5.6-sol` high-reasoning reviewer found no P0-P3 issue, policy contradiction, recovery race, or missing implementation evidence.
+- Owned-only staging: the cached patch contains exactly the seven administrative lock-policy files and excludes the pre-existing `AGENTS.md`, `scripts/check.sh`, README, product-document, and retired-plan changes.
 - Product and goal impact: this is owner-requested administrative loop infrastructure, not an Architecture Foundation implementation unit; it changes no product behavior, criterion status, run selection, UI checkpoint, or accepted unit evidence.
 
 ## Accepted run log
