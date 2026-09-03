@@ -61,13 +61,12 @@ queue.
 ## Current run
 
 - State: accepted; no current unit.
-- Unit id: af-5-thought-capture-form-boundary-validation.
+- Unit id: af-5-work-chooser-toggle-boundary-validation.
 - Criterion: AF-5 Isolated effects and validated boundaries and AF-9 Layered test and quality gates.
-- Intended result: Thought Capture runtime-validates its mutable native-DOM form snapshot before invoking the existing application callback.
-- Accepted evidence: seven focused Thought Capture checks pass, including executable valid forwarding and malformed rejection before `onSave`; strict browser and test typechecks pass; `./scripts/check.sh` passes architecture enforcement, strict typechecks, the Vite build, and 215 tests with zero failures; and `git diff --check -- .` passes.
-- Interpretation: supplied-work membership, bridge-anchor distinction, and string-form snapshots become trusted only at the native-DOM adapter boundary. Valid submission inputs and product-level authored semantics remain unchanged.
-- Independent review: the first fresh `gpt-5.6-sol` high-reasoning review found a P2 executable-submit evidence gap, which was corrected. A fresh second `gpt-5.6-sol` high-reasoning review was clean with no P0-P3 finding, behavior regression, scope concern, or test-coverage concern.
-- Scope guard: copy, CSS, DOM structure, valid interaction, authored lifecycle rule, storage behavior, projection or privacy rule, Map behavior, layout, and design tokens remain unchanged.
+- Intended result: Work Chooser validates mutable native-DOM identifiers before invoking its existing opaque selection callback.
+- Evidence claim: only supplied-catalogue string IDs cross the UI adapter boundary, while valid toggle inputs retain the existing callback shape and selection policy.
+- Accepted evidence: five focused Work Chooser checks pass, strict browser and test typechecks pass, `./scripts/check.sh` passes architecture enforcement, strict typechecks, the Vite build, and 217 tests with zero failures, `git diff --check -- .` passes, and a fresh `gpt-5.6-sol` high-reasoning review is clean with no P0-P3 finding.
+- Scope guard: copy, CSS, DOM structure, valid chooser interaction, selection rule, persistence, projection or privacy rule, Map behavior, layout, and design tokens remain unchanged.
 
 ## Owner authorization
 
@@ -112,7 +111,7 @@ queue.
 
 ## Fresh-task handoff state
 
-- Latest accepted unit: af-5-thought-capture-form-boundary-validation.
+- Latest accepted unit: af-5-work-chooser-toggle-boundary-validation.
 - Latest implementation commit: recorded in this accepted unit's post-commit handoff.
 - Latest temporary handoff: written after this accepted unit commits.
 - Next unit selected: no.
@@ -141,17 +140,17 @@ without discarding uncommitted work or inferring missing decisions.
 ## Current unit evidence
 
 - State: accepted; no current unit.
-- Unit id: af-5-thought-capture-form-boundary-validation.
+- Unit id: af-5-work-chooser-toggle-boundary-validation.
 - Criterion: AF-5 Isolated effects and validated boundaries and AF-9 Layered test and quality gates.
-- Intended result: Thought Capture runtime-validates its form-originated snapshot before invoking its opaque application callback.
-- Evidence claim: malformed or tampered primary work, secondary bridge work, bridge mode, and statement values cannot leave the native-DOM adapter, while valid create, edit, and bridge submissions retain the existing callback input shape and product-level semantics.
-- Exact owned diff: a small typed form-snapshot parser and submit helper in the Thought Capture UI adapter, submit-time rejection before `onSave`, executable valid and malformed submit-boundary coverage, source-contract coverage, and synchronized operational state.
-- Explorer evidence: two independent read-only audits agreed that the direct radio and textarea value forwarding was the smallest remaining form-input boundary gap. Both limited the UI rule to supplied-work membership and distinct bridge anchors, retaining authored lifecycle and statement policy in the existing product module.
-- Focused validation: seven Thought Capture UI checks pass, including valid normal and bridge snapshots, unknown primary, unknown or same bridge anchor, invalid normal-mode secondary anchor, non-string statement rejection, and executable submit forwarding or rejection before `onSave`. Strict browser and test typechecks pass. `git diff --check -- .` passes.
-- Full validation: `./scripts/check.sh` passes architecture enforcement, strict browser and test typechecks, the Vite production build, and 215 tests with zero failures.
-- Scope guard: no copy, CSS, DOM structure, valid interaction, authored lifecycle rule, storage behavior, projection or privacy rule, Map behavior, layout, or design token changed.
-- Rendered validation: not required because the owned diff preserves every valid rendered interaction and changes only malformed native-DOM form input handling.
-- Independent review: the first fresh `gpt-5.6-sol` high-reasoning review found a P2 evidence gap because direct parser tests and source regexes did not execute the submit-to-callback boundary. The review-driven submit helper and executable forwarding or rejection coverage were added, then focused and full validation were repeated. A fresh second `gpt-5.6-sol` high-reasoning review was clean with no P0-P3 finding, behavior regression, scope concern, or test-coverage concern.
+- Intended result: Work Chooser runtime-validates mutable DOM-owned toggle identifiers before invoking its opaque selection callback.
+- Evidence claim: unknown, missing, and non-string identifiers cannot invoke `onToggle`, while valid supplied-catalogue IDs retain exactly the existing callback input shape and selection behavior.
+- Exact owned diff: a small typed identifier parser and submit helper in the Work Chooser UI adapter, click-time rejection before `onToggle`, executable valid and malformed callback-boundary coverage, source-contract coverage, and synchronized operational state.
+- Explorer evidence: three independent read-only audits found no unowned persisted-state shape, identified a broader Map projection migration, and agreed the direct Work Chooser dataset forwarding is the smallest remaining UI trust boundary. The selected rule is limited to catalogue membership, retaining selection policy in the existing application and product layers.
+- Focused validation: five Work Chooser checks pass, covering preserved source delegation, valid supplied-catalogue parsing, and unknown, missing, or non-string identifier rejection before `onToggle`; strict browser and test typechecks pass; and `git diff --check -- .` passes.
+- Full validation: `./scripts/check.sh` passes architecture enforcement, strict browser and test typechecks, the Vite production build, and 217 tests with zero failures.
+- Scope guard: no copy, CSS, DOM structure, valid chooser interaction, selection rule, persistence, projection or privacy rule, Map behavior, layout, or design token changes.
+- Rendered validation: not required because the owned diff preserves every valid rendered interaction and rejects only malformed DOM identifiers.
+- Independent review: a fresh `gpt-5.6-sol` high-reasoning read-only review found no actionable P0-P3 finding, behavior regression, architecture or scope concern, or missing executable evidence.
 
 ## Goal-readiness evidence
 
@@ -422,6 +421,9 @@ Routine work-unit completion does not require owner review.
 - AF-5 and AF-9 partial unit `af-5-thought-capture-form-boundary-validation` accepted on 2026-09-02.
   Thought Capture now validates mutable native-DOM form snapshots before calling application code, accepting only supplied work IDs, a distinct bridge anchor, and string form values while retaining existing product validation and every valid callback input.
   Focused seven-test evidence, full 215-test repository validation, and a clean second fresh independent review after correcting executable submit-boundary coverage support bounded AF-5 and AF-9 evidence while both criteria remain open.
+- AF-5 and AF-9 partial unit `af-5-work-chooser-toggle-boundary-validation` accepted on 2026-09-02.
+  Work Chooser now validates mutable DOM-owned catalogue identifiers before calling application code, accepting only supplied string IDs while retaining existing selection policy and every valid callback input.
+  Focused five-test evidence, full 217-test repository validation, and a clean fresh independent review support bounded AF-5 and AF-9 evidence while both criteria remain open.
 
 ## Administratively closed run log
 

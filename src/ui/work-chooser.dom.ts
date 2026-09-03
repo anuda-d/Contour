@@ -19,6 +19,10 @@ type ConfirmResult = ToggleResult & {
   confirmed: boolean;
 };
 
+type KnownChoosableWorkIds = {
+  has(value: string): boolean;
+};
+
 type WorkChooserOptions = {
   persistent: boolean;
   initialMessage?: string;
@@ -35,6 +39,24 @@ const escapeHtml = (value: unknown) =>
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+
+export const parseWorkChooserToggleId = (
+  value: unknown,
+  workIds: KnownChoosableWorkIds,
+): string | null => {
+  if (typeof value !== "string" || !workIds.has(value)) return null;
+  return value;
+};
+
+export const submitWorkChooserToggle = (
+  value: unknown,
+  workIds: KnownChoosableWorkIds,
+  onToggle: (id: string) => ToggleResult,
+): Readonly<{ id: string; result: ToggleResult }> | null => {
+  const id = parseWorkChooserToggleId(value, workIds);
+  if (!id) return null;
+  return { id, result: onToggle(id) };
+};
 
 export class WorkChooser {
   private readonly catalogueById: Map<string, ChoosableWork>;
@@ -186,12 +208,15 @@ export class WorkChooser {
     });
     this.overlay.querySelectorAll<HTMLElement>("[data-media-id], [data-remove-id]").forEach((button) => {
       button.addEventListener("click", () => {
-        const id = button.dataset.mediaId ?? button.dataset.removeId;
-        if (!id) return;
-        const result = this.options.onToggle(id);
-        this.state = result.state;
-        this.message = result.message;
-        this.render({ focusId: id });
+        const submission = submitWorkChooserToggle(
+          button.dataset.mediaId ?? button.dataset.removeId,
+          this.catalogueById,
+          this.options.onToggle,
+        );
+        if (!submission) return;
+        this.state = submission.result.state;
+        this.message = submission.result.message;
+        this.render({ focusId: submission.id });
       });
     });
     const search = this.requiredOverlayElement<HTMLInputElement>("#catalogue-search");
