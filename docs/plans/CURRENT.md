@@ -6,7 +6,6 @@ Status: Architecture Foundation is active under standing scheduled authorization
 
 - Goal: [Architecture Foundation](architecture-foundation/GOAL.md)
 - Shared implementation state: [Implementation Plan](architecture-foundation/IMPLEMENTATION_PLAN.md)
-- Deferred proposal: [Human Discovery Prototype](human-discovery-prototype/GOAL.md)
 - Prior completed goal: [Identity Map Prototype](identity-map-prototype/GOAL.md)
 - Preserved design foundation: [Editorial Constellation](identity-map-prototype/MAP_DESIGN_FOUNDATION.md)
 - Active work: Architecture Foundation units may run during the authorized daily window

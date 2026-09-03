@@ -105,7 +105,6 @@ Read the implementation state:
 - [Current Development Index](docs/plans/CURRENT.md)
 - [Architecture Foundation goal](docs/plans/architecture-foundation/GOAL.md)
 - [Architecture Foundation implementation state](docs/plans/architecture-foundation/IMPLEMENTATION_PLAN.md)
-- [Deferred Human Discovery proposal](docs/plans/human-discovery-prototype/GOAL.md)
 - [Identity Map Prototype goal](docs/plans/identity-map-prototype/GOAL.md)
 - [Identity Map implementation archive](docs/plans/identity-map-prototype/IMPLEMENTATION_PLAN.md)
 - [Editorial Constellation design foundation](docs/plans/identity-map-prototype/MAP_DESIGN_FOUNDATION.md)
