@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { getSeedGraph } from "../../../src/adapters/seed/prototype-seed.ts";
+import { getSeedGraph, parsePrototypeSeed } from "../../../src/adapters/seed/prototype-seed.ts";
 
 test("the seed contains only owner, Thought, Book, and Film node semantics", () => {
   const graph = getSeedGraph();
@@ -72,4 +72,45 @@ test("seed featured Media are deliberate, unique, and public Map works", () => {
       ),
     ),
   );
+});
+
+test("the seed adapter validates complete trusted graph facts at its boundary", () => {
+  const valid = getSeedGraph();
+  const parsed = parsePrototypeSeed(valid);
+
+  assert.deepEqual(parsed, valid);
+  assert.notEqual(parsed, valid);
+  assert.notEqual(parsed.profile, valid.profile);
+  assert.notEqual(parsed.nodes, valid.nodes);
+  assert.notEqual(parsed.edges, valid.edges);
+});
+
+test("the seed adapter rejects malformed profile, node, and relationship facts", () => {
+  const malformed = (): ReturnType<typeof getSeedGraph> => structuredClone(getSeedGraph());
+
+  const invalidProfile = malformed();
+  invalidProfile.profile.featuredMediaIds = ["arrival", "arrival", "aftersun"];
+  assert.throws(() => parsePrototypeSeed(invalidProfile), /Prototype seed is invalid: profile\.featuredMediaIds must not contain duplicates\./);
+
+  const invalidMedia = malformed();
+  const media = invalidMedia.nodes.find((node) => node.type === "media");
+  assert.ok(media && media.type === "media");
+  media.title = "Different title";
+  assert.throws(() => parsePrototypeSeed(invalidMedia), /Prototype seed is invalid: nodes\[\d+\] must match its supported catalogue work\./);
+
+  const invalidThought = malformed();
+  const thought = invalidThought.nodes.find((node) => node.type === "thought");
+  assert.ok(thought && thought.type === "thought");
+  thought.anchors = ["unavailable-work"];
+  assert.throws(() => parsePrototypeSeed(invalidThought), /Prototype seed is invalid: Thought .+ anchors an unavailable Media work\./);
+
+  const invalidFeatured = malformed();
+  invalidFeatured.profile.featuredMediaIds = ["arrival", "mood-for-love", "unavailable-work"];
+  assert.throws(() => parsePrototypeSeed(invalidFeatured), /Prototype seed is invalid: profile\.featuredMediaIds must name public Media works\./);
+
+  const invalidEdge = malformed();
+  const firstEdge = invalidEdge.edges[0];
+  assert.ok(firstEdge);
+  invalidEdge.edges[0] = { ...firstEdge, target: "arrival" };
+  assert.throws(() => parsePrototypeSeed(invalidEdge), /Prototype seed is invalid: edges\[0\] does not match an authored or anchored Thought relationship\./);
 });
