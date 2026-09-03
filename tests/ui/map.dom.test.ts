@@ -6,9 +6,11 @@ import {
   ThoughtMap,
   getZoomBand,
   hasExceededDragThreshold,
+  parseFeatureToggleId,
   mergeGraphPositions,
   parsePublishDraftId,
   positionFromDrag,
+  submitFeatureToggle,
   submitPublishDraft,
 } from "../../src/ui/map.dom.ts";
 
@@ -147,6 +149,42 @@ test("Map forwards a valid Publish Draft ID once and rejects malformed DOM value
   assert.equal(submitPublishDraft("draft-a", publishableNodes, false, onPublishDraft), null);
   assert.deepEqual(publishedIds, ["draft-a"]);
   assert.match(mapSource, /submitPublishDraft\(\s*publish\.dataset\.publishDraft,/);
+});
+
+const featureableNodes = [
+  { id: "book-a", type: "media" as const, format: "book", title: "Book", creator: "Writer", year: 2020 },
+  { id: "draft-b", type: "thought" as const, status: "draft" as const, statement: "Private.", anchors: ["book-a"] },
+  { id: "user-c", type: "user" as const },
+];
+
+test("Map validates Featured Media DOM IDs against the active projected Media before callback delegation", () => {
+  assert.equal(parseFeatureToggleId("book-a", featureableNodes, true), "book-a");
+  assert.equal(parseFeatureToggleId("draft-b", featureableNodes, true), null);
+  assert.equal(parseFeatureToggleId("user-c", featureableNodes, true), null);
+  assert.equal(parseFeatureToggleId("unknown", featureableNodes, true), null);
+  assert.equal(parseFeatureToggleId(null, featureableNodes, true), null);
+  assert.equal(parseFeatureToggleId("book-a", featureableNodes, false), null);
+});
+
+test("Map forwards a valid Featured Media ID once and rejects malformed DOM values before its callback", () => {
+  const featuredIds: string[] = [];
+  const onToggleFeatured = (id: string) => {
+    featuredIds.push(id);
+    return { state: { featuredMediaIds: [id] }, message: "Added to your profile orbit." };
+  };
+
+  assert.deepEqual(submitFeatureToggle("book-a", featureableNodes, true, onToggleFeatured), {
+    id: "book-a",
+    result: { state: { featuredMediaIds: ["book-a"] }, message: "Added to your profile orbit." },
+  });
+  assert.equal(submitFeatureToggle("draft-b", featureableNodes, true, onToggleFeatured), null);
+  assert.equal(submitFeatureToggle("user-c", featureableNodes, true, onToggleFeatured), null);
+  assert.equal(submitFeatureToggle("unknown", featureableNodes, true, onToggleFeatured), null);
+  assert.equal(submitFeatureToggle(42, featureableNodes, true, onToggleFeatured), null);
+  assert.equal(submitFeatureToggle(undefined, featureableNodes, true, onToggleFeatured), null);
+  assert.equal(submitFeatureToggle("book-a", featureableNodes, false, onToggleFeatured), null);
+  assert.deepEqual(featuredIds, ["book-a"]);
+  assert.match(mapSource, /submitFeatureToggle\(\s*feature\.dataset\.featureToggle,/);
 });
 
 test("a private single-anchor Draft exposes one owner-only bridge action", () => {

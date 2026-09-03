@@ -30,11 +30,11 @@ Status: active shared state; standing scheduled owner authorization.
 | AF-2 Complete strict TypeScript | accepted | Every maintained application source and automated test is strict TypeScript. Separate browser and Node-test typechecks, the Vite build, and the checked `src/composition/main.ts` native entrypoint are accepted with no maintained application JavaScript mirror. |
 | AF-3 Deep product modules | open | Partial: authored Thought lifecycle, anchors, publication, and immutable merge now live in a cohesive strict TypeScript product module; other product facts remain in prototype seams. |
 | AF-4 Application use cases | open | Partial: authored-Thought reload, startup recovery, capture, and publication, deliberate-selection, featured-Media, and pinned-position startup recovery, selection toggle or confirmation, public featured-Media toggle, and spatial pin or unpin commands now use screen-neutral application outcomes through specific typed persistence ports; other current workflows remain composition-owned. |
-| AF-5 Isolated effects and validated boundaries | open | Partial: browser localStorage, DOM-root acquisition, Map resize listening, Map drag-click suppression timing, the existing Map debug-global publication, storage adapters, wall-clock access, UUID generation, authored-Thought cross-tab events, authored, selection, featured-Media, and pinned-position startup recovery, capture, reload, and publication persistence, selection persistence, featured-Media persistence, pinned-position persistence, prototype-seed runtime validation, and Thought Capture form snapshots now cross narrow inward boundaries; other browser events and form-input boundaries remain open. |
+| AF-5 Isolated effects and validated boundaries | open | Partial: browser localStorage, DOM-root acquisition, Map resize listening, Map drag-click suppression timing, the existing Map debug-global publication, storage adapters, wall-clock access, UUID generation, authored-Thought cross-tab events, authored, selection, featured-Media, and pinned-position startup recovery, capture, reload, and publication persistence, selection persistence, featured-Media persistence, pinned-position persistence, prototype-seed and Thought Capture form runtime validation, and Featured Media Map callback validation now cross narrow inward boundaries; other browser events and form-input boundaries remain open. |
 | AF-6 Explicit projections and privacy | open | Partial: the owner and visitor graph projection now has strict TypeScript ownership and focused evidence for Draft and draft-only Media exclusion, publication-derived public eligibility, dangling-edge filtering, and owner capability removal; application-level structurally separate read models remain open. |
 | AF-7 Durable compatibility | open | Partial: authored V2, V1, and legacy-Draft browser storage now has typed precedence, normalization, migration, recovery, and read-merge-write evidence; other persisted state remains to be completed. |
 | AF-8 Frozen visible behavior | open | None yet. |
-| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, shared effect-port source coverage, browser-root, browser-resize, browser-clock, browser-Map-global, prototype-seed and Thought Capture form runtime validation, authored, selection, featured-Media, and pinned-position startup recovery, capture and publication, selection, featured-Media, and pinned-position application and adapter coverage, plus Map composition, DOM-source-contract, product, CSS-regression, end-to-end acceptance, and architecture-boundary coverage; later migrated seams and final coverage remain open. |
+| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, shared effect-port source coverage, browser-root, browser-resize, browser-clock, browser-Map-global, prototype-seed, Thought Capture form, and Featured Media Map callback runtime validation, authored, selection, featured-Media, and pinned-position startup recovery, capture and publication, selection, featured-Media, and pinned-position application and adapter coverage, plus Map composition, DOM-source-contract, product, CSS-regression, end-to-end acceptance, and architecture-boundary coverage; later migrated seams and final coverage remain open. |
 | AF-10 Durable completion walkthrough | open | None yet. |
 
 This table records accepted evidence only.
@@ -111,7 +111,7 @@ queue.
 
 ## Fresh-task handoff state
 
-- Latest accepted unit: af-5-map-publish-draft-boundary-validation.
+- Latest accepted unit: af-5-map-featured-media-boundary-validation.
 - Latest implementation commit: recorded in this accepted unit's post-commit handoff.
 - Latest temporary handoff: written after this accepted unit commits.
 - Next unit selected: no.
@@ -140,17 +140,17 @@ without discarding uncommitted work or inferring missing decisions.
 ## Current unit evidence
 
 - State: accepted; no current unit.
-- Unit id: af-5-map-publish-draft-boundary-validation.
+- Unit id: af-5-map-featured-media-boundary-validation.
 - Criterion: AF-5 Isolated effects and validated boundaries and AF-9 Layered test and quality gates.
-- Intended result: Map runtime-validates a mutable detail-button Publish Draft ID before invoking its opaque callback.
-- Evidence claim: unknown, missing, non-string, non-Thought, published-Thought, and owner-incapable IDs cannot invoke `onPublishDraft`, while a valid active projected Draft retains exactly the existing callback input shape and publication behavior.
-- Exact owned diff: a small typed projected-Draft parser and submit helper in the Map UI adapter, click-time rejection before `onPublishDraft`, executable valid and malformed callback-boundary coverage, source-contract coverage, and synchronized operational state.
-- Explorer evidence: three independent read-only audits identified the direct Publish Draft dataset forwarding as the smallest safe remaining Map trust boundary; the broader projection relocation and other Map event boundaries remain outside this unit.
+- Intended result: Map runtime-validates a mutable Featured Media detail-button ID before invoking its opaque callback.
+- Evidence claim: unknown, missing, non-string, non-Media, and owner-incapable IDs cannot invoke `onToggleFeatured`, while a valid active projected Media ID retains exactly the existing callback input and result behavior.
+- Exact owned diff: a small typed projected-Media parser and submit helper in the Map UI adapter, click-time rejection before `onToggleFeatured`, executable valid and malformed callback-boundary coverage, source-contract coverage, and synchronized operational state.
+- Explorer evidence: two independent read-only audits identified direct Featured Media dataset forwarding as the smallest safe remaining Map trust boundary; a third audit identified Edit Draft as adjacent but less direct because its downstream callback defensively rejects invalid state. The broader projection relocation and other Map event boundaries remain outside this unit.
 - Design Read: preserve the accepted editorial Map with an invisible correctness guard; existing design variance, motion, density, copy, layout, tokens, light and dark modes, focus treatment, and responsive behavior are locked.
 - Design pre-flight: applicable checks pass because no visible element, string, CSS rule, design token, theme, motion, image, navigation, or responsive behavior changes; rendered validation remains unnecessary for malformed-data rejection only.
-- Focused validation: 17 Map checks pass, covering preserved publication source behavior, valid projected-Draft parsing, and malformed callback rejection; `npm run typecheck` passes; and `git diff --check -- .` passes.
-- Full validation: `./scripts/check.sh` passes architecture enforcement, strict browser and test typechecks, the Vite production build, and 219 tests with zero failures.
-- Scope guard: no copy, CSS, DOM structure, valid Draft publication, publication policy, persistence, projection or privacy rule, camera behavior, Map gestures, layout, or design token changes.
+- Focused validation: 19 Map checks pass, covering valid projected-Media parsing, callback-result forwarding, and malformed callback rejection; `npm run typecheck` passes; and `git diff --check -- .` passes.
+- Full validation: `./scripts/check.sh` passes architecture enforcement, strict browser and test typechecks, the Vite production build, and 221 tests with zero failures.
+- Scope guard: no copy, CSS, DOM structure, valid Featured Media callback behavior, feature policy, persistence, projection or privacy rule, camera behavior, Map gestures, layout, or design token changes.
 - Rendered validation: not required because the owned diff preserves every valid rendered interaction and rejects only malformed DOM identifiers.
 - Independent review: a fresh `gpt-5.6-sol` high-reasoning read-only review found no actionable P0-P3 finding, behavior regression, architecture or scope concern, or missing executable evidence.
 
@@ -429,6 +429,9 @@ Routine work-unit completion does not require owner review.
 - AF-5 and AF-9 partial unit `af-5-map-publish-draft-boundary-validation` accepted on 2026-09-02.
   Map now validates a mutable Publish Draft detail-button ID against the current owner-capable projected Draft before calling application code.
   Focused 17-test evidence, full 219-test repository validation, and a clean fresh independent review support bounded AF-5 and AF-9 evidence while both criteria remain open.
+- AF-5 and AF-9 partial unit `af-5-map-featured-media-boundary-validation` accepted on 2026-09-02.
+  Map now validates a mutable Featured Media detail-button ID against the current owner-capable projected Media before calling application code.
+  Focused 19-test evidence, full 221-test repository validation, and a clean fresh independent review support bounded AF-5 and AF-9 evidence while both criteria remain open.
 
 ## Administratively closed run log
 
