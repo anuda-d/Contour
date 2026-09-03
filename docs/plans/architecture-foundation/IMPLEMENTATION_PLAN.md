@@ -61,12 +61,12 @@ queue.
 ## Current run
 
 - State: accepted; no current unit.
-- Unit id: af-5-work-chooser-toggle-boundary-validation.
+- Unit id: af-5-map-publish-draft-boundary-validation.
 - Criterion: AF-5 Isolated effects and validated boundaries and AF-9 Layered test and quality gates.
-- Intended result: Work Chooser validates mutable native-DOM identifiers before invoking its existing opaque selection callback.
-- Evidence claim: only supplied-catalogue string IDs cross the UI adapter boundary, while valid toggle inputs retain the existing callback shape and selection policy.
-- Accepted evidence: five focused Work Chooser checks pass, strict browser and test typechecks pass, `./scripts/check.sh` passes architecture enforcement, strict typechecks, the Vite build, and 217 tests with zero failures, `git diff --check -- .` passes, and a fresh `gpt-5.6-sol` high-reasoning review is clean with no P0-P3 finding.
-- Scope guard: copy, CSS, DOM structure, valid chooser interaction, selection rule, persistence, projection or privacy rule, Map behavior, layout, and design tokens remain unchanged.
+- Intended result: Map validates a mutable Publish Draft detail-button ID against the active projected Draft before invoking its existing opaque callback.
+- Evidence claim: only an owner-capable projected Draft ID crosses the UI adapter boundary, while valid rendered publication retains the existing callback shape and policy.
+- Accepted evidence: 17 focused Map checks pass, `./scripts/check.sh` passes architecture enforcement, strict typechecks, the Vite build, and 219 tests with zero failures, `git diff --check -- .` passes, and a fresh `gpt-5.6-sol` high-reasoning review is clean with no P0-P3 finding.
+- Scope guard: copy, CSS, DOM structure, valid Draft publication, publication policy, persistence, projection or privacy rule, camera behavior, Map gestures, layout, and design tokens remain unchanged.
 
 ## Owner authorization
 
@@ -111,7 +111,7 @@ queue.
 
 ## Fresh-task handoff state
 
-- Latest accepted unit: af-5-work-chooser-toggle-boundary-validation.
+- Latest accepted unit: af-5-map-publish-draft-boundary-validation.
 - Latest implementation commit: recorded in this accepted unit's post-commit handoff.
 - Latest temporary handoff: written after this accepted unit commits.
 - Next unit selected: no.
@@ -140,15 +140,17 @@ without discarding uncommitted work or inferring missing decisions.
 ## Current unit evidence
 
 - State: accepted; no current unit.
-- Unit id: af-5-work-chooser-toggle-boundary-validation.
+- Unit id: af-5-map-publish-draft-boundary-validation.
 - Criterion: AF-5 Isolated effects and validated boundaries and AF-9 Layered test and quality gates.
-- Intended result: Work Chooser runtime-validates mutable DOM-owned toggle identifiers before invoking its opaque selection callback.
-- Evidence claim: unknown, missing, and non-string identifiers cannot invoke `onToggle`, while valid supplied-catalogue IDs retain exactly the existing callback input shape and selection behavior.
-- Exact owned diff: a small typed identifier parser and submit helper in the Work Chooser UI adapter, click-time rejection before `onToggle`, executable valid and malformed callback-boundary coverage, source-contract coverage, and synchronized operational state.
-- Explorer evidence: three independent read-only audits found no unowned persisted-state shape, identified a broader Map projection migration, and agreed the direct Work Chooser dataset forwarding is the smallest remaining UI trust boundary. The selected rule is limited to catalogue membership, retaining selection policy in the existing application and product layers.
-- Focused validation: five Work Chooser checks pass, covering preserved source delegation, valid supplied-catalogue parsing, and unknown, missing, or non-string identifier rejection before `onToggle`; strict browser and test typechecks pass; and `git diff --check -- .` passes.
-- Full validation: `./scripts/check.sh` passes architecture enforcement, strict browser and test typechecks, the Vite production build, and 217 tests with zero failures.
-- Scope guard: no copy, CSS, DOM structure, valid chooser interaction, selection rule, persistence, projection or privacy rule, Map behavior, layout, or design token changes.
+- Intended result: Map runtime-validates a mutable detail-button Publish Draft ID before invoking its opaque callback.
+- Evidence claim: unknown, missing, non-string, non-Thought, published-Thought, and owner-incapable IDs cannot invoke `onPublishDraft`, while a valid active projected Draft retains exactly the existing callback input shape and publication behavior.
+- Exact owned diff: a small typed projected-Draft parser and submit helper in the Map UI adapter, click-time rejection before `onPublishDraft`, executable valid and malformed callback-boundary coverage, source-contract coverage, and synchronized operational state.
+- Explorer evidence: three independent read-only audits identified the direct Publish Draft dataset forwarding as the smallest safe remaining Map trust boundary; the broader projection relocation and other Map event boundaries remain outside this unit.
+- Design Read: preserve the accepted editorial Map with an invisible correctness guard; existing design variance, motion, density, copy, layout, tokens, light and dark modes, focus treatment, and responsive behavior are locked.
+- Design pre-flight: applicable checks pass because no visible element, string, CSS rule, design token, theme, motion, image, navigation, or responsive behavior changes; rendered validation remains unnecessary for malformed-data rejection only.
+- Focused validation: 17 Map checks pass, covering preserved publication source behavior, valid projected-Draft parsing, and malformed callback rejection; `npm run typecheck` passes; and `git diff --check -- .` passes.
+- Full validation: `./scripts/check.sh` passes architecture enforcement, strict browser and test typechecks, the Vite production build, and 219 tests with zero failures.
+- Scope guard: no copy, CSS, DOM structure, valid Draft publication, publication policy, persistence, projection or privacy rule, camera behavior, Map gestures, layout, or design token changes.
 - Rendered validation: not required because the owned diff preserves every valid rendered interaction and rejects only malformed DOM identifiers.
 - Independent review: a fresh `gpt-5.6-sol` high-reasoning read-only review found no actionable P0-P3 finding, behavior regression, architecture or scope concern, or missing executable evidence.
 
@@ -424,6 +426,9 @@ Routine work-unit completion does not require owner review.
 - AF-5 and AF-9 partial unit `af-5-work-chooser-toggle-boundary-validation` accepted on 2026-09-02.
   Work Chooser now validates mutable DOM-owned catalogue identifiers before calling application code, accepting only supplied string IDs while retaining existing selection policy and every valid callback input.
   Focused five-test evidence, full 217-test repository validation, and a clean fresh independent review support bounded AF-5 and AF-9 evidence while both criteria remain open.
+- AF-5 and AF-9 partial unit `af-5-map-publish-draft-boundary-validation` accepted on 2026-09-02.
+  Map now validates a mutable Publish Draft detail-button ID against the current owner-capable projected Draft before calling application code.
+  Focused 17-test evidence, full 219-test repository validation, and a clean fresh independent review support bounded AF-5 and AF-9 evidence while both criteria remain open.
 
 ## Administratively closed run log
 
