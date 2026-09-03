@@ -1,6 +1,10 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import {
+  parseThoughtCaptureFormSnapshot,
+  submitThoughtCaptureFormSnapshot,
+} from "../../src/ui/thought-capture.dom.ts";
 
 const captureSource = await readFile(
   new URL("../../src/ui/thought-capture.dom.ts", import.meta.url),
@@ -15,11 +19,136 @@ test("bridge refinement keeps the primary work fixed and labels the second-work 
   assert.match(captureSource, /What do these works make visible together\?/);
 });
 
-test("bridge refinement submits human-authored meaning and one secondary anchor", () => {
-  assert.match(captureSource, /secondaryMediaId: this\.options\.bridgeMode \? this\.selectedSecondaryMediaId : null/);
-  assert.match(captureSource, /statement: this\.statement/);
+test("Thought Capture validates the form snapshot before its opaque save callback", () => {
+  assert.match(captureSource, /submitThoughtCaptureFormSnapshot\(/);
+  assert.match(captureSource, /this\.options\.onSave,/);
+  assert.match(captureSource, /if \(!result\) return/);
   assert.match(captureSource, /Save private bridge/);
   assert.match(captureSource, /The bridge stays private until you publish it\./);
+});
+
+const workIds = new Set(["book-a", "film-b", "book-c"]);
+
+test("valid create, edit, and bridge snapshots retain the existing callback input shape", () => {
+  assert.deepEqual(
+    parseThoughtCaptureFormSnapshot(
+      { primaryMediaId: "book-a", secondaryMediaId: null, statement: "A private thought." },
+      workIds,
+      false,
+    ),
+    { primaryMediaId: "book-a", secondaryMediaId: null, statement: "A private thought." },
+  );
+  assert.deepEqual(
+    parseThoughtCaptureFormSnapshot(
+      { primaryMediaId: "film-b", secondaryMediaId: "book-c", statement: "A bridge." },
+      workIds,
+      true,
+    ),
+    { primaryMediaId: "film-b", secondaryMediaId: "book-c", statement: "A bridge." },
+  );
+});
+
+test("malformed form snapshots cannot cross the Thought Capture adapter boundary", () => {
+  assert.equal(
+    parseThoughtCaptureFormSnapshot(
+      { primaryMediaId: "unknown", secondaryMediaId: null, statement: "A private thought." },
+      workIds,
+      false,
+    ),
+    null,
+  );
+  assert.equal(
+    parseThoughtCaptureFormSnapshot(
+      { primaryMediaId: "book-a", secondaryMediaId: "unknown", statement: "A bridge." },
+      workIds,
+      true,
+    ),
+    null,
+  );
+  assert.equal(
+    parseThoughtCaptureFormSnapshot(
+      { primaryMediaId: "book-a", secondaryMediaId: "book-a", statement: "A bridge." },
+      workIds,
+      true,
+    ),
+    null,
+  );
+  assert.equal(
+    parseThoughtCaptureFormSnapshot(
+      { primaryMediaId: "book-a", secondaryMediaId: "film-b", statement: "Not a bridge." },
+      workIds,
+      false,
+    ),
+    null,
+  );
+  assert.equal(
+    parseThoughtCaptureFormSnapshot(
+      { primaryMediaId: "book-a", secondaryMediaId: null, statement: null },
+      workIds,
+      false,
+    ),
+    null,
+  );
+});
+
+test("the submit boundary forwards valid input exactly once and rejects malformed input before onSave", () => {
+  const savedInputs: unknown[] = [];
+  const onSave = (input: {
+    draftId: string | null;
+    primaryMediaId: string;
+    secondaryMediaId: string | null;
+    statement: string;
+  }) => {
+    savedInputs.push(input);
+    return { saved: true as const };
+  };
+
+  assert.deepEqual(
+    submitThoughtCaptureFormSnapshot(
+      { primaryMediaId: "book-a", secondaryMediaId: null, statement: "A private thought." },
+      workIds,
+      false,
+      null,
+      onSave,
+    ),
+    { saved: true },
+  );
+  assert.deepEqual(
+    submitThoughtCaptureFormSnapshot(
+      { primaryMediaId: "film-b", secondaryMediaId: "book-c", statement: "A bridge." },
+      workIds,
+      true,
+      "draft-1",
+      onSave,
+    ),
+    { saved: true },
+  );
+  assert.deepEqual(savedInputs, [
+    {
+      draftId: null,
+      primaryMediaId: "book-a",
+      secondaryMediaId: null,
+      statement: "A private thought.",
+    },
+    {
+      draftId: "draft-1",
+      primaryMediaId: "film-b",
+      secondaryMediaId: "book-c",
+      statement: "A bridge.",
+    },
+  ]);
+
+  assert.equal(
+    submitThoughtCaptureFormSnapshot(
+      { primaryMediaId: "book-a", secondaryMediaId: "book-a", statement: "Tampered bridge." },
+      workIds,
+      true,
+      "draft-1",
+      onSave,
+    ),
+    null,
+  );
+  assert.equal(savedInputs.length, 2);
 });
 
 test("later private text editing keeps both bridge works visible and the shared-meaning prompt", () => {

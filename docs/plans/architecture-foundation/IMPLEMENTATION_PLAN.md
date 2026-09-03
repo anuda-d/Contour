@@ -30,11 +30,11 @@ Status: active shared state; standing scheduled owner authorization.
 | AF-2 Complete strict TypeScript | accepted | Every maintained application source and automated test is strict TypeScript. Separate browser and Node-test typechecks, the Vite build, and the checked `src/composition/main.ts` native entrypoint are accepted with no maintained application JavaScript mirror. |
 | AF-3 Deep product modules | open | Partial: authored Thought lifecycle, anchors, publication, and immutable merge now live in a cohesive strict TypeScript product module; other product facts remain in prototype seams. |
 | AF-4 Application use cases | open | Partial: authored-Thought reload, startup recovery, capture, and publication, deliberate-selection, featured-Media, and pinned-position startup recovery, selection toggle or confirmation, public featured-Media toggle, and spatial pin or unpin commands now use screen-neutral application outcomes through specific typed persistence ports; other current workflows remain composition-owned. |
-| AF-5 Isolated effects and validated boundaries | open | Partial: browser localStorage, DOM-root acquisition, Map resize listening, Map drag-click suppression timing, the existing Map debug-global publication, storage adapters, wall-clock access, UUID generation, authored-Thought cross-tab events, authored, selection, featured-Media, and pinned-position startup recovery, capture, reload, and publication persistence, selection persistence, featured-Media persistence, pinned-position persistence, and prototype-seed runtime validation now cross narrow inward boundaries; other browser events and form-input boundaries remain open. |
+| AF-5 Isolated effects and validated boundaries | open | Partial: browser localStorage, DOM-root acquisition, Map resize listening, Map drag-click suppression timing, the existing Map debug-global publication, storage adapters, wall-clock access, UUID generation, authored-Thought cross-tab events, authored, selection, featured-Media, and pinned-position startup recovery, capture, reload, and publication persistence, selection persistence, featured-Media persistence, pinned-position persistence, prototype-seed runtime validation, and Thought Capture form snapshots now cross narrow inward boundaries; other browser events and form-input boundaries remain open. |
 | AF-6 Explicit projections and privacy | open | Partial: the owner and visitor graph projection now has strict TypeScript ownership and focused evidence for Draft and draft-only Media exclusion, publication-derived public eligibility, dangling-edge filtering, and owner capability removal; application-level structurally separate read models remain open. |
 | AF-7 Durable compatibility | open | Partial: authored V2, V1, and legacy-Draft browser storage now has typed precedence, normalization, migration, recovery, and read-merge-write evidence; other persisted state remains to be completed. |
 | AF-8 Frozen visible behavior | open | None yet. |
-| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, shared effect-port source coverage, browser-root, browser-resize, browser-clock, browser-Map-global, prototype-seed runtime validation, authored, selection, featured-Media, and pinned-position startup recovery, capture and publication, selection, featured-Media, and pinned-position application and adapter coverage, plus Map composition, DOM-source-contract, product, CSS-regression, end-to-end acceptance, and architecture-boundary coverage; later migrated seams and final coverage remain open. |
+| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, shared effect-port source coverage, browser-root, browser-resize, browser-clock, browser-Map-global, prototype-seed and Thought Capture form runtime validation, authored, selection, featured-Media, and pinned-position startup recovery, capture and publication, selection, featured-Media, and pinned-position application and adapter coverage, plus Map composition, DOM-source-contract, product, CSS-regression, end-to-end acceptance, and architecture-boundary coverage; later migrated seams and final coverage remain open. |
 | AF-10 Durable completion walkthrough | open | None yet. |
 
 This table records accepted evidence only.
@@ -61,13 +61,13 @@ queue.
 ## Current run
 
 - State: accepted; no current unit.
-- Unit id: af-5-prototype-seed-runtime-validation.
+- Unit id: af-5-thought-capture-form-boundary-validation.
 - Criterion: AF-5 Isolated effects and validated boundaries and AF-9 Layered test and quality gates.
-- Intended result: the existing prototype-seed adapter runtime-validates the current seed shape before returning the same fresh editable graph copy.
-- Accepted evidence: the six focused seed-adapter tests pass, including accepted-seed parsing and malformed profile, Media, Thought-anchor, featured-Media, and edge rejection. `./scripts/check.sh` passes the import-boundary check, strict browser and test typechecks, the Vite production build, and 212 tests with zero failures. `git diff --check -- .` passes.
-- Interpretation: the adapter validates current owner, catalogue, authored-relationship, and deliberate-public-presentation facts before exposing a fresh mutable graph to composition. No rendered validation was due because the unit changed no rendered surface or interaction.
-- Independent review: a fresh `gpt-5.6-sol` high-reasoning review was clean with no P0-P3 finding, behavior regression, scope concern, or test-coverage concern.
-- Scope guard: seed content, rendered surface, interaction policy, CSS, copy, storage behavior, public or private projection rule, layout, and design tokens remain unchanged.
+- Intended result: Thought Capture runtime-validates its mutable native-DOM form snapshot before invoking the existing application callback.
+- Accepted evidence: seven focused Thought Capture checks pass, including executable valid forwarding and malformed rejection before `onSave`; strict browser and test typechecks pass; `./scripts/check.sh` passes architecture enforcement, strict typechecks, the Vite build, and 215 tests with zero failures; and `git diff --check -- .` passes.
+- Interpretation: supplied-work membership, bridge-anchor distinction, and string-form snapshots become trusted only at the native-DOM adapter boundary. Valid submission inputs and product-level authored semantics remain unchanged.
+- Independent review: the first fresh `gpt-5.6-sol` high-reasoning review found a P2 executable-submit evidence gap, which was corrected. A fresh second `gpt-5.6-sol` high-reasoning review was clean with no P0-P3 finding, behavior regression, scope concern, or test-coverage concern.
+- Scope guard: copy, CSS, DOM structure, valid interaction, authored lifecycle rule, storage behavior, projection or privacy rule, Map behavior, layout, and design tokens remain unchanged.
 
 ## Owner authorization
 
@@ -112,7 +112,7 @@ queue.
 
 ## Fresh-task handoff state
 
-- Latest accepted unit: af-5-prototype-seed-runtime-validation.
+- Latest accepted unit: af-5-thought-capture-form-boundary-validation.
 - Latest implementation commit: recorded in this accepted unit's post-commit handoff.
 - Latest temporary handoff: written after this accepted unit commits.
 - Next unit selected: no.
@@ -141,17 +141,17 @@ without discarding uncommitted work or inferring missing decisions.
 ## Current unit evidence
 
 - State: accepted; no current unit.
-- Unit id: af-4-pinned-startup-recovery-use-case.
-- Criterion: AF-4 Application use cases, AF-5 Isolated effects and validated boundaries, and AF-9 Layered test and quality gates.
-- Intended result: pinned-position startup recovery coordinates the existing canonical same-key recovery rewrite through a narrow persistence port while composition retains recovery guards, Map state, and rendering.
-- Evidence claim: composition no longer performs the raw pinned-position recovery persistence transaction while the adapter preserves the established direct boolean write outcome.
-- Exact owned diff: pinned recovery application use case and port, browser recovery-port adapter factory, composition delegation, fake-port application coverage, same-key canonical adapter and unavailable or write-failure coverage, composition source coverage, and synchronized operational state.
-- Explorer evidence: three independent read-only audits agreed that pinned-position recovery is the narrowest remaining composition persistence bypass and must retain the direct same-key V1 rewrite, valid non-user node filtering including private Drafts, position normalization, recovery timing after authored graph recomposition, and silent write failure without cross-tab merging.
-- Focused validation: 23 pinned-position application, adapter, and composition checks passed; strict browser and test typechecks, architecture enforcement, the Vite production build, and `git diff --check -- .` passed.
-- Full validation: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, the Vite production build, and 210 tests with zero failures.
-- Scope guard: no rendered surface, interaction policy, CSS, copy, storage key or representation, valid position filtering, recovery behavior, public or private projection rule, camera behavior, or design token changed.
-- Rendered validation: not required because the owned diff changes no rendered surface or interaction behavior.
-- Independent review: the first fresh `gpt-5.6-sol` high-reasoning review found and the task corrected one documentation-only P2: a stale Current run state. The final fresh `gpt-5.6-sol` high-reasoning review was clean with no P0-P3 finding, code, behavior, scope, or test-coverage concern.
+- Unit id: af-5-thought-capture-form-boundary-validation.
+- Criterion: AF-5 Isolated effects and validated boundaries and AF-9 Layered test and quality gates.
+- Intended result: Thought Capture runtime-validates its form-originated snapshot before invoking its opaque application callback.
+- Evidence claim: malformed or tampered primary work, secondary bridge work, bridge mode, and statement values cannot leave the native-DOM adapter, while valid create, edit, and bridge submissions retain the existing callback input shape and product-level semantics.
+- Exact owned diff: a small typed form-snapshot parser and submit helper in the Thought Capture UI adapter, submit-time rejection before `onSave`, executable valid and malformed submit-boundary coverage, source-contract coverage, and synchronized operational state.
+- Explorer evidence: two independent read-only audits agreed that the direct radio and textarea value forwarding was the smallest remaining form-input boundary gap. Both limited the UI rule to supplied-work membership and distinct bridge anchors, retaining authored lifecycle and statement policy in the existing product module.
+- Focused validation: seven Thought Capture UI checks pass, including valid normal and bridge snapshots, unknown primary, unknown or same bridge anchor, invalid normal-mode secondary anchor, non-string statement rejection, and executable submit forwarding or rejection before `onSave`. Strict browser and test typechecks pass. `git diff --check -- .` passes.
+- Full validation: `./scripts/check.sh` passes architecture enforcement, strict browser and test typechecks, the Vite production build, and 215 tests with zero failures.
+- Scope guard: no copy, CSS, DOM structure, valid interaction, authored lifecycle rule, storage behavior, projection or privacy rule, Map behavior, layout, or design token changed.
+- Rendered validation: not required because the owned diff preserves every valid rendered interaction and changes only malformed native-DOM form input handling.
+- Independent review: the first fresh `gpt-5.6-sol` high-reasoning review found a P2 evidence gap because direct parser tests and source regexes did not execute the submit-to-callback boundary. The review-driven submit helper and executable forwarding or rejection coverage were added, then focused and full validation were repeated. A fresh second `gpt-5.6-sol` high-reasoning review was clean with no P0-P3 finding, behavior regression, scope concern, or test-coverage concern.
 
 ## Goal-readiness evidence
 
@@ -419,6 +419,9 @@ Routine work-unit completion does not require owner review.
 - AF-5 and AF-9 partial unit `af-5-prototype-seed-runtime-validation` accepted on 2026-09-02.
   The prototype-seed adapter now runtime-validates the current owner, supported Book and Film catalogue facts, published Thought anchors, deliberate public features, and authored and anchor relationships before returning the same fresh editable graph copy.
   Focused six-test evidence, full 212-test repository validation, and a clean fresh independent review support bounded AF-5 and AF-9 evidence while both criteria remain open.
+- AF-5 and AF-9 partial unit `af-5-thought-capture-form-boundary-validation` accepted on 2026-09-02.
+  Thought Capture now validates mutable native-DOM form snapshots before calling application code, accepting only supplied work IDs, a distinct bridge anchor, and string form values while retaining existing product validation and every valid callback input.
+  Focused seven-test evidence, full 215-test repository validation, and a clean second fresh independent review after correcting executable submit-boundary coverage support bounded AF-5 and AF-9 evidence while both criteria remain open.
 
 ## Administratively closed run log
 
