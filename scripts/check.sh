@@ -17,7 +17,6 @@ for required_file in \
   "$current_file" \
   "$goal_file" \
   "$state_file" \
-  docs/plans/human-discovery-prototype/GOAL.md \
   docs/plans/identity-map-prototype/GOAL.md \
   docs/plans/identity-map-prototype/IMPLEMENTATION_PLAN.md
 do
@@ -26,9 +25,6 @@ done
 
 grep -q '^- Shared implementation state: \[Implementation Plan\](architecture-foundation/IMPLEMENTATION_PLAN.md)$' \
   "$current_file"
-grep -q '^Status: deferred proposal; not active and not authorized for implementation\.$' \
-  docs/plans/human-discovery-prototype/GOAL.md
-
 read_field() {
   field_name=$1
   source_file=$2

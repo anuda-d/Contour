@@ -15,7 +15,7 @@ test("the native browser entrypoint loads the strict TypeScript composition root
   assert.doesNotMatch(entrypoint, /src\/app\.js/);
 });
 
-test("the composition root wires authored timestamps and UUIDs through browser effect ports", () => {
+test("the composition root wires authored capture effects through browser ports", () => {
   const source = readFileSync(resolve("src/composition/main.ts"), "utf8");
 
   assert.match(source, /import type \{ ClockPort \} from "\.\.\/kernel\/clock\.ts"/);
@@ -24,12 +24,33 @@ test("the composition root wires authored timestamps and UUIDs through browser e
   assert.match(source, /import \{ browserIdentifier \} from "\.\.\/adapters\/browser\/browser-identifier\.ts"/);
   assert.match(source, /const clock: ClockPort = browserClock;/);
   assert.match(source, /const identifier: IdentifierPort = browserIdentifier;/);
-  assert.match(source, /id: `draft-\$\{identifier\.randomUuid\(\)\}`/);
-  assert.match(source, /createdAt: clock\.now\(\),/);
+  assert.match(source, /import \{ saveAuthoredDraft \} from "\.\.\/application\/authorship\/save-authored-draft\.ts"/);
+  assert.match(source, /kind: "create",[\s\S]*?clock,[\s\S]*?identifier,/);
   assert.match(source, /map = new ThoughtMap\(root, graph, \{[\s\S]*?clock,/);
-  assert.match(source, /publishDraft\(\s*\n\s*draftState,\s*\n\s*id,\s*\n\s*clock\.now\(\),/);
+  assert.match(source, /publishAuthoredThought\(\s*\n\s*draftState,\s*\n\s*id,\s*\n\s*validCatalogueIds,\s*\n\s*clock,/);
   assert.doesNotMatch(source, /crypto\.randomUUID\(\)/);
   assert.doesNotMatch(source, /new Date\(\)\.toISOString\(\)/);
+});
+
+test("the composition root delegates authored capture mutation and persistence to the application use case", () => {
+  const source = readFileSync(resolve("src/composition/main.ts"), "utf8");
+
+  assert.match(source, /const authoredThoughtPersistence = createAuthoredThoughtPersistencePort\(storage, validCatalogueIds\);/);
+  assert.match(source, /const result = saveAuthoredDraft\([\s\S]*?kind: "create"/);
+  assert.match(source, /kind: "edit", id: editingId, statement/);
+  assert.match(source, /kind: "bridge",[\s\S]*?statementAtOpen: draft\.statement,/);
+  assert.match(source, /activeMap\(\)\.updateGraph\(graph, \{ focusId: result\.draft\.id, message: result\.message \}\);/);
+  assert.match(source, /activeMap\(\)\.updateGraph\(graph, \{ selectId: result\.draft\.id, message: result\.message \}\);/);
+
+  const captureCallbacks = source.match(
+    /const openCapture =[\s\S]*?\n  const openBridge =[\s\S]*?\n  if \(!graph\.nodes\.length\)/,
+  )?.[0] ?? "";
+  assert.doesNotMatch(captureCallbacks, /createDraft\(/);
+  assert.doesNotMatch(captureCallbacks, /editDraft\(/);
+  assert.doesNotMatch(captureCallbacks, /connectDraft\(/);
+  assert.doesNotMatch(captureCallbacks, /persistDraftState\(/);
+  assert.doesNotMatch(captureCallbacks, /clock\.now\(/);
+  assert.doesNotMatch(captureCallbacks, /identifier\.randomUuid\(/);
 });
 
 test("the composition root acquires browser storage through its outward adapter", () => {
@@ -102,7 +123,7 @@ test("the composition root delegates selection mutation and persistence to the a
 
   assert.match(
     source,
-    /import \{\s*createSelectionPersistencePort,\s*loadSelection,\s*\} from "\.\.\/adapters\/browser\/selection-local-storage\.ts"/,
+    /import \{\s*createSelectionPersistencePort,\s*createSelectionRecoveryPersistencePort,\s*loadSelection,\s*\} from "\.\.\/adapters\/browser\/selection-local-storage\.ts"/,
   );
   assert.match(
     source,
@@ -116,12 +137,31 @@ test("the composition root delegates selection mutation and persistence to the a
   assert.doesNotMatch(source, /saveSelection\(/);
 });
 
+test("the composition root delegates selection startup recovery persistence to the application use case", () => {
+  const source = readFileSync(resolve("src/composition/main.ts"), "utf8");
+
+  assert.match(
+    source,
+    /import \{ recoverSelection \} from "\.\.\/application\/taste\/recover-selection\.ts"/,
+  );
+  assert.match(
+    source,
+    /createSelectionRecoveryPersistencePort,/
+  );
+  assert.match(source, /const selectionRecoveryPersistence = createSelectionRecoveryPersistencePort\(storage\);/);
+  assert.match(
+    source,
+    /if \(loaded\.recovered && loaded\.persistent\) \{\s*const recoveredSelection = recoverSelection\(selectionState, selectionRecoveryPersistence\);\s*selectionState = recoveredSelection\.state;\s*persistent = recoveredSelection\.saved;\s*\}/,
+  );
+  assert.doesNotMatch(source, /selectionPersistence\.save\(selectionState\)/);
+});
+
 test("the composition root delegates featured mutation and persistence to the application use case", () => {
   const source = readFileSync(resolve("src/composition/main.ts"), "utf8");
 
   assert.match(
     source,
-    /import \{\s*createFeaturedPersistencePort,\s*loadFeaturedState,\s*\} from "\.\.\/adapters\/browser\/featured-local-storage\.ts"/,
+    /import \{\s*createFeaturedPersistencePort,\s*createFeaturedRecoveryPersistencePort,\s*loadFeaturedState,\s*\} from "\.\.\/adapters\/browser\/featured-local-storage\.ts"/,
   );
   assert.match(
     source,
@@ -137,24 +177,95 @@ test("the composition root delegates featured mutation and persistence to the ap
   assert.doesNotMatch(source, /saveFeaturedState\(/);
 });
 
-test("the composition root delegates pinned-position mutation and persistence to the application use case", () => {
+test("the composition root delegates featured startup recovery persistence to the application use case", () => {
   const source = readFileSync(resolve("src/composition/main.ts"), "utf8");
 
   assert.match(
     source,
-    /import \{\s*createPinnedPositionPersistencePort,\s*loadPinnedState,\s*\} from "\.\.\/adapters\/browser\/pinned-local-storage\.ts"/,
+    /import \{ recoverFeatured \} from "\.\.\/application\/taste\/recover-featured\.ts"/,
+  );
+  assert.match(source, /createFeaturedRecoveryPersistencePort,/);
+  assert.match(
+    source,
+    /const featuredRecoveryPersistence = createFeaturedRecoveryPersistencePort\(storage\);/,
+  );
+  assert.match(
+    source,
+    /if \(loadedFeatured\.recovered && loadedFeatured\.persistent\) \{\s*const recoveredFeatured = recoverFeatured\(featuredState, featuredRecoveryPersistence\);\s*featuredState = recoveredFeatured\.state;\s*if \(!recoveredFeatured\.saved\) \{\s*featuredMessage = "Unavailable featured works were removed\. Changes will last for this visit\.";/,
+  );
+  assert.doesNotMatch(source, /featuredPersistence\.save\(featuredState\)/);
+});
+
+test("the composition root delegates pinned-position mutation and recovery persistence to application use cases", () => {
+  const source = readFileSync(resolve("src/composition/main.ts"), "utf8");
+
+  assert.match(
+    source,
+    /import \{\s*createPinnedPositionPersistencePort,\s*createPinnedPositionRecoveryPersistencePort,\s*loadPinnedState,\s*\} from "\.\.\/adapters\/browser\/pinned-local-storage\.ts"/,
   );
   assert.match(
     source,
     /import \{\s*pinPosition,\s*unpinPosition,\s*\} from "\.\.\/application\/map\/update-pinned-positions\.ts"/,
   );
+  assert.match(
+    source,
+    /import \{ recoverPinnedPositions \} from "\.\.\/application\/map\/recover-pinned-positions\.ts"/,
+  );
   assert.match(source, /const pinnedPersistence = createPinnedPositionPersistencePort\(storage\);/);
-  assert.match(source, /pinnedPersistence\.save\(pinnedState\);/);
+  assert.match(
+    source,
+    /const pinnedRecoveryPersistence = createPinnedPositionRecoveryPersistencePort\(storage\);/,
+  );
+  assert.match(
+    source,
+    /if \(loadedPinned\.recovered && loadedPinned\.persistent\) \{\s*const recoveredPinned = recoverPinnedPositions\(pinnedState, pinnedRecoveryPersistence\);\s*pinnedState = recoveredPinned\.state;/,
+  );
   assert.match(
     source,
     /const result = pinPosition\(pinnedState, id, position, pinnableIds\(\), pinnedPersistence\);/,
   );
   assert.match(source, /const result = unpinPosition\(pinnedState, id, pinnedPersistence\);/);
+  assert.doesNotMatch(source, /pinnedPersistence\.save\(pinnedState\)/);
   assert.doesNotMatch(source, /from "\.\.\/product\/map\/pinned-positions\.ts"/);
   assert.doesNotMatch(source, /savePinnedState\(/);
+});
+
+test("the composition root delegates authored publication and persistence to the application use case", () => {
+  const source = readFileSync(resolve("src/composition/main.ts"), "utf8");
+
+  assert.match(
+    source,
+    /import \{ publishAuthoredThought \} from "\.\.\/application\/authorship\/publish-authored-thought\.ts"/,
+  );
+  assert.match(
+    source,
+    /const authoredThoughtPersistence = createAuthoredThoughtPersistencePort\(storage, validCatalogueIds\);/,
+  );
+  assert.match(
+    source,
+    /onPublishDraft: \(id\) => \{\s*const result = publishAuthoredThought\(\s*draftState,\s*id,\s*validCatalogueIds,\s*clock,\s*authoredThoughtPersistence,\s*\);/,
+  );
+  assert.match(source, /activeMap\(\)\.updateGraph\(graph, \{ selectId: id, message: draftMessage \}\);/);
+
+  const publishCallback = source.match(
+    /onPublishDraft: \(id\) => \{([\s\S]*?)\n\s*\},\n\s*onToggleFeatured:/,
+  )?.[1] ?? "";
+  assert.doesNotMatch(publishCallback, /publishDraft\(/);
+  assert.doesNotMatch(publishCallback, /persistDraftState\(/);
+  assert.doesNotMatch(publishCallback, /clock\.now\(/);
+});
+
+test("the composition root delegates authored startup recovery persistence to the application use case", () => {
+  const source = readFileSync(resolve("src/composition/main.ts"), "utf8");
+
+  assert.match(
+    source,
+    /import \{ recoverAuthoredThoughts \} from "\.\.\/application\/authorship\/recover-authored-thoughts\.ts"/,
+  );
+  assert.match(source, /createAuthoredThoughtRecoveryPersistencePort\(\s*storage,\s*validCatalogueIds,\s*\)/);
+  assert.match(
+    source,
+    /const persistedDrafts = recoverAuthoredThoughts\(\s*draftState,\s*authoredThoughtRecoveryPersistence,\s*\);/,
+  );
+  assert.doesNotMatch(source, /persistDraftState\(/);
 });

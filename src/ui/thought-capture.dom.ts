@@ -19,6 +19,16 @@ type SaveInput = {
   statement: string;
 };
 
+type ThoughtCaptureFormSnapshot = {
+  primaryMediaId: unknown;
+  secondaryMediaId: unknown;
+  statement: unknown;
+};
+
+type KnownWorkIds = {
+  has(value: string): boolean;
+};
+
 type SaveFailure = {
   saved: false;
   message: string;
@@ -45,6 +55,51 @@ const escapeHtml = (value: unknown) =>
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+
+export const parseThoughtCaptureFormSnapshot = (
+  snapshot: ThoughtCaptureFormSnapshot,
+  workIds: KnownWorkIds,
+  bridgeMode: boolean,
+): Omit<SaveInput, "draftId"> | null => {
+  if (typeof snapshot.primaryMediaId !== "string" || !workIds.has(snapshot.primaryMediaId)) {
+    return null;
+  }
+  if (typeof snapshot.statement !== "string") return null;
+
+  if (!bridgeMode) {
+    if (snapshot.secondaryMediaId !== null) return null;
+    return {
+      primaryMediaId: snapshot.primaryMediaId,
+      secondaryMediaId: null,
+      statement: snapshot.statement,
+    };
+  }
+
+  if (
+    typeof snapshot.secondaryMediaId !== "string" ||
+    !workIds.has(snapshot.secondaryMediaId) ||
+    snapshot.secondaryMediaId === snapshot.primaryMediaId
+  ) {
+    return null;
+  }
+  return {
+    primaryMediaId: snapshot.primaryMediaId,
+    secondaryMediaId: snapshot.secondaryMediaId,
+    statement: snapshot.statement,
+  };
+};
+
+export const submitThoughtCaptureFormSnapshot = <Success extends SaveSuccess>(
+  snapshot: ThoughtCaptureFormSnapshot,
+  workIds: KnownWorkIds,
+  bridgeMode: boolean,
+  draftId: string | null,
+  onSave: (input: SaveInput) => SaveFailure | Success,
+): SaveFailure | Success | null => {
+  const input = parseThoughtCaptureFormSnapshot(snapshot, workIds, bridgeMode);
+  if (!input) return null;
+  return onSave({ draftId, ...input });
+};
 
 export class ThoughtCapture<Success extends SaveSuccess = SaveSuccess> {
   private readonly catalogueById: Map<string, CapturableWork>;
@@ -203,12 +258,18 @@ export class ThoughtCapture<Success extends SaveSuccess = SaveSuccess> {
     });
     this.requiredOverlayElement<HTMLFormElement>(".capture-form").addEventListener("submit", (event) => {
       event.preventDefault();
-      const result = this.options.onSave({
-        draftId: this.draft?.id ?? null,
-        primaryMediaId: this.selectedMediaId,
-        secondaryMediaId: this.options.bridgeMode ? this.selectedSecondaryMediaId : null,
-        statement: this.statement,
-      });
+      const result = submitThoughtCaptureFormSnapshot(
+        {
+          primaryMediaId: this.selectedMediaId,
+          secondaryMediaId: this.options.bridgeMode ? this.selectedSecondaryMediaId : null,
+          statement: this.statement,
+        },
+        this.catalogueById,
+        Boolean(this.options.bridgeMode),
+        this.draft?.id ?? null,
+        this.options.onSave,
+      );
+      if (!result) return;
       if (result.saved) {
         this.close(false);
         this.options.onSaved(result);

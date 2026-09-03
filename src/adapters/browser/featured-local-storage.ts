@@ -4,6 +4,7 @@ import {
   type FeaturedState,
 } from "../../product/taste/featured.ts";
 import type { FeaturedPersistencePort } from "../../application/taste/update-featured.ts";
+import type { FeaturedRecoveryPersistencePort } from "../../application/taste/recover-featured.ts";
 import type { KeyValueStoragePort } from "../../kernel/key-value-storage.ts";
 
 export const FEATURED_STORAGE_KEY = "thought-map.prototype.featured-media.v1";
@@ -82,5 +83,18 @@ export function createFeaturedPersistencePort(
 ): FeaturedPersistencePort {
   return {
     save: (state) => saveFeaturedState(storage, state),
+  };
+}
+
+/**
+ * Adapts the existing same-key normalized featured-Media rewrite to the
+ * narrowly scoped startup recovery use case without exposing browser storage
+ * inward.
+ */
+export function createFeaturedRecoveryPersistencePort(
+  storage: KeyValueStoragePort | null | undefined,
+): FeaturedRecoveryPersistencePort {
+  return {
+    recover: (state) => saveFeaturedState(storage, state),
   };
 }

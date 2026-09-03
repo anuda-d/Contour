@@ -4,6 +4,7 @@ import {
   type PinnedState,
 } from "../../product/map/pinned-positions.ts";
 import type { PinnedPositionPersistencePort } from "../../application/map/update-pinned-positions.ts";
+import type { PinnedPositionRecoveryPersistencePort } from "../../application/map/recover-pinned-positions.ts";
 import type { KeyValueStoragePort } from "../../kernel/key-value-storage.ts";
 
 export const PINNED_STORAGE_KEY = "thought-map.prototype.pinned-positions.v1";
@@ -80,5 +81,18 @@ export function createPinnedPositionPersistencePort(
 ): PinnedPositionPersistencePort {
   return {
     save: (state) => savePinnedState(storage, state),
+  };
+}
+
+/**
+ * Adapts the existing same-key normalized pinned-position rewrite to the
+ * narrowly scoped startup recovery use case without exposing browser storage
+ * to application callers.
+ */
+export function createPinnedPositionRecoveryPersistencePort(
+  storage: KeyValueStoragePort | null | undefined,
+): PinnedPositionRecoveryPersistencePort {
+  return {
+    recover: (state) => savePinnedState(storage, state),
   };
 }

@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import {
   FEATURED_STORAGE_KEY,
   createFeaturedPersistencePort,
+  createFeaturedRecoveryPersistencePort,
   loadFeaturedState,
   saveFeaturedState,
 } from "../../../src/adapters/browser/featured-local-storage.ts";
@@ -90,4 +91,28 @@ test("featured persistence port preserves adapter write outcomes", () => {
   assert.equal(createFeaturedPersistencePort(storage).save(state), true);
   assert.equal(createFeaturedPersistencePort(null).save(state), false);
   assert.equal(storage.values.get(FEATURED_STORAGE_KEY), JSON.stringify(state));
+});
+
+test("featured recovery persistence port performs the canonical same-key rewrite", () => {
+  const state = createFeaturedState(["film-a", "book-a"], eligibleIds);
+  const storage = new MemoryStorage();
+
+  assert.equal(createFeaturedRecoveryPersistencePort(storage).recover(state), true);
+  assert.equal(createFeaturedRecoveryPersistencePort(null).recover(state), false);
+  assert.equal(storage.values.size, 1);
+  assert.equal(storage.values.get(FEATURED_STORAGE_KEY), JSON.stringify(state));
+});
+
+test("featured recovery persistence port preserves write failure as a false outcome", () => {
+  const state = createFeaturedState(["book-a"], eligibleIds);
+  const storage: KeyValueStoragePort = {
+    getItem() {
+      return null;
+    },
+    setItem() {
+      throw new Error("blocked");
+    },
+  };
+
+  assert.equal(createFeaturedRecoveryPersistencePort(storage).recover(state), false);
 });

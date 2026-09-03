@@ -1,20 +1,21 @@
 import { getCatalogue, type CatalogueWork } from "../product/catalogue/catalogue.ts";
 import {
   composeGraphWithDrafts,
-  connectDraft,
-  createDraft,
-  editDraft,
-  publishDraft,
   type Thought,
-  type ThoughtMutation,
 } from "../product/authorship/draft-state.ts";
 import {
+  createAuthoredThoughtPersistencePort,
+  createAuthoredThoughtRecoveryPersistencePort,
   createAuthoredThoughtReloadPort,
   loadDraftState,
-  persistDraftState,
   THOUGHT_STORAGE_KEY,
 } from "../adapters/browser/authored-local-storage.ts";
 import { reloadAuthoredThoughts } from "../application/authorship/reload-authored-thoughts.ts";
+import { recoverAuthoredThoughts } from "../application/authorship/recover-authored-thoughts.ts";
+import { recoverSelection } from "../application/taste/recover-selection.ts";
+import { recoverFeatured } from "../application/taste/recover-featured.ts";
+import { publishAuthoredThought } from "../application/authorship/publish-authored-thought.ts";
+import { saveAuthoredDraft } from "../application/authorship/save-authored-draft.ts";
 import type { KeyValueStoragePort } from "../kernel/key-value-storage.ts";
 import type { ClockPort } from "../kernel/clock.ts";
 import type { IdentifierPort } from "../kernel/identifier.ts";
@@ -22,20 +23,24 @@ import type { StorageChangePort } from "../kernel/storage-change.ts";
 import type { ResizeEventPort } from "../kernel/resize-event.ts";
 import {
   createFeaturedPersistencePort,
+  createFeaturedRecoveryPersistencePort,
   loadFeaturedState,
 } from "../adapters/browser/featured-local-storage.ts";
 import { getPublicMediaIds } from "../graph-projection.ts";
 import { ThoughtMap } from "../ui/map.dom.ts";
 import {
   createPinnedPositionPersistencePort,
+  createPinnedPositionRecoveryPersistencePort,
   loadPinnedState,
 } from "../adapters/browser/pinned-local-storage.ts";
 import {
   pinPosition,
   unpinPosition,
 } from "../application/map/update-pinned-positions.ts";
+import { recoverPinnedPositions } from "../application/map/recover-pinned-positions.ts";
 import {
   createSelectionPersistencePort,
+  createSelectionRecoveryPersistencePort,
   loadSelection,
 } from "../adapters/browser/selection-local-storage.ts";
 import {
@@ -75,9 +80,17 @@ try {
   const publicMediaIds = getPublicMediaIds(baseGraph);
   const storage: KeyValueStoragePort | null = getBrowserKeyValueStorage(window);
   const authoredThoughts = createAuthoredThoughtReloadPort(storage, validCatalogueIds);
+  const authoredThoughtPersistence = createAuthoredThoughtPersistencePort(storage, validCatalogueIds);
+  const authoredThoughtRecoveryPersistence = createAuthoredThoughtRecoveryPersistencePort(
+    storage,
+    validCatalogueIds,
+  );
   const selectionPersistence = createSelectionPersistencePort(storage);
+  const selectionRecoveryPersistence = createSelectionRecoveryPersistencePort(storage);
   const featuredPersistence = createFeaturedPersistencePort(storage);
+  const featuredRecoveryPersistence = createFeaturedRecoveryPersistencePort(storage);
   const pinnedPersistence = createPinnedPositionPersistencePort(storage);
+  const pinnedRecoveryPersistence = createPinnedPositionRecoveryPersistencePort(storage);
 
   const loaded = loadSelection(storage, validCatalogueIds);
   const loadedFeatured = loadFeaturedState(
@@ -127,15 +140,22 @@ try {
   };
 
   if (loaded.recovered && loaded.persistent) {
-    persistent = selectionPersistence.save(selectionState);
+    const recoveredSelection = recoverSelection(selectionState, selectionRecoveryPersistence);
+    selectionState = recoveredSelection.state;
+    persistent = recoveredSelection.saved;
   }
   if (loadedFeatured.recovered && loadedFeatured.persistent) {
-    if (!featuredPersistence.save(featuredState)) {
+    const recoveredFeatured = recoverFeatured(featuredState, featuredRecoveryPersistence);
+    featuredState = recoveredFeatured.state;
+    if (!recoveredFeatured.saved) {
       featuredMessage = "Unavailable featured works were removed. Changes will last for this visit.";
     }
   }
   if (loadedDrafts.recovered && loadedDrafts.persistent) {
-    const persistedDrafts = persistDraftState(storage, draftState, validCatalogueIds);
+    const persistedDrafts = recoverAuthoredThoughts(
+      draftState,
+      authoredThoughtRecoveryPersistence,
+    );
     draftState = persistedDrafts.state;
     graph = composeGraphWithDrafts(baseGraph, draftState);
     if (!persistedDrafts.saved) {
@@ -145,7 +165,8 @@ try {
     }
   }
   if (loadedPinned.recovered && loadedPinned.persistent) {
-    pinnedPersistence.save(pinnedState);
+    const recoveredPinned = recoverPinnedPositions(pinnedState, pinnedRecoveryPersistence);
+    pinnedState = recoveredPinned.state;
   }
 
   const openChooser = () => {
@@ -203,38 +224,28 @@ try {
       draft,
       initialMessage: draft ? "" : initialDraftMessage,
       onSave: ({ draftId: editingId, primaryMediaId, statement }) => {
-        const result = editingId
-          ? editDraft(draftState, editingId, statement)
-          : createDraft(
-              draftState,
-              {
-                id: `draft-${identifier.randomUuid()}`,
+        const result = saveAuthoredDraft(
+          draftState,
+          editingId
+            ? { kind: "edit", id: editingId, statement }
+            : {
+                kind: "create",
                 primaryMediaId,
                 statement,
-                createdAt: clock.now(),
+                selectedMediaIds: new Set(selectionState.selectedMediaIds),
+                clock,
+                identifier,
               },
-              new Set(selectionState.selectedMediaIds),
-            );
+          validCatalogueIds,
+          authoredThoughtPersistence,
+        );
         if ("error" in result) return { saved: false, message: result.error };
 
         draftState = result.state;
-        const persisted = result.changed
-          ? persistDraftState(storage, draftState, validCatalogueIds, {
-              id: result.draft.id,
-              fields: editingId ? ["statement"] : [],
-            })
-          : { saved: true, state: draftState };
-        draftState = persisted.state;
-        const currentThought = draftState.thoughts.find((thought) => thought.id === result.draft.id);
-        const publishedElsewhere = editingId && currentThought?.status === "published";
-        draftMessage = publishedElsewhere
-          ? "This Thought was already published in another tab. The private edit was not saved."
-          : persisted.saved
-            ? result.message
-            : `${result.message} This Draft will last for this visit.`;
+        draftMessage = result.message;
         return {
           saved: true,
-          draft: currentThought ?? result.draft,
+          draft: result.thought,
           message: draftMessage,
         };
       },
@@ -272,35 +283,24 @@ try {
       draft,
       bridgeMode: true,
       onSave: ({ secondaryMediaId, statement }) => {
-        const result = connectDraft(
+        const result = saveAuthoredDraft(
           draftState,
-          draft.id,
-          { secondaryMediaId, statement },
+          {
+            kind: "bridge",
+            id: draft.id,
+            secondaryMediaId,
+            statement,
+            statementAtOpen: draft.statement,
+          },
           validCatalogueIds,
+          authoredThoughtPersistence,
         );
         if ("error" in result) return { saved: false, message: result.error };
         draftState = result.state;
-        const bridgeMutationFields: ThoughtMutation["fields"] =
-          result.draft.statement === draft.statement
-            ? ["secondaryMediaId"]
-            : ["secondaryMediaId", "statement"];
-        const persisted = result.changed
-          ? persistDraftState(storage, draftState, validCatalogueIds, {
-              id: draft.id,
-              fields: bridgeMutationFields,
-            })
-          : { saved: true, state: draftState };
-        draftState = persisted.state;
-        const currentThought = draftState.thoughts.find((thought) => thought.id === draft.id);
-        const publishedElsewhere = currentThought?.status === "published";
-        draftMessage = publishedElsewhere
-          ? "This Thought was already published in another tab. The bridge was not saved."
-          : persisted.saved
-            ? result.message
-            : `${result.message} This bridge will last for this visit.`;
+        draftMessage = result.message;
         return {
           saved: true,
-          draft: currentThought ?? result.draft,
+          draft: result.thought,
           message: draftMessage,
         };
       },
@@ -338,25 +338,19 @@ try {
       onEditDraft: (id) => openCapture(id),
       onConnectDraft: (id) => openBridge(id),
       onPublishDraft: (id) => {
-        const result = publishDraft(
+        const result = publishAuthoredThought(
           draftState,
           id,
-          clock.now(),
           validCatalogueIds,
+          clock,
+          authoredThoughtPersistence,
         );
         if (!result.changed || !("message" in result)) return result;
         draftState = result.state;
-        const persisted = persistDraftState(storage, draftState, validCatalogueIds, {
-          id,
-          fields: ["status", "publishedAt"],
-        });
-        draftState = persisted.state;
-        draftMessage = persisted.saved
-          ? result.message
-          : "Thought published for this visit. The saved Draft was not changed.";
+        draftMessage = result.message;
         graph = composeGraphWithDrafts(baseGraph, draftState);
         activeMap().updateGraph(graph, { selectId: id, message: draftMessage });
-        return { ...result, state: draftState, message: draftMessage };
+        return result;
       },
       onToggleFeatured: (id) => {
         const media = graph.nodes.find((node) => node.id === id && node.type === "media");

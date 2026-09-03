@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import {
   SELECTION_STORAGE_KEY,
   createSelectionPersistencePort,
+  createSelectionRecoveryPersistencePort,
   loadSelection,
   saveSelection,
 } from "../../../src/adapters/browser/selection-local-storage.ts";
@@ -83,4 +84,33 @@ test("selection persistence port preserves the adapter write outcome", () => {
   assert.equal(createSelectionPersistencePort(storage).save(state), true);
   assert.equal(storage.values.get(SELECTION_STORAGE_KEY), JSON.stringify(state));
   assert.equal(createSelectionPersistencePort(null).save(state), false);
+});
+
+test("selection recovery persistence rewrites normalized state through the existing key", () => {
+  const storage = new MemoryStorage();
+  storage.setItem(
+    SELECTION_STORAGE_KEY,
+    JSON.stringify({
+      version: 0,
+      selectedMediaIds: ["a", "missing", "a", "b", "c", "d"],
+      confirmed: true,
+    }),
+  );
+  const loaded = loadSelection(storage, validIds);
+
+  assert.equal(loaded.recovered, true);
+  assert.deepEqual(loaded.state, {
+    ...emptySelection(),
+    selectedMediaIds: ["a", "b", "c"],
+    confirmed: true,
+  });
+  assert.equal(createSelectionRecoveryPersistencePort(storage).recover(loaded.state), true);
+  assert.equal(storage.values.get(SELECTION_STORAGE_KEY), JSON.stringify(loaded.state));
+  assert.deepEqual(loadSelection(storage, validIds), {
+    state: loaded.state,
+    persistent: true,
+    recovered: false,
+    storageError: false,
+  });
+  assert.equal(createSelectionRecoveryPersistencePort(null).recover(loaded.state), false);
 });

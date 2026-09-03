@@ -1,6 +1,10 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import {
+  parseWorkChooserToggleId,
+  submitWorkChooserToggle,
+} from "../../src/ui/work-chooser.dom.ts";
 
 const chooserSource = await readFile(
   new URL("../../src/ui/work-chooser.dom.ts", import.meta.url),
@@ -21,12 +25,43 @@ test("chooser source contract delegates selection and confirmation policy throug
   assert.match(chooserSource, /type WorkChooserOptions =/);
   assert.match(chooserSource, /onToggle: \(id: string\) => ToggleResult/);
   assert.match(chooserSource, /onConfirm: \(\) => ConfirmResult/);
-  assert.match(chooserSource, /const result = this\.options\.onToggle\(id\)/);
-  assert.match(chooserSource, /this\.state = result\.state/);
-  assert.match(chooserSource, /this\.message = result\.message/);
+  assert.match(chooserSource, /submitWorkChooserToggle\(/);
+  assert.match(chooserSource, /this\.options\.onToggle,/);
+  assert.match(chooserSource, /if \(!submission\) return/);
+  assert.match(chooserSource, /this\.state = submission\.result\.state/);
+  assert.match(chooserSource, /this\.message = submission\.result\.message/);
   assert.match(chooserSource, /if \(result\.confirmed\) this\.close\(\)/);
   assert.doesNotMatch(chooserSource, /from "\.\.\/product\//);
   assert.doesNotMatch(chooserSource, /from "\.\.\/adapters\//);
+});
+
+const workIds = new Set(["book-a", "film-b"]);
+
+test("chooser validates mutable DOM identifiers before its opaque toggle callback", () => {
+  assert.equal(parseWorkChooserToggleId("book-a", workIds), "book-a");
+  assert.equal(parseWorkChooserToggleId("unknown", workIds), null);
+  assert.equal(parseWorkChooserToggleId(undefined, workIds), null);
+  assert.equal(parseWorkChooserToggleId({ value: "book-a" }, workIds), null);
+});
+
+test("chooser toggle boundary forwards valid identifiers once and rejects malformed values before onToggle", () => {
+  const toggledIds: string[] = [];
+  const onToggle = (id: string) => {
+    toggledIds.push(id);
+    return { state: { selectedMediaIds: [id] }, message: "Selected." };
+  };
+
+  assert.deepEqual(submitWorkChooserToggle("book-a", workIds, onToggle), {
+    id: "book-a",
+    result: {
+      state: { selectedMediaIds: ["book-a"] },
+      message: "Selected.",
+    },
+  });
+  assert.equal(submitWorkChooserToggle("unknown", workIds, onToggle), null);
+  assert.equal(submitWorkChooserToggle(undefined, workIds, onToggle), null);
+  assert.equal(submitWorkChooserToggle({ value: "book-a" }, workIds, onToggle), null);
+  assert.deepEqual(toggledIds, ["book-a"]);
 });
 
 test("chooser source contract preserves modal inertness, keyboard trapping, and restored focus", () => {

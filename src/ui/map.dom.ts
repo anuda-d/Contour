@@ -62,6 +62,50 @@ function datasetValue(element: HTMLElement, key: string): string {
   if (!value) throw new Error(`Expected Map data attribute: ${key}`);
   return value;
 }
+
+export const parsePublishDraftId = (
+  value: unknown,
+  nodes: readonly MapNode[],
+  canCaptureThoughts: boolean,
+): string | null => {
+  if (!canCaptureThoughts || typeof value !== "string") return null;
+  const node = nodes.find((item) => item.id === value);
+  return node?.type === "thought" && node.status === "draft" ? node.id : null;
+};
+
+export const submitPublishDraft = (
+  value: unknown,
+  nodes: readonly MapNode[],
+  canCaptureThoughts: boolean,
+  onPublishDraft: ((id: string) => void) | undefined,
+): string | null => {
+  const id = parsePublishDraftId(value, nodes, canCaptureThoughts);
+  if (!id || !onPublishDraft) return null;
+  onPublishDraft(id);
+  return id;
+};
+
+export const parseFeatureToggleId = (
+  value: unknown,
+  nodes: readonly MapNode[],
+  canFeatureMedia: boolean,
+): string | null => {
+  if (!canFeatureMedia || typeof value !== "string") return null;
+  const node = nodes.find((item) => item.id === value);
+  return node?.type === "media" ? node.id : null;
+};
+
+export const submitFeatureToggle = (
+  value: unknown,
+  nodes: readonly MapNode[],
+  canFeatureMedia: boolean,
+  onToggleFeatured: ((id: string) => CallbackResult<FeaturedState> | undefined) | undefined,
+): { id: string; result: CallbackResult<FeaturedState> } | null => {
+  const id = parseFeatureToggleId(value, nodes, canFeatureMedia);
+  const result = id ? onToggleFeatured?.(id) : undefined;
+  return id && result ? { id, result } : null;
+};
+
 export type MapPresentation = {
   modes: { owner: MapMode; visitor: MapMode };
   normalizeMode: (mode: string | undefined) => MapMode;
@@ -641,7 +685,12 @@ export class ThoughtMap {
   bindDetailEvents(): void {
     const publish = this.detailPanel.querySelector<HTMLElement>("[data-publish-draft]");
     publish?.addEventListener("click", () => {
-      this.options.onPublishDraft?.(datasetValue(publish, "publishDraft"));
+      submitPublishDraft(
+        publish.dataset.publishDraft,
+        this.graph.nodes,
+        this.capabilities.canCaptureThoughts,
+        this.options.onPublishDraft,
+      );
     });
     const edit = this.detailPanel.querySelector<HTMLElement>("[data-edit-draft]");
     edit?.addEventListener("click", () => {
@@ -653,10 +702,14 @@ export class ThoughtMap {
     });
     const feature = this.detailPanel.querySelector<HTMLElement>("[data-feature-toggle]");
     feature?.addEventListener("click", () => {
-      const id = datasetValue(feature, "featureToggle");
-      const result = this.options.onToggleFeatured?.(id);
-      if (!result) return;
-      this.updateFeaturedState(result.state, result.message, id);
+      const submitted = submitFeatureToggle(
+        feature.dataset.featureToggle,
+        this.graph.nodes,
+        this.capabilities.canFeatureMedia,
+        this.options.onToggleFeatured,
+      );
+      if (!submitted) return;
+      this.updateFeaturedState(submitted.result.state, submitted.result.message, submitted.id);
     });
     const position = this.detailPanel.querySelector<HTMLElement>("[data-position-action]");
     position?.addEventListener("click", () => {
