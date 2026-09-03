@@ -29,12 +29,12 @@ Status: active shared state; standing scheduled owner authorization.
 | AF-1 Enforced architecture contract | accepted | Architecture decision records, six-key compatibility inventory, and the checked import-boundary gate were accepted after 30 focused and 112 repository tests plus clean fresh review. |
 | AF-2 Complete strict TypeScript | accepted | Every maintained application source and automated test is strict TypeScript. Separate browser and Node-test typechecks, the Vite build, and the checked `src/composition/main.ts` native entrypoint are accepted with no maintained application JavaScript mirror. |
 | AF-3 Deep product modules | open | Partial: authored Thought lifecycle, anchors, publication, and immutable merge now live in a cohesive strict TypeScript product module; other product facts remain in prototype seams. |
-| AF-4 Application use cases | open | Partial: authored-Thought reload, startup recovery, capture, and publication, deliberate-selection and featured-Media startup recovery, selection toggle or confirmation, public featured-Media toggle, and spatial pin or unpin commands now use screen-neutral application outcomes through specific typed persistence ports; other current workflows remain composition-owned. |
-| AF-5 Isolated effects and validated boundaries | open | Partial: browser localStorage, DOM-root acquisition, Map resize listening, Map drag-click suppression timing, the existing Map debug-global publication, storage adapters, wall-clock access, UUID generation, authored-Thought cross-tab events, authored, selection, and featured-Media startup recovery, capture, reload, and publication persistence, selection persistence, featured-Media persistence, and pinned-position persistence now cross narrow inward ports; other browser events, seed input, and form-input boundaries remain open. |
+| AF-4 Application use cases | open | Partial: authored-Thought reload, startup recovery, capture, and publication, deliberate-selection, featured-Media, and pinned-position startup recovery, selection toggle or confirmation, public featured-Media toggle, and spatial pin or unpin commands now use screen-neutral application outcomes through specific typed persistence ports; other current workflows remain composition-owned. |
+| AF-5 Isolated effects and validated boundaries | open | Partial: browser localStorage, DOM-root acquisition, Map resize listening, Map drag-click suppression timing, the existing Map debug-global publication, storage adapters, wall-clock access, UUID generation, authored-Thought cross-tab events, authored, selection, featured-Media, and pinned-position startup recovery, capture, reload, and publication persistence, selection persistence, featured-Media persistence, and pinned-position persistence now cross narrow inward ports; other browser events, seed input, and form-input boundaries remain open. |
 | AF-6 Explicit projections and privacy | open | Partial: the owner and visitor graph projection now has strict TypeScript ownership and focused evidence for Draft and draft-only Media exclusion, publication-derived public eligibility, dangling-edge filtering, and owner capability removal; application-level structurally separate read models remain open. |
 | AF-7 Durable compatibility | open | Partial: authored V2, V1, and legacy-Draft browser storage now has typed precedence, normalization, migration, recovery, and read-merge-write evidence; other persisted state remains to be completed. |
 | AF-8 Frozen visible behavior | open | None yet. |
-| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, shared effect-port source coverage, browser-root, browser-resize, browser-clock, browser-Map-global, authored, selection, and featured-Media startup recovery, capture and publication, selection, featured-Media, and pinned-position application and adapter coverage, plus Map composition, DOM-source-contract, product, CSS-regression, end-to-end acceptance, and architecture-boundary coverage; later migrated seams and final coverage remain open. |
+| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, shared effect-port source coverage, browser-root, browser-resize, browser-clock, browser-Map-global, authored, selection, featured-Media, and pinned-position startup recovery, capture and publication, selection, featured-Media, and pinned-position application and adapter coverage, plus Map composition, DOM-source-contract, product, CSS-regression, end-to-end acceptance, and architecture-boundary coverage; later migrated seams and final coverage remain open. |
 | AF-10 Durable completion walkthrough | open | None yet. |
 
 This table records accepted evidence only.
@@ -61,11 +61,11 @@ queue.
 ## Current run
 
 - State: accepted; no current unit.
-- Unit id: af-4-featured-startup-recovery-use-case.
+- Unit id: af-4-pinned-startup-recovery-use-case.
 - Criterion: AF-4 Application use cases, AF-5 Isolated effects and validated boundaries, and AF-9 Layered test and quality gates.
-- Intended result: a featured-Media startup recovery use case coordinates the existing canonical same-key recovery rewrite through a narrow persistence port while composition retains loading guards, exact recovery copy, Map state, and rendering.
-- Evidence claim: deterministic application tests with a fake recovery port, featured-storage adapter contract coverage, and focused composition source coverage demonstrate that composition no longer performs the raw featured-Media recovery persistence transaction.
-- Scope guard: no rendered surface, interaction policy, CSS, copy, storage key or representation, public-Media eligibility, ordering or three-work limit, recovery behavior, public or private projection rule, camera behavior, or design token may change.
+- Intended result: pinned-position startup recovery coordinates the existing canonical same-key recovery rewrite through a narrow persistence port while composition retains recovery guards, Map state, and rendering.
+- Evidence claim: deterministic application tests with a fake recovery port, pinned-storage adapter contract coverage, and focused composition source coverage demonstrate that composition no longer performs the raw pinned-position recovery persistence transaction.
+- Scope guard: no rendered surface, interaction policy, CSS, copy, storage key or representation, valid position filtering, recovery behavior, public or private projection rule, camera behavior, or design token may change.
 
 ## Owner authorization
 
@@ -110,7 +110,7 @@ queue.
 
 ## Fresh-task handoff state
 
-- Latest accepted unit: af-4-featured-startup-recovery-use-case.
+- Latest accepted unit: af-4-pinned-startup-recovery-use-case.
 - Latest implementation commit: recorded in this accepted unit's post-commit handoff.
 - Latest temporary handoff: written after this accepted unit commits.
 - Next unit selected: no.
@@ -139,17 +139,17 @@ without discarding uncommitted work or inferring missing decisions.
 ## Current unit evidence
 
 - State: accepted; no current unit.
-- Unit id: af-4-featured-startup-recovery-use-case.
+- Unit id: af-4-pinned-startup-recovery-use-case.
 - Criterion: AF-4 Application use cases, AF-5 Isolated effects and validated boundaries, and AF-9 Layered test and quality gates.
-- Intended result: featured-Media startup recovery coordinates the existing canonical same-key rewrite through a narrow persistence port while composition retains recovery guards, exact failure copy, Map state, and rendering.
-- Evidence claim: composition no longer performs the raw featured-Media recovery persistence transaction while the adapter preserves the established direct boolean write outcome.
-- Exact owned diff: featured recovery application use case and port, browser recovery-port adapter factory, composition delegation, fake-port application coverage, same-key canonical adapter and write-failure coverage, composition source coverage, and synchronized operational state.
-- Explorer evidence: three independent read-only audits agreed that featured-Media recovery is the narrowest remaining composition persistence bypass and must retain the direct same-key write, public-only eligibility, ordered three-work state, and exact visit-only failure copy without cross-tab merging.
-- Focused validation: 31 featured-Media application, adapter, composition, product, and acceptance checks passed; strict browser and test typechecks, architecture enforcement, the Vite production build, and `git diff --check -- .` passed.
-- Full validation: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, the Vite production build, and 206 tests with zero failures.
-- Scope guard: no rendered surface, interaction policy, CSS, copy, storage key or representation, public-Media eligibility, ordering or three-work limit, recovery behavior, public or private projection rule, camera behavior, or design token changed.
+- Intended result: pinned-position startup recovery coordinates the existing canonical same-key recovery rewrite through a narrow persistence port while composition retains recovery guards, Map state, and rendering.
+- Evidence claim: composition no longer performs the raw pinned-position recovery persistence transaction while the adapter preserves the established direct boolean write outcome.
+- Exact owned diff: pinned recovery application use case and port, browser recovery-port adapter factory, composition delegation, fake-port application coverage, same-key canonical adapter and unavailable or write-failure coverage, composition source coverage, and synchronized operational state.
+- Explorer evidence: three independent read-only audits agreed that pinned-position recovery is the narrowest remaining composition persistence bypass and must retain the direct same-key V1 rewrite, valid non-user node filtering including private Drafts, position normalization, recovery timing after authored graph recomposition, and silent write failure without cross-tab merging.
+- Focused validation: 23 pinned-position application, adapter, and composition checks passed; strict browser and test typechecks, architecture enforcement, the Vite production build, and `git diff --check -- .` passed.
+- Full validation: `./scripts/check.sh` passed architecture enforcement, strict browser and test typechecks, the Vite production build, and 210 tests with zero failures.
+- Scope guard: no rendered surface, interaction policy, CSS, copy, storage key or representation, valid position filtering, recovery behavior, public or private projection rule, camera behavior, or design token changed.
 - Rendered validation: not required because the owned diff changes no rendered surface or interaction behavior.
-- Independent review: a fresh `gpt-5.6-sol` high-reasoning review was clean with no P0-P3 finding, commit blocker, evidence overclaim, missing test, scope violation, or unresolved owner decision.
+- Independent review: the first fresh `gpt-5.6-sol` high-reasoning review found and the task corrected one documentation-only P2: a stale Current run state. The final fresh `gpt-5.6-sol` high-reasoning review was clean with no P0-P3 finding, code, behavior, scope, or test-coverage concern.
 
 ## Goal-readiness evidence
 
@@ -410,6 +410,10 @@ Routine work-unit completion does not require owner review.
   A featured-Media startup recovery use case now coordinates the existing canonical same-key rewrite through a narrow persistence port.
   It preserves public-only eligibility, ordered unique three-work curation, seed defaults, explicit empty state, the exact storage key and JSON representation, direct write-only recovery semantics, visit-only failure copy, public and private boundaries, Map state, and rendering.
   Focused 31-check evidence, full 206-test repository validation, and a clean fresh independent review support bounded AF-4, AF-5, and AF-9 evidence.
+- AF-4, AF-5, and AF-9 partial unit `af-4-pinned-startup-recovery-use-case` accepted on 2026-09-02.
+  A pinned-position startup recovery use case now coordinates the existing canonical same-key V1 rewrite through a narrow persistence port.
+  It preserves valid non-user position eligibility including private Drafts, normalization and recovery timing after authored graph recomposition, the exact storage key and JSON representation, direct write-only recovery semantics, silent write failure, spatial-only meaning, Map state, and rendering.
+  Focused 23-check evidence, full 210-test repository validation, and a clean second fresh independent review after a documentation-only state correction support bounded AF-4, AF-5, and AF-9 evidence.
 
 ## Administratively closed run log
 

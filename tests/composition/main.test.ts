@@ -196,24 +196,36 @@ test("the composition root delegates featured startup recovery persistence to th
   assert.doesNotMatch(source, /featuredPersistence\.save\(featuredState\)/);
 });
 
-test("the composition root delegates pinned-position mutation and persistence to the application use case", () => {
+test("the composition root delegates pinned-position mutation and recovery persistence to application use cases", () => {
   const source = readFileSync(resolve("src/composition/main.ts"), "utf8");
 
   assert.match(
     source,
-    /import \{\s*createPinnedPositionPersistencePort,\s*loadPinnedState,\s*\} from "\.\.\/adapters\/browser\/pinned-local-storage\.ts"/,
+    /import \{\s*createPinnedPositionPersistencePort,\s*createPinnedPositionRecoveryPersistencePort,\s*loadPinnedState,\s*\} from "\.\.\/adapters\/browser\/pinned-local-storage\.ts"/,
   );
   assert.match(
     source,
     /import \{\s*pinPosition,\s*unpinPosition,\s*\} from "\.\.\/application\/map\/update-pinned-positions\.ts"/,
   );
+  assert.match(
+    source,
+    /import \{ recoverPinnedPositions \} from "\.\.\/application\/map\/recover-pinned-positions\.ts"/,
+  );
   assert.match(source, /const pinnedPersistence = createPinnedPositionPersistencePort\(storage\);/);
-  assert.match(source, /pinnedPersistence\.save\(pinnedState\);/);
+  assert.match(
+    source,
+    /const pinnedRecoveryPersistence = createPinnedPositionRecoveryPersistencePort\(storage\);/,
+  );
+  assert.match(
+    source,
+    /if \(loadedPinned\.recovered && loadedPinned\.persistent\) \{\s*const recoveredPinned = recoverPinnedPositions\(pinnedState, pinnedRecoveryPersistence\);\s*pinnedState = recoveredPinned\.state;/,
+  );
   assert.match(
     source,
     /const result = pinPosition\(pinnedState, id, position, pinnableIds\(\), pinnedPersistence\);/,
   );
   assert.match(source, /const result = unpinPosition\(pinnedState, id, pinnedPersistence\);/);
+  assert.doesNotMatch(source, /pinnedPersistence\.save\(pinnedState\)/);
   assert.doesNotMatch(source, /from "\.\.\/product\/map\/pinned-positions\.ts"/);
   assert.doesNotMatch(source, /savePinnedState\(/);
 });

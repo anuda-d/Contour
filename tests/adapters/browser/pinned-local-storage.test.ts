@@ -3,6 +3,7 @@ import test from "node:test";
 import {
   PINNED_STORAGE_KEY,
   createPinnedPositionPersistencePort,
+  createPinnedPositionRecoveryPersistencePort,
   loadPinnedState,
   savePinnedState,
 } from "../../../src/adapters/browser/pinned-local-storage.ts";
@@ -96,4 +97,36 @@ test("pinned-position persistence port preserves adapter write outcomes", () => 
   assert.equal(createPinnedPositionPersistencePort(storage).save(state), true);
   assert.equal(createPinnedPositionPersistencePort(null).save(state), false);
   assert.equal(storage.getItem(PINNED_STORAGE_KEY), JSON.stringify(state));
+});
+
+test("pinned-position recovery port performs the canonical same-key rewrite", () => {
+  const storage = memoryStorage();
+  const state = pinPosition(
+    emptyPinnedState(),
+    "book-a",
+    { x: -80, y: 42 },
+    validIds,
+  ).state;
+
+  assert.equal(createPinnedPositionRecoveryPersistencePort(storage).recover(state), true);
+  assert.equal(storage.getItem(PINNED_STORAGE_KEY), JSON.stringify(state));
+  assert.deepEqual(loadPinnedState(storage, validIds), {
+    state,
+    persistent: true,
+    recovered: false,
+    storageError: false,
+  });
+});
+
+test("pinned-position recovery port preserves unavailable and failed write outcomes", () => {
+  const state = emptyPinnedState();
+  const writeFailure: KeyValueStoragePort = {
+    getItem: () => null,
+    setItem: () => {
+      throw new Error("quota reached");
+    },
+  };
+
+  assert.equal(createPinnedPositionRecoveryPersistencePort(null).recover(state), false);
+  assert.equal(createPinnedPositionRecoveryPersistencePort(writeFailure).recover(state), false);
 });

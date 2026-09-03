@@ -30,12 +30,14 @@ import { getPublicMediaIds } from "../graph-projection.ts";
 import { ThoughtMap } from "../ui/map.dom.ts";
 import {
   createPinnedPositionPersistencePort,
+  createPinnedPositionRecoveryPersistencePort,
   loadPinnedState,
 } from "../adapters/browser/pinned-local-storage.ts";
 import {
   pinPosition,
   unpinPosition,
 } from "../application/map/update-pinned-positions.ts";
+import { recoverPinnedPositions } from "../application/map/recover-pinned-positions.ts";
 import {
   createSelectionPersistencePort,
   createSelectionRecoveryPersistencePort,
@@ -88,6 +90,7 @@ try {
   const featuredPersistence = createFeaturedPersistencePort(storage);
   const featuredRecoveryPersistence = createFeaturedRecoveryPersistencePort(storage);
   const pinnedPersistence = createPinnedPositionPersistencePort(storage);
+  const pinnedRecoveryPersistence = createPinnedPositionRecoveryPersistencePort(storage);
 
   const loaded = loadSelection(storage, validCatalogueIds);
   const loadedFeatured = loadFeaturedState(
@@ -162,7 +165,8 @@ try {
     }
   }
   if (loadedPinned.recovered && loadedPinned.persistent) {
-    pinnedPersistence.save(pinnedState);
+    const recoveredPinned = recoverPinnedPositions(pinnedState, pinnedRecoveryPersistence);
+    pinnedState = recoveredPinned.state;
   }
 
   const openChooser = () => {
