@@ -64,11 +64,12 @@ does not create a successor.
 Hourly scheduled starts during the window are recovery opportunities.
 They must exit without repository changes when another live project
 implementation task owns the work.
-The unscoped Codex task listing is not an ownership precondition because it can hang and cannot classify idle historical tasks reliably.
-Each repository-working task must atomically acquire the durable local checkout lock, which is the decisive single-writer proof.
+Read-only orientation and exploration do not require the checkout lock.
+Each task acquires the durable single-writer record immediately before its first repository mutation.
+An exact documented terminal owner may be recovered only through the record's unique claim ID; age alone never permits recovery.
 When no live owner exists, they resume exactly a matching recorded current and
 incomplete run instead of selecting a replacement.
-Conflicting run fields, an unreadable lock, or an uninspectable recorded owner stop safely.
+Conflicting run fields, an unreadable lock, or uncertain owner state stop safely.
 No human approval is required between clean units that remain inside this goal.
 The loop still stops for an unresolved owner decision, unsafe or overlapping
 state, failed validation or review that cannot be resolved in scope, or an

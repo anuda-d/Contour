@@ -17,8 +17,7 @@ for required_file in \
   "$current_file" \
   "$goal_file" \
   "$state_file" \
-  docs/plans/identity-map-prototype/GOAL.md \
-  docs/plans/identity-map-prototype/IMPLEMENTATION_PLAN.md
+  docs/plans/identity-map-prototype/GOAL.md
 do
   test -s "$required_file"
 done
@@ -106,13 +105,12 @@ grep -q 'newly created fresh task' docs/main/DEVELOPMENT_LOOP.md
 grep -q '18:00 until' docs/main/DEVELOPMENT_LOOP.md
 grep -q 'create one fresh successor task' docs/main/DEVELOPMENT_LOOP.md
 grep -q 'development_loop_lock.py acquire' AGENTS.md docs/main/DEVELOPMENT_LOOP.md
-grep -q 'unscoped Codex task listing is not an ownership precondition' \
+grep -q 'Read-only inspection and read-only explorer subagents do not require checkout ownership' \
+  AGENTS.md
+grep -q 'recover-stale' docs/main/DEVELOPMENT_LOOP.md
+grep -q 'Never use an age or timeout alone to recover ownership' \
   docs/main/DEVELOPMENT_LOOP.md
-grep -q 'Do not call `list_threads` as part of the no-overlap gate' \
-  docs/main/DEVELOPMENT_LOOP.md
-grep -q 'Ownership is never taken over or force-released by a different task' \
-  docs/main/DEVELOPMENT_LOOP.md
-grep -q 'idle owner that asked for input still owns the checkout' \
+grep -q 'reported a terminal state never resumes repository work under its prior claim' \
   docs/main/DEVELOPMENT_LOOP.md
 grep -q 'No human approval is required between clean' \
   docs/plans/architecture-foundation/IMPLEMENTATION_PLAN.md

@@ -6,9 +6,11 @@ repository. Product direction belongs to the owner.
 ## Before working
 
 - Start with `docs/plans/CURRENT.md`; it is the compact operational index.
-- Before spawning subagents or changing the repository, follow the no-overlap gate in `docs/main/DEVELOPMENT_LOOP.md` and claim checkout ownership with `python3 scripts/development_loop_lock.py acquire`.
-- The ownership command uses `CODEX_THREAD_ID` automatically.
-  A task must assert ownership before each later mutation phase and release it at every terminal state or immediately before a relay handoff.
+- Read-only inspection and read-only explorer subagents do not require checkout ownership.
+- Immediately before the first repository mutation, follow the compact no-overlap gate in `docs/main/DEVELOPMENT_LOOP.md` and run `python3 scripts/development_loop_lock.py acquire`.
+- After a resumed turn, assert ownership before the next repository mutation.
+  Assert again before commit or relay, and release after the terminal handoff or immediately before relay.
+- A task that has reported a terminal state must never resume repository work under that task's prior claim.
 - Confirm that exactly one owner-approved goal is active.
 - Confirm that the active goal has standing owner authorization and that no
   owner decision, pause, unsafe baseline, or overlapping run blocks work.
@@ -21,7 +23,7 @@ repository. Product direction belongs to the owner.
 - Read the active goal and implementation state, then locate only enough code
   and tests to select one smallest useful goal gap.
 - Read only the product specification relevant to that selected task.
-- Treat `docs/05-open-questions.md` as owner decision boundaries, not a backlog.
+- Treat unresolved product questions as owner decision boundaries, not a backlog.
 - If an owner decision is pending, do not select or begin another work unit.
 
 ## Product direction
