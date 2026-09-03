@@ -96,9 +96,6 @@ Read the product direction:
 - [Product foundation](docs/00-product-foundation.md)
 - [Product model](docs/01-product-model.md)
 - [Experience architecture](docs/02-experience-architecture.md)
-- [Social contract](docs/03-social-contract.md)
-- [Web MVP plan](docs/04-web-mvp-plan.md)
-- [Open questions](docs/05-open-questions.md)
 
 Read the implementation state:
 
@@ -106,7 +103,6 @@ Read the implementation state:
 - [Architecture Foundation goal](docs/plans/architecture-foundation/GOAL.md)
 - [Architecture Foundation implementation state](docs/plans/architecture-foundation/IMPLEMENTATION_PLAN.md)
 - [Identity Map Prototype goal](docs/plans/identity-map-prototype/GOAL.md)
-- [Identity Map implementation archive](docs/plans/identity-map-prototype/IMPLEMENTATION_PLAN.md)
 - [Editorial Constellation design foundation](docs/plans/identity-map-prototype/MAP_DESIGN_FOUNDATION.md)
 - [Goal-bounded development loop](docs/main/DEVELOPMENT_LOOP.md)
 

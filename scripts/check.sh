@@ -17,8 +17,7 @@ for required_file in \
   "$current_file" \
   "$goal_file" \
   "$state_file" \
-  docs/plans/identity-map-prototype/GOAL.md \
-  docs/plans/identity-map-prototype/IMPLEMENTATION_PLAN.md
+  docs/plans/identity-map-prototype/GOAL.md
 do
   test -s "$required_file"
 done

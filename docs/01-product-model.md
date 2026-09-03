@@ -2,388 +2,267 @@
 
 ## Purpose
 
-This document defines Contour's core objects, relationships, and boundaries. It
-protects deliberate public expression from private behavioral inference while
-allowing both to improve discovery.
+This document defines Contour's current product objects, relationships, lifecycle rules, and public/private boundaries.
 
-## Model overview
+## Model boundaries
 
-```mermaid
-graph TD
-    U[User] -->|likes publicly| M[Book or Film]
-    U -->|authors| T[Thought]
-    T -->|anchored to| M
-    T -->|references| OT[Another person's Thought]
-    T -->|develops or revises| NT[Another authored Thought]
-    U -->|owns| PM[Personal Map]
-    PM -->|contains public taste and authorship| M
-    PM -->|contains| T
-    PM -->|generates| TR[Personal Theme region]
-    U -->|private behavior informs| IG[Interest graph]
-    IG -->|personalizes| D[Discovery]
-    M -->|grounds| D
-    T -->|explains| D
-    TR -->|routes into| D
-```
+Contour's shared catalogue contains Books and Films.
+
+A User owns a public profile and Map plus a separate private interest graph and Library.
+
+The public Map is a projection of deliberate taste and authored expression, not the product database or a general activity log.
+
+The core relationships are:
+
+- A User deliberately Likes shared Media publicly.
+- A User authors Thoughts anchored to shared Media.
+- A User owns a Personal Map containing public taste, published authorship, generated regions, and credited external routes.
+- The Map generates personal Theme regions from coherent public material.
+- Private behavior informs discovery through an Interest Graph without becoming public identity.
 
 ## User
 
-A User has a public profile and Map plus a separate private interest graph.
+A User's minimum public identity is a handle, display name, profile image or visual mark, and short identity line.
 
-Minimum public identity:
+The public profile may accumulate deliberately public Likes, Published Thoughts, authored connections, visible Theme regions, and featured Media.
 
-- Handle.
-- Display name.
-- Profile image or visual mark.
-- Short identity line.
-- Deliberately public Likes, Published Thoughts, connections, and visible Theme
-  regions as they accumulate.
-- Optional featured Media selected from the public Map.
-
-The profile communicates taste and thought without relying on audience size,
-consumption totals, achievement statistics, or public vote scores.
+The profile communicates taste and authorship without audience size, consumption totals, achievements, or public vote scores.
 
 ## Media
 
-Media is a shared record for a created work. The first version supports two
-types only.
+Media is a shared record for a created work.
 
-### Book
+The first version supports two types only:
 
-- Title.
-- Author or authors.
-- Publication year when known.
-- Cover when a trustworthy source is available.
-- Optional identifiers such as ISBN.
+- **Book:** title, author or authors, publication year when known, cover when trustworthy, and optional identifiers such as ISBN.
+- **Film:** title, director or directors, release year when known, poster when trustworthy, and optional external catalogue identifiers.
 
-### Film
+The platform stores metadata rather than the work itself, and the same record is shared across Users.
 
-- Title.
-- Director or directors.
-- Release year when known.
-- Poster when a trustworthy source is available.
-- Optional external catalogue identifiers.
+Missing niche works may be provisional records containing type, title, creator, and optional year.
 
-### Shared rules
+Duplicate records must be mergeable without losing Likes, Thoughts, Saves, Bookmarks, or discovery provenance.
 
-- The platform stores metadata, not the work itself.
-- The same work is shared across Users rather than duplicated into each Map.
-- Missing niche works can be created as provisional records.
-- A provisional record needs type, title, creator, and optional year.
-- Duplicate records must be mergeable without losing Likes, Thoughts, Saves,
-  Bookmarks, or discovery provenance.
-- Missing artwork uses a deliberately designed typographic tile.
-- The system must not invent fake cover or poster art.
-- Users should not freely replace shared artwork in the first version.
+Missing artwork uses a designed typographic tile, and the system must not invent cover or poster art.
+
+Users should not freely replace shared artwork in the first version.
 
 ## Like
 
-A Like is a deliberate public claim that a Book or Film belongs in the User's
-taste.
+A Like is a deliberate public claim that a Book or Film belongs in the User's taste.
 
-- It may add the shared Media record to the User's public Map without requiring
-  a Thought.
-- It does not claim authorship, explain why the User likes the work, create a
-  semantic edge, or prove completion.
-- It is distinct from a private Save, a rating, and an upvote on someone else's
-  contribution.
-- Removing a Like removes the taste-only membership unless the same Media still
-  belongs through a Published Thought, connection, or explicit feature.
-- Public aggregate Like counts are hidden or strongly de-emphasized.
+It may add the shared Media to the User's public Map without requiring a Thought.
 
-Like is the lowest-friction public Map contribution. Thoughts and connections
-add meaning rather than being prerequisites for a Map to exist.
+It does not claim authorship, explain why the User likes the work, create a semantic edge, or prove completion.
+
+It is distinct from a private Save, rating, or Vote on another person's contribution.
+
+Removing a Like removes taste-only membership unless the same Media remains public through a Published Thought, connection, or explicit feature.
+
+Public aggregate Like counts are hidden or strongly de-emphasized.
 
 ## Thought
 
 A Thought is the primary authored content object.
 
-It represents anything a person wants to express in response to created media:
-a reaction, question, interpretation, disagreement, memory, comparison, or
-conclusion. The author has freedom over register and length within practical
-product limits.
+It may be a reaction, question, interpretation, disagreement, memory, comparison, or conclusion in the author's own words.
 
-### Required properties
+Every Thought has an author, free-form core statement, status, and creation timestamp.
 
-- Author.
-- Free-form core statement.
-- Status.
-- One primary Media anchor before publication.
-- Creation and publication timestamps.
+A Published Thought has a publication timestamp and at least one Book or Film anchor.
 
-### Optional properties
+An optional body, precise scene/chapter/passage/timestamp reference, additional Media anchors, and credited Thought or Theme references may add context.
 
-- Expanded body.
-- Precise reference such as chapter, passage description, scene, or timestamp.
-- Additional Media anchors.
-- Reference to another Thought or personal Theme region.
+The compact statement must remain usable in discovery and on the Map.
 
-### Form
+Contour does not require a rating, summary, verdict, theme field, or academic review structure.
 
-Every Thought needs a compact statement that remains usable in discovery and
-on the Map. An optional body may add depth. Contour does not require a rating,
-summary, verdict, theme field, or academic review structure.
+A Draft may be unattached while captured, but a Published Thought must have a Media anchor.
 
-### Grounding rule
+A quotation without the User's own expression is not a Thought.
 
-- A Draft may temporarily have no Media anchor.
-- A Published Thought must have at least one Book or Film anchor.
-- A quotation without the User's own expression is not a Thought.
+Adding another work makes a Thought a bridge across Media.
 
-### One work and bridge Thoughts
+A bridge is an authored interaction and presentation of meaning, not a separate content type.
 
-A Thought may begin with one primary work and stand on its own. Adding another
-work turns it into a bridge across Media.
+Spatial proximity never creates a semantic connection.
 
-Connection is therefore an interaction and presentation, not a competing
-authored content type. A multi-Media Thought contains the human meaning that
-makes the relationship useful for discovery.
-
-## Thought lifecycle
+## Thought lifecycle and evolution
 
 ### Draft
 
-- Private to the author.
-- Freely editable.
-- May be unattached while in a capture inbox.
-- Appears distinctly on the author's private Map layer as soon as it is
-  captured.
-- Never appears on the public Map, profile, search, or recommendations.
-- Cannot receive public social interaction.
+- A Draft is private to its author and freely editable.
+- It may be unattached in a capture inbox.
+- It appears on the author's private Map as soon as it is captured.
+- It never appears in visitor mode, public search, public recommendations, or a public read model.
+- It cannot receive public social interaction.
 
 ### Published
 
-- Public and eligible for Map, profile, Media, Theme, search, and discovery
-  surfaces.
-- Must have a Media anchor.
-- May receive private Bookmarks, personalized Votes, Comments when enabled, and
-  credited Thought references.
+- A Published Thought is public and eligible for the author's Map and profile, Media and Theme surfaces, search, and discovery.
+- It may receive private Bookmarks, personalized Votes, optional Comments, and credited references.
 
 ### Correction
 
-Published wording may be corrected for spelling, grammar, clarity, or
-inaccurate reference details without changing the underlying claim.
+Spelling, grammar, clarity, and inaccurate reference details may be corrected without changing the underlying claim.
 
-Published corrections should retain prior versions for trust. The interface
-may present this as `Edited · View history`.
-
-### Intellectual change
+Corrections should retain prior versions for trust, for example through an `Edited · View history` affordance.
 
 A changed position is a new Thought, not a rewrite of the original.
 
-Supported relationships should begin with:
+Supported relationships include `develops`, `revises`, `contradicts`, `clarifies`, and `references`.
 
-- `develops`
-- `revises`
-- `contradicts`
-- `clarifies`
-- `references`
+Linked content should indicate when a source was corrected after a relationship was created.
 
-This makes intellectual development visible rather than erasing it.
+Withdrawal and deletion need an explicit policy before linked public content is treated as disposable.
 
 ## Personal Theme region
 
-A Theme is a generated region of related public Likes, Thoughts, Media, and
-authored relationships in one person's Map. It is a discovery lens, not a
-conventional node or manually assigned global tag.
+A Personal Theme is a generated region of related public Likes, Thoughts, Media, and authored relationships in one person's Map.
 
-Examples:
+It is a discovery lens, not a canonical global topic, conventional node, or manually assigned tag.
 
-- Nostalgia as self-deception.
-- Performance as survival.
-- Memory as an unreliable kindness.
+A Theme appears only when the public Map has enough substance and coherence to support a meaningful region.
 
-### Formation
+Evidence may include multiple works, Thoughts, explicit relationships, and recurring language or ideas.
 
-- A Theme appears only when the public Map has enough substance and coherence
-  to support a meaningful region.
-- Evidence may include multiple works, multiple Thoughts, explicit
-  relationships, and recurring language or ideas.
-- Spatial proximity alone is insufficient.
-- Exact thresholds remain an empirical product question.
+Spatial proximity alone is insufficient, and exact thresholds remain an empirical product question.
 
-### Naming and control
+The system generates the name and must distinguish it from the User's authored words.
 
-- The system generates the Theme name when the formation threshold is met.
-- The interface must distinguish generated naming from the User's authored
-  words.
-- A generated Theme is visible by default when its Map is public.
-- The owner may rename, hide, dismiss, or later restore the Theme.
-- Hiding or dismissing a Theme does not delete the underlying Likes, Thoughts,
-  Media, or connections.
-- A visible Theme is searchable when its Map is public.
+The owner may rename, hide, dismiss, and later restore a Theme.
 
-### Network meaning
+Hiding or dismissing a Theme does not delete its underlying Likes, Thoughts, Media, or connections.
 
-- A Theme region belongs to one User's Map.
-- It is not a canonical global topic.
-- A User does not manually file every Thought into it as required creation
-  labor.
-- Similar personal Themes may be retrieved together without being merged into
-  one objective concept.
+A visible Theme is searchable when its Map is public.
+
+Similar personal Themes may be retrieved together without being merged into one objective concept.
 
 ## Personal Map
 
-The Map is a generated, shapeable view of one User's deliberate public taste
-and expression. It is not a separately authored database or the only way to
-use Contour.
+The Map is a generated, shapeable view of one User's deliberate public taste and expression.
 
-### Public membership
+Public membership may contain deliberately Liked Books and Films, Published Thoughts, their Media anchors, explicit relationships, visible generated Themes, and credited routes to external material.
 
-A User's public Map may contain:
+It must not contain Drafts, private Saves or Bookmarks, passive searches or views, recommendation history, another person's Thought as if locally authored, or hidden and dismissed Themes.
 
-- Books and Films they deliberately Like;
-- their Published Thoughts;
-- Media anchoring those Thoughts;
-- their explicit relationships among Thoughts and Media;
-- visible generated Theme regions; and
-- credited routes to external material without importing its authorship.
+The layers remain visually and semantically distinct:
 
-It does not contain:
+- **Taste:** deliberately Liked Books and Films.
+- **Authored:** Published Thoughts and explicit connections.
+- **Generated:** layout and visible Personal Themes.
+- **External:** credited references and navigable social context.
 
-- Draft Thoughts;
-- private Saves or Bookmarks;
-- passive searches, views, dwell, or recommendation history;
-- another person's Thought as if the User authored it; or
-- hidden or dismissed Theme regions.
+The layout is generated from public membership and actual relationships.
 
-### Layers
+It should remain stable enough to feel familiar, support zooming and region focus, and allow light controls such as moving, pinning, featuring, and hiding generated regions.
 
-- **Taste layer:** deliberately Liked Books and Films.
-- **Authored layer:** Published Thoughts and explicit connections.
-- **Generated layer:** layout and visible Theme regions.
-- **External layer:** credited references and navigable social context.
+Movement and pinning change presentation only.
 
-These layers must remain visually and semantically distinct.
+The Map must not require full manual node placement or become a blank canvas.
 
-### Layout
+## Private interest graph and Library
 
-- Generated automatically from public membership and actual relationships.
-- Stable enough that the Map feels familiar over time.
-- Supports zooming and region focus.
-- Allows intuitive movement and light control such as pinning, featuring, and
-  hiding generated regions.
-- Distinguishes spatial movement from authored semantic relationships.
-- Does not require full manual node placement.
+The Interest Graph is private system state used to personalize discovery.
 
-## Private interest graph
+Possible signals include Likes, Published Thoughts, explicit connections, Saves, Bookmarks, follows, Votes, searches, selected recommendation reasons, repeated deliberate visits, and aggregate similarity.
 
-The interest graph is private system state used to personalize discovery. It
-is not a public Map layer and must not be presented as the User's identity.
+Authored expression, Likes, Saves, follows, and repeated deliberate actions carry more weight than one impression, view, or raw dwell time.
 
-Possible inputs include:
+Passive or private activity never silently changes the public Map.
 
-- Likes, Published Thoughts, and explicit connections;
-- private Saves and Bookmarks;
-- follows and personalized Votes;
-- searches and selected recommendation reasons;
-- repeated visits to Media, Thoughts, Theme regions, Maps, or people;
-- opens, skips, and other interaction signals; and
-- similarity to aggregate patterns across other Users.
+Recommendation explanations must not reveal sensitive private activity to another User.
 
-Signal strength must reflect intent. Authored expression, Likes, Saves, follows,
-and repeated deliberate actions carry more weight than an impression, one view,
-or raw time spent.
+Production requires proportionate controls for personalization history, correction, and reset.
 
-### Boundary
+The private Library may contain Saved Books and Films, Bookmarked Thoughts, connections, Theme regions, Draft Thoughts, and saved routes to another person's Map.
 
-- Passive or private activity never silently changes the public Map.
-- Recommendation explanations must not reveal sensitive private activity to
-  another User.
-- A User needs proportionate controls over personalization history, correction,
-  and reset before production launch.
-- Recommendation logic may retrieve candidates from the interest graph, but it
-  must show human evidence from public content whenever available.
+Saving or Bookmarking does not publish, notify the source by default, add an item to the public Map, create a semantic edge, or imply agreement.
 
-## Private Library
+## Social actions
 
-The Library is private utility.
+### Save
 
-It may contain:
+A Save privately records a Book or Film for possible future reading or viewing.
 
-- Books and Films Saved for later;
-- Bookmarked Thoughts, connections, or personal Theme regions;
-- Draft Thoughts; and
-- saved routes back to another person's Map.
+It does not add the work to the public Map or imply completion, agreement, or a Like.
 
-Saving or Bookmarking does not publish, notify the source author by default,
-add an item to the public Map, create a semantic edge, or imply agreement.
+### Bookmark
 
-## Cross-person references
+A Bookmark privately records another person's Thought, connection, Theme region, or Map route for return.
 
-When a User publishes a Thought referencing another person's Thought or Theme
-region:
+It preserves source authorship and context and does not copy the material into the User's public Map.
 
-- the new Thought appears normally in its author's Map;
-- it identifies the external source and author;
-- the external material remains owned by and located with its original author;
-- the relationship is credited and navigable; and
-- the default personal Map need not render the full external branch as large
-  local nodes.
+### Vote
 
-Saving a branch privately and referencing it publicly do not import it into the
-User's authored Map. Whether a future User can add a live or copied external
-branch to their Map remains an unresolved owner decision.
+A Vote is private feedback about whether a Thought, connection, or discovery route fits the viewer's taste.
 
-## Vote
+An upvote means `More like this for me`, and a downvote means `Less like this for me`.
 
-A Vote is private feedback about whether a Thought, connection, or discovery
-route fits the viewer's taste.
+Neither Vote means objective correctness or changes the author's Map.
 
-- An upvote means the viewer wants more like this.
-- A downvote means the interpretation or route is not for this viewer.
-- A Vote is not a judgment of objective truth or quality.
-- A Vote does not alter the target author's Map.
-- Downvotes do not notify the author.
-- Public totals and global scoreboards are excluded.
-- Voting may influence personal relevance, but the system should still preserve
-  some varied and opposing perspectives.
+Downvotes do not notify the author.
 
-The Social Contract owns detailed presentation and ranking effects.
+Public totals and global scoreboards are excluded.
 
-## Follow
+Personalized results should retain some varied and opposing perspectives rather than optimizing only for agreement.
 
-Following a person prioritizes routes through their public taste, Thoughts,
-connections, Themes, and Map. It does not copy their material into the
-follower's Map.
+### Follow
 
-## Comment
+Following a person prioritizes routes through their public taste, Thoughts, connections, Themes, and Map.
 
-A Comment is optional contextual conversation attached to one Thought.
+It does not copy their material into the follower's Map or require a chronological home feed.
 
-- It has an author and body.
-- It belongs to exactly one Thought.
-- It may have one level of reply.
-- It is visible only when that public Thought is opened.
-- It has no standalone discovery page and is not a Map node.
-- It may optionally be developed into a new anchored Thought referencing the
-  original.
+Follower counts are hidden or strongly de-emphasized.
 
-Whether Comments belong in the first shared discovery phase remains open.
+### Comment
 
-## Path
+A Comment is optional contextual conversation attached to exactly one public Thought.
 
-A Path is a possible guided journey through existing Thoughts, Media, or Theme
-regions.
+It has an author and body.
 
-- Author.
-- Title.
-- Short introduction or thesis.
-- Ordered credited references.
-- Visibility.
+It is visible through that Thought, has at most one reply level, has no standalone discovery page, and is not a Map node.
 
-A Path does not duplicate its sources. Paths remain conceptually compatible
-with Contour but are not required for the next discovery proof.
+It may optionally be developed into a new anchored Thought.
+
+The parent Thought author may disable Comments.
+
+Comments require author controls, moderation, and a separate owner decision before entering a shared discovery phase.
+
+## Cross-person provenance
+
+When a User references another person's Thought or Theme, the new Thought appears in the author's Map and identifies the external source and author.
+
+The source remains owned by and located with its original author, and the relationship is credited and navigable.
+
+Saving or referencing another person's material does not import it into the User's authored Map.
+
+The safe current model is to Bookmark the source, navigate to its original context, publish a new Media-anchored response, and credit the source.
+
+Any future external-branch reuse must preserve authorship, attribution, edit behavior, context, and the distinction between reference and agreement.
+
+Authorship never transfers through Like, Save, Bookmark, Vote, Follow, Comment, or reference.
+
+Generated Theme names are system organization unless the owner explicitly renames them.
+
+## Recommendation contract
+
+Recommendations may combine public, private, and aggregate signals, but the explanation must match the evidence actually used.
+
+When available, the explanation must identify the strongest understandable evidence from a Thought, authored connection, Personal Theme, followed or similar person/Map, or known work that supplied the route.
+
+An inferred recommendation may appear without an explicit connection, but it must not invent human authorship or expose private behavior.
+
+Prioritize direct intent and understandable human evidence before wider aggregate candidates.
+
+Do not rank by global Vote totals, follower count, public Like count, Comment count, posting frequency, engagement velocity, or raw time spent.
+
+## Launch safety requirements
+
+Before a multi-User public launch, Contour needs blocking and reporting at User, Thought, and Comment level, author control over attached Comments, removal of one's own Comment, harassment handling, moderation and appeal policy, and personalization privacy controls.
+
+Votes are taste signals and never substitutes for reporting or moderation.
 
 ## Objects deliberately excluded
 
-The foundation does not include:
-
-- a mandatory or aggregate Rating;
-- a public popularity score;
-- a canonical global Theme or Topic object;
-- a standalone public Post without a Book or Film anchor;
-- a public consumption log;
-- an achievement, streak, or engagement score;
-- a semantic edge created only by spatial movement; or
-- an AI-authored Thought presented as human expression.
+The current model excludes mandatory or aggregate Ratings, public popularity scores, canonical global Themes, standalone public Posts without a Book or Film anchor, public consumption logs, achievements or streaks, semantic edges created only by movement, and AI-authored Thoughts presented as human expression.

@@ -23,7 +23,7 @@ repository. Product direction belongs to the owner.
 - Read the active goal and implementation state, then locate only enough code
   and tests to select one smallest useful goal gap.
 - Read only the product specification relevant to that selected task.
-- Treat `docs/05-open-questions.md` as owner decision boundaries, not a backlog.
+- Treat unresolved product questions as owner decision boundaries, not a backlog.
 - If an owner decision is pending, do not select or begin another work unit.
 
 ## Product direction

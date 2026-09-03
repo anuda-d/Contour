@@ -198,14 +198,7 @@ After selecting one smallest useful goal gap, read only the relevant parts of:
 - [Product Model](../../01-product-model.md) for User, Media, Thought, Draft,
   Published, bridge, and Map semantics;
 - [Experience Architecture](../../02-experience-architecture.md) for Map,
-  profile, Thought detail, onboarding, and responsive behavior; and
-- [Web MVP Plan](../../04-web-mvp-plan.md) for the Stage 0 walkthrough and
-  validation standard.
-
-The [Open Questions](../../05-open-questions.md) are boundaries around owner
-authority, not an implementation backlog. The [Social Contract](../../03-social-contract.md)
-is later context unless an implementation threatens one of its authorship or
-anti-popularity invariants.
+  profile, Thought detail, onboarding, and responsive behavior.
 
 ## Completion Boundary
 
