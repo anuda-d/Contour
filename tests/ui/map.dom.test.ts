@@ -6,12 +6,14 @@ import {
   ThoughtMap,
   getZoomBand,
   hasExceededDragThreshold,
+  parseEditDraftId,
   parseFeatureToggleId,
   parsePositionActionId,
   mergeGraphPositions,
   parsePublishDraftId,
   positionFromDrag,
   submitFeatureToggle,
+  submitEditDraft,
   submitPositionAction,
   submitPublishDraft,
 } from "../../src/ui/map.dom.ts";
@@ -151,6 +153,28 @@ test("Map forwards a valid Publish Draft ID once and rejects malformed DOM value
   assert.equal(submitPublishDraft("draft-a", publishableNodes, false, onPublishDraft), null);
   assert.deepEqual(publishedIds, ["draft-a"]);
   assert.match(mapSource, /submitPublishDraft\(\s*publish\.dataset\.publishDraft,/);
+});
+
+test("Map validates Edit Draft DOM IDs against the active projected Draft before callback delegation", () => {
+  assert.equal(parseEditDraftId("draft-a", publishableNodes, true), "draft-a");
+  assert.equal(parseEditDraftId("published-b", publishableNodes, true), null);
+  assert.equal(parseEditDraftId("book-a", publishableNodes, true), null);
+  assert.equal(parseEditDraftId("unknown", publishableNodes, true), null);
+  assert.equal(parseEditDraftId(null, publishableNodes, true), null);
+  assert.equal(parseEditDraftId("draft-a", publishableNodes, false), null);
+});
+
+test("Map forwards a valid Edit Draft ID once and rejects malformed DOM values before its callback", () => {
+  const editedIds: string[] = [];
+  const onEditDraft = (id: string) => editedIds.push(id);
+
+  assert.equal(submitEditDraft("draft-a", publishableNodes, true, onEditDraft), "draft-a");
+  assert.equal(submitEditDraft("published-b", publishableNodes, true, onEditDraft), null);
+  assert.equal(submitEditDraft("book-a", publishableNodes, true, onEditDraft), null);
+  assert.equal(submitEditDraft(undefined, publishableNodes, true, onEditDraft), null);
+  assert.equal(submitEditDraft("draft-a", publishableNodes, false, onEditDraft), null);
+  assert.deepEqual(editedIds, ["draft-a"]);
+  assert.match(mapSource, /submitEditDraft\(\s*edit\.dataset\.editDraft,/);
 });
 
 const featureableNodes = [

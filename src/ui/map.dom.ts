@@ -85,6 +85,28 @@ export const submitPublishDraft = (
   return id;
 };
 
+export const parseEditDraftId = (
+  value: unknown,
+  nodes: readonly MapNode[],
+  canCaptureThoughts: boolean,
+): string | null => {
+  if (!canCaptureThoughts || typeof value !== "string") return null;
+  const node = nodes.find((item) => item.id === value);
+  return node?.type === "thought" && node.status === "draft" ? node.id : null;
+};
+
+export const submitEditDraft = (
+  value: unknown,
+  nodes: readonly MapNode[],
+  canCaptureThoughts: boolean,
+  onEditDraft: ((id: string) => void) | undefined,
+): string | null => {
+  const id = parseEditDraftId(value, nodes, canCaptureThoughts);
+  if (!id || !onEditDraft) return null;
+  onEditDraft(id);
+  return id;
+};
+
 export const parseFeatureToggleId = (
   value: unknown,
   nodes: readonly MapNode[],
@@ -720,7 +742,12 @@ export class ThoughtMap {
     });
     const edit = this.detailPanel.querySelector<HTMLElement>("[data-edit-draft]");
     edit?.addEventListener("click", () => {
-      this.options.onEditDraft?.(datasetValue(edit, "editDraft"));
+      submitEditDraft(
+        edit.dataset.editDraft,
+        this.graph.nodes,
+        this.capabilities.canCaptureThoughts,
+        this.options.onEditDraft,
+      );
     });
     const connect = this.detailPanel.querySelector<HTMLElement>("[data-connect-draft]");
     connect?.addEventListener("click", () => {
