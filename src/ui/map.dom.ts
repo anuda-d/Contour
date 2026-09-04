@@ -106,6 +106,32 @@ export const submitFeatureToggle = (
   return id && result ? { id, result } : null;
 };
 
+export const parsePositionActionId = (
+  value: unknown,
+  nodes: readonly MapNode[],
+  canShapeNodes: boolean,
+): string | null => {
+  if (!canShapeNodes || typeof value !== "string") return null;
+  const node = nodes.find((item) => item.id === value);
+  return node && node.type !== "user" ? node.id : null;
+};
+
+export const submitPositionAction = (
+  value: unknown,
+  nodes: readonly MapNode[],
+  canShapeNodes: boolean,
+  isActionable: (id: string) => boolean,
+  isPinned: (id: string) => boolean,
+  positionForId: (id: string) => Point,
+  onPinPosition: ((id: string, position: Point) => CallbackResult<PinnedState> | undefined) | undefined,
+  onUnpinPosition: ((id: string) => CallbackResult<PinnedState> | undefined) | undefined,
+): { id: string; result: CallbackResult<PinnedState> } | null => {
+  const id = parsePositionActionId(value, nodes, canShapeNodes);
+  if (!id || !isActionable(id)) return null;
+  const result = isPinned(id) ? onUnpinPosition?.(id) : onPinPosition?.(id, positionForId(id));
+  return result ? { id, result } : null;
+};
+
 export type MapPresentation = {
   modes: { owner: MapMode; visitor: MapMode };
   normalizeMode: (mode: string | undefined) => MapMode;
@@ -713,12 +739,18 @@ export class ThoughtMap {
     });
     const position = this.detailPanel.querySelector<HTMLElement>("[data-position-action]");
     position?.addEventListener("click", () => {
-      const id = datasetValue(position, "positionAction");
-      const result = this.isPinned(id)
-        ? this.options.onUnpinPosition?.(id)
-        : this.options.onPinPosition?.(id, this.positions[id]!);
-      if (!result) return;
-      this.updatePinnedState(result.state, result.message, id);
+      const submitted = submitPositionAction(
+        position.dataset.positionAction,
+        this.graph.nodes,
+        this.capabilities.canShapeNodes,
+        (id) => this.isPinned(id) || this.movedNodes.has(id),
+        (id) => this.isPinned(id),
+        (id) => this.positions[id]!,
+        this.options.onPinPosition,
+        this.options.onUnpinPosition,
+      );
+      if (!submitted) return;
+      this.updatePinnedState(submitted.result.state, submitted.result.message, submitted.id);
     });
     const focus = this.detailPanel.querySelector<HTMLElement>("[data-detail-focus]");
     focus?.addEventListener("click", () => {

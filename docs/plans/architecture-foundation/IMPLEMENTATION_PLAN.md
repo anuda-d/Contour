@@ -30,11 +30,11 @@ Status: active shared state; standing scheduled owner authorization.
 | AF-2 Complete strict TypeScript | accepted | Every maintained application source and automated test is strict TypeScript. Separate browser and Node-test typechecks, the Vite build, and the checked `src/composition/main.ts` native entrypoint are accepted with no maintained application JavaScript mirror. |
 | AF-3 Deep product modules | open | Partial: authored Thought lifecycle, anchors, publication, and immutable merge now live in a cohesive strict TypeScript product module; other product facts remain in prototype seams. |
 | AF-4 Application use cases | open | Partial: authored-Thought reload, startup recovery, capture, and publication, deliberate-selection, featured-Media, and pinned-position startup recovery, selection toggle or confirmation, public featured-Media toggle, and spatial pin or unpin commands now use screen-neutral application outcomes through specific typed persistence ports; other current workflows remain composition-owned. |
-| AF-5 Isolated effects and validated boundaries | open | Partial: browser localStorage, DOM-root acquisition, Map resize listening, Map drag-click suppression timing, the existing Map debug-global publication, storage adapters, wall-clock access, UUID generation, authored-Thought cross-tab events, authored, selection, featured-Media, and pinned-position startup recovery, capture, reload, and publication persistence, selection persistence, featured-Media persistence, pinned-position persistence, prototype-seed and Thought Capture form runtime validation, and Featured Media Map callback validation now cross narrow inward boundaries; other browser events and form-input boundaries remain open. |
+| AF-5 Isolated effects and validated boundaries | open | Partial: browser localStorage, DOM-root acquisition, Map resize listening, Map drag-click suppression timing, the existing Map debug-global publication, storage adapters, wall-clock access, UUID generation, authored-Thought cross-tab events, authored, selection, featured-Media, and pinned-position startup recovery, capture, reload, and publication persistence, selection persistence, featured-Media persistence, pinned-position persistence, prototype-seed and Thought Capture form runtime validation, and Featured Media plus position-action Map callback validation now cross narrow inward boundaries; other browser events and form-input boundaries remain open. |
 | AF-6 Explicit projections and privacy | open | Partial: the owner and visitor graph projection now has strict TypeScript ownership and focused evidence for Draft and draft-only Media exclusion, publication-derived public eligibility, dangling-edge filtering, and owner capability removal; application-level structurally separate read models remain open. |
 | AF-7 Durable compatibility | open | Partial: authored V2, V1, and legacy-Draft browser storage now has typed precedence, normalization, migration, recovery, and read-merge-write evidence; other persisted state remains to be completed. |
 | AF-8 Frozen visible behavior | open | None yet. |
-| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, shared effect-port source coverage, browser-root, browser-resize, browser-clock, browser-Map-global, prototype-seed, Thought Capture form, and Featured Media Map callback runtime validation, authored, selection, featured-Media, and pinned-position startup recovery, capture and publication, selection, featured-Media, and pinned-position application and adapter coverage, plus Map composition, DOM-source-contract, product, CSS-regression, end-to-end acceptance, and architecture-boundary coverage; later migrated seams and final coverage remain open. |
+| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, shared effect-port source coverage, browser-root, browser-resize, browser-clock, browser-Map-global, prototype-seed, Thought Capture form, and Featured Media plus position-action Map callback runtime validation, authored, selection, featured-Media, and pinned-position startup recovery, capture and publication, selection, featured-Media, and pinned-position application and adapter coverage, plus Map composition, DOM-source-contract, product, CSS-regression, end-to-end acceptance, and architecture-boundary coverage; later migrated seams and final coverage remain open. |
 | AF-10 Durable completion walkthrough | open | None yet. |
 
 This table records accepted evidence only.
@@ -61,12 +61,12 @@ queue.
 ## Current run
 
 - State: accepted; no current unit.
-- Unit id: af-5-map-publish-draft-boundary-validation.
+- Unit id: af-5-map-position-action-boundary-validation.
 - Criterion: AF-5 Isolated effects and validated boundaries and AF-9 Layered test and quality gates.
-- Intended result: Map validates a mutable Publish Draft detail-button ID against the active projected Draft before invoking its existing opaque callback.
-- Evidence claim: only an owner-capable projected Draft ID crosses the UI adapter boundary, while valid rendered publication retains the existing callback shape and policy.
-- Accepted evidence: 17 focused Map checks pass, `./scripts/check.sh` passes architecture enforcement, strict typechecks, the Vite build, and 219 tests with zero failures, `git diff --check -- .` passes, and a fresh `gpt-5.6-sol` high-reasoning review is clean with no P0-P3 finding.
-- Scope guard: copy, CSS, DOM structure, valid Draft publication, publication policy, persistence, projection or privacy rule, camera behavior, Map gestures, layout, and design tokens remain unchanged.
+- Intended result: Map validates a mutable position-action detail-button ID against an active owner-projected non-user node before invoking its existing pin or unpin callbacks.
+- Evidence claim: only an owner-capable spatial target crosses the UI adapter boundary, so malformed, visitor, user, stale, or non-projected IDs cannot mutate pinned persistence while valid Media and Thought placement retain their current callbacks and behavior.
+- Accepted evidence: 21 focused Map checks pass, including executable parsing and callback-forwarding coverage for active Media and private Draft targets plus malformed, user, visitor, stale, and non-actionable rejections; `./scripts/check.sh` passes architecture enforcement, strict typechecks, the Vite build, and 226 tests with zero failures; `git diff --check -- .` passes; and a fresh `gpt-5.6-sol` high-reasoning review is clean with no P0-P3 finding.
+- Scope guard: copy, CSS, DOM structure, valid pinning and unpinning, position policy, persistence representation, projection or privacy rule, camera behavior, Map gestures, layout, and design tokens remain unchanged.
 
 ## Owner authorization
 
@@ -111,7 +111,7 @@ queue.
 
 ## Fresh-task handoff state
 
-- Latest accepted unit: af-5-map-featured-media-boundary-validation.
+- Latest accepted unit: af-5-map-position-action-boundary-validation.
 - Latest implementation commit: recorded in this accepted unit's post-commit handoff.
 - Latest temporary handoff: written after this accepted unit commits.
 - Next unit selected: no.
@@ -439,6 +439,9 @@ Routine work-unit completion does not require owner review.
 - AF-5 and AF-9 partial unit `af-5-map-featured-media-boundary-validation` accepted on 2026-09-02.
   Map now validates a mutable Featured Media detail-button ID against the current owner-capable projected Media before calling application code.
   Focused 19-test evidence, full 221-test repository validation, and a clean fresh independent review support bounded AF-5 and AF-9 evidence while both criteria remain open.
+- AF-5 and AF-9 partial unit `af-5-map-position-action-boundary-validation` accepted on 2026-09-04.
+  Map now validates a mutable position-action detail-button ID against the current owner-projected non-user node and current action eligibility before calling either spatial persistence callback.
+  Focused 21-test evidence, full 226-test repository validation, and a clean fresh independent review support bounded AF-5 and AF-9 evidence while both criteria remain open.
 
 ## Administratively closed run log
 

@@ -7,10 +7,12 @@ import {
   getZoomBand,
   hasExceededDragThreshold,
   parseFeatureToggleId,
+  parsePositionActionId,
   mergeGraphPositions,
   parsePublishDraftId,
   positionFromDrag,
   submitFeatureToggle,
+  submitPositionAction,
   submitPublishDraft,
 } from "../../src/ui/map.dom.ts";
 
@@ -185,6 +187,122 @@ test("Map forwards a valid Featured Media ID once and rejects malformed DOM valu
   assert.equal(submitFeatureToggle("book-a", featureableNodes, false, onToggleFeatured), null);
   assert.deepEqual(featuredIds, ["book-a"]);
   assert.match(mapSource, /submitFeatureToggle\(\s*feature\.dataset\.featureToggle,/);
+});
+
+const positionableNodes = [
+  { id: "book-a", type: "media" as const, format: "book", title: "Book", creator: "Writer", year: 2020 },
+  { id: "draft-b", type: "thought" as const, status: "draft" as const, statement: "Private.", anchors: ["book-a"] },
+  { id: "user-c", type: "user" as const },
+];
+
+test("Map validates position-action DOM IDs against active owner-projected pinnable nodes", () => {
+  assert.equal(parsePositionActionId("book-a", positionableNodes, true), "book-a");
+  assert.equal(parsePositionActionId("draft-b", positionableNodes, true), "draft-b");
+  assert.equal(parsePositionActionId("user-c", positionableNodes, true), null);
+  assert.equal(parsePositionActionId("unknown", positionableNodes, true), null);
+  assert.equal(parsePositionActionId(null, positionableNodes, true), null);
+  assert.equal(parsePositionActionId(42, positionableNodes, true), null);
+  assert.equal(parsePositionActionId("book-a", positionableNodes, false), null);
+});
+
+test("Map forwards only an actionable position target to its existing pin or unpin callback", () => {
+  const pinnedIds: Array<{ id: string; position: { x: number; y: number } }> = [];
+  const unpinnedIds: string[] = [];
+  const pinnedResult = { state: { pinnedPositions: { "book-a": { x: 12, y: -8 } } }, message: "Position pinned." };
+  const unpinnedResult = { state: { pinnedPositions: {} }, message: "Position returned to the generated layout." };
+  const onPinPosition = (id: string, position: { x: number; y: number }) => {
+    pinnedIds.push({ id, position });
+    return pinnedResult;
+  };
+  const onUnpinPosition = (id: string) => {
+    unpinnedIds.push(id);
+    return unpinnedResult;
+  };
+  const isActionable = (id: string) => id === "book-a" || id === "draft-b";
+  const isPinned = (id: string) => id === "draft-b";
+  const positionForId = () => ({ x: 12, y: -8 });
+
+  assert.deepEqual(
+    submitPositionAction(
+      "book-a",
+      positionableNodes,
+      true,
+      isActionable,
+      isPinned,
+      positionForId,
+      onPinPosition,
+      onUnpinPosition,
+    ),
+    { id: "book-a", result: pinnedResult },
+  );
+  assert.deepEqual(
+    submitPositionAction(
+      "draft-b",
+      positionableNodes,
+      true,
+      isActionable,
+      isPinned,
+      positionForId,
+      onPinPosition,
+      onUnpinPosition,
+    ),
+    { id: "draft-b", result: unpinnedResult },
+  );
+  assert.equal(
+    submitPositionAction(
+      "user-c",
+      positionableNodes,
+      true,
+      isActionable,
+      isPinned,
+      positionForId,
+      onPinPosition,
+      onUnpinPosition,
+    ),
+    null,
+  );
+  assert.equal(
+    submitPositionAction(
+      "book-a",
+      positionableNodes,
+      true,
+      () => false,
+      isPinned,
+      positionForId,
+      onPinPosition,
+      onUnpinPosition,
+    ),
+    null,
+  );
+  assert.equal(
+    submitPositionAction(
+      "book-a",
+      positionableNodes,
+      false,
+      isActionable,
+      isPinned,
+      positionForId,
+      onPinPosition,
+      onUnpinPosition,
+    ),
+    null,
+  );
+  assert.equal(
+    submitPositionAction(
+      "unknown",
+      positionableNodes,
+      true,
+      () => false,
+      isPinned,
+      positionForId,
+      onPinPosition,
+      onUnpinPosition,
+    ),
+    null,
+  );
+  assert.deepEqual(pinnedIds, [{ id: "book-a", position: { x: 12, y: -8 } }]);
+  assert.deepEqual(unpinnedIds, ["draft-b"]);
+  assert.match(mapSource, /submitPositionAction\(\s*position\.dataset\.positionAction,/);
 });
 
 test("a private single-anchor Draft exposes one owner-only bridge action", () => {
