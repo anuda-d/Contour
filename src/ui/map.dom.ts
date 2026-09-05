@@ -107,6 +107,32 @@ export const submitEditDraft = (
   return id;
 };
 
+export const parseConnectDraftId = (
+  value: unknown,
+  nodes: readonly MapNode[],
+  canCaptureThoughts: boolean,
+  selectionConfirmed: boolean,
+): string | null => {
+  if (!canCaptureThoughts || !selectionConfirmed || typeof value !== "string") return null;
+  const node = nodes.find((item) => item.id === value);
+  return node?.type === "thought" && node.status === "draft" && node.anchors.length === 1
+    ? node.id
+    : null;
+};
+
+export const submitConnectDraft = (
+  value: unknown,
+  nodes: readonly MapNode[],
+  canCaptureThoughts: boolean,
+  selectionConfirmed: boolean,
+  onConnectDraft: ((id: string) => void) | undefined,
+): string | null => {
+  const id = parseConnectDraftId(value, nodes, canCaptureThoughts, selectionConfirmed);
+  if (!id || !onConnectDraft) return null;
+  onConnectDraft(id);
+  return id;
+};
+
 export const parseFeatureToggleId = (
   value: unknown,
   nodes: readonly MapNode[],
@@ -751,7 +777,13 @@ export class ThoughtMap {
     });
     const connect = this.detailPanel.querySelector<HTMLElement>("[data-connect-draft]");
     connect?.addEventListener("click", () => {
-      this.options.onConnectDraft?.(datasetValue(connect, "connectDraft"));
+      submitConnectDraft(
+        connect.dataset.connectDraft,
+        this.graph.nodes,
+        this.capabilities.canCaptureThoughts,
+        Boolean(this.options.selectionState?.confirmed),
+        this.options.onConnectDraft,
+      );
     });
     const feature = this.detailPanel.querySelector<HTMLElement>("[data-feature-toggle]");
     feature?.addEventListener("click", () => {

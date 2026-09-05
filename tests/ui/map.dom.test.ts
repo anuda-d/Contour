@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import {
   DRAG_THRESHOLD,
   ThoughtMap,
+  parseConnectDraftId,
   getZoomBand,
   hasExceededDragThreshold,
   parseEditDraftId,
@@ -13,6 +14,7 @@ import {
   parsePublishDraftId,
   positionFromDrag,
   submitFeatureToggle,
+  submitConnectDraft,
   submitEditDraft,
   submitPositionAction,
   submitPublishDraft,
@@ -177,6 +179,41 @@ test("Map forwards a valid Edit Draft ID once and rejects malformed DOM values b
   assert.match(mapSource, /submitEditDraft\(\s*edit\.dataset\.editDraft,/);
 });
 
+const connectableNodes = [
+  { id: "draft-a", type: "thought" as const, status: "draft" as const, statement: "Private.", anchors: ["book-a"] },
+  { id: "bridged-b", type: "thought" as const, status: "draft" as const, statement: "Bridge.", anchors: ["book-a", "film-b"] },
+  { id: "published-c", type: "thought" as const, status: "published" as const, statement: "Public.", anchors: ["book-a"] },
+  { id: "book-a", type: "media" as const, format: "book", title: "Book", creator: "Writer", year: 2020 },
+  { id: "user-a", type: "user" as const },
+];
+
+test("Map validates Connect another work DOM IDs against an active projected single-anchor Draft", () => {
+  assert.equal(parseConnectDraftId("draft-a", connectableNodes, true, true), "draft-a");
+  assert.equal(parseConnectDraftId("bridged-b", connectableNodes, true, true), null);
+  assert.equal(parseConnectDraftId("published-c", connectableNodes, true, true), null);
+  assert.equal(parseConnectDraftId("book-a", connectableNodes, true, true), null);
+  assert.equal(parseConnectDraftId("user-a", connectableNodes, true, true), null);
+  assert.equal(parseConnectDraftId("unknown", connectableNodes, true, true), null);
+  assert.equal(parseConnectDraftId(null, connectableNodes, true, true), null);
+  assert.equal(parseConnectDraftId("draft-a", connectableNodes, false, true), null);
+  assert.equal(parseConnectDraftId("draft-a", connectableNodes, true, false), null);
+});
+
+test("Map forwards a valid Connect another work ID once and rejects malformed DOM values before its callback", () => {
+  const connectedIds: string[] = [];
+  const onConnectDraft = (id: string) => connectedIds.push(id);
+
+  assert.equal(submitConnectDraft("draft-a", connectableNodes, true, true, onConnectDraft), "draft-a");
+  assert.equal(submitConnectDraft("bridged-b", connectableNodes, true, true, onConnectDraft), null);
+  assert.equal(submitConnectDraft("published-c", connectableNodes, true, true, onConnectDraft), null);
+  assert.equal(submitConnectDraft("book-a", connectableNodes, true, true, onConnectDraft), null);
+  assert.equal(submitConnectDraft(undefined, connectableNodes, true, true, onConnectDraft), null);
+  assert.equal(submitConnectDraft("draft-a", connectableNodes, false, true, onConnectDraft), null);
+  assert.equal(submitConnectDraft("draft-a", connectableNodes, true, false, onConnectDraft), null);
+  assert.deepEqual(connectedIds, ["draft-a"]);
+  assert.match(mapSource, /submitConnectDraft\(\s*connect\.dataset\.connectDraft,/);
+});
+
 const featureableNodes = [
   { id: "book-a", type: "media" as const, format: "book", title: "Book", creator: "Writer", year: 2020 },
   { id: "draft-b", type: "thought" as const, status: "draft" as const, statement: "Private.", anchors: ["book-a"] },
@@ -333,7 +370,7 @@ test("a private single-anchor Draft exposes one owner-only bridge action", () =>
   assert.match(mapSource, /data-connect-draft="\$\{escapeHtml\(id\)\}"/);
   assert.match(mapSource, /node\.anchors\.length === 1/);
   assert.match(mapSource, /this\.options\.selectionState\?\.confirmed/);
-  assert.match(mapSource, /this\.options\.onConnectDraft\?\./);
+  assert.match(mapSource, /submitConnectDraft\(/);
   assert.match(mapSource, /focusDraftConnect\(id: string\)/);
 });
 
