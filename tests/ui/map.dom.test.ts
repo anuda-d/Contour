@@ -11,6 +11,7 @@ import {
   parseFeatureToggleId,
   parsePositionActionId,
   mergeGraphPositions,
+  parseNodeEventTargetId,
   parsePublishDraftId,
   positionFromDrag,
   submitFeatureToggle,
@@ -75,6 +76,175 @@ test("graph growth preserves existing placement and adds generated positions for
     ),
     { existing: { x: 12, y: -8 }, "draft-new": { x: 42, y: 18 } },
   );
+});
+
+const eventTargetNodes = [
+  { id: "book-a", type: "media" as const, format: "book", title: "Book", creator: "Writer", year: 2020 },
+  { id: "draft-b", type: "thought" as const, status: "draft" as const, statement: "Private.", anchors: ["book-a"] },
+  { id: "user-c", type: "user" as const },
+];
+
+test("Map validates mutable node-event IDs against active projected non-user nodes", () => {
+  assert.equal(parseNodeEventTargetId("book-a", eventTargetNodes), "book-a");
+  assert.equal(parseNodeEventTargetId("draft-b", eventTargetNodes), "draft-b");
+  assert.equal(parseNodeEventTargetId("user-c", eventTargetNodes), null);
+  assert.equal(parseNodeEventTargetId("unknown", eventTargetNodes), null);
+  assert.equal(parseNodeEventTargetId(undefined, eventTargetNodes), null);
+  assert.equal(parseNodeEventTargetId(42, eventTargetNodes), null);
+  assert.equal(
+    mapSource.match(/parseNodeEventTargetId\(element\.dataset\.nodeId, this\.graph\.nodes\)/g)?.length,
+    3,
+  );
+});
+
+test("invalid Map node-event targets stay inert before selection or position access", () => {
+  let selections = 0;
+  let pointerCaptures = 0;
+  let preventedKeys = 0;
+  let stoppedKeys = 0;
+  let mapTransforms = 0;
+  const context = {
+    graph: { nodes: eventTargetNodes },
+    capabilities: { canShapeNodes: true },
+    suppressedClick: null,
+    options: { clock: { nowMilliseconds: () => 0 } },
+    positions: {},
+    view: { x: 0, y: 0, scale: 1 },
+    isPinned: () => false,
+    selectNode: () => {
+      selections += 1;
+    },
+    applyTransform: () => {
+      mapTransforms += 1;
+    },
+  };
+  for (const nodeId of ["stale", "user-c", undefined]) {
+    const invalidElement = {
+      dataset: { nodeId },
+      setPointerCapture: () => {
+        pointerCaptures += 1;
+      },
+    } as unknown as HTMLElement;
+
+    ThoughtMap.prototype.handleNodeClick.call(
+      context,
+      { preventDefault: () => undefined } as unknown as MouseEvent,
+      invalidElement,
+    );
+    ThoughtMap.prototype.startNodeDrag.call(
+      context,
+      { pointerType: "mouse", button: 0 } as PointerEvent,
+      invalidElement,
+    );
+    let propagationStopped = false;
+    const keyboardEvent = {
+      key: "ArrowRight",
+      preventDefault: () => {
+        preventedKeys += 1;
+      },
+      stopPropagation: () => {
+        propagationStopped = true;
+        stoppedKeys += 1;
+      },
+    } as unknown as KeyboardEvent;
+    ThoughtMap.prototype.moveNodeByKeyboard.call(context, keyboardEvent, invalidElement);
+    if (!propagationStopped) ThoughtMap.prototype.handleKeyboard.call(context, keyboardEvent);
+  }
+
+  assert.equal(selections, 0);
+  assert.equal(pointerCaptures, 0);
+  assert.equal(preventedKeys, 0);
+  assert.equal(stoppedKeys, 3);
+  assert.equal(mapTransforms, 0);
+  assert.deepEqual(context.view, { x: 0, y: 0, scale: 1 });
+});
+
+test("valid projected Media and Thought retain click, drag-start, and keyboard behavior", () => {
+  for (const id of ["book-a", "draft-b"]) {
+    const selections: string[] = [];
+    ThoughtMap.prototype.handleNodeClick.call(
+      {
+        graph: { nodes: eventTargetNodes },
+        suppressedClick: null,
+        options: { clock: { nowMilliseconds: () => 0 } },
+        selectNode: (selectedId: string) => selections.push(selectedId),
+      },
+      { preventDefault: () => undefined } as unknown as MouseEvent,
+      { dataset: { nodeId: id } } as unknown as HTMLElement,
+    );
+
+    let pointerCaptures = 0;
+    let pointerStops = 0;
+    const pointerListeners: string[] = [];
+    ThoughtMap.prototype.startNodeDrag.call(
+      {
+        graph: { nodes: eventTargetNodes },
+        capabilities: { canShapeNodes: true },
+        positions: { [id]: { x: 10, y: 20 } },
+        isPinned: () => false,
+      },
+      {
+        pointerType: "mouse",
+        button: 0,
+        pointerId: 1,
+        clientX: 40,
+        clientY: 50,
+        stopPropagation: () => {
+          pointerStops += 1;
+        },
+      } as unknown as PointerEvent,
+      {
+        dataset: { nodeId: id },
+        setPointerCapture: () => {
+          pointerCaptures += 1;
+        },
+        addEventListener: (type: string) => pointerListeners.push(type),
+      } as unknown as HTMLElement,
+    );
+
+    let preventedKeys = 0;
+    let stoppedKeys = 0;
+    const movedNodes = new Set<string>();
+    const positions = { [id]: { x: 10, y: 20 } };
+    const styleUpdates: string[] = [];
+    ThoughtMap.prototype.moveNodeByKeyboard.call(
+      {
+        graph: { nodes: eventTargetNodes },
+        capabilities: { canShapeNodes: true },
+        positions,
+        view: { scale: 2 },
+        movedNodes,
+        isPinned: () => false,
+        clearPinnedMessage: () => undefined,
+        selectNode: (selectedId: string) => selections.push(selectedId),
+        renderRegions: () => undefined,
+      },
+      {
+        key: "ArrowRight",
+        shiftKey: false,
+        preventDefault: () => {
+          preventedKeys += 1;
+        },
+        stopPropagation: () => {
+          stoppedKeys += 1;
+        },
+      } as unknown as KeyboardEvent,
+      {
+        dataset: { nodeId: id },
+        style: { setProperty: (name: string, value: string) => styleUpdates.push(`${name}:${value}`) },
+      } as unknown as HTMLElement,
+    );
+
+    assert.deepEqual(selections, [id, id]);
+    assert.equal(pointerCaptures, 1);
+    assert.equal(pointerStops, 1);
+    assert.deepEqual(pointerListeners, ["pointermove", "pointerup", "pointercancel"]);
+    assert.deepEqual(positions[id], { x: 22, y: 20 });
+    assert.deepEqual([...movedNodes], [id]);
+    assert.deepEqual(styleUpdates, ["--node-x:22px", "--node-y:20px"]);
+    assert.equal(preventedKeys, 1);
+    assert.equal(stoppedKeys, 1);
+  }
 });
 
 test("pinning remains explicit, owner-only editing while Reset retains durable positions", () => {

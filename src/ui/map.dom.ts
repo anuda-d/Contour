@@ -164,6 +164,15 @@ export const parsePositionActionId = (
   return node && node.type !== "user" ? node.id : null;
 };
 
+export const parseNodeEventTargetId = (
+  value: unknown,
+  nodes: readonly MapNode[],
+): string | null => {
+  if (typeof value !== "string") return null;
+  const node = nodes.find((item) => item.id === value);
+  return node && node.type !== "user" ? node.id : null;
+};
+
 export const submitPositionAction = (
   value: unknown,
   nodes: readonly MapNode[],
@@ -1016,7 +1025,8 @@ export class ThoughtMap {
   }
 
   handleNodeClick(event: MouseEvent, element: HTMLElement): void {
-    const id = datasetValue(element, "nodeId");
+    const id = parseNodeEventTargetId(element.dataset.nodeId, this.graph.nodes);
+    if (!id) return;
     if (this.suppressedClick?.id === id && this.options.clock.nowMilliseconds() <= this.suppressedClick.until) {
       event.preventDefault();
       this.suppressedClick = null;
@@ -1197,7 +1207,8 @@ export class ThoughtMap {
   }
 
   startNodeDrag(event: PointerEvent, element: HTMLElement): void {
-    const id = datasetValue(element, "nodeId");
+    const id = parseNodeEventTargetId(element.dataset.nodeId, this.graph.nodes);
+    if (!id) return;
     if (!this.capabilities.canShapeNodes || this.isPinned(id)) return;
     if (event.pointerType === "mouse" && event.button !== 0) return;
     event.stopPropagation();
@@ -1246,7 +1257,11 @@ export class ThoughtMap {
   }
 
   moveNodeByKeyboard(event: KeyboardEvent, element: HTMLElement): void {
-    const id = datasetValue(element, "nodeId");
+    const id = parseNodeEventTargetId(element.dataset.nodeId, this.graph.nodes);
+    if (!id) {
+      event.stopPropagation();
+      return;
+    }
     if (!this.capabilities.canShapeNodes || this.isPinned(id)) return;
     const directions: Record<string, readonly [number, number]> = {
       ArrowLeft: [-1, 0],
