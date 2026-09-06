@@ -21,7 +21,7 @@ import {
   getModeCapabilities,
   getPublicMediaIds,
   projectGraphForMode,
-} from "../src/graph-projection.ts";
+} from "../src/product/map/projection.ts";
 import {
   loadPinnedState,
   savePinnedState,

@@ -6,7 +6,7 @@ import {
   normalizeMapMode,
   projectGraphForMode,
   type GraphInput,
-} from "../src/graph-projection.ts";
+} from "../../../src/product/map/projection.ts";
 
 const graphWithDraft: GraphInput = {
   profile: { id: "person", displayName: "Person", featuredMediaIds: ["shared"] },

@@ -32,12 +32,12 @@ export type GraphInput = Readonly<{
 }>;
 
 export type PublicMediaSource = Readonly<{
-  nodes: readonly Readonly<{
+  nodes: ReadonlyArray<Readonly<{
     id: string;
     type: string;
     status?: string;
     anchors?: readonly string[];
-  }>[];
+  }>>;
 }>;
 
 export type ProjectedGraph = {

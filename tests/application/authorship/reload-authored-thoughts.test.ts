@@ -5,7 +5,7 @@ import {
   type AuthoredThoughtReloadPort,
 } from "../../../src/application/authorship/reload-authored-thoughts.ts";
 import { getSeedGraph } from "../../../src/adapters/seed/prototype-seed.ts";
-import { projectGraphForMode } from "../../../src/graph-projection.ts";
+import { projectGraphForMode } from "../../../src/product/map/projection.ts";
 import {
   createDraft,
   emptyDraftState,

@@ -26,7 +26,7 @@ import {
   createFeaturedRecoveryPersistencePort,
   loadFeaturedState,
 } from "../adapters/browser/featured-local-storage.ts";
-import { getPublicMediaIds } from "../graph-projection.ts";
+import { getPublicMediaIds } from "../product/map/projection.ts";
 import { ThoughtMap } from "../ui/map.dom.ts";
 import {
   createPinnedPositionPersistencePort,

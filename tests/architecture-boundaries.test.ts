@@ -307,13 +307,13 @@ test("architecture boundary check rejects Vite worker URL dependencies across a 
   assert.match(result.output, /product -> adapters import is forbidden/);
 });
 
-test("architecture boundary check validates legacy import resolution before exempting direction", () => {
+test("architecture boundary check rejects the retired top-level Map projection path", () => {
   const root = createFixture({
-    "src/graph-projection.ts": 'import "./missing.ts";\n',
+    "src/graph-projection.ts": "export const stale = true;\n",
   });
   const result = runChecker(root);
   assert.equal(result.status, 1, result.output);
-  assert.match(result.output, /imports unresolved source/);
+  assert.match(result.output, /src\/graph-projection\.ts: source file is not assigned to a permitted layer/);
 });
 
 test("architecture boundary check rejects the migrated top-level Draft-state path", () => {
