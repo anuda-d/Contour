@@ -32,7 +32,7 @@ Status: active shared state; standing scheduled owner authorization.
 | AF-4 Application use cases | open | Partial: authored-Thought reload, startup recovery, capture, and publication, deliberate-selection, featured-Media, and pinned-position startup recovery, selection toggle or confirmation, public featured-Media toggle, and spatial pin or unpin commands now use screen-neutral application outcomes through specific typed persistence ports; other current workflows remain composition-owned. |
 | AF-5 Isolated effects and validated boundaries | open | Partial: browser localStorage, DOM-root acquisition, Map resize listening, Map drag-click suppression timing, the existing Map debug-global publication, storage adapters, wall-clock access, UUID generation, authored-Thought cross-tab events, authored, selection, featured-Media, and pinned-position startup recovery, capture, reload, and publication persistence, selection persistence, featured-Media persistence, pinned-position persistence, prototype-seed and Thought Capture form runtime validation, and Publish, Edit, Connect another work, Featured Media, position-action, node-event, Focus-control, edge-state, and selection-state Map validation now cross narrow inward boundaries; other browser events and form-input boundaries remain open. |
 | AF-6 Explicit projections and privacy | open | Partial: the owner and visitor graph projection is now a strict TypeScript `product/map` module with focused evidence for Draft and draft-only Media exclusion, publication-derived public eligibility, dangling-edge filtering, and owner capability removal; application-level structurally separate read models remain open. |
-| AF-7 Durable compatibility | open | Partial: authored V2, V1, and legacy-Draft browser storage now has typed precedence, normalization, migration, recovery, and read-merge-write evidence; other persisted state remains to be completed. |
+| AF-7 Durable compatibility | accepted | Six current browser-storage key shapes across selection, authored Thought V2/V1/legacy Draft precedence, featured Media, and pinned positions have accepted typed migration, retention, recovery, unavailable-storage, reload, and privacy evidence. |
 | AF-8 Frozen visible behavior | open | None yet. |
 | AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries including retired flat Map-projection and layout-path rejection, shared effect-port source coverage, browser-root, browser-resize, browser-clock, browser-Map-global, prototype-seed, Thought Capture form, and Publish, Edit, Connect another work, Featured Media, position-action, node-event, Focus-control, edge-state, and selection-state Map runtime validation, authored, selection, featured-Media, and pinned-position startup recovery, capture and publication, selection, featured-Media, and pinned-position application and adapter coverage, plus Map composition, DOM-source-contract, product, CSS-regression, end-to-end acceptance, and architecture-boundary coverage; later migrated seams and final coverage remain open. |
 | AF-10 Durable completion walkthrough | open | None yet. |
@@ -42,15 +42,22 @@ It is not a task sequence, roadmap, or permission to infer later work units.
 
 ## Completion audit
 
-- Last audited commit: none
-- Accepted implementation units since audit: 0
+- Last audited commit: e88ac497146430de3dd936cd5606184289b0e2fc
+- Accepted implementation units since audit: 1
 
-The owner approved completion-focused unit selection on 2026-09-06.
-The first audit is due before the next new implementation unit; no audit or criterion acceptance is claimed by this administrative update.
-The next eligible fresh task compares every open criterion with current source, tests, and accepted evidence and records exact implementation or verification blockers and observable acceptance conditions here.
-It also assesses the recent pattern of partial units when grouping its one selected responsibility.
-This section is present-state evidence, with no future task queue.
-Thereafter, follow the baseline, count, audit, and blocker-refresh rules in `docs/main/DEVELOPMENT_LOOP.md`.
+| Open criterion | Present evidence | Exact remaining blocker | Observable acceptance condition |
+| --- | --- | --- | --- |
+| AF-3 Deep product modules | Authorship, taste, catalogue, Map projection, pinned positions, and layout have strict modules. | `prototype-seed.ts`, `draft-state.ts`, and Map projection still make generic graph structures authoritative for owner identity, seeded authorship, and relationship facts. | Typed current product facts and their invariants have one owner, with the graph only a rebuildable Map representation. |
+| AF-4 Application use cases | Authored, selection, featured, and pin commands plus recoveries use typed persistence ports. | Composition still coordinates startup loading, recovery, eligibility derivation, graph rebuilding, and rendering from raw state fragments. | Screen-neutral use cases or read-model queries coordinate every current workflow and return explicit outcomes. |
+| AF-5 Isolated effects and validated boundaries | Browser storage, clock, identifier, root, resize, storage event, seed, and current form boundaries have focused typed-port evidence. | Criterion-level proof has not yet been consolidated against every implemented effect boundary. | Evidence demonstrates every current inward effect and untrusted input crosses one validated narrow boundary. |
+| AF-6 Explicit projections and privacy | Product projection tests cover draft exclusion and visitor capabilities. | `ThoughtMap` retains the full private graph and applies its visitor filter at display time, rather than receiving a structural public read model. | Owner and visitor Map/profile read models are distinct application outputs and visitor rendering cannot retain Draft or draft-only data. |
+| AF-8 Frozen visible behavior | Node suites cover deterministic behavior, static UI contracts, and compatibility scenarios. | No accepted rendered desktop and mobile owner/visitor walkthrough proves interaction, responsive layout, or light/dark preservation. | Documented browser-driven frozen-flow evidence covers the stated behavior and visual baseline. |
+| AF-9 Layered test and quality gates | Architecture gate, strict typechecks, build, and focused layer suites cover migrated seams. | Criterion-level proof has not yet established final coverage completeness for all migrated and remaining seams. | Deterministic product, application fake, adapter, DOM, architecture, strict build, and repository checks together protect the completed foundation. |
+| AF-10 Durable completion walkthrough | Prior prototype completion and current Node checks exist. | Final completion depends on all remaining criteria and a clean rendered legacy-state walkthrough. | All criteria are accepted with clean build, desktop/mobile light/dark legacy-state walkthrough, console evidence, and final independent review. |
+
+The audit found a recent pattern of narrow partial migrations.
+The selected responsibility therefore verifies the entire existing browser-storage compatibility contract together, rather than adding another isolated per-key test.
+This audit is present-state evidence, with no future task queue.
 
 ## Architecture entry state
 
@@ -73,11 +80,10 @@ queue.
 ## Current run
 
 - State: accepted; no current unit.
-- Unit id: af-3-product-map-layout-location.
-- Criterion: AF-3 Deep product modules and AF-9 Layered test and quality gates.
-- Intended result: deterministic spatial layout now lives at `src/product/map/layout.ts`, where the contract assigns spatial layout inputs.
-- Accepted evidence: generated coordinates, owner centering, authored-edge influence, collision separation, presentation-port behavior, and valid Map interactions are preserved while the architecture gate rejects revival of `src/layout.ts`.
-- Scope guard: no copy, CSS, rendered DOM structure, persistence representation, projection or privacy policy, Map gesture, design token, or valid interaction behavior changes.
+- Latest accepted unit: af-7-browser-storage-compatibility-contract.
+- Criterion: AF-7 Durable compatibility.
+- Accepted result: the browser-storage compatibility contract now covers every current key shape with existing focused adapter evidence and a combined cross-representation contract.
+- UI checkpoint: unchanged at 0 because no visible behavior or UI source changed.
 
 ## Owner authorization
 
@@ -499,6 +505,10 @@ Routine work-unit completion does not require owner review.
   Deterministic spatial layout now lives in `src/product/map/layout.ts`, and the architecture checker rejects revival of the retired top-level path.
   Generated coordinates, owner centering, authored-edge influence, collision separation, Map presentation-port behavior, and all valid visible behavior remain unchanged.
   Repeated focused 77-check evidence, repeated full 239-test repository validation, and a clean final fresh independent review after four documentation-state and coverage-wording corrections support bounded AF-3 and AF-9 evidence while both criteria remain open.
+- AF-7 unit `af-7-browser-storage-compatibility-contract` accepted on 2026-09-06.
+  The combined contract now proves all six persisted key shapes across four state families: selection V1, authored Thought V2, V1, and legacy Draft precedence, featured Media V1, and pinned positions V1.
+  It preserves normalized valid state, full authored fields, raw legacy-key retention through recovery, V2-first precedence, V1 and legacy-only fallback, same-key recovery writes, visit-only storage failure, authored-only storage-event reload, and private Draft boundaries.
+  Focused 38-check evidence, strict browser and test typechecks, the full repository check, owned-diff whitespace validation, and a clean final fresh independent review support AF-7 acceptance.
 
 ## Administratively closed run log
 
