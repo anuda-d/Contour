@@ -12,6 +12,7 @@ import {
   parseOrbitFocusId,
   parsePositionActionId,
   mergeGraphPositions,
+  resolveTemporaryMovedNodes,
   parseNodeEventTargetId,
   parsePublishDraftId,
   positionFromDrag,
@@ -78,6 +79,17 @@ test("graph growth preserves existing placement and adds generated positions for
       { existing: { x: 99, y: 99 }, "draft-new": { x: 42, y: 18 } },
     ),
     { existing: { x: 12, y: -8 }, "draft-new": { x: 42, y: 18 } },
+  );
+});
+
+test("temporary placement remains only for visible unpinned nodes", () => {
+  assert.deepEqual(
+    [...resolveTemporaryMovedNodes(
+      ["visible", "pinned", "missing"],
+      { visible: { x: 1, y: 2 }, pinned: { x: 3, y: 4 } },
+      { pinned: { x: 3, y: 4 } },
+    )],
+    ["visible"],
   );
 });
 
@@ -440,7 +452,7 @@ test("pinning remains explicit, owner-only editing while Reset retains durable p
   );
   assert.match(
     mapSource,
-    /this\.options\.pinnedState\?\.pinnedPositions \?\? \{\}/,
+    /this\.pinnedPositions/,
   );
 });
 
@@ -451,8 +463,8 @@ test("a new temporary move clears stale pin and unpin feedback", () => {
     options: {
       pinnedMessage: "Position returned to the generated layout.",
       pinnedMessageId: "thought-a",
-      pinnedState: { pinnedPositions: {} },
     },
+    pinnedPositions: {},
     isPinned: ThoughtMap.prototype.isPinned,
   };
 
@@ -469,7 +481,7 @@ test("publishing is an owner-only Draft action that preserves the current camera
     /node\.status === "draft" && this\.capabilities\.canCaptureThoughts/,
   );
   assert.match(mapSource, /submitPublishDraft\(/);
-  assert.match(mapSource, /updateGraph\(\s*graph: unknown,/);
+  assert.match(mapSource, /updateReadModel\(\s*readModel: MapReadModel,/);
   assert.match(mapSource, /if \(selectId && this\.nodeById\.has\(selectId\)\) this\.selectedId = selectId/);
   assert.doesNotMatch(
     mapSource,
@@ -781,13 +793,16 @@ test("visitor framing presents one public profile without duplicating owner chro
   assert.match(ThoughtMap.prototype.topbarIdentity.call(owner), /aria-label="Map owner"/);
 });
 
-test("visitor mode keeps the same camera and positions while restoring mode focus", () => {
-  const setModeSource = mapSource.match(/setMode\(mode: string\): void \{([\s\S]*?)\n  \}\n\n  handleNodeClick/)?.[1] ?? "";
-  assert.doesNotMatch(setModeSource, /this\.view\s*=/);
-  assert.doesNotMatch(setModeSource, /this\.positions\s*=/);
-  assert.match(setModeSource, /this\.render\(\)/);
-  assert.match(setModeSource, /this\.applyTransform\(\)/);
-  assert.match(setModeSource, /nextMode === this\.presentation\.modes\.visitor \? "\[data-mode-exit\]"/);
+test("visitor read-model updates preserve camera and positions while restoring mode focus", () => {
+  const updateReadModelSource = mapSource.match(/updateReadModel\([\s\S]*?\n  \}\n\n  requestMode/)?.[0] ?? "";
+  assert.doesNotMatch(updateReadModelSource, /this\.view\s*=/);
+  assert.match(updateReadModelSource, /this\.positions = positions/);
+  assert.match(updateReadModelSource, /currentPositions \?\? this\.positions/);
+  assert.match(updateReadModelSource, /currentMovedNodeIds \?\? this\.movedNodes/);
+  assert.match(updateReadModelSource, /if \(message !== undefined\) this\.options\.draftMessage = message/);
+  assert.match(updateReadModelSource, /this\.render\(\)/);
+  assert.match(updateReadModelSource, /this\.applyTransform\(\)/);
+  assert.match(updateReadModelSource, /this\.mode === "visitor" \? "\[data-mode-exit\]"/);
 });
 
 test("Published Thought detail derives authorship from the active profile", () => {

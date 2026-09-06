@@ -26,7 +26,7 @@ test("the composition root wires authored capture effects through browser ports"
   assert.match(source, /const identifier: IdentifierPort = browserIdentifier;/);
   assert.match(source, /import \{ saveAuthoredDraft \} from "\.\.\/application\/authorship\/save-authored-draft\.ts"/);
   assert.match(source, /kind: "create",[\s\S]*?clock,[\s\S]*?identifier,/);
-  assert.match(source, /map = new ThoughtMap\(root, graph, \{[\s\S]*?clock,/);
+  assert.match(source, /map = new ThoughtMap\(root, currentMapReadModel\(\), \{[\s\S]*?clock,/);
   assert.match(source, /publishAuthoredThought\(\s*\n\s*draftState,\s*\n\s*id,\s*\n\s*validCatalogueIds,\s*\n\s*clock,/);
   assert.doesNotMatch(source, /crypto\.randomUUID\(\)/);
   assert.doesNotMatch(source, /new Date\(\)\.toISOString\(\)/);
@@ -39,8 +39,7 @@ test("the composition root delegates authored capture mutation and persistence t
   assert.match(source, /const result = saveAuthoredDraft\([\s\S]*?kind: "create"/);
   assert.match(source, /kind: "edit", id: editingId, statement/);
   assert.match(source, /kind: "bridge",[\s\S]*?statementAtOpen: draft\.statement,/);
-  assert.match(source, /activeMap\(\)\.updateGraph\(graph, \{ focusId: result\.draft\.id, message: result\.message \}\);/);
-  assert.match(source, /activeMap\(\)\.updateGraph\(graph, \{ selectId: result\.draft\.id, message: result\.message \}\);/);
+  assert.match(source, /activeMap\(\)\.updateReadModel\(currentMapReadModel\(\), \{/);
 
   const captureCallbacks = source.match(
     /const openCapture =[\s\S]*?\n  const openBridge =[\s\S]*?\n  if \(!graph\.nodes\.length\)/,
@@ -105,7 +104,7 @@ test("the composition root wires authored storage changes through a browser even
   assert.match(source, /storageChanges\.onChange\(THOUGHT_STORAGE_KEY, \(\) => \{/);
   assert.match(source, /const synced = reloadAuthoredThoughts\(baseGraph, authoredThoughts\);/);
   assert.match(source, /if \(synced\.kind === "storage-unavailable"\) return;/);
-  assert.match(source, /activeMap\(\)\.updateGraph\(graph, \{ message: synced\.message \}\);/);
+  assert.match(source, /activeMap\(\)\.updateReadModel\(currentMapReadModel\(\), \{ message: synced\.message \}\);/);
   assert.doesNotMatch(source, /window\.addEventListener\("storage"/);
 });
 
@@ -115,7 +114,7 @@ test("the composition root wires Map resize listening through a browser event po
   assert.match(source, /import type \{ ResizeEventPort \} from "\.\.\/kernel\/resize-event\.ts"/);
   assert.match(source, /import \{ createBrowserResizeEventPort \} from "\.\.\/adapters\/browser\/browser-resize-event\.ts"/);
   assert.match(source, /const resizeEvents: ResizeEventPort = createBrowserResizeEventPort\(window\);/);
-  assert.match(source, /map = new ThoughtMap\(root, graph, \{[\s\S]*?resizeEvents,/);
+  assert.match(source, /map = new ThoughtMap\(root, currentMapReadModel\(\), \{[\s\S]*?resizeEvents,/);
 });
 
 test("the composition root delegates selection mutation and persistence to the application use case", () => {
@@ -245,7 +244,7 @@ test("the composition root delegates authored publication and persistence to the
     source,
     /onPublishDraft: \(id\) => \{\s*const result = publishAuthoredThought\(\s*draftState,\s*id,\s*validCatalogueIds,\s*clock,\s*authoredThoughtPersistence,\s*\);/,
   );
-  assert.match(source, /activeMap\(\)\.updateGraph\(graph, \{ selectId: id, message: draftMessage \}\);/);
+  assert.match(source, /activeMap\(\)\.updateReadModel\(currentMapReadModel\(\), \{ selectId: id, message: draftMessage \}\);/);
 
   const publishCallback = source.match(
     /onPublishDraft: \(id\) => \{([\s\S]*?)\n\s*\},\n\s*onToggleFeatured:/,
@@ -268,4 +267,14 @@ test("the composition root delegates authored startup recovery persistence to th
     /const persistedDrafts = recoverAuthoredThoughts\(\s*draftState,\s*authoredThoughtRecoveryPersistence,\s*\);/,
   );
   assert.doesNotMatch(source, /persistDraftState\(/);
+});
+
+test("the composition root retains owner-only temporary placement state across visitor preview", () => {
+  const source = readFileSync(resolve("src/composition/main.ts"), "utf8");
+
+  assert.match(source, /let ownerModeInteraction: \{/);
+  assert.match(source, /ownerModeInteraction = \{ positions: currentPositions, movedNodeIds: currentMovedNodeIds \};/);
+  assert.match(source, /currentPositions: ownerModeInteraction\.positions,/);
+  assert.match(source, /currentMovedNodeIds: ownerModeInteraction\.movedNodeIds,/);
+  assert.match(source, /if \(nextMode === "owner"\) ownerModeInteraction = null;/);
 });

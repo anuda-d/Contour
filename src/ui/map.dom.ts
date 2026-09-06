@@ -1,5 +1,6 @@
 import type { ResizeEventPort } from "../kernel/resize-event.ts";
 import type { ClockPort } from "../kernel/clock.ts";
+import type { MapReadModel } from "../application/map/create-map-read-model.ts";
 
 type MapMode = "owner" | "visitor";
 
@@ -216,10 +217,7 @@ export const submitPositionAction = (
 
 export type MapPresentation = {
   modes: { owner: MapMode; visitor: MapMode };
-  normalizeMode: (mode: string | undefined) => MapMode;
-  getModeCapabilities: (mode: MapMode) => MapCapabilities;
-  projectGraphForMode: (graph: unknown, mode: MapMode) => MapGraph;
-  layoutGraph: (graph: unknown, world: World) => Positions;
+  readGraph: (graph: unknown) => MapGraph;
   resolvePositions: (
     graph: unknown,
     generatedPositions: Positions,
@@ -231,12 +229,10 @@ type MapOptions = {
   presentation: MapPresentation;
   clock: ClockPort;
   resizeEvents: ResizeEventPort;
-  mode?: string;
   selectionState?: SelectionState;
   featuredState?: FeaturedState;
   featuredMessage?: string;
   draftMessage?: string;
-  pinnedState?: PinnedState;
   pinnedMessage?: string;
   pinnedMessageId?: string | null;
   onOpenChooser?: () => void;
@@ -247,7 +243,11 @@ type MapOptions = {
   onToggleFeatured?: (id: string) => CallbackResult<FeaturedState> | undefined;
   onPinPosition?: (id: string, position: Point) => CallbackResult<PinnedState> | undefined;
   onUnpinPosition?: (id: string) => CallbackResult<PinnedState> | undefined;
-  onModeChange?: (mode: MapMode) => void;
+  onModeChange?: (
+    mode: MapMode,
+    currentPositions: Positions,
+    currentMovedNodeIds: readonly string[],
+  ) => void;
 };
 
 const WORLD = { width: 1080, height: 720 };
@@ -299,9 +299,18 @@ export function mergeGraphPositions(
   );
 }
 
+export function resolveTemporaryMovedNodes(
+  movedNodeIds: Iterable<string>,
+  positions: Positions,
+  pinnedPositions: Positions,
+): Set<string> {
+  return new Set(
+    [...movedNodeIds].filter((id) => positions[id] && !Object.hasOwn(pinnedPositions, id)),
+  );
+}
+
 export class ThoughtMap {
   root: HTMLElement;
-  fullGraph: unknown;
   options: MapOptions;
   presentation: MapPresentation;
   mode: MapMode;
@@ -309,6 +318,7 @@ export class ThoughtMap {
   graph: MapGraph;
   nodeById: Map<string, MapNode>;
   generatedPositions: Positions;
+  pinnedPositions: Positions;
   positions: Positions;
   view: Point & { scale: number };
   selectedId: string | null;
@@ -334,21 +344,21 @@ export class ThoughtMap {
   edgeLayer!: HTMLElement;
   detailPanel!: HTMLElement;
 
-  constructor(root: HTMLElement, graph: unknown, options: MapOptions) {
+  constructor(root: HTMLElement, readModel: MapReadModel, options: MapOptions) {
     this.root = root;
-    this.fullGraph = graph;
     this.options = options;
     this.presentation = options.presentation;
-    this.mode = this.presentation.normalizeMode(options.mode);
-    this.capabilities = this.presentation.getModeCapabilities(this.mode);
-    this.graph = this.presentation.projectGraphForMode(this.fullGraph, this.mode);
+    this.mode = readModel.mode;
+    this.capabilities = readModel.capabilities;
+    this.graph = this.presentation.readGraph(readModel.graph);
     this.nodeById = new Map(this.graph.nodes.map((node) => [node.id, node]));
-    this.generatedPositions = this.presentation.layoutGraph(graph, WORLD);
+    this.generatedPositions = readModel.generatedPositions;
+    this.pinnedPositions = readModel.pinnedPositions;
     this.positions = this.presentation.resolvePositions(
-      graph,
+      this.graph,
       this.generatedPositions,
       {},
-      options.pinnedState?.pinnedPositions ?? {},
+      this.pinnedPositions,
     );
     this.view = { x: 0, y: 0, scale: 0.8 };
     this.selectedId = null;
@@ -784,7 +794,7 @@ export class ThoughtMap {
   }
 
   isPinned(id: string): boolean {
-    return Object.hasOwn(this.options.pinnedState?.pinnedPositions ?? {}, id);
+    return Object.hasOwn(this.pinnedPositions, id);
   }
 
   clearPinnedMessage(id: string): void {
@@ -866,19 +876,19 @@ export class ThoughtMap {
       this.options.onOpenCapture?.();
     });
     this.root.querySelector("[data-mode-enter]")?.addEventListener("click", () => {
-      this.requestMode(this.presentation.modes.visitor);
+      this.requestMode("visitor");
     });
     this.root.querySelector("[data-mode-exit]")?.addEventListener("click", () => {
-      this.requestMode(this.presentation.modes.owner);
+      this.requestMode("owner");
     });
     requiredElement<HTMLElement>(this.root, '[data-control="zoom-in"]').addEventListener("click", () => this.zoomBy(1.18));
     requiredElement<HTMLElement>(this.root, '[data-control="zoom-out"]').addEventListener("click", () => this.zoomBy(0.84));
     this.root.querySelector('[data-control="reset"]')?.addEventListener("click", () => {
       this.positions = this.presentation.resolvePositions(
-        this.fullGraph,
+        this.graph,
         this.generatedPositions,
         {},
-        this.options.pinnedState?.pinnedPositions ?? {},
+        this.pinnedPositions,
       );
       this.movedNodes.clear();
       this.renderRegions();
@@ -949,7 +959,7 @@ export class ThoughtMap {
 
   updatePinnedState(state: PinnedState, message = "", focusId: string | null = null): void {
     if (!focusId) return;
-    this.options.pinnedState = state;
+    this.pinnedPositions = { ...state.pinnedPositions };
     this.options.pinnedMessage = message;
     this.options.pinnedMessageId = focusId;
     const pinnedPosition = state.pinnedPositions[focusId];
@@ -989,32 +999,61 @@ export class ThoughtMap {
     this.detailPanel.querySelector<HTMLElement>("[data-connect-draft]")?.focus();
   }
 
-  updateGraph(
-    graph: unknown,
-    { focusId = null, selectId = null, message = "" }: { focusId?: string | null; selectId?: string | null; message?: string } = {},
+  updateReadModel(
+    readModel: MapReadModel,
+    {
+      focusId = null,
+      selectId = null,
+      message,
+      currentPositions,
+      currentMovedNodeIds,
+    }: {
+      focusId?: string | null;
+      selectId?: string | null;
+      message?: string;
+      currentPositions?: Positions;
+      currentMovedNodeIds?: readonly string[];
+    } = {},
   ): void {
-    const generatedPositions = this.presentation.layoutGraph(graph, WORLD);
+    const modeChanged = readModel.mode !== this.mode;
+    const graph = this.presentation.readGraph(readModel.graph);
+    const generatedPositions = readModel.generatedPositions;
     const positions = this.presentation.resolvePositions(
       graph,
       generatedPositions,
-      this.positions,
-      this.options.pinnedState?.pinnedPositions ?? {},
+      currentPositions ?? this.positions,
+      readModel.pinnedPositions,
     );
-    this.fullGraph = graph;
+    this.mode = readModel.mode;
+    this.capabilities = readModel.capabilities;
     this.generatedPositions = generatedPositions;
+    this.pinnedPositions = readModel.pinnedPositions;
     this.positions = positions;
-    this.options.draftMessage = message;
-    this.graph = this.presentation.projectGraphForMode(this.fullGraph, this.mode);
+    if (message !== undefined) this.options.draftMessage = message;
+    this.graph = graph;
     this.nodeById = new Map(this.graph.nodes.map((node) => [node.id, node]));
-    this.movedNodes = new Set(
-      [...this.movedNodes].filter((id) => positions[id] && !this.isPinned(id)),
+    this.movedNodes = resolveTemporaryMovedNodes(
+      currentMovedNodeIds ?? this.movedNodes,
+      positions,
+      this.pinnedPositions,
     );
     if (selectId && this.nodeById.has(selectId)) this.selectedId = selectId;
     if (!this.selectedId || !this.nodeById.has(this.selectedId)) this.selectedId = null;
+    if (modeChanged) {
+      this.activePointers.clear();
+      this.panGesture = null;
+      this.pinchGesture = null;
+    }
     this.render();
     this.bindEvents();
     this.applyTransform();
-    if (focusId && this.nodeById.has(focusId)) {
+    if (modeChanged) {
+      requestAnimationFrame(() => {
+        this.root
+          .querySelector<HTMLElement>(this.mode === "visitor" ? "[data-mode-exit]" : "[data-mode-enter]")
+          ?.focus();
+      });
+    } else if (focusId && this.nodeById.has(focusId)) {
       requestAnimationFrame(() => {
         this.focusNode(focusId);
         this.root.querySelector<HTMLElement>(`[data-node-id="${CSS.escape(focusId)}"]`)?.focus();
@@ -1027,29 +1066,12 @@ export class ThoughtMap {
   }
 
   requestMode(mode: MapMode): void {
-    if (this.options.onModeChange) this.options.onModeChange(mode);
-    else this.setMode(mode);
-  }
-
-  setMode(mode: string): void {
-    const nextMode = this.presentation.normalizeMode(mode);
-    if (nextMode === this.mode) return;
-    this.mode = nextMode;
-    this.capabilities = this.presentation.getModeCapabilities(nextMode);
-    this.graph = this.presentation.projectGraphForMode(this.fullGraph, nextMode);
-    this.nodeById = new Map(this.graph.nodes.map((node) => [node.id, node]));
-    if (!this.selectedId || !this.nodeById.has(this.selectedId)) this.selectedId = null;
-    this.activePointers.clear();
-    this.panGesture = null;
-    this.pinchGesture = null;
-    this.render();
-    this.bindEvents();
-    this.applyTransform();
-    requestAnimationFrame(() => {
-      this.root
-        .querySelector<HTMLElement>(nextMode === this.presentation.modes.visitor ? "[data-mode-exit]" : "[data-mode-enter]")
-        ?.focus();
-    });
+    if (mode === this.mode) return;
+    this.options.onModeChange?.(
+      mode,
+      Object.fromEntries(Object.entries(this.positions).map(([id, point]) => [id, { ...point }])),
+      [...this.movedNodes],
+    );
   }
 
   handleNodeClick(event: MouseEvent, element: HTMLElement): void {

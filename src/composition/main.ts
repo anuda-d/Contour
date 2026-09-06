@@ -27,6 +27,7 @@ import {
   loadFeaturedState,
 } from "../adapters/browser/featured-local-storage.ts";
 import { getPublicMediaIds } from "../product/map/projection.ts";
+import { createMapReadModel } from "../application/map/create-map-read-model.ts";
 import { ThoughtMap } from "../ui/map.dom.ts";
 import {
   createPinnedPositionPersistencePort,
@@ -128,6 +129,10 @@ try {
   let capture: ThoughtCapture<SavedThought> | null = null;
   let map: ThoughtMap | null = null;
   let mapMode: "owner" | "visitor" = "owner";
+  let ownerModeInteraction: {
+    positions: Record<string, { x: number; y: number }>;
+    movedNodeIds: readonly string[];
+  } | null = null;
 
   const activeMap = (): ThoughtMap => {
     if (!map) throw new Error("Expected initialized Map.");
@@ -138,6 +143,7 @@ try {
     if (!shell) throw new Error("Expected application shell.");
     return shell;
   };
+  const currentMapReadModel = () => createMapReadModel(graph, mapMode, pinnedState);
 
   if (loaded.recovered && loaded.persistent) {
     const recoveredSelection = recoverSelection(selectionState, selectionRecoveryPersistence);
@@ -251,7 +257,10 @@ try {
       },
       onSaved: (result) => {
         graph = composeGraphWithDrafts(baseGraph, draftState);
-        activeMap().updateGraph(graph, { focusId: result.draft.id, message: result.message });
+        activeMap().updateReadModel(currentMapReadModel(), {
+          focusId: result.draft.id,
+          message: result.message,
+        });
       },
       onClose: () => {
         capture = null;
@@ -306,7 +315,10 @@ try {
       },
       onSaved: (result) => {
         graph = composeGraphWithDrafts(baseGraph, draftState);
-        activeMap().updateGraph(graph, { selectId: result.draft.id, message: result.message });
+        activeMap().updateReadModel(currentMapReadModel(), {
+          selectId: result.draft.id,
+          message: result.message,
+        });
       },
       onClose: () => {
         capture = null;
@@ -323,16 +335,14 @@ try {
       </main>
     `;
   } else {
-    map = new ThoughtMap(root, graph, {
+    map = new ThoughtMap(root, currentMapReadModel(), {
       presentation: mapPresentation,
       clock,
       resizeEvents,
-      mode: mapMode,
       selectionState,
       featuredState,
       featuredMessage,
       draftMessage,
-      pinnedState,
       onOpenChooser: openChooser,
       onOpenCapture: () => openCapture(),
       onEditDraft: (id) => openCapture(id),
@@ -349,7 +359,7 @@ try {
         draftState = result.state;
         draftMessage = result.message;
         graph = composeGraphWithDrafts(baseGraph, draftState);
-        activeMap().updateGraph(graph, { selectId: id, message: draftMessage });
+        activeMap().updateReadModel(currentMapReadModel(), { selectId: id, message: draftMessage });
         return result;
       },
       onToggleFeatured: (id) => {
@@ -375,9 +385,20 @@ try {
         pinnedState = result.state;
         return result;
       },
-      onModeChange: (nextMode) => {
+      onModeChange: (nextMode, currentPositions, currentMovedNodeIds) => {
+        if (nextMode === "visitor") {
+          ownerModeInteraction = { positions: currentPositions, movedNodeIds: currentMovedNodeIds };
+        }
         mapMode = nextMode;
-        activeMap().setMode(nextMode);
+        activeMap().updateReadModel(currentMapReadModel(), {
+          ...(nextMode === "owner" && ownerModeInteraction
+            ? {
+                currentPositions: ownerModeInteraction.positions,
+                currentMovedNodeIds: ownerModeInteraction.movedNodeIds,
+              }
+            : {}),
+        });
+        if (nextMode === "owner") ownerModeInteraction = null;
       },
     });
     publishBrowserThoughtMap(window, map);
@@ -386,7 +407,7 @@ try {
       if (synced.kind === "storage-unavailable") return;
       draftState = synced.state;
       graph = synced.graph;
-      activeMap().updateGraph(graph, { message: synced.message });
+      activeMap().updateReadModel(currentMapReadModel(), { message: synced.message });
     });
   }
 } catch (error) {
