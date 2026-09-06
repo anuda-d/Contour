@@ -9,6 +9,7 @@ import {
   hasExceededDragThreshold,
   parseEditDraftId,
   parseFeatureToggleId,
+  parseOrbitFocusId,
   parsePositionActionId,
   mergeGraphPositions,
   parseNodeEventTargetId,
@@ -16,7 +17,9 @@ import {
   positionFromDrag,
   submitFeatureToggle,
   submitConnectDraft,
+  submitDetailFocus,
   submitEditDraft,
+  submitOrbitFocus,
   submitPositionAction,
   submitPublishDraft,
 } from "../../src/ui/map.dom.ts";
@@ -245,6 +248,54 @@ test("valid projected Media and Thought retain click, drag-start, and keyboard b
     assert.equal(preventedKeys, 1);
     assert.equal(stoppedKeys, 1);
   }
+});
+
+test("Map validates orbit Focus DOM IDs against active projected Media", () => {
+  assert.equal(parseOrbitFocusId("book-a", eventTargetNodes), "book-a");
+  assert.equal(parseOrbitFocusId("draft-b", eventTargetNodes), null);
+  assert.equal(parseOrbitFocusId("user-c", eventTargetNodes), null);
+  assert.equal(parseOrbitFocusId("stale", eventTargetNodes), null);
+  assert.equal(parseOrbitFocusId(undefined, eventTargetNodes), null);
+  assert.equal(parseOrbitFocusId(42, eventTargetNodes), null);
+});
+
+test("Map validates detail Focus DOM IDs against active projected non-user nodes", () => {
+  const focusedIds: string[] = [];
+  const onFocus = (id: string) => focusedIds.push(id);
+
+  assert.equal(submitDetailFocus("book-a", eventTargetNodes, onFocus), "book-a");
+  assert.equal(submitDetailFocus("draft-b", eventTargetNodes, onFocus), "draft-b");
+  assert.equal(submitDetailFocus("user-c", eventTargetNodes, onFocus), null);
+  assert.equal(submitDetailFocus("stale", eventTargetNodes, onFocus), null);
+  assert.equal(submitDetailFocus(undefined, eventTargetNodes, onFocus), null);
+  assert.equal(submitDetailFocus(42, eventTargetNodes, onFocus), null);
+  assert.deepEqual(focusedIds, ["book-a", "draft-b"]);
+});
+
+test("Map Focus controls delegate valid targets once and reject malformed DOM values before focus", () => {
+  const orbitFocusedIds: string[] = [];
+  const detailFocusedIds: string[] = [];
+  const orbitFocus = (id: string) => orbitFocusedIds.push(id);
+  const detailFocus = (id: string) => detailFocusedIds.push(id);
+
+  assert.equal(submitOrbitFocus("book-a", eventTargetNodes, orbitFocus), "book-a");
+  assert.equal(submitOrbitFocus("draft-b", eventTargetNodes, orbitFocus), null);
+  assert.equal(submitOrbitFocus("user-c", eventTargetNodes, orbitFocus), null);
+  assert.equal(submitOrbitFocus("stale", eventTargetNodes, orbitFocus), null);
+  assert.equal(submitOrbitFocus(undefined, eventTargetNodes, orbitFocus), null);
+  assert.equal(submitDetailFocus("user-c", eventTargetNodes, detailFocus), null);
+  assert.equal(submitDetailFocus("stale", eventTargetNodes, detailFocus), null);
+  assert.equal(submitDetailFocus(undefined, eventTargetNodes, detailFocus), null);
+  assert.deepEqual(orbitFocusedIds, ["book-a"]);
+  assert.deepEqual(detailFocusedIds, []);
+  assert.match(
+    mapSource,
+    /submitOrbitFocus\(element\.dataset\.orbitFocus, this\.graph\.nodes, \(id\) => this\.focusNode\(id\)\)/,
+  );
+  assert.match(
+    mapSource,
+    /submitDetailFocus\(focus\.dataset\.detailFocus, this\.graph\.nodes, \(id\) => this\.focusNode\(id\)\)/,
+  );
 });
 
 test("pinning remains explicit, owner-only editing while Reset retains durable positions", () => {

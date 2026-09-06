@@ -173,6 +173,37 @@ export const parseNodeEventTargetId = (
   return node && node.type !== "user" ? node.id : null;
 };
 
+export const parseOrbitFocusId = (
+  value: unknown,
+  nodes: readonly MapNode[],
+): string | null => {
+  if (typeof value !== "string") return null;
+  const node = nodes.find((item) => item.id === value);
+  return node?.type === "media" ? node.id : null;
+};
+
+export const submitOrbitFocus = (
+  value: unknown,
+  nodes: readonly MapNode[],
+  onFocus: (id: string) => void,
+): string | null => {
+  const id = parseOrbitFocusId(value, nodes);
+  if (!id) return null;
+  onFocus(id);
+  return id;
+};
+
+export const submitDetailFocus = (
+  value: unknown,
+  nodes: readonly MapNode[],
+  onFocus: (id: string) => void,
+): string | null => {
+  const id = parseNodeEventTargetId(value, nodes);
+  if (!id) return null;
+  onFocus(id);
+  return id;
+};
+
 export const submitPositionAction = (
   value: unknown,
   nodes: readonly MapNode[],
@@ -537,7 +568,9 @@ export class ThoughtMap {
 
   bindOrbitEvents() {
     this.root.querySelectorAll<HTMLElement>("[data-orbit-focus]").forEach((element) => {
-      element.addEventListener("click", () => this.focusNode(datasetValue(element, "orbitFocus")));
+      element.addEventListener("click", () => {
+        submitOrbitFocus(element.dataset.orbitFocus, this.graph.nodes, (id) => this.focusNode(id));
+      });
     });
   }
 
@@ -822,7 +855,7 @@ export class ThoughtMap {
     });
     const focus = this.detailPanel.querySelector<HTMLElement>("[data-detail-focus]");
     focus?.addEventListener("click", () => {
-      this.focusNode(datasetValue(focus, "detailFocus"));
+      submitDetailFocus(focus.dataset.detailFocus, this.graph.nodes, (id) => this.focusNode(id));
     });
     this.detailPanel.querySelector("[data-detail-close]")?.addEventListener("click", () => {
       this.selectNode(null);
