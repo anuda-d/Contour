@@ -96,7 +96,7 @@ test("Map validates mutable node-event IDs against active projected non-user nod
   assert.equal(parseNodeEventTargetId(42, eventTargetNodes), null);
   assert.equal(
     mapSource.match(/parseNodeEventTargetId\(element\.dataset\.nodeId, this\.graph\.nodes\)/g)?.length,
-    3,
+    4,
   );
 });
 
@@ -248,6 +248,65 @@ test("valid projected Media and Thought retain click, drag-start, and keyboard b
     assert.equal(preventedKeys, 1);
     assert.equal(stoppedKeys, 1);
   }
+});
+
+test("Map edge rendering ignores malformed DOM node IDs while preserving valid connection state", () => {
+  const toggles = new Map<unknown, Array<[string, boolean]>>();
+  const unconnectedNode = {
+    id: "film-d",
+    type: "media" as const,
+    format: "film",
+    title: "Film",
+    creator: "Director",
+    year: 2021,
+  };
+  const elementFor = (nodeId: unknown) => ({
+    dataset: { nodeId },
+    classList: {
+      toggle: (className: string, enabled: boolean) => {
+        const entries = toggles.get(nodeId) ?? [];
+        entries.push([className, enabled]);
+        toggles.set(nodeId, entries);
+      },
+    },
+  });
+  const elements = [
+    elementFor("book-a"),
+    elementFor("draft-b"),
+    elementFor("film-d"),
+    elementFor("user-c"),
+    elementFor("stale"),
+    elementFor(undefined),
+    elementFor(42),
+  ];
+  const context = {
+    graph: {
+      nodes: [...eventTargetNodes, unconnectedNode],
+      edges: [{ id: "anchor-a", source: "draft-b", target: "book-a", kind: "anchor" }],
+    },
+    positions: { "book-a": { x: 10, y: 20 }, "draft-b": { x: 30, y: 40 } },
+    selectedId: "book-a",
+    edgeLayer: { innerHTML: "" },
+    root: { querySelectorAll: () => elements },
+  };
+
+  assert.doesNotThrow(() => ThoughtMap.prototype.renderEdges.call(context));
+  assert.deepEqual(toggles.get("book-a"), [
+    ["is-connected", false],
+    ["is-muted", false],
+  ]);
+  assert.deepEqual(toggles.get("draft-b"), [
+    ["is-connected", true],
+    ["is-muted", false],
+  ]);
+  assert.deepEqual(toggles.get("film-d"), [
+    ["is-connected", false],
+    ["is-muted", true],
+  ]);
+  assert.equal(toggles.has("user-c"), false);
+  assert.equal(toggles.has("stale"), false);
+  assert.equal(toggles.has(undefined), false);
+  assert.equal(toggles.has(42), false);
 });
 
 test("Map validates orbit Focus DOM IDs against active projected Media", () => {

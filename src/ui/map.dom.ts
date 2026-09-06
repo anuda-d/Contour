@@ -57,12 +57,6 @@ function isPoint(point: Point | undefined): point is Point {
   return point !== undefined;
 }
 
-function datasetValue(element: HTMLElement, key: string): string {
-  const value = element.dataset[key];
-  if (!value) throw new Error(`Expected Map data attribute: ${key}`);
-  return value;
-}
-
 export const parsePublishDraftId = (
   value: unknown,
   nodes: readonly MapNode[],
@@ -676,7 +670,8 @@ export class ThoughtMap {
       .join("");
 
     this.root.querySelectorAll<HTMLElement>(".map-node").forEach((element) => {
-      const id = datasetValue(element, "nodeId");
+      const id = parseNodeEventTargetId(element.dataset.nodeId, this.graph.nodes);
+      if (!id) return;
       const connected = this.graph.edges.some(
         (edge) =>
           (edge.source === this.selectedId && edge.target === id) ||
