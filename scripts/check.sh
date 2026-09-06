@@ -79,6 +79,17 @@ alignment_due=$(read_field 'Alignment due' "$state_file")
 visual_checkpoint=$(read_field 'Visual checkpoint' "$state_file")
 ui_units=$(read_field 'UI units since visual checkpoint' "$state_file")
 standing_authority=$(read_field 'Standing implementation authority' "$state_file")
+audit_baseline=$(read_field 'Last audited commit' "$state_file")
+audit_units=$(read_field 'Accepted implementation units since audit' "$state_file")
+
+test "$(grep -c '^## Completion audit$' "$state_file")" -eq 1
+case "$audit_units" in
+  0|1|2|3) ;;
+  *) echo "Invalid completion audit count: $audit_units" >&2; exit 1 ;;
+esac
+if test "$audit_baseline" != none; then
+  printf '%s\n' "$audit_baseline" | grep -Eq '^[0-9a-f]{40}$'
+fi
 
 test "$frozen_baseline" = approved
 test "$architecture_gate" = open -o "$architecture_gate" = approved

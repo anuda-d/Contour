@@ -56,6 +56,9 @@ the foundation-first strategy explicitly.
 
 The authorized window is daily from 18:00 through 23:00 in America/Toronto.
 Each implementation task owns at most one bounded unit.
+Each unit completes a coherent responsibility and eliminates a concrete acceptance gap, grouping related validation and migration work within that boundary.
+The implementation state's `Completion audit` record is authoritative for the audit due before the next new selection and after every three accepted implementation units.
+Audits identify exact remaining criterion blockers during normal task preparation and require no additional owner approval.
 After a clean accepted commit before 23:00, that task writes the required
 temporary handoff and creates one fresh successor task in the same project.
 At or after 23:00, it finishes the active unit safely, writes the handoff, and
@@ -87,7 +90,7 @@ effects are not authorized by standing implementation authority.
 5. the latest temporary handoff when one exists
 6. confirm the current time is inside the scheduled window for new selection
 7. confirm no task or recorded run overlaps
-8. select or continue only one smallest useful goal gap
+8. continue the matching incomplete unit, or complete any due completion audit and select one coherent responsibility that eliminates an acceptance gap
 9. read only the code, tests, and specification needed for that unit
 
 ## Fresh-task boundary
@@ -97,8 +100,7 @@ Every terminal unit state writes
 `contour-architecture-foundation-handoff.md` in the operating system temporary
 directory and records `No next unit selected`.
 The current task never selects a second unit.
-When relay is allowed, it creates a fresh task whose first action is to select
-the next smallest justified gap from authoritative repository state.
+When relay is allowed, it creates a fresh task that uses authoritative repository state to complete any due audit and select one coherent responsibility.
 
 ## Commands
 

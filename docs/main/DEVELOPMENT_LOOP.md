@@ -3,8 +3,7 @@
 Status: current operating contract for scheduled development against one
 owner-approved goal.
 
-This loop advances one approved goal through small, independently validated
-work units in successive fresh tasks.
+This loop advances one approved goal through complete, bounded responsibilities that are independently validated in successive fresh tasks.
 It operates only when `docs/plans/CURRENT.md` records exactly one active goal
 with standing owner authorization.
 Routine implementation, acceptance, local commit, handoff, and relay inside the
@@ -45,8 +44,13 @@ window but does not silently start an implementation unit.
 
 The active goal defines the outcome, invariants, authorized scope, validation
 standard, and completion condition.
-A work unit is the smallest coherent change that creates evidence for one unmet
-criterion.
+A work unit completes one coherent behavior or architectural responsibility and eliminates a concrete acceptance gap for one or more criteria.
+Its boundary is the responsibility's owner, inputs, outputs, invariants, and known active entry paths.
+Group the related validators, helpers, adapters, imports, and tests required to close that boundary in the same unit.
+Do not split sibling paths into successive units solely because each can be changed and tested separately.
+Do not combine unrelated responsibilities to increase commit size.
+A narrow handler change, wrapper extraction, or file relocation is a standalone unit only when it closes a concrete acceptance gap or is an indispensable prerequisite.
+For a prerequisite, record the dependency or preservation risk that prevents completing the surrounding responsibility safely in the same unit, plus the prerequisite's own completion condition.
 One implementation task owns at most one work unit.
 
 Standing authorization permits successive bounded units only inside the active
@@ -57,19 +61,47 @@ It never records a future task queue.
 
 Each work unit:
 
-1. selects one smallest justified goal gap;
+1. completes any due completion audit and selects one bounded responsibility that eliminates an acceptance gap;
 2. obtains one to three independent read-only explorations;
-3. states one criterion, intended result, and evidence claim;
+3. states the affected criteria, responsibility, gap to eliminate, completion condition, and evidence claim;
 4. implements one coherent change through the sole-writer orchestrator;
 5. runs focused checks and the full repository check;
 6. records candidate evidence;
 7. receives a fresh independent read-only review;
 8. resolves every blocking finding and repeats validation and fresh review after
    a material correction;
-9. records accepted evidence and creates one local commit;
+9. records the eliminated gap, refreshes remaining criterion blockers and the audit count, and creates one local commit;
 10. writes the compact temporary handoff with `No next unit selected`;
 11. creates one fresh successor before 23:00 when relay remains authorized; and
 12. stops without selecting another unit.
+
+## Completion audit
+
+Completion audits are part of normal task orientation and review.
+They require no separate task, extra review stage, or routine owner approval.
+The implementation state contains one `Completion audit` section with `Last audited commit` and `Accepted implementation units since audit` fields.
+An audit is due before new selection when the baseline is `none` or the count is `3`.
+Complete an already-recorded matching incomplete unit before performing a due audit; never replace that unit to satisfy the cadence.
+
+When due, compare every open criterion with current source, tests, and accepted evidence.
+Record a compact table of criterion, evidence or owning source, exact remaining implementation or verification blocker, and observable acceptance condition.
+Distinguish missing implementation from missing proof and check whether existing evidence is sufficient for acceptance before proposing more code.
+Replace vague residual descriptions such as "other boundaries remain open" with concrete, evidence-backed gaps.
+This is an inventory of present acceptance blockers, with no future unit IDs, task sequence, speculative scope, or selected successor.
+If no criterion became accepted during the interval, assess whether unit fragmentation is preventing completion and use that assessment when grouping the next responsibility.
+An unchanged criterion count alone does not block work or require owner approval when the remaining gaps are concrete and authorized.
+
+Perform the audit read-only during orientation and persist it with the selected unit only after acquiring ownership and rechecking state.
+Set `Last audited commit` to the inspected HEAD and reset `Accepted implementation units since audit` to `0` when recording that selection.
+If no unit can be selected, persist the audit only when an authorized terminal handoff requires a repository update, under ownership.
+The audit itself never marks a criterion accepted; acceptance still requires the normal validation and fresh independent review.
+An evidence-only verification unit is appropriate when the implementation already satisfies a criterion.
+
+At each accepted implementation unit, refresh the touched criteria's concrete remaining blockers and increment the count once, capped at `3`.
+Administrative commits, recovery no-ops, corrections within a unit, and blocked or paused units do not increment it.
+The third accepted unit leaves the audit due for the next fresh task; it does not start an audit or a second unit after committing.
+Use the accepted run log to reconcile the count if a handoff was interrupted.
+Keep this audit record in the implementation state only and refer to it from the compact index and handoff.
 
 ## Architecture Foundation exception
 
@@ -110,7 +142,8 @@ The handoff contains only:
 
 - active goal id and exact terminal state;
 - accepted commit or exact incomplete working-tree state;
-- criterion and evidence status;
+- criterion, eliminated acceptance gap, and evidence status;
+- completion-audit baseline and count, with a link to the authoritative implementation state;
 - focused, full, rendered, and independent-review results as applicable;
 - UI checkpoint count;
 - risks and unresolved owner decisions;
@@ -274,6 +307,7 @@ Before selecting or continuing a unit, confirm that:
 - a current unit, if any, matches the incomplete unit;
 - the work is authorized by the active goal;
 - no future task queue is recorded;
+- a due completion audit is performed before new selection, without replacing a matching incomplete unit;
 - the architecture entry gate is respected;
 - the checkout contains no unsafe overlapping user changes; and
 - the repository check passes, or a pre-existing unrelated failure is recorded.
@@ -291,7 +325,9 @@ Confirm this is a fresh task and perform only read-only orientation.
 
 ### 2. Select one task
 
-Choose the smallest unmet goal gap that can create direct evidence in one task.
+Complete any due completion audit, then choose one coherent responsibility with a concrete acceptance gap and observable completion condition.
+Prefer a unit that completes a criterion or removes an indispensable blocker to its acceptance.
+Include the known related paths needed to close the responsibility; explain any dependency or preservation risk that requires a narrower prerequisite.
 While the architecture entry gate is open, select only its contract unit.
 
 Immediately before recording the selection, acquire durable checkout ownership and recheck the relevant repository and run state.
@@ -299,8 +335,9 @@ Immediately before recording the selection, acquire durable checkout ownership a
 Record only that task under `Current run` and `Incomplete run`.
 State:
 
-> This work unit advances criterion X by producing result Y, verified by
-> evidence Z.
+> This work unit advances criteria X by completing responsibility Y and eliminating acceptance gap Z, verified by evidence E.
+
+Record the owning layer, included paths, preservation boundary, and completion condition with that claim.
 
 Do not record later tasks.
 If no honest gap advances the goal, stop at **NO JUSTIFIED CHANGE**.
@@ -313,7 +350,7 @@ The orchestrator remains the sole writer.
 
 ### 4. Implement
 
-Make the smallest coherent change that can satisfy the claim.
+Complete the recorded responsibility with the simplest coherent change that satisfies its completion condition.
 Preserve the visible behavior freeze, public and private boundaries, authored
 meaning, spatial separation, storage compatibility, and unrelated work.
 
@@ -329,12 +366,14 @@ AF-10.
 
 ### 6. Record and review
 
-Before review, record the criterion, claim, exact diff, observed evidence,
-validation, UI counter, risks, and proposed accepted evidence.
+Before review, record the criteria, responsibility, eliminated gap, completion condition, exact diff, observed evidence, validation, UI counter, risks, and proposed accepted evidence.
+Refresh the touched criteria's remaining implementation and verification blockers and show the proposed audit-count update.
 
 Use a fresh read-only `gpt-5.6-sol` high-reasoning reviewer.
 Provide the goal, relevant rules, actual diff, evidence claim, validation, and
 known risks.
+The reviewer checks responsibility completion and whether the evidence closes the named gap, including any justification for a narrow prerequisite.
+Passing tests or a larger accepted-evidence inventory alone does not establish completion.
 Resolve every blocker.
 A material correction repeats focused and full validation and uses a new fresh
 reviewer.
@@ -346,7 +385,7 @@ After validation passes and review is clean:
 1. record the factual review result;
 2. mark only supported criteria accepted;
 3. approve the architecture entry gate only when its exact claim is satisfied;
-4. append the accepted run record;
+4. append the accepted run record with the eliminated gap and remaining blockers, and increment the completion-audit count once;
 5. update the UI checkpoint fields when applicable;
 6. clear `Current run` and `Incomplete run`;
 7. set `Run status` to `awaiting scheduled fresh task` unless the goal is
@@ -422,7 +461,7 @@ At completion:
 
 For every committed unit retain:
 
-1. criterion and claim;
+1. criteria, completed responsibility, eliminated acceptance gap, and remaining implementation or verification blockers;
 2. observed evidence and interpretation separately;
 3. exact files and local commit;
 4. focused and full validation plus applicable rendered evidence;

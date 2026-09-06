@@ -40,6 +40,18 @@ Status: active shared state; standing scheduled owner authorization.
 This table records accepted evidence only.
 It is not a task sequence, roadmap, or permission to infer later work units.
 
+## Completion audit
+
+- Last audited commit: none
+- Accepted implementation units since audit: 0
+
+The owner approved completion-focused unit selection on 2026-09-06.
+The first audit is due before the next new implementation unit; no audit or criterion acceptance is claimed by this administrative update.
+The next eligible fresh task compares every open criterion with current source, tests, and accepted evidence and records exact implementation or verification blockers and observable acceptance conditions here.
+It also assesses the recent pattern of partial units when grouping its one selected responsibility.
+This section is present-state evidence, with no future task queue.
+Thereafter, follow the baseline, count, audit, and blocker-refresh rules in `docs/main/DEVELOPMENT_LOOP.md`.
+
 ## Architecture entry state
 
 - Gate state: approved
@@ -110,9 +122,9 @@ queue.
 
 ## Fresh-task handoff state
 
-- Latest accepted unit: af-6-product-map-projection-location.
-- Latest implementation commit: recorded in this accepted unit's post-commit handoff.
-- Latest temporary handoff: written after this accepted unit commits.
+- Latest accepted unit: af-3-product-map-layout-location.
+- Latest implementation commit: `1bb7b05`.
+- Latest temporary handoff: `contour-architecture-foundation-handoff.md` in temporary storage; context only, with this repository state authoritative.
 - Next unit selected: no.
 
 Every unit task writes a compact redacted handoff document in the operating
@@ -131,8 +143,7 @@ The handoff includes:
 - suggested skills for the next task.
 
 The handoff is context only, never authority or a future task queue.
-A fresh successor selects the next smallest justified gap only after reading
-authoritative repository state and confirming no overlap.
+A fresh successor selects one coherent responsibility only after reading authoritative repository state, confirming no overlap, and completing any due completion audit.
 If the temporary file is unavailable, it reconstructs facts from the repository
 without discarding uncommitted work or inferring missing decisions.
 
@@ -201,6 +212,11 @@ without discarding uncommitted work or inferring missing decisions.
 
 ## Acceptance rules
 
+- A unit completes one coherent responsibility and eliminates its named acceptance gap, or completes an indispensable prerequisite justified by dependency or preservation risk.
+- Related entry paths and their validators, adapters, imports, and focused tests belong in the same unit when they serve that responsibility.
+- Candidate evidence and independent review address the completion condition and concrete remaining criterion blockers.
+- Refresh touched criterion blockers and increment the completion-audit count once per accepted implementation unit.
+  At three, the next fresh task audits every open criterion before selecting its unit.
 - Routine unit acceptance requires focused and full validation plus clean fresh
   independent review.
 - Candidate evidence is recorded before review.
@@ -244,6 +260,21 @@ Routine work-unit completion does not require owner review.
 - Final independent review: a fresh `gpt-5.6-sol` high-reasoning reviewer found no P0-P3 issue, policy contradiction, recovery race, or missing implementation evidence.
 - Owned-only staging: the cached patch contains exactly the seven administrative lock-policy files and excludes the pre-existing `AGENTS.md`, `scripts/check.sh`, README, product-document, and retired-plan changes.
 - Product and goal impact: this is owner-requested administrative loop infrastructure, not an Architecture Foundation implementation unit; it changes no product behavior, criterion status, run selection, UI checkpoint, or accepted unit evidence.
+
+## Administrative completion policy update
+
+- Authority: the owner requested this loop correction on 2026-09-06 after reviewing the pattern of small partial units.
+- Criterion: selection and acceptance must complete a bounded responsibility or justified prerequisite and identify the concrete goal gap eliminated.
+- Intended result: related paths are completed together, touched criterion blockers stay explicit, and a completion audit is due before the next new selection and every three accepted implementation units afterward.
+- Explorer evidence: two independent read-only audits identified repeated single-boundary units, vague residual criterion descriptions, and stale latest-unit handoff metadata.
+- Exact repository diff: `AGENTS.md`, `docs/main/DEVELOPMENT_LOOP.md`, `docs/plans/CURRENT.md`, this implementation state, and `scripts/check.sh` synchronize selection, review, audit cadence, and compact audit-state validation.
+- Automation verification: the existing `bproject-autonomous-graph-loop` prompt is installed and reads back exactly as reviewed; identity, project, active status, schedule, model, reasoning effort, and local execution environment are preserved.
+- Focused validation: shell syntax and whitespace checks pass; eight isolated policy-check fixtures accept initial, due, and recovery audit states and reject malformed, missing, duplicate, or out-of-range fields.
+- Full validation: `./scripts/check.sh` passes architecture enforcement, strict browser and test typechecks, the Vite production build, and all 239 tests with zero failures.
+- Independent review: a fresh read-only `gpt-5.6-sol` high-reasoning reviewer found no actionable P0-P3 finding and independently reran the full repository check successfully.
+- Scope: this administrative update selects no implementation unit, advances no Architecture Foundation criterion, and leaves the UI checkpoint count at zero.
+  Goal scope, standing authorization, ownership, safety gates, full validation, independent review, rendered checkpoints, and the scheduled window are preserved.
+- Completion audit: intentionally due; the next eligible fresh task establishes current criterion blockers before selecting its unit.
 
 ## Accepted run log
 
