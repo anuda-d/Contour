@@ -28,13 +28,13 @@ Status: active shared state; standing scheduled owner authorization.
 | --- | --- | --- |
 | AF-1 Enforced architecture contract | accepted | Architecture decision records, six-key compatibility inventory, and the checked import-boundary gate were accepted after 30 focused and 112 repository tests plus clean fresh review. |
 | AF-2 Complete strict TypeScript | accepted | Every maintained application source and automated test is strict TypeScript. Separate browser and Node-test typechecks, the Vite build, and the checked `src/composition/main.ts` native entrypoint are accepted with no maintained application JavaScript mirror. |
-| AF-3 Deep product modules | open | Partial: authored Thought lifecycle, anchors, publication, and immutable merge now live in a cohesive strict TypeScript product module; other product facts remain in prototype seams. |
+| AF-3 Deep product modules | open | Partial: authored Thought lifecycle, anchors, publication, and immutable merge plus deterministic spatial layout now live in cohesive strict TypeScript product modules; other product facts remain in prototype seams. |
 | AF-4 Application use cases | open | Partial: authored-Thought reload, startup recovery, capture, and publication, deliberate-selection, featured-Media, and pinned-position startup recovery, selection toggle or confirmation, public featured-Media toggle, and spatial pin or unpin commands now use screen-neutral application outcomes through specific typed persistence ports; other current workflows remain composition-owned. |
 | AF-5 Isolated effects and validated boundaries | open | Partial: browser localStorage, DOM-root acquisition, Map resize listening, Map drag-click suppression timing, the existing Map debug-global publication, storage adapters, wall-clock access, UUID generation, authored-Thought cross-tab events, authored, selection, featured-Media, and pinned-position startup recovery, capture, reload, and publication persistence, selection persistence, featured-Media persistence, pinned-position persistence, prototype-seed and Thought Capture form runtime validation, and Publish, Edit, Connect another work, Featured Media, position-action, node-event, Focus-control, edge-state, and selection-state Map validation now cross narrow inward boundaries; other browser events and form-input boundaries remain open. |
 | AF-6 Explicit projections and privacy | open | Partial: the owner and visitor graph projection is now a strict TypeScript `product/map` module with focused evidence for Draft and draft-only Media exclusion, publication-derived public eligibility, dangling-edge filtering, and owner capability removal; application-level structurally separate read models remain open. |
 | AF-7 Durable compatibility | open | Partial: authored V2, V1, and legacy-Draft browser storage now has typed precedence, normalization, migration, recovery, and read-merge-write evidence; other persisted state remains to be completed. |
 | AF-8 Frozen visible behavior | open | None yet. |
-| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries including retired flat Map-projection rejection, shared effect-port source coverage, browser-root, browser-resize, browser-clock, browser-Map-global, prototype-seed, Thought Capture form, and Publish, Edit, Connect another work, Featured Media, position-action, node-event, Focus-control, edge-state, and selection-state Map runtime validation, authored, selection, featured-Media, and pinned-position startup recovery, capture and publication, selection, featured-Media, and pinned-position application and adapter coverage, plus Map composition, DOM-source-contract, product, CSS-regression, end-to-end acceptance, and architecture-boundary coverage; later migrated seams and final coverage remain open. |
+| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries including retired flat Map-projection and layout-path rejection, shared effect-port source coverage, browser-root, browser-resize, browser-clock, browser-Map-global, prototype-seed, Thought Capture form, and Publish, Edit, Connect another work, Featured Media, position-action, node-event, Focus-control, edge-state, and selection-state Map runtime validation, authored, selection, featured-Media, and pinned-position startup recovery, capture and publication, selection, featured-Media, and pinned-position application and adapter coverage, plus Map composition, DOM-source-contract, product, CSS-regression, end-to-end acceptance, and architecture-boundary coverage; later migrated seams and final coverage remain open. |
 | AF-10 Durable completion walkthrough | open | None yet. |
 
 This table records accepted evidence only.
@@ -61,12 +61,11 @@ queue.
 ## Current run
 
 - State: accepted; no current unit.
-- Unit id: af-6-product-map-projection-location.
-- Criterion: AF-6 Explicit projections and privacy and AF-9 Layered test and quality gates.
-- Intended result: the existing owner and visitor projection policy becomes a normal `product/map` module, rather than a temporary flat legacy source.
-- Evidence claim: its exported behavior, projection order, deep-copy isolation, Draft and draft-only Media exclusion, dangling-edge removal, public-Media eligibility, and owner capability policy remain unchanged while the old flat path is rejected by the architecture gate.
-- Accepted evidence: 47 focused checks, strict typechecks, `git diff --check -- .`, and the complete repository check pass with 238 tests. A fresh independent review found one P1 recovery-state omission. After synchronizing active run fields under `Current run` and `Incomplete run`, repeating focused and full validation, and receiving a second fresh independent review, no actionable P0-P3 finding remains.
-- Scope guard: no copy, CSS, rendered DOM structure, persistence representation, projection or privacy policy, Map gesture, layout, design token, or valid interaction behavior changes.
+- Unit id: af-3-product-map-layout-location.
+- Criterion: AF-3 Deep product modules and AF-9 Layered test and quality gates.
+- Intended result: deterministic spatial layout now lives at `src/product/map/layout.ts`, where the contract assigns spatial layout inputs.
+- Accepted evidence: generated coordinates, owner centering, authored-edge influence, collision separation, presentation-port behavior, and valid Map interactions are preserved while the architecture gate rejects revival of `src/layout.ts`.
+- Scope guard: no copy, CSS, rendered DOM structure, persistence representation, projection or privacy policy, Map gesture, design token, or valid interaction behavior changes.
 
 ## Owner authorization
 
@@ -140,19 +139,18 @@ without discarding uncommitted work or inferring missing decisions.
 ## Current unit evidence
 
 - State: accepted; no current unit.
-- Unit id: af-6-product-map-projection-location.
-- Criterion: AF-6 Explicit projections and privacy and AF-9 Layered test and quality gates.
-- Intended result: relocate the existing owner and visitor projection policy to `src/product/map/projection.ts` without changing its API or behavior.
-- Explorer partition: three independent read-only audits ruled out already accepted Map boundaries and identified the temporary flat projection source as the smallest non-duplicative architecture gap.
-- Exact owned diff: production and test importers now use `src/product/map/projection.ts`; its matching test moved to `tests/product/map/projection.test.ts`; the old flat exception was removed from the import checker; and an executable fixture rejects revival of `src/graph-projection.ts`.
-- Observed correction: the newly enforced product source exposed an invalid legacy `readonly Readonly<...>[]` annotation to the architecture parser. An equivalent `ReadonlyArray<Readonly<...>>` annotation restores strict parser compatibility without runtime effect.
-- Focused validation: `npx tsx --test tests/product/map/projection.test.ts tests/composition/map-presentation.test.ts tests/acceptance-walkthrough.test.ts tests/application/authorship/reload-authored-thoughts.test.ts tests/architecture-boundaries.test.ts` passes all 47 checks.
+- Unit id: af-3-product-map-layout-location.
+- Criterion: AF-3 Deep product modules and AF-9 Layered test and quality gates.
+- Intended result: relocate unchanged deterministic spatial layout to `src/product/map/layout.ts` and retire its final flat transition path.
+- Explorer partition: two independent read-only audits found `src/layout.ts` to be the final architecture-contract transition exemption. They verified one production importer, one focused layout test, and Map access only through the existing composition presentation port.
+- Exact owned diff: production and test importers use `src/product/map/layout.ts`; its matching test lives at `tests/product/map/layout.test.ts`; the final legacy exception is removed from the import checker; and an executable fixture rejects revival of `src/layout.ts`.
+- Focused validation: `npx tsx --test tests/product/map/layout.test.ts tests/composition/map-presentation.test.ts tests/ui/map.dom.test.ts tests/acceptance-walkthrough.test.ts tests/architecture-boundaries.test.ts` passes all 77 checks.
 - Type validation: `npm run typecheck` passes the strict browser and test TypeScript projects.
-- Full validation: `./scripts/check.sh` passes architecture enforcement, both strict typechecks, the Vite build, and all 238 tests with zero failures.
+- Full validation: `./scripts/check.sh` passes architecture enforcement, both strict typechecks, the Vite build, and all 239 tests with zero failures.
 - Whitespace validation: `git diff --check -- .` passes.
 - Rendered validation: not due because valid rendered behavior and visual code are unchanged.
-- Independent review: the first fresh review found a P1 recovery-safety gap because the canonical run fields still said no run while the candidate was active. The fields were synchronized as `independent review`, focused and full validation were repeated, and a second fresh review found no actionable P0-P3 finding.
-- Scope guard: no copy, CSS, rendered DOM structure, persistence, projection or privacy policy, Map gesture, layout, design token, or valid interaction behavior changes.
+- Independent review: three fresh reviewers found four documentation-state or coverage wording issues. After each correction, focused and full validation were repeated. The final fresh `gpt-5.6-sol` high-reasoning review found no actionable P0-P3 finding.
+- Scope guard: no copy, CSS, rendered DOM structure, persistence, projection or privacy policy, Map gesture, design token, or valid interaction behavior changes.
 
 ## Goal-readiness evidence
 
@@ -466,6 +464,10 @@ Routine work-unit completion does not require owner review.
   The existing owner and visitor projection policy now lives in `src/product/map/projection.ts`, and the architecture checker rejects revival of the retired flat path.
   Projection order, deep-copy isolation, Draft and draft-only Media exclusion, dangling-edge removal, public-Media eligibility, owner capability policy, and all valid visible behavior remain unchanged.
   Repeated focused 47-check evidence, repeated full 238-test repository validation, and a clean second fresh independent review after correcting the canonical recovery state support bounded AF-6 and AF-9 evidence while both criteria remain open.
+- AF-3 and AF-9 partial unit `af-3-product-map-layout-location` accepted on 2026-09-06.
+  Deterministic spatial layout now lives in `src/product/map/layout.ts`, and the architecture checker rejects revival of the retired top-level path.
+  Generated coordinates, owner centering, authored-edge influence, collision separation, Map presentation-port behavior, and all valid visible behavior remain unchanged.
+  Repeated focused 77-check evidence, repeated full 239-test repository validation, and a clean final fresh independent review after four documentation-state and coverage-wording corrections support bounded AF-3 and AF-9 evidence while both criteria remain open.
 
 ## Administratively closed run log
 

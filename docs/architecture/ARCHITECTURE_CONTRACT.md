@@ -74,15 +74,6 @@ Browser event adapters use a `browser-*.ts` name.
 Native-DOM UI adapters use a `*.dom.ts` or `*.view.ts` name.
 Tests mirror their owning source path beneath `tests/`.
 
-## Current transition map
-
-The flat JavaScript files below are temporary legacy locations while AF-2 through AF-7 migrate bounded seams.
-They are explicit in the import checker so a new top-level source file cannot silently bypass the target layout.
-
-| Current file | Temporary classification | Migration destination | Preserved responsibility |
-| --- | --- | --- | --- |
-| `src/layout.ts` | product transition | `src/product/map/`, `src/application/`, and `src/ui/` | spatial presentation inputs |
-
 ## Migrated seams
 
 | Current owner | Migrated source | Preserved responsibility |
@@ -96,6 +87,7 @@ They are explicit in the import checker so a new top-level source file cannot si
 | Taste selection | `src/product/taste/selection.ts` and `src/adapters/browser/selection-local-storage.ts` | Typed private three-work selection rules and injected browser-storage persistence |
 | Taste featured Media | `src/product/taste/featured.ts` and `src/adapters/browser/featured-local-storage.ts` | Typed deliberate public presentation choices and injected browser-storage persistence |
 | Map pinned positions | `src/product/map/pinned-positions.ts` and `src/adapters/browser/pinned-local-storage.ts` | Typed spatial pin rules and injected V1 browser-storage persistence without semantic authorship effects |
+| Map layout | `src/product/map/layout.ts` | Typed deterministic spatial layout inputs that remain distinct from authored relationship meaning and Map interaction |
 | Authored Thoughts | `src/product/authorship/draft-state.ts` and `src/adapters/browser/authored-local-storage.ts` | Typed Draft lifecycle, immutable authored-state merge, and injected V2, V1, and legacy-Draft browser-storage compatibility |
 | Map public projection | `src/product/map/projection.ts` | Typed owner and visitor projection plus capability inputs while the application still owns final read-model separation |
 | Prototype seed | `src/adapters/seed/prototype-seed.ts` | Typed deterministic seeded owner, Media, published Thoughts, authored relationships, public choices, and spatial inputs |
@@ -110,18 +102,17 @@ Spatial pins and movement remain presentation facts and never create authored re
 
 ## Enforced import boundaries
 
-`scripts/check-import-boundaries.mjs` enforces the target directional matrix for files already under the target directories.
+`scripts/check-import-boundaries.mjs` enforces the target directional matrix for every maintained JavaScript and TypeScript module source file.
 The matrix allows `kernel -> kernel`, `product -> product or kernel`, `application -> application, product, or kernel`, `adapters -> adapters, application, product, or kernel`, `ui -> ui, application, or kernel`, and `composition -> any layer`.
-The temporary legacy importers above are parsed and retain source-resolution validation, but are exempt from directional enforcement only while they remain at their listed paths.
-The checker uses the TypeScript- and JSX-aware `@babel/parser` to reject an unclassified new source file, unresolved relative or `/src/` imports, and every forbidden source import under valid ESM or CommonJS grammar.
+The checker uses the TypeScript- and JSX-aware `@babel/parser` to reject an unclassified new JavaScript or TypeScript module source file, unresolved relative or `/src/` imports, and every forbidden source import under valid ESM or CommonJS grammar.
 The target uses ESM source only, so `.cjs` and `.cts` files plus unshadowed CommonJS `require` and export-assignment forms fail the check rather than creating an unchecked CommonJS path.
 `import.meta.glob()` is reserved for a future approved composition adapter and fails in all current source layers.
 Dynamic imports that cannot be statically resolved use no permitted layer and are rejected in migrated source.
 `scripts/check.sh` invokes the checker so supported repository validation cannot bypass it.
 The controlled test fixture proves that a product module importing a browser adapter fails the check.
 
-## Exit condition for transition exceptions
+## Target layout condition
 
-The temporary legacy exemptions are removed as each file migrates into the target layout.
+No maintained source file retains a transition classification or directional exception.
 AF-2 acceptance requires every maintained application source and automated test to be strict TypeScript with no maintained JavaScript mirror.
 No future module is introduced merely to satisfy this layout.

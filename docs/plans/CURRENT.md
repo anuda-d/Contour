@@ -109,5 +109,4 @@ the next smallest justified gap from authoritative repository state.
 ## Stop condition
 
 The repository is at **GOAL ACTIVE - AWAITING SCHEDULED FRESH TASK**.
-The automation may start or relay one fresh task at a time during the authorized
-window without intermediate owner approval.
+The automation may start or relay one fresh task at a time during the authorized window without intermediate owner approval.

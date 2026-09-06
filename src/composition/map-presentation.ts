@@ -4,7 +4,7 @@ import {
   normalizeMapMode,
   projectGraphForMode,
 } from "../product/map/projection.ts";
-import { layoutGraph } from "../layout.ts";
+import { layoutGraph } from "../product/map/layout.ts";
 import { resolvePositions } from "../product/map/pinned-positions.ts";
 import type {
   MapEdge,

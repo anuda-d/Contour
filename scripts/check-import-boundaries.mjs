@@ -1,14 +1,11 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
-import { resolve, relative, dirname, extname, basename } from "node:path";
+import { resolve, relative, dirname, extname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parse } from "@babel/parser";
 import traverse from "@babel/traverse";
 
 const sourceExtensions = new Set([".js", ".mjs", ".cjs", ".jsx", ".ts", ".mts", ".cts", ".tsx"]);
 const layers = new Set(["kernel", "product", "application", "adapters", "ui", "composition"]);
-const legacyLayers = new Map([
-  ["layout.ts", "product"],
-]);
 const permittedTargets = {
   kernel: new Set(["kernel"]),
   product: new Set(["kernel", "product"]),
@@ -30,9 +27,7 @@ function sourceLayer(sourceRoot, filePath) {
   const sourceRelativePath = relative(sourceRoot, filePath);
   const [firstSegment] = sourceRelativePath.split("/");
   if (layers.has(firstSegment)) return { layer: firstSegment, legacy: false };
-  if (sourceRelativePath.includes("/")) return null;
-  const legacyLayer = legacyLayers.get(basename(filePath));
-  return legacyLayer ? { layer: legacyLayer, legacy: true } : null;
+  return null;
 }
 
 function resolveSourceImport(repositoryRoot, importerPath, specifier) {
@@ -256,7 +251,6 @@ export function validateArchitectureBoundaries(repositoryRoot) {
         violations.push(`${importerLabel}: imports unclassified source ${targetLabel}.`);
         continue;
       }
-      if (importer.legacy) continue;
       if (!permittedTargets[importer.layer].has(target.layer)) {
         violations.push(
           `${importerLabel}: ${importer.layer} -> ${target.layer} import is forbidden (${targetLabel}).`,
