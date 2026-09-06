@@ -96,7 +96,7 @@ test("Map validates mutable node-event IDs against active projected non-user nod
   assert.equal(parseNodeEventTargetId(42, eventTargetNodes), null);
   assert.equal(
     mapSource.match(/parseNodeEventTargetId\(element\.dataset\.nodeId, this\.graph\.nodes\)/g)?.length,
-    4,
+    5,
   );
 });
 
@@ -307,6 +307,74 @@ test("Map edge rendering ignores malformed DOM node IDs while preserving valid c
   assert.equal(toggles.has("stale"), false);
   assert.equal(toggles.has(undefined), false);
   assert.equal(toggles.has(42), false);
+});
+
+test("Map selection rendering ignores malformed DOM node IDs while preserving valid selected state", () => {
+  const updates = new Map<unknown, Array<["class" | "aria", string | boolean]>>();
+  const elementFor = (nodeId: unknown) => ({
+    dataset: { nodeId },
+    classList: {
+      toggle: (className: string, enabled: boolean) => {
+        const entries = updates.get(nodeId) ?? [];
+        entries.push(["class", `${className}:${enabled}`]);
+        updates.set(nodeId, entries);
+      },
+    },
+    setAttribute: (name: string, value: string) => {
+      const entries = updates.get(nodeId) ?? [];
+      entries.push(["aria", `${name}:${value}`]);
+      updates.set(nodeId, entries);
+    },
+  });
+  const elements = [
+    elementFor("book-a"),
+    elementFor("draft-b"),
+    elementFor("user-c"),
+    elementFor("stale"),
+    elementFor(undefined),
+    elementFor(42),
+  ];
+  let edgeRenders = 0;
+  let detailRenders = 0;
+  const context = {
+    graph: { nodes: eventTargetNodes },
+    selectedId: null,
+    root: { querySelectorAll: () => elements },
+    renderEdges: () => {
+      edgeRenders += 1;
+    },
+    renderDetails: () => {
+      detailRenders += 1;
+    },
+  };
+
+  ThoughtMap.prototype.selectNode.call(context, "book-a");
+  ThoughtMap.prototype.selectNode.call(context, "draft-b");
+  ThoughtMap.prototype.selectNode.call(context, null);
+
+  assert.deepEqual(updates.get("book-a"), [
+    ["class", "is-selected:true"],
+    ["aria", "aria-pressed:true"],
+    ["class", "is-selected:false"],
+    ["aria", "aria-pressed:false"],
+    ["class", "is-selected:false"],
+    ["aria", "aria-pressed:false"],
+  ]);
+  assert.deepEqual(updates.get("draft-b"), [
+    ["class", "is-selected:false"],
+    ["aria", "aria-pressed:false"],
+    ["class", "is-selected:true"],
+    ["aria", "aria-pressed:true"],
+    ["class", "is-selected:false"],
+    ["aria", "aria-pressed:false"],
+  ]);
+  assert.equal(updates.has("user-c"), false);
+  assert.equal(updates.has("stale"), false);
+  assert.equal(updates.has(undefined), false);
+  assert.equal(updates.has(42), false);
+  assert.equal(context.selectedId, null);
+  assert.equal(edgeRenders, 3);
+  assert.equal(detailRenders, 3);
 });
 
 test("Map validates orbit Focus DOM IDs against active projected Media", () => {

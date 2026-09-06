@@ -30,11 +30,11 @@ Status: active shared state; standing scheduled owner authorization.
 | AF-2 Complete strict TypeScript | accepted | Every maintained application source and automated test is strict TypeScript. Separate browser and Node-test typechecks, the Vite build, and the checked `src/composition/main.ts` native entrypoint are accepted with no maintained application JavaScript mirror. |
 | AF-3 Deep product modules | open | Partial: authored Thought lifecycle, anchors, publication, and immutable merge now live in a cohesive strict TypeScript product module; other product facts remain in prototype seams. |
 | AF-4 Application use cases | open | Partial: authored-Thought reload, startup recovery, capture, and publication, deliberate-selection, featured-Media, and pinned-position startup recovery, selection toggle or confirmation, public featured-Media toggle, and spatial pin or unpin commands now use screen-neutral application outcomes through specific typed persistence ports; other current workflows remain composition-owned. |
-| AF-5 Isolated effects and validated boundaries | open | Partial: browser localStorage, DOM-root acquisition, Map resize listening, Map drag-click suppression timing, the existing Map debug-global publication, storage adapters, wall-clock access, UUID generation, authored-Thought cross-tab events, authored, selection, featured-Media, and pinned-position startup recovery, capture, reload, and publication persistence, selection persistence, featured-Media persistence, pinned-position persistence, prototype-seed and Thought Capture form runtime validation, and Publish, Edit, Connect another work, Featured Media, position-action, node-event, Focus-control, and edge-state Map validation now cross narrow inward boundaries; other browser events and form-input boundaries remain open. |
+| AF-5 Isolated effects and validated boundaries | open | Partial: browser localStorage, DOM-root acquisition, Map resize listening, Map drag-click suppression timing, the existing Map debug-global publication, storage adapters, wall-clock access, UUID generation, authored-Thought cross-tab events, authored, selection, featured-Media, and pinned-position startup recovery, capture, reload, and publication persistence, selection persistence, featured-Media persistence, pinned-position persistence, prototype-seed and Thought Capture form runtime validation, and Publish, Edit, Connect another work, Featured Media, position-action, node-event, Focus-control, edge-state, and selection-state Map validation now cross narrow inward boundaries; other browser events and form-input boundaries remain open. |
 | AF-6 Explicit projections and privacy | open | Partial: the owner and visitor graph projection now has strict TypeScript ownership and focused evidence for Draft and draft-only Media exclusion, publication-derived public eligibility, dangling-edge filtering, and owner capability removal; application-level structurally separate read models remain open. |
 | AF-7 Durable compatibility | open | Partial: authored V2, V1, and legacy-Draft browser storage now has typed precedence, normalization, migration, recovery, and read-merge-write evidence; other persisted state remains to be completed. |
 | AF-8 Frozen visible behavior | open | None yet. |
-| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, shared effect-port source coverage, browser-root, browser-resize, browser-clock, browser-Map-global, prototype-seed, Thought Capture form, and Publish, Edit, Connect another work, Featured Media, position-action, node-event, Focus-control, plus edge-state Map runtime validation, authored, selection, featured-Media, and pinned-position startup recovery, capture and publication, selection, featured-Media, and pinned-position application and adapter coverage, plus Map composition, DOM-source-contract, product, CSS-regression, end-to-end acceptance, and architecture-boundary coverage; later migrated seams and final coverage remain open. |
+| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, shared effect-port source coverage, browser-root, browser-resize, browser-clock, browser-Map-global, prototype-seed, Thought Capture form, and Publish, Edit, Connect another work, Featured Media, position-action, node-event, Focus-control, edge-state, and selection-state Map runtime validation, authored, selection, featured-Media, and pinned-position startup recovery, capture and publication, selection, featured-Media, and pinned-position application and adapter coverage, plus Map composition, DOM-source-contract, product, CSS-regression, end-to-end acceptance, and architecture-boundary coverage; later migrated seams and final coverage remain open. |
 | AF-10 Durable completion walkthrough | open | None yet. |
 
 This table records accepted evidence only.
@@ -61,15 +61,12 @@ queue.
 ## Current run
 
 - State: accepted; no current unit.
-- Unit id: af-5-map-edge-state-dom-boundary-validation.
+- Unit id: af-5-map-selection-state-dom-boundary-validation.
 - Criterion: AF-5 Isolated effects and validated boundaries and AF-9 Layered test and quality gates.
-- Intended result: Map edge-state rendering validates mutable DOM node identifiers against active projected non-user nodes before comparing graph connections or mutating presentation classes.
-- Evidence claim: missing, non-string, stale, user, or non-projected IDs remain inert without throwing, while valid projected Media and Thought nodes retain their existing connected and muted class behavior.
-- Candidate evidence: the focused 32-check Map suite and full 237-test repository gate pass with zero failures. Strict browser and test typechecks, architecture enforcement, the Vite build, and `git diff --check -- .` also pass.
-- First review finding: the focused test did not exercise the positive muted branch for a valid unconnected projected node, so its exact behavior-preservation claim was incomplete.
-- Correction evidence: the focused case now includes an unconnected projected Film and proves `is-connected` remains false and `is-muted` remains true. The repeated focused 32-check suite and full 237-test repository gate pass with zero failures.
-- Accepted evidence: all 32 focused Map checks and all 237 repository tests pass with zero failures. `./scripts/check.sh` and `git diff --check -- .` pass. A fresh `gpt-5.6-sol` high-reasoning correction review found no actionable P0-P3 finding.
-- Scope guard: copy, CSS, rendered DOM structure, persistence representation, projection or privacy rules, valid Map gestures, layout, design tokens, and edge-state behavior for valid targets remain unchanged.
+- Intended result: Map selection-state rendering validates mutable DOM node identifiers against active projected non-user nodes before selected-class or ARIA mutation.
+- Evidence claim: missing, non-string, stale, user, and non-projected identifiers remain inert, while valid selected and unselected projected Media and Thoughts retain their exact class and `aria-pressed` behavior, including selection clearing.
+- Accepted evidence: all 33 focused Map checks and all 238 repository tests pass with zero failures. `./scripts/check.sh` and `git diff --check -- .` pass. The first fresh review found one P2 coverage gap for selected Thought behavior. After the focused correction and repeated validation, a second fresh `gpt-5.6-sol` high-reasoning review found no actionable P0-P3 finding.
+- Scope guard: copy, CSS, rendered DOM structure, persistence representation, projection or privacy rules, valid Map gestures, layout, design tokens, and valid selection behavior remain unchanged.
 
 ## Owner authorization
 
@@ -114,7 +111,7 @@ queue.
 
 ## Fresh-task handoff state
 
-- Latest accepted unit: af-5-map-edge-state-dom-boundary-validation.
+- Latest accepted unit: af-5-map-selection-state-dom-boundary-validation.
 - Latest implementation commit: recorded in this accepted unit's post-commit handoff.
 - Latest temporary handoff: written after this accepted unit commits.
 - Next unit selected: no.
@@ -143,33 +140,33 @@ without discarding uncommitted work or inferring missing decisions.
 ## Current unit evidence
 
 - State: accepted; no current unit.
-- Unit id: af-5-map-edge-state-dom-boundary-validation.
+- Unit id: af-5-map-selection-state-dom-boundary-validation.
 - Criterion: AF-5 Isolated effects and validated boundaries and AF-9 Layered test and quality gates.
-- Intended result: Map edge-state rendering runtime-validates mutable DOM node identifiers before comparing graph connections or mutating presentation classes.
-- Evidence claim: missing, non-string, stale, user, or non-projected IDs are inert and cannot abort selection rendering, while valid projected Media and Thought nodes retain exactly the existing connected and muted class behavior.
-- Explorer partition: one read-only Map audit reproduced the missing-ID exception and identified the existing projected-node validator; one application audit independently identified unchecked wheel events and a larger bridge-preparation workflow; one compatibility audit identified a larger cross-key migration evidence gap.
-- Reproduction: invoking `renderEdges` with a `.map-node` that lacks `data-node-id` throws `Expected Map data attribute: nodeId` through `datasetValue`.
-- Exact owned diff: `renderEdges` now reuses the existing projected non-user node parser and skips invalid elements before graph comparisons or class mutation; focused executable coverage supplies valid Media and Thought nodes plus missing, non-string, stale, and user identifiers, and the source contract records the fourth parser entry.
-- Observed evidence: the new focused case failed before implementation with the exact missing-attribute exception while all prior Map checks passed.
-- Observed evidence: after implementation all 32 focused Map checks pass, including unchanged valid connected and muted class outcomes plus inert malformed targets.
-- Interpretation: the candidate closes only the reproduced mutable-DOM trust gap and reuses the already accepted node-event eligibility rule without changing the graph, projection, or valid presentation behavior.
+- Intended result: Map selection-state rendering runtime-validates mutable DOM node identifiers before selected-class or `aria-pressed` mutation.
+- Evidence claim: missing, non-string, stale, user, and non-projected IDs are inert, while valid selected and unselected projected Media and Thoughts retain exact selected-class and `aria-pressed` behavior, including selection clearing.
+- Explorer partition: two independent read-only audits identified the direct mutable-DOM comparison as the only remaining Map dataset identity mutation and confirmed that Thought Capture and Work Chooser inputs already validate at their inward boundaries.
+- Reproduction: selecting a valid work directly mutates the selected class and `aria-pressed` state of user, stale, missing, and non-string `.map-node` elements.
+- Exact owned diff: `selectNode` now reuses the existing projected non-user parser and skips invalid elements before class or ARIA mutation; focused executable coverage supplies valid Media and Thought nodes plus missing, non-string, stale, and user identifiers, and the source contract records the fifth parser entry.
+- Observed evidence: the new focused case failed before implementation because the parser-use source contract found only four call sites and invalid DOM elements received mutations.
+- Observed evidence: after implementation all 33 focused Map checks pass, including valid selected Media and Thought, valid unselected state, clearing, and inert malformed targets.
+- Interpretation: the candidate closes only the reproduced mutable-DOM trust gap and reuses the accepted node-event eligibility rule without changing graph, projection, valid presentation, or selection behavior.
 - Design Read: preserve the frozen Editorial Constellation Map for people exploring authored Books and Films, with its existing spatial and editorial language intact.
 - Design dials: existing behavior remains at variance 7 for asymmetric constellation composition, motion 4 for purposeful interaction feedback, and density 4 for readable contextual detail.
 - Redesign audit: this is preservation work. No rendered markup, visible copy, CSS, tokens, modes, navigation, responsive rule, image, or motion code changes.
-- Design pre-flight: applicable preservation checks constrain this unit to rejecting invalid input during existing edge-state rendering. No new design system, color, shape, button, form, typography, image, CTA, animation, dark-mode, responsive, accessibility, loading, empty, or error surface is introduced.
-- Focused validation: `npx tsx --test tests/ui/map.dom.test.ts` passes all 32 Map checks with zero failures.
+- Design pre-flight: applicable preservation checks constrain this unit to rejecting invalid input during existing selection-state rendering. No new design system, color, shape, button, form, typography, image, CTA, animation, dark-mode, responsive, accessibility, loading, empty, or error surface is introduced.
+- Focused validation: `npx tsx --test tests/ui/map.dom.test.ts` passes all 33 Map checks with zero failures.
 - Type validation: `npm run typecheck` passes the strict browser and test TypeScript projects.
-- Full validation: `./scripts/check.sh` passes architecture enforcement, both strict typechecks, the Vite build, and all 237 tests with zero failures.
+- Full validation: `./scripts/check.sh` passes architecture enforcement, both strict typechecks, the Vite build, and all 238 tests with zero failures.
 - Whitespace validation: `git diff --check -- .` passes.
 - Rendered validation: not due because the unit changes no valid rendered interaction and rejects only malformed mutable DOM identifiers.
 - Candidate review request: inspect the actual diff, the reproduced failure, valid class-state preservation, runtime eligibility semantics, test sufficiency, design-freeze compliance, and operational-state accuracy.
-- First independent review: one P2 evidence gap found. The focused test proves selected and connected nodes remain unmuted but must also prove a valid unconnected node remains muted.
-- Review correction: the focused test now covers a valid unconnected projected Film and asserts the positive muted branch without changing implementation code.
-- Repeated focused validation: all 32 Map checks pass with zero failures.
-- Repeated full validation: `./scripts/check.sh` passes architecture enforcement, both strict typechecks, the Vite build, and all 237 tests with zero failures.
+- First independent review: one P2 evidence gap found. The focused test selected only valid Media and therefore did not prove selected Thought behavior.
+- Review correction: the focused test now also selects the valid Thought before clearing and asserts its selected class and `aria-pressed` state.
+- Repeated focused validation: all 33 Map checks pass with zero failures.
+- Repeated full validation: `./scripts/check.sh` passes architecture enforcement, both strict typechecks, the Vite build, and all 238 tests with zero failures.
 - Repeated whitespace validation: `git diff --check -- .` passes.
-- Final independent review: a fresh `gpt-5.6-sol` high-reasoning reviewer found no P0-P3 finding after the correction. The reviewer confirmed the valid unconnected-node muted branch, invalid-target inertness, valid class-state preservation, full validation, and frozen design scope.
-- Scope guard: no copy, CSS, rendered DOM structure, persistence, projection or privacy rules, valid Map gestures, layout, design tokens, or edge-state behavior for valid targets may change.
+- Final independent review: a fresh `gpt-5.6-sol` high-reasoning reviewer found no actionable P0-P3 finding after the correction.
+- Scope guard: no copy, CSS, rendered DOM structure, persistence, projection or privacy rules, valid Map gestures, layout, design tokens, or valid selection behavior may change.
 
 ## Goal-readiness evidence
 
@@ -475,6 +472,10 @@ Routine work-unit completion does not require owner review.
   Map edge-state rendering now validates mutable node identifiers against active projected non-user nodes before graph comparison or class mutation.
   Missing, non-string, stale, user, and non-projected identifiers remain inert, while selected, connected, and muted behavior for valid Media and Thought nodes is preserved.
   Repeated focused 32-check evidence, repeated full 237-test repository validation, and a clean fresh correction review after one test-coverage finding support bounded AF-5 and AF-9 evidence while both criteria remain open.
+- AF-5 and AF-9 partial unit `af-5-map-selection-state-dom-boundary-validation` accepted on 2026-09-05.
+  Map selection-state rendering now validates mutable node identifiers against active projected non-user nodes before selected-class or `aria-pressed` mutation.
+  Missing, non-string, stale, user, and non-projected identifiers remain inert, while selected and unselected behavior for valid Media and Thought nodes, including clearing selection, is preserved.
+  Repeated focused 33-check evidence, repeated full 238-test repository validation, and a clean fresh correction review after one test-coverage finding support bounded AF-5 and AF-9 evidence while both criteria remain open.
 
 ## Administratively closed run log
 

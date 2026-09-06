@@ -1067,7 +1067,9 @@ export class ThoughtMap {
   selectNode(id: string | null): void {
     this.selectedId = id;
     this.root.querySelectorAll<HTMLElement>(".map-node").forEach((element) => {
-      const selected = element.dataset.nodeId === id;
+      const nodeId = parseNodeEventTargetId(element.dataset.nodeId, this.graph.nodes);
+      if (!nodeId) return;
+      const selected = nodeId === id;
       element.classList.toggle("is-selected", selected);
       element.setAttribute("aria-pressed", String(selected));
     });
