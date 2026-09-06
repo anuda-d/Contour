@@ -5,6 +5,7 @@ import {
 } from "../../product/taste/featured.ts";
 import type { FeaturedPersistencePort } from "../../application/taste/update-featured.ts";
 import type { FeaturedRecoveryPersistencePort } from "../../application/taste/recover-featured.ts";
+import type { FeaturedStartupPort } from "../../application/map/initialize-map-session.ts";
 import type { KeyValueStoragePort } from "../../kernel/key-value-storage.ts";
 
 export const FEATURED_STORAGE_KEY = "thought-map.prototype.featured-media.v1";
@@ -83,6 +84,14 @@ export function createFeaturedPersistencePort(
 ): FeaturedPersistencePort {
   return {
     save: (state) => saveFeaturedState(storage, state),
+  };
+}
+
+export function createFeaturedStartupPort(
+  storage: KeyValueStoragePort | null | undefined,
+): FeaturedStartupPort {
+  return {
+    load: (eligibleIds, defaultIds) => loadFeaturedState(storage, eligibleIds, [...defaultIds]),
   };
 }
 

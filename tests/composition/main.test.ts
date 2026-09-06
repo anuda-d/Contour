@@ -122,7 +122,7 @@ test("the composition root delegates selection mutation and persistence to the a
 
   assert.match(
     source,
-    /import \{\s*createSelectionPersistencePort,\s*createSelectionRecoveryPersistencePort,\s*loadSelection,\s*\} from "\.\.\/adapters\/browser\/selection-local-storage\.ts"/,
+    /import \{\s*createSelectionPersistencePort,\s*createSelectionRecoveryPersistencePort,\s*createSelectionStartupPort,\s*\} from "\.\.\/adapters\/browser\/selection-local-storage\.ts"/,
   );
   assert.match(
     source,
@@ -136,23 +136,27 @@ test("the composition root delegates selection mutation and persistence to the a
   assert.doesNotMatch(source, /saveSelection\(/);
 });
 
-test("the composition root delegates selection startup recovery persistence to the application use case", () => {
+test("the composition root delegates complete Map-session startup to the application layer", () => {
   const source = readFileSync(resolve("src/composition/main.ts"), "utf8");
 
   assert.match(
     source,
-    /import \{ recoverSelection \} from "\.\.\/application\/taste\/recover-selection\.ts"/,
+    /import \{ initializeMapSession \} from "\.\.\/application\/map\/initialize-map-session\.ts"/,
   );
-  assert.match(
-    source,
-    /createSelectionRecoveryPersistencePort,/
-  );
-  assert.match(source, /const selectionRecoveryPersistence = createSelectionRecoveryPersistencePort\(storage\);/);
-  assert.match(
-    source,
-    /if \(loaded\.recovered && loaded\.persistent\) \{\s*const recoveredSelection = recoverSelection\(selectionState, selectionRecoveryPersistence\);\s*selectionState = recoveredSelection\.state;\s*persistent = recoveredSelection\.saved;\s*\}/,
-  );
-  assert.doesNotMatch(source, /selectionPersistence\.save\(selectionState\)/);
+  assert.match(source, /const session = initializeMapSession\(\{[\s\S]*?selection: createSelectionStartupPort\(storage\),[\s\S]*?featured: createFeaturedStartupPort\(storage\),[\s\S]*?authoredThoughts: createAuthoredThoughtStartupPort\(storage\),[\s\S]*?pinnedPositions: createPinnedPositionStartupPort\(storage\),/);
+  assert.match(source, /selectionRecovery: createSelectionRecoveryPersistencePort\(storage\),/);
+  assert.match(source, /featuredRecovery: createFeaturedRecoveryPersistencePort\(storage\),/);
+  assert.match(source, /pinnedPositionRecovery: createPinnedPositionRecoveryPersistencePort\(storage\),/);
+  assert.match(source, /let selectionState = session\.selectionState;/);
+  assert.match(source, /let graph = session\.graph;/);
+  assert.doesNotMatch(source, /loadSelection\(/);
+  assert.doesNotMatch(source, /loadFeaturedState\(/);
+  assert.doesNotMatch(source, /loadDraftState\(/);
+  assert.doesNotMatch(source, /loadPinnedState\(/);
+  assert.doesNotMatch(source, /recoverSelection\(/);
+  assert.doesNotMatch(source, /recoverFeatured\(/);
+  assert.doesNotMatch(source, /recoverAuthoredThoughts\(/);
+  assert.doesNotMatch(source, /recoverPinnedPositions\(/);
 });
 
 test("the composition root delegates featured mutation and persistence to the application use case", () => {
@@ -160,7 +164,7 @@ test("the composition root delegates featured mutation and persistence to the ap
 
   assert.match(
     source,
-    /import \{\s*createFeaturedPersistencePort,\s*createFeaturedRecoveryPersistencePort,\s*loadFeaturedState,\s*\} from "\.\.\/adapters\/browser\/featured-local-storage\.ts"/,
+    /import \{\s*createFeaturedPersistencePort,\s*createFeaturedRecoveryPersistencePort,\s*createFeaturedStartupPort,\s*\} from "\.\.\/adapters\/browser\/featured-local-storage\.ts"/,
   );
   assert.match(
     source,
@@ -176,49 +180,18 @@ test("the composition root delegates featured mutation and persistence to the ap
   assert.doesNotMatch(source, /saveFeaturedState\(/);
 });
 
-test("the composition root delegates featured startup recovery persistence to the application use case", () => {
-  const source = readFileSync(resolve("src/composition/main.ts"), "utf8");
-
-  assert.match(
-    source,
-    /import \{ recoverFeatured \} from "\.\.\/application\/taste\/recover-featured\.ts"/,
-  );
-  assert.match(source, /createFeaturedRecoveryPersistencePort,/);
-  assert.match(
-    source,
-    /const featuredRecoveryPersistence = createFeaturedRecoveryPersistencePort\(storage\);/,
-  );
-  assert.match(
-    source,
-    /if \(loadedFeatured\.recovered && loadedFeatured\.persistent\) \{\s*const recoveredFeatured = recoverFeatured\(featuredState, featuredRecoveryPersistence\);\s*featuredState = recoveredFeatured\.state;\s*if \(!recoveredFeatured\.saved\) \{\s*featuredMessage = "Unavailable featured works were removed\. Changes will last for this visit\.";/,
-  );
-  assert.doesNotMatch(source, /featuredPersistence\.save\(featuredState\)/);
-});
-
 test("the composition root delegates pinned-position mutation and recovery persistence to application use cases", () => {
   const source = readFileSync(resolve("src/composition/main.ts"), "utf8");
 
   assert.match(
     source,
-    /import \{\s*createPinnedPositionPersistencePort,\s*createPinnedPositionRecoveryPersistencePort,\s*loadPinnedState,\s*\} from "\.\.\/adapters\/browser\/pinned-local-storage\.ts"/,
+    /import \{\s*createPinnedPositionPersistencePort,\s*createPinnedPositionRecoveryPersistencePort,\s*createPinnedPositionStartupPort,\s*\} from "\.\.\/adapters\/browser\/pinned-local-storage\.ts"/,
   );
   assert.match(
     source,
     /import \{\s*pinPosition,\s*unpinPosition,\s*\} from "\.\.\/application\/map\/update-pinned-positions\.ts"/,
   );
-  assert.match(
-    source,
-    /import \{ recoverPinnedPositions \} from "\.\.\/application\/map\/recover-pinned-positions\.ts"/,
-  );
   assert.match(source, /const pinnedPersistence = createPinnedPositionPersistencePort\(storage\);/);
-  assert.match(
-    source,
-    /const pinnedRecoveryPersistence = createPinnedPositionRecoveryPersistencePort\(storage\);/,
-  );
-  assert.match(
-    source,
-    /if \(loadedPinned\.recovered && loadedPinned\.persistent\) \{\s*const recoveredPinned = recoverPinnedPositions\(pinnedState, pinnedRecoveryPersistence\);\s*pinnedState = recoveredPinned\.state;/,
-  );
   assert.match(
     source,
     /const result = pinPosition\(pinnedState, id, position, pinnableIds\(\), pinnedPersistence\);/,
@@ -252,21 +225,6 @@ test("the composition root delegates authored publication and persistence to the
   assert.doesNotMatch(publishCallback, /publishDraft\(/);
   assert.doesNotMatch(publishCallback, /persistDraftState\(/);
   assert.doesNotMatch(publishCallback, /clock\.now\(/);
-});
-
-test("the composition root delegates authored startup recovery persistence to the application use case", () => {
-  const source = readFileSync(resolve("src/composition/main.ts"), "utf8");
-
-  assert.match(
-    source,
-    /import \{ recoverAuthoredThoughts \} from "\.\.\/application\/authorship\/recover-authored-thoughts\.ts"/,
-  );
-  assert.match(source, /createAuthoredThoughtRecoveryPersistencePort\(\s*storage,\s*validCatalogueIds,\s*\)/);
-  assert.match(
-    source,
-    /const persistedDrafts = recoverAuthoredThoughts\(\s*draftState,\s*authoredThoughtRecoveryPersistence,\s*\);/,
-  );
-  assert.doesNotMatch(source, /persistDraftState\(/);
 });
 
 test("the composition root retains owner-only temporary placement state across visitor preview", () => {

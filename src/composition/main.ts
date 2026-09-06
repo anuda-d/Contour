@@ -5,17 +5,14 @@ import {
 } from "../product/authorship/draft-state.ts";
 import {
   createAuthoredThoughtPersistencePort,
-  createAuthoredThoughtRecoveryPersistencePort,
   createAuthoredThoughtReloadPort,
-  loadDraftState,
+  createAuthoredThoughtStartupPort,
   THOUGHT_STORAGE_KEY,
 } from "../adapters/browser/authored-local-storage.ts";
 import { reloadAuthoredThoughts } from "../application/authorship/reload-authored-thoughts.ts";
-import { recoverAuthoredThoughts } from "../application/authorship/recover-authored-thoughts.ts";
-import { recoverSelection } from "../application/taste/recover-selection.ts";
-import { recoverFeatured } from "../application/taste/recover-featured.ts";
 import { publishAuthoredThought } from "../application/authorship/publish-authored-thought.ts";
 import { saveAuthoredDraft } from "../application/authorship/save-authored-draft.ts";
+import { initializeMapSession } from "../application/map/initialize-map-session.ts";
 import type { KeyValueStoragePort } from "../kernel/key-value-storage.ts";
 import type { ClockPort } from "../kernel/clock.ts";
 import type { IdentifierPort } from "../kernel/identifier.ts";
@@ -24,25 +21,23 @@ import type { ResizeEventPort } from "../kernel/resize-event.ts";
 import {
   createFeaturedPersistencePort,
   createFeaturedRecoveryPersistencePort,
-  loadFeaturedState,
+  createFeaturedStartupPort,
 } from "../adapters/browser/featured-local-storage.ts";
-import { getPublicMediaIds } from "../product/map/projection.ts";
 import { createMapReadModel } from "../application/map/create-map-read-model.ts";
 import { ThoughtMap } from "../ui/map.dom.ts";
 import {
   createPinnedPositionPersistencePort,
   createPinnedPositionRecoveryPersistencePort,
-  loadPinnedState,
+  createPinnedPositionStartupPort,
 } from "../adapters/browser/pinned-local-storage.ts";
 import {
   pinPosition,
   unpinPosition,
 } from "../application/map/update-pinned-positions.ts";
-import { recoverPinnedPositions } from "../application/map/recover-pinned-positions.ts";
 import {
   createSelectionPersistencePort,
   createSelectionRecoveryPersistencePort,
-  loadSelection,
+  createSelectionStartupPort,
 } from "../adapters/browser/selection-local-storage.ts";
 import {
   confirmSelection,
@@ -77,53 +72,36 @@ const resizeEvents: ResizeEventPort = createBrowserResizeEventPort(window);
 try {
   const baseGraph = getSeedGraph();
   const catalogue = getCatalogue();
-  const validCatalogueIds = new Set(catalogue.map((item) => item.id));
-  const publicMediaIds = getPublicMediaIds(baseGraph);
   const storage: KeyValueStoragePort | null = getBrowserKeyValueStorage(window);
+  const session = initializeMapSession({
+    baseGraph,
+    catalogue,
+    selection: createSelectionStartupPort(storage),
+    featured: createFeaturedStartupPort(storage),
+    authoredThoughts: createAuthoredThoughtStartupPort(storage),
+    pinnedPositions: createPinnedPositionStartupPort(storage),
+    selectionRecovery: createSelectionRecoveryPersistencePort(storage),
+    featuredRecovery: createFeaturedRecoveryPersistencePort(storage),
+    pinnedPositionRecovery: createPinnedPositionRecoveryPersistencePort(storage),
+  });
+  const validCatalogueIds = session.validCatalogueIds;
+  const publicMediaIds = session.publicMediaIds;
   const authoredThoughts = createAuthoredThoughtReloadPort(storage, validCatalogueIds);
   const authoredThoughtPersistence = createAuthoredThoughtPersistencePort(storage, validCatalogueIds);
-  const authoredThoughtRecoveryPersistence = createAuthoredThoughtRecoveryPersistencePort(
-    storage,
-    validCatalogueIds,
-  );
   const selectionPersistence = createSelectionPersistencePort(storage);
-  const selectionRecoveryPersistence = createSelectionRecoveryPersistencePort(storage);
   const featuredPersistence = createFeaturedPersistencePort(storage);
-  const featuredRecoveryPersistence = createFeaturedRecoveryPersistencePort(storage);
   const pinnedPersistence = createPinnedPositionPersistencePort(storage);
-  const pinnedRecoveryPersistence = createPinnedPositionRecoveryPersistencePort(storage);
-
-  const loaded = loadSelection(storage, validCatalogueIds);
-  const loadedFeatured = loadFeaturedState(
-    storage,
-    publicMediaIds,
-    baseGraph.profile.featuredMediaIds,
-  );
-  const loadedDrafts = loadDraftState(storage, validCatalogueIds);
-  let selectionState = loaded.state;
-  let featuredState = loadedFeatured.state;
-  let draftState = loadedDrafts.state;
-  let graph = composeGraphWithDrafts(baseGraph, draftState);
+  let selectionState = session.selectionState;
+  let featuredState = session.featuredState;
+  let draftState = session.draftState;
+  let graph = session.graph;
   const pinnableIds = () =>
     new Set(graph.nodes.filter((node) => node.type !== "user").map((node) => node.id));
-  const loadedPinned = loadPinnedState(storage, pinnableIds());
-  let pinnedState = loadedPinned.state;
-  let persistent = loaded.persistent;
-  let initialChooserMessage = loaded.storageError
-    ? "Selections will last for this visit."
-    : loaded.recovered
-      ? "Unavailable saved works were removed."
-      : "";
-  let featuredMessage = loadedFeatured.storageError
-    ? "Featured Media will last for this visit."
-    : loadedFeatured.recovered
-      ? "Unavailable featured works were removed."
-      : "";
-  let initialDraftMessage = loadedDrafts.storageError
-    ? "Private Drafts will last for this visit."
-    : (loadedDrafts.recoveryNotice ?? (loadedDrafts.recovered && !loadedDrafts.migrated))
-      ? "Saved authored Thoughts were recovered safely."
-      : "";
+  let pinnedState = session.pinnedState;
+  let persistent = session.persistent;
+  let initialChooserMessage = session.initialChooserMessage;
+  let featuredMessage = session.featuredMessage;
+  let initialDraftMessage = session.initialDraftMessage;
   let draftMessage = initialDraftMessage;
   let chooser: WorkChooser | null = null;
   let capture: ThoughtCapture<SavedThought> | null = null;
@@ -144,36 +122,6 @@ try {
     return shell;
   };
   const currentMapReadModel = () => createMapReadModel(graph, mapMode, pinnedState);
-
-  if (loaded.recovered && loaded.persistent) {
-    const recoveredSelection = recoverSelection(selectionState, selectionRecoveryPersistence);
-    selectionState = recoveredSelection.state;
-    persistent = recoveredSelection.saved;
-  }
-  if (loadedFeatured.recovered && loadedFeatured.persistent) {
-    const recoveredFeatured = recoverFeatured(featuredState, featuredRecoveryPersistence);
-    featuredState = recoveredFeatured.state;
-    if (!recoveredFeatured.saved) {
-      featuredMessage = "Unavailable featured works were removed. Changes will last for this visit.";
-    }
-  }
-  if (loadedDrafts.recovered && loadedDrafts.persistent) {
-    const persistedDrafts = recoverAuthoredThoughts(
-      draftState,
-      authoredThoughtRecoveryPersistence,
-    );
-    draftState = persistedDrafts.state;
-    graph = composeGraphWithDrafts(baseGraph, draftState);
-    if (!persistedDrafts.saved) {
-      initialDraftMessage =
-        "Saved authored Thoughts were recovered safely. Changes will last for this visit.";
-      draftMessage = initialDraftMessage;
-    }
-  }
-  if (loadedPinned.recovered && loadedPinned.persistent) {
-    const recoveredPinned = recoverPinnedPositions(pinnedState, pinnedRecoveryPersistence);
-    pinnedState = recoveredPinned.state;
-  }
 
   const openChooser = () => {
     if (chooser || capture || mapMode !== "owner") return;
