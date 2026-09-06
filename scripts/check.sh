@@ -128,9 +128,11 @@ grep -q 'No human approval is required between clean' \
 grep -q 'contour-architecture-foundation-handoff.md' \
   "$current_file" "$state_file"
 
+goal_progress=$(sed -n '/^## Goal progress$/,/^This table records accepted evidence only\.$/p' "$state_file")
+
 for criterion_number in 1 2 3 4 5 6 7 8 9 10
 do
-  awk -F '|' -v criterion="AF-${criterion_number}" '
+  printf '%s\n' "$goal_progress" | awk -F '|' -v criterion="AF-${criterion_number}" '
     {
       key = $2
       status = $3
@@ -147,7 +149,7 @@ do
       }
     }
     END { exit !(count == 1 && open + accepted == 1) }
-  ' "$state_file"
+  '
 done
 
 case "$owner_authorization" in
@@ -231,7 +233,7 @@ case "$owner_authorization" in
     grep -q '^Status: Architecture Foundation is complete\.$' README.md
     for criterion_number in 1 2 3 4 5 6 7 8 9 10
     do
-      awk -F '|' -v criterion="AF-${criterion_number}" '
+      printf '%s\n' "$goal_progress" | awk -F '|' -v criterion="AF-${criterion_number}" '
         {
           key = $2
           status = $3
@@ -242,7 +244,7 @@ case "$owner_authorization" in
           if (key ~ ("^" criterion " ") && status == "accepted" && length(evidence) >= 20) accepted += 1
         }
         END { exit !(accepted == 1) }
-      ' "$state_file"
+      '
     done
     test "$(sed -n '/^## Current run$/,/^## Owner authorization$/p' "$state_file" | wc -l | tr -d ' ')" -eq 5
     sed -n '/^## Current run$/,/^## Owner authorization$/p' "$state_file" | \
@@ -259,14 +261,14 @@ esac
 
 if test "$architecture_gate" = open
 then
-  accepted_count=$(awk -F '|' '
+  accepted_count=$(printf '%s\n' "$goal_progress" | awk -F '|' '
     {
       status = $3
       gsub(/^[[:space:]]+|[[:space:]]+$/, "", status)
       if (status == "accepted") count += 1
     }
     END { print count + 0 }
-  ' "$state_file")
+  ')
   test "$accepted_count" -eq 0
 fi
 
@@ -307,7 +309,7 @@ done
 
 criterion_status() {
   criterion_name=$1
-  awk -F '|' -v criterion="$criterion_name" '
+  printf '%s\n' "$goal_progress" | awk -F '|' -v criterion="$criterion_name" '
     {
       key = $2
       status = $3
@@ -315,7 +317,7 @@ criterion_status() {
       gsub(/^[[:space:]]+|[[:space:]]+$/, "", status)
       if (key ~ ("^" criterion " ")) print status
     }
-  ' "$state_file"
+  '
 }
 
 check_typescript_substrate() {

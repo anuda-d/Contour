@@ -12,6 +12,7 @@ import {
 import type { ClockPort } from "../../../src/kernel/clock.ts";
 import type { IdentifierPort } from "../../../src/kernel/identifier.ts";
 import type { KeyValueStoragePort } from "../../../src/kernel/key-value-storage.ts";
+import { getSeedGraph } from "../../../src/adapters/seed/prototype-seed.ts";
 import {
   createDraft,
   emptyDraftState,
@@ -20,6 +21,7 @@ import {
 } from "../../../src/product/authorship/draft-state.ts";
 
 const validIds = new Set(["left-hand", "arrival", "moonlight"]);
+const baseGraph = getSeedGraph();
 const createdAt = "2026-09-02T23:10:00.000Z";
 const clock: ClockPort = { now: () => createdAt, nowMilliseconds: () => 0 };
 const identifier: IdentifierPort = { randomUuid: () => "fixed-uuid" };
@@ -70,13 +72,20 @@ test("create uses effect ports and persists the exact new-Draft mutation", () =>
     identifier,
   };
 
-  const result = saveAuthoredDraft(emptyDraftState(), command, validIds, port);
+  const result = saveAuthoredDraft(baseGraph, emptyDraftState(), command, validIds, port);
 
   assert.equal("error" in result, false);
   if ("error" in result) return;
   assert.equal(result.message, "Private Draft added to your Map.");
   assert.equal(result.thought.id, "draft-fixed-uuid");
   assert.equal(result.thought.createdAt, createdAt);
+  assert.equal(result.graph.nodes.some((node) => node.id === result.thought.id), true);
+  assert.equal(
+    result.graph.edges.some(
+      (edge) => edge.id === `anchor-${result.thought.id}-${result.thought.primaryMediaId}`,
+    ),
+    true,
+  );
   assert.deepEqual(port.writes.map((write) => write.mutation), [
     { id: "draft-fixed-uuid", fields: [] },
   ]);
@@ -87,6 +96,7 @@ test("rejected capture commands do not persist product failures", () => {
   const state = initial();
 
   const unselected = saveAuthoredDraft(
+    baseGraph,
     emptyDraftState(),
     {
       kind: "create",
@@ -100,12 +110,14 @@ test("rejected capture commands do not persist product failures", () => {
     port,
   );
   const unavailable = saveAuthoredDraft(
+    baseGraph,
     state,
     { kind: "edit", id: "missing", statement: "A revision." },
     validIds,
     port,
   );
   const invalidBridge = saveAuthoredDraft(
+    baseGraph,
     state,
     {
       kind: "bridge",
@@ -127,6 +139,7 @@ test("rejected capture commands do not persist product failures", () => {
 test("edit preserves its successful no-op dialog behavior without persistence", () => {
   const port = persistence();
   const result = saveAuthoredDraft(
+    baseGraph,
     initial(),
     { kind: "edit", id: "draft-one", statement: "A private thought." },
     validIds,
@@ -138,12 +151,14 @@ test("edit preserves its successful no-op dialog behavior without persistence", 
   assert.equal(result.changed, false);
   assert.equal(result.persistenceSaved, null);
   assert.equal(result.message, "Draft unchanged.");
+  assert.equal(result.graph.nodes.some((node) => node.id === "draft-one"), true);
   assert.deepEqual(port.writes, []);
 });
 
 test("bridge preserves its opening statement when concurrent state changes", () => {
   const port = persistence();
   const result = saveAuthoredDraft(
+    baseGraph,
     initial(),
     {
       kind: "bridge",
@@ -169,12 +184,14 @@ test("changed edit and bridge commands persist their exact field scopes", () => 
   const bridgePort = persistence();
 
   saveAuthoredDraft(
+    baseGraph,
     initial(),
     { kind: "edit", id: "draft-one", statement: "An edited thought." },
     validIds,
     editPort,
   );
   saveAuthoredDraft(
+    baseGraph,
     initial(),
     {
       kind: "bridge",
@@ -206,6 +223,7 @@ test("whitespace-only bridge edits preserve a remote statement through the real 
   persistDraftState(storage, remote, validIds, { id: "draft-one", fields: ["statement"] });
 
   const result = saveAuthoredDraft(
+    baseGraph,
     state,
     {
       kind: "bridge",
@@ -222,6 +240,10 @@ test("whitespace-only bridge edits preserve a remote statement through the real 
   if ("error" in result) return;
   assert.equal(result.thought.statement, "Remote concurrent edit.");
   assert.equal(result.thought.secondaryMediaId, "arrival");
+  assert.equal(
+    result.graph.nodes.find((node) => node.id === "draft-one")?.statement,
+    "Remote concurrent edit.",
+  );
 });
 
 test("changed edits and bridges return merged publication state with exact protection copy", () => {
@@ -239,12 +261,14 @@ test("changed edits and bridges return merged publication state with exact prote
   const port: AuthoredThoughtPersistencePort = { save: () => ({ saved: true, state: published }) };
 
   const edit = saveAuthoredDraft(
+    baseGraph,
     state,
     { kind: "edit", id: "draft-one", statement: "A stale private revision." },
     validIds,
     port,
   );
   const bridge = saveAuthoredDraft(
+    baseGraph,
     state,
     {
       kind: "bridge",
@@ -264,6 +288,7 @@ test("changed edits and bridges return merged publication state with exact prote
 
 test("failed capture persistence retains visit-only state and exact operation copy", () => {
   const edit = saveAuthoredDraft(
+    baseGraph,
     initial(),
     { kind: "edit", id: "draft-one", statement: "A locally retained revision." },
     validIds,
@@ -271,6 +296,7 @@ test("failed capture persistence retains visit-only state and exact operation co
   );
 
   const create = saveAuthoredDraft(
+    baseGraph,
     emptyDraftState(),
     {
       kind: "create",
@@ -284,6 +310,7 @@ test("failed capture persistence retains visit-only state and exact operation co
     persistence(false),
   );
   const bridge = saveAuthoredDraft(
+    baseGraph,
     initial(),
     {
       kind: "bridge",

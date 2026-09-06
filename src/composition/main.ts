@@ -1,7 +1,7 @@
 import { getCatalogue, type CatalogueWork } from "../product/catalogue/catalogue.ts";
 import {
-  composeGraphWithDrafts,
   type Thought,
+  type ThoughtGraph,
 } from "../product/authorship/draft-state.ts";
 import {
   createAuthoredThoughtPersistencePort,
@@ -59,6 +59,7 @@ import { publishBrowserThoughtMap } from "../adapters/browser/browser-map-global
 type SavedThought = {
   saved: true;
   draft: Thought;
+  graph: ThoughtGraph;
   message: string;
 };
 
@@ -179,6 +180,7 @@ try {
       initialMessage: draft ? "" : initialDraftMessage,
       onSave: ({ draftId: editingId, primaryMediaId, statement }) => {
         const result = saveAuthoredDraft(
+          baseGraph,
           draftState,
           editingId
             ? { kind: "edit", id: editingId, statement }
@@ -200,11 +202,12 @@ try {
         return {
           saved: true,
           draft: result.thought,
+          graph: result.graph,
           message: draftMessage,
         };
       },
       onSaved: (result) => {
-        graph = composeGraphWithDrafts(baseGraph, draftState);
+        graph = result.graph;
         activeMap().updateReadModel(currentMapReadModel(), {
           focusId: result.draft.id,
           message: result.message,
@@ -241,6 +244,7 @@ try {
       bridgeMode: true,
       onSave: ({ secondaryMediaId, statement }) => {
         const result = saveAuthoredDraft(
+          baseGraph,
           draftState,
           {
             kind: "bridge",
@@ -258,11 +262,12 @@ try {
         return {
           saved: true,
           draft: result.thought,
+          graph: result.graph,
           message: draftMessage,
         };
       },
       onSaved: (result) => {
-        graph = composeGraphWithDrafts(baseGraph, draftState);
+        graph = result.graph;
         activeMap().updateReadModel(currentMapReadModel(), {
           selectId: result.draft.id,
           message: result.message,
@@ -297,16 +302,17 @@ try {
       onConnectDraft: (id) => openBridge(id),
       onPublishDraft: (id) => {
         const result = publishAuthoredThought(
+          baseGraph,
           draftState,
           id,
           validCatalogueIds,
           clock,
           authoredThoughtPersistence,
         );
-        if (!result.changed || !("message" in result)) return result;
+        if (!result.changed || !("graph" in result) || !("message" in result)) return result;
         draftState = result.state;
         draftMessage = result.message;
-        graph = composeGraphWithDrafts(baseGraph, draftState);
+        graph = result.graph;
         activeMap().updateReadModel(currentMapReadModel(), { selectId: id, message: draftMessage });
         return result;
       },

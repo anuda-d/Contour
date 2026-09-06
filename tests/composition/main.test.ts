@@ -27,7 +27,7 @@ test("the composition root wires authored capture effects through browser ports"
   assert.match(source, /import \{ saveAuthoredDraft \} from "\.\.\/application\/authorship\/save-authored-draft\.ts"/);
   assert.match(source, /kind: "create",[\s\S]*?clock,[\s\S]*?identifier,/);
   assert.match(source, /map = new ThoughtMap\(root, currentMapReadModel\(\), \{[\s\S]*?clock,/);
-  assert.match(source, /publishAuthoredThought\(\s*\n\s*draftState,\s*\n\s*id,\s*\n\s*validCatalogueIds,\s*\n\s*clock,/);
+  assert.match(source, /publishAuthoredThought\(\s*\n\s*baseGraph,\s*\n\s*draftState,\s*\n\s*id,\s*\n\s*validCatalogueIds,\s*\n\s*clock,/);
   assert.doesNotMatch(source, /crypto\.randomUUID\(\)/);
   assert.doesNotMatch(source, /new Date\(\)\.toISOString\(\)/);
 });
@@ -50,6 +50,7 @@ test("the composition root delegates authored capture mutation and persistence t
   assert.doesNotMatch(captureCallbacks, /persistDraftState\(/);
   assert.doesNotMatch(captureCallbacks, /clock\.now\(/);
   assert.doesNotMatch(captureCallbacks, /identifier\.randomUuid\(/);
+  assert.doesNotMatch(captureCallbacks, /composeGraphWithDrafts\(/);
 });
 
 test("the composition root acquires browser storage through its outward adapter", () => {
@@ -106,6 +107,7 @@ test("the composition root wires authored storage changes through a browser even
   assert.match(source, /if \(synced\.kind === "storage-unavailable"\) return;/);
   assert.match(source, /activeMap\(\)\.updateReadModel\(currentMapReadModel\(\), \{ message: synced\.message \}\);/);
   assert.doesNotMatch(source, /window\.addEventListener\("storage"/);
+  assert.doesNotMatch(source, /import \{\s*composeGraphWithDrafts/);
 });
 
 test("the composition root wires Map resize listening through a browser event port", () => {
@@ -215,7 +217,7 @@ test("the composition root delegates authored publication and persistence to the
   );
   assert.match(
     source,
-    /onPublishDraft: \(id\) => \{\s*const result = publishAuthoredThought\(\s*draftState,\s*id,\s*validCatalogueIds,\s*clock,\s*authoredThoughtPersistence,\s*\);/,
+    /onPublishDraft: \(id\) => \{\s*const result = publishAuthoredThought\(\s*baseGraph,\s*draftState,\s*id,\s*validCatalogueIds,\s*clock,\s*authoredThoughtPersistence,\s*\);/,
   );
   assert.match(source, /activeMap\(\)\.updateReadModel\(currentMapReadModel\(\), \{ selectId: id, message: draftMessage \}\);/);
 
@@ -225,6 +227,7 @@ test("the composition root delegates authored publication and persistence to the
   assert.doesNotMatch(publishCallback, /publishDraft\(/);
   assert.doesNotMatch(publishCallback, /persistDraftState\(/);
   assert.doesNotMatch(publishCallback, /clock\.now\(/);
+  assert.doesNotMatch(publishCallback, /composeGraphWithDrafts\(/);
 });
 
 test("the composition root retains owner-only temporary placement state across visitor preview", () => {
