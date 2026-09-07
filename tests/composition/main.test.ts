@@ -64,6 +64,32 @@ test("the composition root acquires browser storage through its outward adapter"
   assert.doesNotMatch(source, /window\.localStorage/);
 });
 
+test("capture entry preparation is application-owned while modal and focus behavior stay outward", () => {
+  const source = readFileSync(resolve("src/composition/main.ts"), "utf8");
+  const capture = source.slice(source.indexOf("  const openCapture ="), source.indexOf("  const openBridge ="));
+  const bridge = source.slice(source.indexOf("  const openBridge ="), source.indexOf("  if (!graph.nodes.length)"));
+
+  assert.match(source, /import \{ prepareAuthoredCapture \} from "\.\.\/application\/authorship\/prepare-authored-capture\.ts"/);
+  assert.match(capture, /prepareAuthoredCapture\(\s*draftState,\s*selectionState,\s*catalogue,\s*draftId \? \{ kind: "edit", id: draftId \} : \{ kind: "create" \},\s*\)/);
+  assert.match(bridge, /prepareAuthoredCapture\(\s*draftState,\s*selectionState,\s*catalogue,\s*\{ kind: "bridge", id: draftId \},\s*\)/);
+  assert.match(capture, /if \(prepared.kind === "unavailable"\) return;/);
+  assert.match(bridge, /if \(prepared.kind !== "bridge"\) return;/);
+  for (const entry of [capture, bridge]) {
+    assert.match(entry, /if \(capture \|\| chooser \|\| mapMode !== "owner"\) return;/);
+    assert.match(entry, /const \{ draft, works \} = prepared;/);
+    assert.match(entry, /new ThoughtCapture<SavedThought>\(appShell\(\), works,/);
+    assert.doesNotMatch(entry, /draftState\.thoughts|selectionState\.confirmed|catalogue\.(?:find|filter|map)/);
+    assert.doesNotMatch(entry, /selectedMediaIds\.(?:filter|map)/);
+  }
+  assert.match(capture, /initialMessage: draft \? "" : initialDraftMessage,/);
+  assert.match(capture, /initialDraftMessage = "";/);
+  assert.doesNotMatch(bridge, /initialDraftMessage/);
+  assert.match(capture, /focusId: result\.draft\.id,/);
+  assert.match(bridge, /selectId: result\.draft\.id,/);
+  assert.match(capture, /if \(draft\) activeMap\(\)\.focusDraftEdit\(draft\.id\);\s*else activeMap\(\)\.focusCaptureEntry\(\);/);
+  assert.match(bridge, /restoreFocus: \(\) => activeMap\(\)\.focusDraftConnect\(draft\.id\),/);
+});
+
 test("the composition root acquires the browser root through its outward adapter", () => {
   const source = readFileSync(resolve("src/composition/main.ts"), "utf8");
 

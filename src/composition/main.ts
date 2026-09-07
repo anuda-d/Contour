@@ -1,4 +1,4 @@
-import { getCatalogue, type CatalogueWork } from "../product/catalogue/catalogue.ts";
+import { getCatalogue } from "../product/catalogue/catalogue.ts";
 import {
   type Thought,
   type ThoughtGraph,
@@ -12,6 +12,7 @@ import {
 import { reloadAuthoredThoughts } from "../application/authorship/reload-authored-thoughts.ts";
 import { publishAuthoredThought } from "../application/authorship/publish-authored-thought.ts";
 import { saveAuthoredDraft } from "../application/authorship/save-authored-draft.ts";
+import { prepareAuthoredCapture } from "../application/authorship/prepare-authored-capture.ts";
 import { initializeMapSession } from "../application/map/initialize-map-session.ts";
 import type { KeyValueStoragePort } from "../kernel/key-value-storage.ts";
 import type { ClockPort } from "../kernel/clock.ts";
@@ -158,22 +159,14 @@ try {
 
   const openCapture = (draftId: string | null = null) => {
     if (capture || chooser || mapMode !== "owner") return;
-    const draft = (draftId
-      ? draftState.thoughts.find((item) => item.id === draftId && item.status === "draft")
-      : null) ?? null;
-    if (draftId && !draft) return;
-    if (!draft && !selectionState.confirmed) return;
-
-    const workIds = draft
-      ? [
-          draft.primaryMediaId,
-          ...(draft.secondaryMediaId ? [draft.secondaryMediaId] : []),
-        ]
-      : selectionState.selectedMediaIds;
-    const works = workIds
-      .map((id) => catalogue.find((item) => item.id === id))
-      .filter((item): item is CatalogueWork => item !== undefined);
-    if (!works.length) return;
+    const prepared = prepareAuthoredCapture(
+      draftState,
+      selectionState,
+      catalogue,
+      draftId ? { kind: "edit", id: draftId } : { kind: "create" },
+    );
+    if (prepared.kind === "unavailable") return;
+    const { draft, works } = prepared;
 
     capture = new ThoughtCapture<SavedThought>(appShell(), works, {
       draft,
@@ -225,19 +218,15 @@ try {
   };
 
   const openBridge = (draftId: string) => {
-    if (capture || chooser || mapMode !== "owner" || !selectionState.confirmed) return;
-    const draft = draftState.thoughts.find(
-      (thought) =>
-        thought.id === draftId && thought.status === "draft" && !thought.secondaryMediaId,
+    if (capture || chooser || mapMode !== "owner") return;
+    const prepared = prepareAuthoredCapture(
+      draftState,
+      selectionState,
+      catalogue,
+      { kind: "bridge", id: draftId },
     );
-    if (!draft) return;
-    const primaryWork = catalogue.find((item) => item.id === draft.primaryMediaId);
-    const otherWorks = selectionState.selectedMediaIds
-      .filter((id) => id !== draft.primaryMediaId)
-      .map((id) => catalogue.find((item) => item.id === id))
-      .filter((item): item is CatalogueWork => item !== undefined);
-    if (!primaryWork || !otherWorks.length) return;
-    const works = [primaryWork, ...otherWorks];
+    if (prepared.kind !== "bridge") return;
+    const { draft, works } = prepared;
 
     capture = new ThoughtCapture<SavedThought>(appShell(), works, {
       draft,
