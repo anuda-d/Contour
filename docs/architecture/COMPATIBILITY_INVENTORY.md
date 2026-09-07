@@ -38,5 +38,6 @@ Migration must construct the matching validation context before discarding any p
 
 ## Frozen walkthrough evidence
 
-`tests/acceptance-walkthrough.test.mjs` covers persisted selection, Draft creation and editing, bridge authorship, pinning, publication, featuring, reload durability, and private versus visitor projection behavior.
+`tests/acceptance-walkthrough.test.ts` covers persisted selection, Draft creation and editing, bridge authorship, pinning, publication, featuring, reload durability, and private versus visitor projection behavior.
+`tests/adapters/browser/storage-compatibility-contract.test.ts` exercises all current representations together, including normalized selection and pinned positions, authored V2-first precedence, V1 and legacy-only fallback, legacy-key retention through recovery, featured recovery defaults, authored storage-event reload, and unavailable-storage fallback.
 The focused state suites named above cover canonical round trips, legacy thought migration and precedence, malformed payload recovery, unavailable storage, and authored merge behavior.

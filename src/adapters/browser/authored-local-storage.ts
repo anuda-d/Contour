@@ -10,6 +10,7 @@ import type { KeyValueStoragePort } from "../../kernel/key-value-storage.ts";
 import type { AuthoredThoughtReloadPort } from "../../application/authorship/reload-authored-thoughts.ts";
 import type { AuthoredThoughtPersistencePort } from "../../application/authorship/authored-thought-persistence.ts";
 import type { AuthoredThoughtRecoveryPersistencePort } from "../../application/authorship/recover-authored-thoughts.ts";
+import type { AuthoredThoughtStartupPort } from "../../application/map/initialize-map-session.ts";
 
 export const THOUGHT_STORAGE_KEY = "thought-map.prototype.authored-thoughts.v2";
 export const THOUGHT_V1_STORAGE_KEY = "thought-map.prototype.authored-thoughts.v1";
@@ -77,6 +78,16 @@ export function createAuthoredThoughtReloadPort(
         ? { kind: "storage-unavailable" }
         : { kind: "loaded", state: loaded.state };
     },
+  };
+}
+
+export function createAuthoredThoughtStartupPort(
+  storage: KeyValueStoragePort | null,
+): AuthoredThoughtStartupPort {
+  return {
+    load: (validMediaIds) => loadDraftState(storage, validMediaIds),
+    recover: (state, validMediaIds) =>
+      createAuthoredThoughtRecoveryPersistencePort(storage, validMediaIds).recover(state),
   };
 }
 

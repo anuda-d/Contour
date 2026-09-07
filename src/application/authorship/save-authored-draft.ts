@@ -8,6 +8,7 @@ import {
   type ThoughtMutation,
   type ThoughtState,
 } from "../../product/authorship/draft-state.ts";
+import { buildMapGraph, type MapProjectionFacts } from "../../product/map/map-graph.ts";
 import type { AuthoredThoughtPersistencePort } from "./authored-thought-persistence.ts";
 
 type MediaIds = ReadonlySet<string> | Iterable<string>;
@@ -39,6 +40,7 @@ type SaveAuthoredDraftSuccess = Readonly<{
   persistenceSaved: boolean | null;
   state: ThoughtState;
   thought: Thought;
+  graph: ReturnType<typeof buildMapGraph>;
   message: string;
 }>;
 
@@ -71,9 +73,11 @@ const changedMutation = (
 
 /**
  * Coordinates one private authored-Thought capture command and its scoped
- * persistence, while leaving dialog flow, graph projection, and rendering outwards.
+ * persistence, and rebuildable Map graph assembly while leaving dialog flow,
+ * read-model projection, and rendering outwards.
  */
 export function saveAuthoredDraft(
+  mapFacts: MapProjectionFacts,
   state: ThoughtState,
   command: SaveAuthoredDraftCommand,
   validMediaIds: MediaIds,
@@ -108,6 +112,7 @@ export function saveAuthoredDraft(
       persistenceSaved: null,
       state: result.state,
       thought: result.draft,
+      graph: buildMapGraph(mapFacts, result.state),
       message: result.message,
     };
   }
@@ -128,6 +133,7 @@ export function saveAuthoredDraft(
     persistenceSaved: persisted.saved,
     state: persisted.state,
     thought,
+    graph: buildMapGraph(mapFacts, persisted.state),
     message,
   };
 }

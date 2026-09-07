@@ -1,5 +1,6 @@
 import type { ResizeEventPort } from "../kernel/resize-event.ts";
 import type { ClockPort } from "../kernel/clock.ts";
+import type { MapReadModel } from "../application/map/create-map-read-model.ts";
 
 type MapMode = "owner" | "visitor";
 
@@ -57,12 +58,6 @@ function isPoint(point: Point | undefined): point is Point {
   return point !== undefined;
 }
 
-function datasetValue(element: HTMLElement, key: string): string {
-  const value = element.dataset[key];
-  if (!value) throw new Error(`Expected Map data attribute: ${key}`);
-  return value;
-}
-
 export const parsePublishDraftId = (
   value: unknown,
   nodes: readonly MapNode[],
@@ -82,6 +77,54 @@ export const submitPublishDraft = (
   const id = parsePublishDraftId(value, nodes, canCaptureThoughts);
   if (!id || !onPublishDraft) return null;
   onPublishDraft(id);
+  return id;
+};
+
+export const parseEditDraftId = (
+  value: unknown,
+  nodes: readonly MapNode[],
+  canCaptureThoughts: boolean,
+): string | null => {
+  if (!canCaptureThoughts || typeof value !== "string") return null;
+  const node = nodes.find((item) => item.id === value);
+  return node?.type === "thought" && node.status === "draft" ? node.id : null;
+};
+
+export const submitEditDraft = (
+  value: unknown,
+  nodes: readonly MapNode[],
+  canCaptureThoughts: boolean,
+  onEditDraft: ((id: string) => void) | undefined,
+): string | null => {
+  const id = parseEditDraftId(value, nodes, canCaptureThoughts);
+  if (!id || !onEditDraft) return null;
+  onEditDraft(id);
+  return id;
+};
+
+export const parseConnectDraftId = (
+  value: unknown,
+  nodes: readonly MapNode[],
+  canCaptureThoughts: boolean,
+  selectionConfirmed: boolean,
+): string | null => {
+  if (!canCaptureThoughts || !selectionConfirmed || typeof value !== "string") return null;
+  const node = nodes.find((item) => item.id === value);
+  return node?.type === "thought" && node.status === "draft" && node.anchors.length === 1
+    ? node.id
+    : null;
+};
+
+export const submitConnectDraft = (
+  value: unknown,
+  nodes: readonly MapNode[],
+  canCaptureThoughts: boolean,
+  selectionConfirmed: boolean,
+  onConnectDraft: ((id: string) => void) | undefined,
+): string | null => {
+  const id = parseConnectDraftId(value, nodes, canCaptureThoughts, selectionConfirmed);
+  if (!id || !onConnectDraft) return null;
+  onConnectDraft(id);
   return id;
 };
 
@@ -106,12 +149,75 @@ export const submitFeatureToggle = (
   return id && result ? { id, result } : null;
 };
 
+export const parsePositionActionId = (
+  value: unknown,
+  nodes: readonly MapNode[],
+  canShapeNodes: boolean,
+): string | null => {
+  if (!canShapeNodes || typeof value !== "string") return null;
+  const node = nodes.find((item) => item.id === value);
+  return node && node.type !== "user" ? node.id : null;
+};
+
+export const parseNodeEventTargetId = (
+  value: unknown,
+  nodes: readonly MapNode[],
+): string | null => {
+  if (typeof value !== "string") return null;
+  const node = nodes.find((item) => item.id === value);
+  return node && node.type !== "user" ? node.id : null;
+};
+
+export const parseOrbitFocusId = (
+  value: unknown,
+  nodes: readonly MapNode[],
+): string | null => {
+  if (typeof value !== "string") return null;
+  const node = nodes.find((item) => item.id === value);
+  return node?.type === "media" ? node.id : null;
+};
+
+export const submitOrbitFocus = (
+  value: unknown,
+  nodes: readonly MapNode[],
+  onFocus: (id: string) => void,
+): string | null => {
+  const id = parseOrbitFocusId(value, nodes);
+  if (!id) return null;
+  onFocus(id);
+  return id;
+};
+
+export const submitDetailFocus = (
+  value: unknown,
+  nodes: readonly MapNode[],
+  onFocus: (id: string) => void,
+): string | null => {
+  const id = parseNodeEventTargetId(value, nodes);
+  if (!id) return null;
+  onFocus(id);
+  return id;
+};
+
+export const submitPositionAction = (
+  value: unknown,
+  nodes: readonly MapNode[],
+  canShapeNodes: boolean,
+  isActionable: (id: string) => boolean,
+  isPinned: (id: string) => boolean,
+  positionForId: (id: string) => Point,
+  onPinPosition: ((id: string, position: Point) => CallbackResult<PinnedState> | undefined) | undefined,
+  onUnpinPosition: ((id: string) => CallbackResult<PinnedState> | undefined) | undefined,
+): { id: string; result: CallbackResult<PinnedState> } | null => {
+  const id = parsePositionActionId(value, nodes, canShapeNodes);
+  if (!id || !isActionable(id)) return null;
+  const result = isPinned(id) ? onUnpinPosition?.(id) : onPinPosition?.(id, positionForId(id));
+  return result ? { id, result } : null;
+};
+
 export type MapPresentation = {
   modes: { owner: MapMode; visitor: MapMode };
-  normalizeMode: (mode: string | undefined) => MapMode;
-  getModeCapabilities: (mode: MapMode) => MapCapabilities;
-  projectGraphForMode: (graph: unknown, mode: MapMode) => MapGraph;
-  layoutGraph: (graph: unknown, world: World) => Positions;
+  readGraph: (graph: unknown) => MapGraph;
   resolvePositions: (
     graph: unknown,
     generatedPositions: Positions,
@@ -123,12 +229,10 @@ type MapOptions = {
   presentation: MapPresentation;
   clock: ClockPort;
   resizeEvents: ResizeEventPort;
-  mode?: string;
   selectionState?: SelectionState;
   featuredState?: FeaturedState;
   featuredMessage?: string;
   draftMessage?: string;
-  pinnedState?: PinnedState;
   pinnedMessage?: string;
   pinnedMessageId?: string | null;
   onOpenChooser?: () => void;
@@ -139,7 +243,11 @@ type MapOptions = {
   onToggleFeatured?: (id: string) => CallbackResult<FeaturedState> | undefined;
   onPinPosition?: (id: string, position: Point) => CallbackResult<PinnedState> | undefined;
   onUnpinPosition?: (id: string) => CallbackResult<PinnedState> | undefined;
-  onModeChange?: (mode: MapMode) => void;
+  onModeChange?: (
+    mode: MapMode,
+    currentPositions: Positions,
+    currentMovedNodeIds: readonly string[],
+  ) => void;
 };
 
 const WORLD = { width: 1080, height: 720 };
@@ -191,9 +299,18 @@ export function mergeGraphPositions(
   );
 }
 
+export function resolveTemporaryMovedNodes(
+  movedNodeIds: Iterable<string>,
+  positions: Positions,
+  pinnedPositions: Positions,
+): Set<string> {
+  return new Set(
+    [...movedNodeIds].filter((id) => positions[id] && !Object.hasOwn(pinnedPositions, id)),
+  );
+}
+
 export class ThoughtMap {
   root: HTMLElement;
-  fullGraph: unknown;
   options: MapOptions;
   presentation: MapPresentation;
   mode: MapMode;
@@ -201,6 +318,7 @@ export class ThoughtMap {
   graph: MapGraph;
   nodeById: Map<string, MapNode>;
   generatedPositions: Positions;
+  pinnedPositions: Positions;
   positions: Positions;
   view: Point & { scale: number };
   selectedId: string | null;
@@ -226,21 +344,21 @@ export class ThoughtMap {
   edgeLayer!: HTMLElement;
   detailPanel!: HTMLElement;
 
-  constructor(root: HTMLElement, graph: unknown, options: MapOptions) {
+  constructor(root: HTMLElement, readModel: MapReadModel, options: MapOptions) {
     this.root = root;
-    this.fullGraph = graph;
     this.options = options;
     this.presentation = options.presentation;
-    this.mode = this.presentation.normalizeMode(options.mode);
-    this.capabilities = this.presentation.getModeCapabilities(this.mode);
-    this.graph = this.presentation.projectGraphForMode(this.fullGraph, this.mode);
+    this.mode = readModel.mode;
+    this.capabilities = readModel.capabilities;
+    this.graph = this.presentation.readGraph(readModel.graph);
     this.nodeById = new Map(this.graph.nodes.map((node) => [node.id, node]));
-    this.generatedPositions = this.presentation.layoutGraph(graph, WORLD);
+    this.generatedPositions = readModel.generatedPositions;
+    this.pinnedPositions = readModel.pinnedPositions;
     this.positions = this.presentation.resolvePositions(
-      graph,
+      this.graph,
       this.generatedPositions,
       {},
-      options.pinnedState?.pinnedPositions ?? {},
+      this.pinnedPositions,
     );
     this.view = { x: 0, y: 0, scale: 0.8 };
     this.selectedId = null;
@@ -454,7 +572,9 @@ export class ThoughtMap {
 
   bindOrbitEvents() {
     this.root.querySelectorAll<HTMLElement>("[data-orbit-focus]").forEach((element) => {
-      element.addEventListener("click", () => this.focusNode(datasetValue(element, "orbitFocus")));
+      element.addEventListener("click", () => {
+        submitOrbitFocus(element.dataset.orbitFocus, this.graph.nodes, (id) => this.focusNode(id));
+      });
     });
   }
 
@@ -560,7 +680,8 @@ export class ThoughtMap {
       .join("");
 
     this.root.querySelectorAll<HTMLElement>(".map-node").forEach((element) => {
-      const id = datasetValue(element, "nodeId");
+      const id = parseNodeEventTargetId(element.dataset.nodeId, this.graph.nodes);
+      if (!id) return;
       const connected = this.graph.edges.some(
         (edge) =>
           (edge.source === this.selectedId && edge.target === id) ||
@@ -673,7 +794,7 @@ export class ThoughtMap {
   }
 
   isPinned(id: string): boolean {
-    return Object.hasOwn(this.options.pinnedState?.pinnedPositions ?? {}, id);
+    return Object.hasOwn(this.pinnedPositions, id);
   }
 
   clearPinnedMessage(id: string): void {
@@ -694,11 +815,22 @@ export class ThoughtMap {
     });
     const edit = this.detailPanel.querySelector<HTMLElement>("[data-edit-draft]");
     edit?.addEventListener("click", () => {
-      this.options.onEditDraft?.(datasetValue(edit, "editDraft"));
+      submitEditDraft(
+        edit.dataset.editDraft,
+        this.graph.nodes,
+        this.capabilities.canCaptureThoughts,
+        this.options.onEditDraft,
+      );
     });
     const connect = this.detailPanel.querySelector<HTMLElement>("[data-connect-draft]");
     connect?.addEventListener("click", () => {
-      this.options.onConnectDraft?.(datasetValue(connect, "connectDraft"));
+      submitConnectDraft(
+        connect.dataset.connectDraft,
+        this.graph.nodes,
+        this.capabilities.canCaptureThoughts,
+        Boolean(this.options.selectionState?.confirmed),
+        this.options.onConnectDraft,
+      );
     });
     const feature = this.detailPanel.querySelector<HTMLElement>("[data-feature-toggle]");
     feature?.addEventListener("click", () => {
@@ -713,16 +845,22 @@ export class ThoughtMap {
     });
     const position = this.detailPanel.querySelector<HTMLElement>("[data-position-action]");
     position?.addEventListener("click", () => {
-      const id = datasetValue(position, "positionAction");
-      const result = this.isPinned(id)
-        ? this.options.onUnpinPosition?.(id)
-        : this.options.onPinPosition?.(id, this.positions[id]!);
-      if (!result) return;
-      this.updatePinnedState(result.state, result.message, id);
+      const submitted = submitPositionAction(
+        position.dataset.positionAction,
+        this.graph.nodes,
+        this.capabilities.canShapeNodes,
+        (id) => this.isPinned(id) || this.movedNodes.has(id),
+        (id) => this.isPinned(id),
+        (id) => this.positions[id]!,
+        this.options.onPinPosition,
+        this.options.onUnpinPosition,
+      );
+      if (!submitted) return;
+      this.updatePinnedState(submitted.result.state, submitted.result.message, submitted.id);
     });
     const focus = this.detailPanel.querySelector<HTMLElement>("[data-detail-focus]");
     focus?.addEventListener("click", () => {
-      this.focusNode(datasetValue(focus, "detailFocus"));
+      submitDetailFocus(focus.dataset.detailFocus, this.graph.nodes, (id) => this.focusNode(id));
     });
     this.detailPanel.querySelector("[data-detail-close]")?.addEventListener("click", () => {
       this.selectNode(null);
@@ -738,19 +876,19 @@ export class ThoughtMap {
       this.options.onOpenCapture?.();
     });
     this.root.querySelector("[data-mode-enter]")?.addEventListener("click", () => {
-      this.requestMode(this.presentation.modes.visitor);
+      this.requestMode("visitor");
     });
     this.root.querySelector("[data-mode-exit]")?.addEventListener("click", () => {
-      this.requestMode(this.presentation.modes.owner);
+      this.requestMode("owner");
     });
     requiredElement<HTMLElement>(this.root, '[data-control="zoom-in"]').addEventListener("click", () => this.zoomBy(1.18));
     requiredElement<HTMLElement>(this.root, '[data-control="zoom-out"]').addEventListener("click", () => this.zoomBy(0.84));
     this.root.querySelector('[data-control="reset"]')?.addEventListener("click", () => {
       this.positions = this.presentation.resolvePositions(
-        this.fullGraph,
+        this.graph,
         this.generatedPositions,
         {},
-        this.options.pinnedState?.pinnedPositions ?? {},
+        this.pinnedPositions,
       );
       this.movedNodes.clear();
       this.renderRegions();
@@ -821,7 +959,7 @@ export class ThoughtMap {
 
   updatePinnedState(state: PinnedState, message = "", focusId: string | null = null): void {
     if (!focusId) return;
-    this.options.pinnedState = state;
+    this.pinnedPositions = { ...state.pinnedPositions };
     this.options.pinnedMessage = message;
     this.options.pinnedMessageId = focusId;
     const pinnedPosition = state.pinnedPositions[focusId];
@@ -861,32 +999,61 @@ export class ThoughtMap {
     this.detailPanel.querySelector<HTMLElement>("[data-connect-draft]")?.focus();
   }
 
-  updateGraph(
-    graph: unknown,
-    { focusId = null, selectId = null, message = "" }: { focusId?: string | null; selectId?: string | null; message?: string } = {},
+  updateReadModel(
+    readModel: MapReadModel,
+    {
+      focusId = null,
+      selectId = null,
+      message,
+      currentPositions,
+      currentMovedNodeIds,
+    }: {
+      focusId?: string | null;
+      selectId?: string | null;
+      message?: string;
+      currentPositions?: Positions;
+      currentMovedNodeIds?: readonly string[];
+    } = {},
   ): void {
-    const generatedPositions = this.presentation.layoutGraph(graph, WORLD);
+    const modeChanged = readModel.mode !== this.mode;
+    const graph = this.presentation.readGraph(readModel.graph);
+    const generatedPositions = readModel.generatedPositions;
     const positions = this.presentation.resolvePositions(
       graph,
       generatedPositions,
-      this.positions,
-      this.options.pinnedState?.pinnedPositions ?? {},
+      currentPositions ?? this.positions,
+      readModel.pinnedPositions,
     );
-    this.fullGraph = graph;
+    this.mode = readModel.mode;
+    this.capabilities = readModel.capabilities;
     this.generatedPositions = generatedPositions;
+    this.pinnedPositions = readModel.pinnedPositions;
     this.positions = positions;
-    this.options.draftMessage = message;
-    this.graph = this.presentation.projectGraphForMode(this.fullGraph, this.mode);
+    if (message !== undefined) this.options.draftMessage = message;
+    this.graph = graph;
     this.nodeById = new Map(this.graph.nodes.map((node) => [node.id, node]));
-    this.movedNodes = new Set(
-      [...this.movedNodes].filter((id) => positions[id] && !this.isPinned(id)),
+    this.movedNodes = resolveTemporaryMovedNodes(
+      currentMovedNodeIds ?? this.movedNodes,
+      positions,
+      this.pinnedPositions,
     );
     if (selectId && this.nodeById.has(selectId)) this.selectedId = selectId;
     if (!this.selectedId || !this.nodeById.has(this.selectedId)) this.selectedId = null;
+    if (modeChanged) {
+      this.activePointers.clear();
+      this.panGesture = null;
+      this.pinchGesture = null;
+    }
     this.render();
     this.bindEvents();
     this.applyTransform();
-    if (focusId && this.nodeById.has(focusId)) {
+    if (modeChanged) {
+      requestAnimationFrame(() => {
+        this.root
+          .querySelector<HTMLElement>(this.mode === "visitor" ? "[data-mode-exit]" : "[data-mode-enter]")
+          ?.focus();
+      });
+    } else if (focusId && this.nodeById.has(focusId)) {
       requestAnimationFrame(() => {
         this.focusNode(focusId);
         this.root.querySelector<HTMLElement>(`[data-node-id="${CSS.escape(focusId)}"]`)?.focus();
@@ -899,33 +1066,17 @@ export class ThoughtMap {
   }
 
   requestMode(mode: MapMode): void {
-    if (this.options.onModeChange) this.options.onModeChange(mode);
-    else this.setMode(mode);
-  }
-
-  setMode(mode: string): void {
-    const nextMode = this.presentation.normalizeMode(mode);
-    if (nextMode === this.mode) return;
-    this.mode = nextMode;
-    this.capabilities = this.presentation.getModeCapabilities(nextMode);
-    this.graph = this.presentation.projectGraphForMode(this.fullGraph, nextMode);
-    this.nodeById = new Map(this.graph.nodes.map((node) => [node.id, node]));
-    if (!this.selectedId || !this.nodeById.has(this.selectedId)) this.selectedId = null;
-    this.activePointers.clear();
-    this.panGesture = null;
-    this.pinchGesture = null;
-    this.render();
-    this.bindEvents();
-    this.applyTransform();
-    requestAnimationFrame(() => {
-      this.root
-        .querySelector<HTMLElement>(nextMode === this.presentation.modes.visitor ? "[data-mode-exit]" : "[data-mode-enter]")
-        ?.focus();
-    });
+    if (mode === this.mode) return;
+    this.options.onModeChange?.(
+      mode,
+      Object.fromEntries(Object.entries(this.positions).map(([id, point]) => [id, { ...point }])),
+      [...this.movedNodes],
+    );
   }
 
   handleNodeClick(event: MouseEvent, element: HTMLElement): void {
-    const id = datasetValue(element, "nodeId");
+    const id = parseNodeEventTargetId(element.dataset.nodeId, this.graph.nodes);
+    if (!id) return;
     if (this.suppressedClick?.id === id && this.options.clock.nowMilliseconds() <= this.suppressedClick.until) {
       event.preventDefault();
       this.suppressedClick = null;
@@ -938,7 +1089,9 @@ export class ThoughtMap {
   selectNode(id: string | null): void {
     this.selectedId = id;
     this.root.querySelectorAll<HTMLElement>(".map-node").forEach((element) => {
-      const selected = element.dataset.nodeId === id;
+      const nodeId = parseNodeEventTargetId(element.dataset.nodeId, this.graph.nodes);
+      if (!nodeId) return;
+      const selected = nodeId === id;
       element.classList.toggle("is-selected", selected);
       element.setAttribute("aria-pressed", String(selected));
     });
@@ -1106,7 +1259,8 @@ export class ThoughtMap {
   }
 
   startNodeDrag(event: PointerEvent, element: HTMLElement): void {
-    const id = datasetValue(element, "nodeId");
+    const id = parseNodeEventTargetId(element.dataset.nodeId, this.graph.nodes);
+    if (!id) return;
     if (!this.capabilities.canShapeNodes || this.isPinned(id)) return;
     if (event.pointerType === "mouse" && event.button !== 0) return;
     event.stopPropagation();
@@ -1155,7 +1309,11 @@ export class ThoughtMap {
   }
 
   moveNodeByKeyboard(event: KeyboardEvent, element: HTMLElement): void {
-    const id = datasetValue(element, "nodeId");
+    const id = parseNodeEventTargetId(element.dataset.nodeId, this.graph.nodes);
+    if (!id) {
+      event.stopPropagation();
+      return;
+    }
     if (!this.capabilities.canShapeNodes || this.isPinned(id)) return;
     const directions: Record<string, readonly [number, number]> = {
       ArrowLeft: [-1, 0],

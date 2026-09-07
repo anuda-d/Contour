@@ -2,7 +2,6 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   THOUGHT_VERSION,
-  composeGraphWithDrafts,
   connectDraft,
   createDraft,
   editDraft,
@@ -10,7 +9,7 @@ import {
   mergeDraftStates,
   normalizeDraftState,
   publishDraft,
-  type ThoughtGraph,
+  getPublishedMediaIds,
 } from "../../../src/product/authorship/draft-state.ts";
 
 const validIds = new Set(["left-hand", "arrival"]);
@@ -74,13 +73,11 @@ test("merge is immutable, preserves independent fields, and makes publication ir
   assert.notEqual(stale, published);
 });
 
-test("graph composition is rebuildable output with authored anchor meaning", () => {
-  const baseGraph: ThoughtGraph = { profile: { id: "person" }, nodes: [{ id: "person", type: "user" }, { id: "left-hand", type: "media" }], edges: [] };
+test("published Media eligibility comes only from authored facts", () => {
   const state = createDraft(emptyDraftState(), input, validIds).state;
-  const graph = composeGraphWithDrafts(baseGraph, state);
-  assert.equal(baseGraph.nodes.some((node) => node.id === input.id), false);
-  assert.deepEqual(graph.nodes.find((node) => node.id === input.id)?.anchors, ["left-hand"]);
-  assert.ok(graph.edges.some((edge) => edge.id === `authored-${input.id}`));
+  assert.deepEqual([...getPublishedMediaIds([], state)], []);
+  const published = publishDraft(state, input.id, "2026-08-24T09:30:00.000Z", validIds).state;
+  assert.deepEqual([...getPublishedMediaIds([{ id: "seed", status: "published", statement: "Seed", primaryMediaId: "arrival" }], published)], ["arrival", "left-hand"]);
 });
 
 test("editing preserves its anchor and timestamp without mutating the prior Draft", () => {
@@ -117,17 +114,4 @@ test("field-scoped merge removes only a deliberately cleared bridge anchor", () 
   const merged = mergeDraftStates(initial, withoutBridge, { id: input.id, fields: ["secondaryMediaId"] });
   assert.equal(merged.thoughts[0]!.secondaryMediaId, undefined);
   assert.equal(merged.thoughts[0]!.statement, input.statement.trim());
-});
-
-test("published composition preserves Thought identity and publication metadata", () => {
-  const published = publishDraft(
-    createDraft(emptyDraftState(), input, validIds).state,
-    input.id,
-    "2026-08-24T09:30:00.000Z",
-    validIds,
-  ).state;
-  const graph = composeGraphWithDrafts({ profile: {}, nodes: [], edges: [] }, published);
-  const thought = graph.nodes.find((node) => node.id === input.id);
-  assert.equal(thought?.status, "published");
-  assert.equal(thought?.publishedAt, "2026-08-24T09:30:00.000Z");
 });

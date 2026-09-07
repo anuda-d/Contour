@@ -1,3 +1,4 @@
+// Deterministic spatial inputs remain separate from authored relationship meaning.
 const TYPE_RADIUS = {
   user: 0,
   thought: 205,

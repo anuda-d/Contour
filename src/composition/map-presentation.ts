@@ -1,10 +1,4 @@
-import {
-  MAP_MODES,
-  getModeCapabilities,
-  normalizeMapMode,
-  projectGraphForMode,
-} from "../graph-projection.ts";
-import { layoutGraph } from "../layout.ts";
+import { MAP_MODES } from "../product/map/projection.ts";
 import { resolvePositions } from "../product/map/pinned-positions.ts";
 import type {
   MapEdge,
@@ -99,13 +93,7 @@ function mapGraph(value: unknown): MapGraph {
 export function createMapPresentation(): MapPresentation {
   return {
     modes: MAP_MODES,
-    normalizeMode: normalizeMapMode,
-    getModeCapabilities,
-    projectGraphForMode: (graph, mode) => mapGraph(projectGraphForMode(mapGraph(graph), mode)),
-    layoutGraph: (graph, world) => {
-      const map = mapGraph(graph);
-      return layoutGraph(map.nodes, map.edges, world);
-    },
+    readGraph: mapGraph,
     resolvePositions: (graph, generatedPositions, currentPositions, pinnedPositions = {}) => {
       const map = mapGraph(graph);
       const resolved = resolvePositions(map.nodes, generatedPositions, currentPositions, pinnedPositions);

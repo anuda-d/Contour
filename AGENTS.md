@@ -20,8 +20,7 @@ repository. Product direction belongs to the owner.
   and implementation state as authoritative.
 - Standing authorization permits successive bounded units only inside the
   approved goal. It does not authorize a new goal or broader product direction.
-- Read the active goal and implementation state, then locate only enough code
-  and tests to select one smallest useful goal gap.
+- Read the active goal and implementation state, complete any due completion audit, then locate enough code and tests to select one coherent responsibility that eliminates a concrete acceptance gap.
 - Read only the product specification relevant to that selected task.
 - Treat unresolved product questions as owner decision boundaries, not a backlog.
 - If an owner decision is pending, do not select or begin another work unit.
@@ -67,7 +66,7 @@ repository. Product direction belongs to the owner.
 
 ## While implementing
 
-- State the criterion, intended behavior, and evidence before editing.
+- State the criterion, responsibility, acceptance gap to eliminate, completion condition, and evidence before editing.
 - Use one to three read-only explorer subagents for independent investigation
   before implementation. They return concise evidence and never edit files.
 - For Map presentation, interaction, visibility, responsive layout, design
@@ -77,8 +76,11 @@ repository. Product direction belongs to the owner.
   than mechanically importing landing-page patterns.
 - The orchestrator is the sole implementation writer and owns selection,
   integration, validation, and completion judgment.
-- Prefer the smallest end-to-end behavior or directly testable architecture
-  claim authorized by the active goal.
+- Complete one bounded end-to-end behavior or architectural responsibility authorized by the active goal.
+- Group related entry paths, validators, adapters, helpers, imports, and tests needed to close that responsibility in the same unit.
+  A single handler, wrapper, or file move is a standalone unit only when it closes a concrete acceptance gap or is an indispensable prerequisite justified by dependency or preservation risk.
+- Refresh the touched criteria's remaining blockers at acceptance.
+  Audit all open criteria before the next selection when no audit exists or three implementation units have been accepted since the audit, following `docs/main/DEVELOPMENT_LOOP.md`.
 - Keep spatial graph movement distinct from semantic authorship.
 - Preserve clear private Draft and public Published boundaries.
 - Avoid speculative infrastructure for later social or production goals.
@@ -116,14 +118,14 @@ repository. Product direction belongs to the owner.
 - Select or continue the next unit only in a newly created fresh chat.
 - Independent review is required. A reviewer reports findings but does not make
   product decisions.
+- Independent review checks that the responsibility's completion condition is met and the remaining acceptance blockers are explicit, as well as implementation correctness.
 - Record candidate evidence before independent review so the reviewer inspects
   the claim as well as the implementation. Focused and repository validation
   plus a clean fresh independent review permit local acceptance and commit;
   full rendered click-through evidence is required only when the visual
   checkpoint is due.
 - After a unit is committed, hand off and stop.
-  A fresh chat may select the next smallest justified gap inside the same goal
-  only while standing authorization remains active.
+  A fresh chat may select one coherent responsibility inside the same goal only while standing authorization remains active and any due completion audit has been performed.
 - During an authorized scheduled window, an accepted unit may create exactly one
   fresh successor task in the same project after its handoff.
   The current task still stops and never selects the successor's unit.

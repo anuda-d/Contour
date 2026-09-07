@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { layoutGraph } from "../src/layout.ts";
-import { getSeedGraph } from "../src/adapters/seed/prototype-seed.ts";
+import { layoutGraph } from "../../../src/product/map/layout.ts";
+import { getPrototypeMapGraph } from "../../support/prototype-map.ts";
 
 test("the generated layout is deterministic and finite", () => {
-  const graph = getSeedGraph();
+  const graph = getPrototypeMapGraph();
   const first = layoutGraph(graph.nodes, graph.edges);
   const second = layoutGraph(graph.nodes, graph.edges);
 
@@ -16,7 +16,7 @@ test("the generated layout is deterministic and finite", () => {
 });
 
 test("the accepted seed keeps its generated coordinates", () => {
-  const graph = getSeedGraph();
+  const graph = getPrototypeMapGraph();
 
   assert.deepEqual(layoutGraph(graph.nodes, graph.edges), {
     mira: { x: 0, y: 0 },
@@ -34,13 +34,13 @@ test("the accepted seed keeps its generated coordinates", () => {
 });
 
 test("the owner remains the stable centre", () => {
-  const graph = getSeedGraph();
+  const graph = getPrototypeMapGraph();
   const positions = layoutGraph(graph.nodes, graph.edges);
   assert.deepEqual(positions.mira, { x: 0, y: 0 });
 });
 
 test("authored relationships affect the generated shape", () => {
-  const graph = getSeedGraph();
+  const graph = getPrototypeMapGraph();
   const connected = layoutGraph(graph.nodes, graph.edges);
   const withoutOneAnchor = layoutGraph(
     graph.nodes,
@@ -52,7 +52,7 @@ test("authored relationships affect the generated shape", () => {
 });
 
 test("the generated starting shape keeps node centres visibly separated", () => {
-  const graph = getSeedGraph();
+  const graph = getPrototypeMapGraph();
   const positions = layoutGraph(graph.nodes, graph.edges);
 
   graph.nodes.forEach((node, index) => {

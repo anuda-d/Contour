@@ -28,17 +28,38 @@ Status: active shared state; standing scheduled owner authorization.
 | --- | --- | --- |
 | AF-1 Enforced architecture contract | accepted | Architecture decision records, six-key compatibility inventory, and the checked import-boundary gate were accepted after 30 focused and 112 repository tests plus clean fresh review. |
 | AF-2 Complete strict TypeScript | accepted | Every maintained application source and automated test is strict TypeScript. Separate browser and Node-test typechecks, the Vite build, and the checked `src/composition/main.ts` native entrypoint are accepted with no maintained application JavaScript mirror. |
-| AF-3 Deep product modules | open | Partial: authored Thought lifecycle, anchors, publication, and immutable merge now live in a cohesive strict TypeScript product module; other product facts remain in prototype seams. |
-| AF-4 Application use cases | open | Partial: authored-Thought reload, startup recovery, capture, and publication, deliberate-selection, featured-Media, and pinned-position startup recovery, selection toggle or confirmation, public featured-Media toggle, and spatial pin or unpin commands now use screen-neutral application outcomes through specific typed persistence ports; other current workflows remain composition-owned. |
-| AF-5 Isolated effects and validated boundaries | open | Partial: browser localStorage, DOM-root acquisition, Map resize listening, Map drag-click suppression timing, the existing Map debug-global publication, storage adapters, wall-clock access, UUID generation, authored-Thought cross-tab events, authored, selection, featured-Media, and pinned-position startup recovery, capture, reload, and publication persistence, selection persistence, featured-Media persistence, pinned-position persistence, prototype-seed and Thought Capture form runtime validation, and Featured Media Map callback validation now cross narrow inward boundaries; other browser events and form-input boundaries remain open. |
-| AF-6 Explicit projections and privacy | open | Partial: the owner and visitor graph projection now has strict TypeScript ownership and focused evidence for Draft and draft-only Media exclusion, publication-derived public eligibility, dangling-edge filtering, and owner capability removal; application-level structurally separate read models remain open. |
-| AF-7 Durable compatibility | open | Partial: authored V2, V1, and legacy-Draft browser storage now has typed precedence, normalization, migration, recovery, and read-merge-write evidence; other persisted state remains to be completed. |
+| AF-3 Deep product modules | accepted | Typed identity, catalogue, and seeded or persisted authored facts now have explicit owners, while one Map builder deterministically derives nodes and relationship edges for projection and layout. Focused fact, projection, application, and walkthrough evidence plus clean fresh review confirm no generic graph remains product authority. |
+| AF-4 Application use cases | accepted | Screen-neutral startup and recovery, create/edit/bridge preparation, selection and featured-Media commands, pin/unpin commands, authored capture/publication/reload state-plus-graph outcomes, and structural Map reads coordinate every current workflow through explicit outcomes and typed ports. Focused application, composition, and form evidence plus clean criterion-wide independent review confirm that only presentation and concrete effect wiring remain outward. |
+| AF-5 Isolated effects and validated boundaries | open | Partial: browser localStorage, DOM-root acquisition, Map resize listening, Map drag-click suppression timing, the existing Map debug-global publication, storage adapters, wall-clock access, UUID generation, authored-Thought cross-tab events, complete selection, featured-Media, authored-Thought, and pinned-position startup loading and recovery, capture, reload, and publication persistence, prototype-seed and Thought Capture form runtime validation, and Publish, Edit, Connect another work, Featured Media, position-action, node-event, Focus-control, edge-state, and selection-state Map validation now cross narrow inward boundaries; other browser events and form-input boundaries remain open. |
+| AF-6 Explicit projections and privacy | accepted | Application-created owner and visitor Map read models now structurally separate rendered graph data. Visitor Map rendering receives no Draft or draft-only Media, generated positions, or pins, while public positions preserve full-graph layout influence and owner-only transient placement remains outside visitor rendering. |
+| AF-7 Durable compatibility | accepted | Six current browser-storage key shapes across selection, authored Thought V2/V1/legacy Draft precedence, featured Media, and pinned positions have accepted typed migration, retention, recovery, unavailable-storage, reload, and privacy evidence. |
 | AF-8 Frozen visible behavior | open | None yet. |
-| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries, shared effect-port source coverage, browser-root, browser-resize, browser-clock, browser-Map-global, prototype-seed, Thought Capture form, and Featured Media Map callback runtime validation, authored, selection, featured-Media, and pinned-position startup recovery, capture and publication, selection, featured-Media, and pinned-position application and adapter coverage, plus Map composition, DOM-source-contract, product, CSS-regression, end-to-end acceptance, and architecture-boundary coverage; later migrated seams and final coverage remain open. |
+| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries including retired flat Map-projection and layout-path rejection, shared effect-port source coverage, browser-root, browser-resize, browser-clock, browser-Map-global, prototype-seed, Thought Capture form, and Publish, Edit, Connect another work, Featured Media, position-action, node-event, Focus-control, edge-state, and selection-state Map runtime validation, complete Map-session application coverage, authored capture preparation, capture mutation, publication, and graph transitions, selection, featured-Media, pinned-position, Map read-model, composition, DOM-source-contract, product, CSS-regression, end-to-end acceptance, and architecture-boundary coverage; its status parsers read only the authoritative Goal progress table; later migrated seams and final coverage remain open. |
 | AF-10 Durable completion walkthrough | open | None yet. |
 
 This table records accepted evidence only.
 It is not a task sequence, roadmap, or permission to infer later work units.
+
+## Completion audit
+
+- Last audited commit: b3c3f0605380aa434a2dcf4b47d1f31be255926b
+- Accepted implementation units since audit: 3
+
+| Open criterion | Present evidence | Exact remaining blocker | Observable acceptance condition |
+| --- | --- | --- | --- |
+| AF-5 Isolated effects and validated boundaries | Browser storage, clock, identifier, root, resize, storage event, seed, and current form boundaries have focused typed-port evidence. | Criterion-level proof has not yet been consolidated against every implemented effect boundary. | Evidence demonstrates every current inward effect and untrusted input crosses one validated narrow boundary. |
+| AF-8 Frozen visible behavior | Node suites cover deterministic behavior, static UI contracts, and compatibility scenarios. | No accepted rendered desktop and mobile owner/visitor walkthrough proves interaction, responsive layout, or light/dark preservation. | Documented browser-driven frozen-flow evidence covers the stated behavior and visual baseline. |
+| AF-9 Layered test and quality gates | Strict typechecks, build, architecture enforcement, layered suites, and accepted complete AF-4 workflow evidence include all capture preparation paths. | A consolidated criterion-level inventory has not mapped every current product, application, adapter, and DOM invariant to executable proof; AF-3 product-fact ownership migration and AF-8/AF-10 rendered proof remain open. | Explicit evidence covers the final implemented seams with deterministic product, fake-port application, adapter, DOM, architecture, strict build, and repository checks. |
+| AF-10 Durable completion walkthrough | Prior prototype completion and current Node checks exist. | Final completion depends on all remaining criteria and a clean rendered legacy-state walkthrough. | All criteria are accepted with clean build, desktop/mobile light/dark legacy-state walkthrough, console evidence, and final independent review. |
+
+At the recorded audit baseline no criterion was ready for acceptance.
+Touched blocker rows are refreshed at each unit; the baseline and count still govern the next complete audit.
+AF-3 is accepted: identity, catalogue, and authored facts now own their current semantics, and the Map graph is rebuilt only as a projection and layout input.
+AF-4 is now accepted after complete workflow evidence and fresh criterion-wide independent review.
+Its capture-preparation blocker is eliminated; rendering and focus translation remain correctly outward.
+AF-5 and AF-9 require criterion-level boundary and seam proof after the remaining migrations.
+AF-8 and AF-10 require their final rendered walkthroughs.
+This audit is present-state evidence, with no future task queue.
 
 ## Architecture entry state
 
@@ -61,12 +82,13 @@ queue.
 ## Current run
 
 - State: accepted; no current unit.
-- Unit id: af-5-map-publish-draft-boundary-validation.
-- Criterion: AF-5 Isolated effects and validated boundaries and AF-9 Layered test and quality gates.
-- Intended result: Map validates a mutable Publish Draft detail-button ID against the active projected Draft before invoking its existing opaque callback.
-- Evidence claim: only an owner-capable projected Draft ID crosses the UI adapter boundary, while valid rendered publication retains the existing callback shape and policy.
-- Accepted evidence: 17 focused Map checks pass, `./scripts/check.sh` passes architecture enforcement, strict typechecks, the Vite build, and 219 tests with zero failures, `git diff --check -- .` passes, and a fresh `gpt-5.6-sol` high-reasoning review is clean with no P0-P3 finding.
-- Scope guard: copy, CSS, DOM structure, valid Draft publication, publication policy, persistence, projection or privacy rule, camera behavior, Map gestures, layout, and design tokens remain unchanged.
+- Latest accepted unit: af-3-typed-prototype-facts-map-projection.
+- Criteria: AF-3 Deep product modules accepted, with bounded AF-5 and AF-9 support.
+- Accepted result: typed identity, catalogue, and authored facts now rebuild the Map representation through one product-owned builder.
+  The seed boundary validates redundant legacy relationship input without returning graph-shaped product authority.
+- Evidence: 48 focused checks, the full 256-test repository suite, strict browser and test typechecks, architecture enforcement, Vite build, and whitespace validation pass.
+- Independent review: a fresh read-only `gpt-5.6-sol` high-reasoning review found no actionable P0-P3 findings after independently rerunning 69 affected tests.
+- UI checkpoint: unchanged at 0; no valid UI behavior, copy, DOM, CSS, theme, layout, or interaction changed.
 
 ## Owner authorization
 
@@ -111,9 +133,9 @@ queue.
 
 ## Fresh-task handoff state
 
-- Latest accepted unit: af-5-map-featured-media-boundary-validation.
+- Latest accepted unit: af-4-authored-capture-preparation.
 - Latest implementation commit: recorded in this accepted unit's post-commit handoff.
-- Latest temporary handoff: written after this accepted unit commits.
+- Latest temporary handoff: `contour-architecture-foundation-handoff.md` in temporary storage; context only, with this repository state authoritative.
 - Next unit selected: no.
 
 Every unit task writes a compact redacted handoff document in the operating
@@ -132,27 +154,80 @@ The handoff includes:
 - suggested skills for the next task.
 
 The handoff is context only, never authority or a future task queue.
-A fresh successor selects the next smallest justified gap only after reading
-authoritative repository state and confirming no overlap.
+A fresh successor selects one coherent responsibility only after reading authoritative repository state, confirming no overlap, and completing any due completion audit.
 If the temporary file is unavailable, it reconstructs facts from the repository
 without discarding uncommitted work or inferring missing decisions.
 
 ## Current unit evidence
 
 - State: accepted; no current unit.
-- Unit id: af-5-map-featured-media-boundary-validation.
-- Criterion: AF-5 Isolated effects and validated boundaries and AF-9 Layered test and quality gates.
-- Intended result: Map runtime-validates a mutable Featured Media detail-button ID before invoking its opaque callback.
-- Evidence claim: unknown, missing, non-string, non-Media, and owner-incapable IDs cannot invoke `onToggleFeatured`, while a valid active projected Media ID retains exactly the existing callback input and result behavior.
-- Exact owned diff: a small typed projected-Media parser and submit helper in the Map UI adapter, click-time rejection before `onToggleFeatured`, executable valid and malformed callback-boundary coverage, source-contract coverage, and synchronized operational state.
-- Explorer evidence: two independent read-only audits identified direct Featured Media dataset forwarding as the smallest safe remaining Map trust boundary; a third audit identified Edit Draft as adjacent but less direct because its downstream callback defensively rejects invalid state. The broader projection relocation and other Map event boundaries remain outside this unit.
-- Design Read: preserve the accepted editorial Map with an invisible correctness guard; existing design variance, motion, density, copy, layout, tokens, light and dark modes, focus treatment, and responsive behavior are locked.
-- Design pre-flight: applicable checks pass because no visible element, string, CSS rule, design token, theme, motion, image, navigation, or responsive behavior changes; rendered validation remains unnecessary for malformed-data rejection only.
-- Focused validation: 19 Map checks pass, covering valid projected-Media parsing, callback-result forwarding, and malformed callback rejection; `npm run typecheck` passes; and `git diff --check -- .` passes.
-- Full validation: `./scripts/check.sh` passes architecture enforcement, strict browser and test typechecks, the Vite production build, and 221 tests with zero failures.
-- Scope guard: no copy, CSS, DOM structure, valid Featured Media callback behavior, feature policy, persistence, projection or privacy rule, camera behavior, Map gestures, layout, or design token changes.
-- Rendered validation: not required because the owned diff preserves every valid rendered interaction and rejects only malformed DOM identifiers.
-- Independent review: a fresh `gpt-5.6-sol` high-reasoning read-only review found no actionable P0-P3 finding, behavior regression, architecture or scope concern, or missing executable evidence.
+- Unit id: af-3-typed-prototype-facts-map-projection.
+- Criterion: AF-3 Deep product modules accepted, with bounded AF-5 and AF-9 support.
+
+### Prior AF-4 acceptance evidence
+
+- Completed responsibility: one application query prepares creation, editing including existing bridges, and bridge creation from current authored state, private selection, and catalogue facts.
+- Eliminated gap: composition no longer owns capture availability, Draft lookup, anchor assembly, or selected-work catalogue joins.
+- Completion condition: all three entry paths return explicit available or unavailable outcomes with unchanged eligible works, order, and Draft opening values; composition consumes those outcomes without reconstructing workflow rules.
+- Exact accepted files: `src/application/authorship/prepare-authored-capture.ts`, `src/composition/main.ts`, `tests/application/authorship/prepare-authored-capture.test.ts`, `tests/composition/main.test.ts`, and this implementation state.
+  `CURRENT.md` is synchronized back to its canonical idle state and has no final diff.
+- Observed evidence: eight executable application tests cover confirmed create availability, selection order, single and existing-bridge editing with unconfirmed selection, missing and Published Thought rejection, primary-first selected bridge candidates, missing-catalogue filtering, and isolated opening snapshots.
+  The new composition source contract verifies both entry callbacks delegate preparation and retain modal exclusion, owner mode, notice consumption, focus restoration, and focus-versus-selection Map updates.
+  Existing capture form and save tests continue to prove validation, exact mutations, concurrent merge protection, no-op, and visit-only outcomes.
+- Validation: all 48 focused authored application, composition, and Thought Capture tests pass.
+  `./scripts/check.sh` passes strict browser and test typechecks, architecture boundaries, Vite build, and all 258 repository tests with zero failures.
+  Owned-diff whitespace checks pass.
+  Initial validation found two redundant test guards rejected after assertion narrowing and a noncanonical run-status value; both were corrected before the successful focused and full rerun.
+- Interpretation: the preparation query closes the remaining AF-4 workflow join when combined with the previously accepted application boundaries below.
+  Fresh independent review confirmed criterion completion and the absence of another composition-owned workflow mutation script.
+  Rendering, dialog lifecycle, owner preview gating, focus versus selection, display-title input, and projected pinnable IDs are narrow outer presentation or composition responsibilities.
+  They do not perform domain mutation, persistence, or cross-module transaction policy and should not move into the application layer.
+- Design Read: preservation of the native-DOM Editorial Constellation for people authoring private Thoughts about Books and Films.
+- Design dials: DESIGN_VARIANCE, MOTION_INTENSITY, and VISUAL_DENSITY all match the accepted implementation; no dial increment or redesign is authorized.
+- Design preservation audit: keep cool mineral light and matched dark tokens, coral accent, Avenir typography, 7px control radius, existing anchor order, private notices, dialog inertness, and focus behavior.
+- Design pre-flight: preservation mode, accepted Editorial Constellation language, existing design dials, and native DOM/CSS remain unchanged.
+  Source and diff inspection confirm no UI renderer, CSS, token, copy, focus-trap, keyboard, modal inertness, responsive, or theme edits.
+  New query tests cover the work order that drives dialog content.
+  Landing-page layout, hero, image, and motion redesign checks are inapplicable to this bounded product architecture unit.
+- Rendered evidence: not run; no valid UI behavior changes and the fifth-UI-unit checkpoint is not due.
+  AF-8 and AF-10 still require their complete rendered walkthroughs.
+- UI checkpoint: unchanged at 0.
+- Independent review: fresh read-only `gpt-5.6-sol` high-reasoning review found no actionable P0-P3 findings.
+  The reviewer independently reran all 48 focused checks and whitespace validation, inspected the full-check evidence, and confirmed AF-4 acceptance.
+- Acceptance: AF-4 accepted under standing owner authorization after clean review; no AF-4 blocker remains.
+  AF-9 receives bounded preparation-query and composition evidence but remains open for a complete invariant-to-test inventory, remaining AF-3 migration coverage, and AF-8/AF-10 rendered evidence.
+- Completion audit count: incremented once from 1 to 2; audit baseline remains `b3c3f0605380aa434a2dcf4b47d1f31be255926b`.
+- Risks and assumptions: owner-only gating remains before preparation in composition and in Map entry controls.
+  Bridge secondary eligibility remains the offered current selected works plus the existing form boundary; the save command's current catalogue validation is unchanged.
+  Existing partial-catalogue filtering is preserved, including editing when at least one existing anchor resolves.
+  No unresolved owner decision is required.
+
+### AF-3 accepted evidence
+
+- Completed responsibility: typed identity and authored facts are now the source of truth, while `product/map/map-graph.ts` alone derives the Map-only nodes and semantic relationship edges.
+- Eliminated acceptance gap: no active product or application path accepts a generic graph as authority for owner identity, seeded authored Thoughts, or authored and anchor relationships.
+- Completion condition evidence: the focused 48-test suite passes across seed validation, graph assembly, authored workflows, startup, privacy projection, deterministic layout, composition contracts, and the private-to-public walkthrough.
+  Strict browser and Node type checks, `./scripts/check.sh`, and owned-diff whitespace validation also pass.
+- Preservation evidence: exact seed profile, Thought content, relationship IDs, kinds, ordering, accepted layout coordinates, Draft privacy, public eligibility, pin eligibility, storage shapes, messages, and native DOM behavior remain covered without a renderer or CSS change.
+- Independent review: the initial reviewer found and the unit corrected lossy third-anchor rejection and a missing draft-only Media privacy proof.
+  A fresh final reviewer found no actionable P0-P3 findings and independently passed 69 affected tests.
+- Remaining blockers: AF-5 still needs a complete effect-boundary inventory, and AF-9 still needs its final cross-layer invariant-to-test inventory and rendered evidence.
+- Completion audit: incremented once from 2 to 3, so the next fresh task must complete a new audit before selection.
+- Risks and assumptions: redundant seed relationship records remain only for input validation, never as product authority.
+  Persisted `draft-*` IDs still win collisions exactly as before.
+  No owner decision is required.
+
+### AF-4 criterion evidence consolidation
+
+| Current workflow | Owning application boundary | Accepted evidence |
+| --- | --- | --- |
+| Complete startup and recovery | `application/map/initialize-map-session.ts` and the authored, selection, featured, and pin recovery use cases | Accepted typed-port ordering, success, corruption recovery, merge, and visit-only tests |
+| Create, edit, and bridge preparation | `application/authorship/prepare-authored-capture.ts` | Accepted ordered opening snapshots and explicit availability tests for all three sibling paths |
+| Authored create, edit, and bridge mutation | `application/authorship/save-authored-draft.ts` | Accepted injected clock/identifier, scoped persistence, stale publication protection, no-op, exact messages, authoritative state-plus-graph tests |
+| Authored publication and storage-event reload | `application/authorship/publish-authored-thought.ts` and `reload-authored-thoughts.ts` | Accepted lifecycle, atomic persistence, concurrent merge, storage-unavailable, state-plus-graph, and public projection tests |
+| Private selection and public featured-Media mutation | `application/taste/update-selection.ts` and `update-featured.ts` | Accepted invariant, ordering, public eligibility, no-op, persistence, and explicit outcome tests |
+| Spatial pin and unpin | `application/map/update-pinned-positions.ts` | Accepted non-user eligibility, position validation, persistence failure, no-op, and spatial-only outcome tests |
+| Active owner and visitor Map reads | `application/map/create-map-read-model.ts` | Accepted structural privacy, full-graph layout preservation, pin filtering, and owner transient placement tests |
 
 ## Goal-readiness evidence
 
@@ -203,6 +278,11 @@ without discarding uncommitted work or inferring missing decisions.
 
 ## Acceptance rules
 
+- A unit completes one coherent responsibility and eliminates its named acceptance gap, or completes an indispensable prerequisite justified by dependency or preservation risk.
+- Related entry paths and their validators, adapters, imports, and focused tests belong in the same unit when they serve that responsibility.
+- Candidate evidence and independent review address the completion condition and concrete remaining criterion blockers.
+- Refresh touched criterion blockers and increment the completion-audit count once per accepted implementation unit.
+  At three, the next fresh task audits every open criterion before selecting its unit.
 - Routine unit acceptance requires focused and full validation plus clean fresh
   independent review.
 - Candidate evidence is recorded before review.
@@ -246,6 +326,21 @@ Routine work-unit completion does not require owner review.
 - Final independent review: a fresh `gpt-5.6-sol` high-reasoning reviewer found no P0-P3 issue, policy contradiction, recovery race, or missing implementation evidence.
 - Owned-only staging: the cached patch contains exactly the seven administrative lock-policy files and excludes the pre-existing `AGENTS.md`, `scripts/check.sh`, README, product-document, and retired-plan changes.
 - Product and goal impact: this is owner-requested administrative loop infrastructure, not an Architecture Foundation implementation unit; it changes no product behavior, criterion status, run selection, UI checkpoint, or accepted unit evidence.
+
+## Administrative completion policy update
+
+- Authority: the owner requested this loop correction on 2026-09-06 after reviewing the pattern of small partial units.
+- Criterion: selection and acceptance must complete a bounded responsibility or justified prerequisite and identify the concrete goal gap eliminated.
+- Intended result: related paths are completed together, touched criterion blockers stay explicit, and a completion audit is due before the next new selection and every three accepted implementation units afterward.
+- Explorer evidence: two independent read-only audits identified repeated single-boundary units, vague residual criterion descriptions, and stale latest-unit handoff metadata.
+- Exact repository diff: `AGENTS.md`, `docs/main/DEVELOPMENT_LOOP.md`, `docs/plans/CURRENT.md`, this implementation state, and `scripts/check.sh` synchronize selection, review, audit cadence, and compact audit-state validation.
+- Automation verification: the existing `bproject-autonomous-graph-loop` prompt is installed and reads back exactly as reviewed; identity, project, active status, schedule, model, reasoning effort, and local execution environment are preserved.
+- Focused validation: shell syntax and whitespace checks pass; eight isolated policy-check fixtures accept initial, due, and recovery audit states and reject malformed, missing, duplicate, or out-of-range fields.
+- Full validation: `./scripts/check.sh` passes architecture enforcement, strict browser and test typechecks, the Vite production build, and all 239 tests with zero failures.
+- Independent review: a fresh read-only `gpt-5.6-sol` high-reasoning reviewer found no actionable P0-P3 finding and independently reran the full repository check successfully.
+- Scope: this administrative update selects no implementation unit, advances no Architecture Foundation criterion, and leaves the UI checkpoint count at zero.
+  Goal scope, standing authorization, ownership, safety gates, full validation, independent review, rendered checkpoints, and the scheduled window are preserved.
+- Completion audit: intentionally due; the next eligible fresh task establishes current criterion blockers before selecting its unit.
 
 ## Accepted run log
 
@@ -439,6 +534,78 @@ Routine work-unit completion does not require owner review.
 - AF-5 and AF-9 partial unit `af-5-map-featured-media-boundary-validation` accepted on 2026-09-02.
   Map now validates a mutable Featured Media detail-button ID against the current owner-capable projected Media before calling application code.
   Focused 19-test evidence, full 221-test repository validation, and a clean fresh independent review support bounded AF-5 and AF-9 evidence while both criteria remain open.
+- AF-5 and AF-9 partial unit `af-5-map-position-action-boundary-validation` accepted on 2026-09-04.
+  Map now validates a mutable position-action detail-button ID against the current owner-projected non-user node and current action eligibility before calling either spatial persistence callback.
+  Focused 21-test evidence, full 226-test repository validation, and a clean fresh independent review support bounded AF-5 and AF-9 evidence while both criteria remain open.
+- AF-5 and AF-9 partial unit `af-5-map-edit-draft-boundary-validation` accepted on 2026-09-04.
+  Map now validates a mutable Edit Draft detail-button ID against the current owner-capable projected Draft before calling application composition.
+  Focused 23-test evidence, full 228-test repository validation, and a clean fresh independent review support bounded AF-5 and AF-9 evidence while both criteria remain open.
+- AF-5 and AF-9 partial unit `af-5-map-connect-draft-boundary-validation` accepted on 2026-09-04.
+  Map now validates a mutable Connect another work detail-button ID against the current owner-capable projected single-anchor Draft with confirmed selection before calling application composition.
+  Focused 25-test evidence, full 230-test repository validation, and a clean fresh independent review support bounded AF-5 and AF-9 evidence while both criteria remain open.
+- AF-5 and AF-9 partial unit `af-5-map-node-event-target-boundary-validation` accepted on 2026-09-05.
+  Map now validates mutable node-event identifiers against active projected non-user nodes before click selection, pointer drag, or keyboard movement changes Map state.
+  Focused 28-test evidence, full 233-test repository validation, and a clean second fresh independent review after correcting invalid keyboard propagation support bounded AF-5 and AF-9 evidence while both criteria remain open.
+- AF-5 and AF-9 partial unit `af-5-map-focus-target-boundary-validation` accepted on 2026-09-05.
+  Map now validates mutable orbit and detail Focus identifiers against active projected targets before focus changes selection, detail rendering, or camera state.
+  Focused 31-test evidence, full 236-test repository validation, and a clean fresh independent review support bounded AF-5 and AF-9 evidence while both criteria remain open.
+- AF-5 and AF-9 partial unit `af-5-map-edge-state-dom-boundary-validation` accepted on 2026-09-05.
+  Map edge-state rendering now validates mutable node identifiers against active projected non-user nodes before graph comparison or class mutation.
+  Missing, non-string, stale, user, and non-projected identifiers remain inert, while selected, connected, and muted behavior for valid Media and Thought nodes is preserved.
+  Repeated focused 32-check evidence, repeated full 237-test repository validation, and a clean fresh correction review after one test-coverage finding support bounded AF-5 and AF-9 evidence while both criteria remain open.
+- AF-5 and AF-9 partial unit `af-5-map-selection-state-dom-boundary-validation` accepted on 2026-09-05.
+  Map selection-state rendering now validates mutable node identifiers against active projected non-user nodes before selected-class or `aria-pressed` mutation.
+  Missing, non-string, stale, user, and non-projected identifiers remain inert, while selected and unselected behavior for valid Media and Thought nodes, including clearing selection, is preserved.
+  Repeated focused 33-check evidence, repeated full 238-test repository validation, and a clean fresh correction review after one test-coverage finding support bounded AF-5 and AF-9 evidence while both criteria remain open.
+- AF-6 and AF-9 partial unit `af-6-product-map-projection-location` accepted on 2026-09-05.
+  The existing owner and visitor projection policy now lives in `src/product/map/projection.ts`, and the architecture checker rejects revival of the retired flat path.
+  Projection order, deep-copy isolation, Draft and draft-only Media exclusion, dangling-edge removal, public-Media eligibility, owner capability policy, and all valid visible behavior remain unchanged.
+  Repeated focused 47-check evidence, repeated full 238-test repository validation, and a clean second fresh independent review after correcting the canonical recovery state support bounded AF-6 and AF-9 evidence while both criteria remain open.
+- AF-3 and AF-9 partial unit `af-3-product-map-layout-location` accepted on 2026-09-06.
+  Deterministic spatial layout now lives in `src/product/map/layout.ts`, and the architecture checker rejects revival of the retired top-level path.
+  Generated coordinates, owner centering, authored-edge influence, collision separation, Map presentation-port behavior, and all valid visible behavior remain unchanged.
+  Repeated focused 77-check evidence, repeated full 239-test repository validation, and a clean final fresh independent review after four documentation-state and coverage-wording corrections support bounded AF-3 and AF-9 evidence while both criteria remain open.
+- AF-7 unit `af-7-browser-storage-compatibility-contract` accepted on 2026-09-06.
+  The combined contract now proves all six persisted key shapes across four state families: selection V1, authored Thought V2, V1, and legacy Draft precedence, featured Media V1, and pinned positions V1.
+  It preserves normalized valid state, full authored fields, raw legacy-key retention through recovery, V2-first precedence, V1 and legacy-only fallback, same-key recovery writes, visit-only storage failure, authored-only storage-event reload, and private Draft boundaries.
+  Focused 38-check evidence, strict browser and test typechecks, the full repository check, owned-diff whitespace validation, and a clean final fresh independent review support AF-7 acceptance.
+- AF-6 with bounded AF-4 and AF-9 support unit `af-6-structural-map-read-model` accepted on 2026-09-06.
+  The application now creates owner and visitor Map read models, and the Map UI consumes only the active structural model rather than retaining a full private graph and filtering it at display time.
+  Visitor rendering excludes Draft and draft-only Media, generated positions, pins, and temporary-movement metadata while preserving public-node layout from the complete graph.
+  Owner-only temporary positions and movement markers remain in composition across visitor preview and restore only on owner return, and mode-only swaps preserve Draft notices.
+  Strict typechecks, 61 focused checks, full 248-check repository validation, whitespace validation, and a final fresh independent review with no P0-P3 findings support AF-6 acceptance while AF-4 and AF-9 remain open.
+- AF-4 with bounded AF-5 and AF-9 support unit `af-4-map-session-initialization` accepted on 2026-09-06.
+  Complete selection, featured-Media, authored-Thought, and pinned-position startup loading and recovery now run through typed application ports and return one screen-neutral Map-session result.
+  Composition wires browser adapters, consumes the explicit result, and no longer scripts raw startup loading, recovery, eligibility derivation, or graph assembly.
+  Exact load and recovery order, normalized recovery writes, success and visit-only messages, public featured-Media eligibility, private Draft pinnability, authored-Draft recomposition, structural visitor Map reads, persistence shapes, and all valid visible behavior remain unchanged.
+  The focused 49-check suite, strict typechecks, architecture check, Vite build, owned-diff whitespace validation, and full 248-check repository validation pass.
+  Three fresh independent reviews resolved successful-recovery evidence and documentation-state findings, and the final fresh review found no actionable P0-P3 findings.
+  AF-4 remains open for mutation-time capture and bridge eligibility plus render-refresh responsibilities.
+- AF-4 with bounded AF-9 support unit `af-4-authored-map-state-transitions` accepted on 2026-09-06.
+  Authored save and publication application outcomes now return the authoritative persisted Thought state plus rebuilt Map graph, matching the already explicit reload outcome.
+  Composition applies that result and retains dialog lifecycle, focus or selection presentation choice, and Map rendering.
+  The unit preserves concurrent merged state, no-op and visit-only outcomes, exact messages, storage representations, private Draft boundaries, public projection eligibility, and all valid visible behavior.
+  The repository quality gate now scopes every criterion parser to the authoritative Goal progress table.
+  Strict typechecks, 29 focused checks, the full 249-check repository validation, whitespace validation, and a final fresh independent review with no actionable P0-P3 findings support bounded AF-4 and AF-9 evidence.
+  AF-4 remains open for mutation-time capture and bridge eligibility plus rendering responsibility.
+
+- AF-4 with bounded AF-9 support unit `af-4-authored-capture-preparation` accepted on 2026-09-06.
+  The new application query owns the complete creation, editing including existing bridges, and bridge preparation responsibility.
+  It eliminates composition-owned capture availability and joins between current authored Drafts, private selection, and catalogue facts.
+  Observed evidence preserves confirmed create and bridge gating, editing after selection becomes unconfirmed, existing anchors, exact candidate order, unavailable records, and isolated opening snapshots.
+  The two read-only explorers independently audited workflow ownership and capture contracts.
+  All 48 focused checks, strict browser and test typechecks, architecture enforcement, Vite build, whitespace validation, and the full 258-test repository check pass.
+  Fresh read-only `gpt-5.6-sol` high-reasoning review found no actionable P0-P3 findings and confirmed that no AF-4 workflow blocker remains.
+  AF-4 is accepted based on this complete preparation boundary plus the previously accepted startup, command, recovery, reload, and structural Map read-model evidence.
+  Modal lifecycle, owner presentation, focus versus selection, Map rendering, display-title input, and spatial eligibility inputs remain appropriate outer wiring.
+  AF-9 remains open for the complete invariant-to-test inventory, remaining product-fact migration coverage, and final rendered evidence.
+  Exact files are the new application query and mirrored tests, composition root and its source-contract tests, and this implementation state.
+  `CURRENT.md` is synchronized with no final diff.
+  The unit's local commit SHA is recorded in its post-commit temporary handoff; no push or external publication is authorized.
+  UI checkpoint count remains 0, and the completion-audit count advances once to 2.
+  No owner decision or unresolved assumption was introduced; save-time bridge policy, form validation, persistence, and valid visible behavior remain frozen.
+  Acceptance is under standing owner authorization after focused and full validation plus clean independent review.
+  The handoff records `No next unit selected`.
 
 ## Administratively closed run log
 

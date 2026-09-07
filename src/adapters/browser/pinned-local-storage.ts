@@ -5,6 +5,7 @@ import {
 } from "../../product/map/pinned-positions.ts";
 import type { PinnedPositionPersistencePort } from "../../application/map/update-pinned-positions.ts";
 import type { PinnedPositionRecoveryPersistencePort } from "../../application/map/recover-pinned-positions.ts";
+import type { PinnedPositionStartupPort } from "../../application/map/initialize-map-session.ts";
 import type { KeyValueStoragePort } from "../../kernel/key-value-storage.ts";
 
 export const PINNED_STORAGE_KEY = "thought-map.prototype.pinned-positions.v1";
@@ -82,6 +83,12 @@ export function createPinnedPositionPersistencePort(
   return {
     save: (state) => savePinnedState(storage, state),
   };
+}
+
+export function createPinnedPositionStartupPort(
+  storage: KeyValueStoragePort | null | undefined,
+): PinnedPositionStartupPort {
+  return { load: (validIds) => loadPinnedState(storage, validIds) };
 }
 
 /**
