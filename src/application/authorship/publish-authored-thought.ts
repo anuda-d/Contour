@@ -1,9 +1,9 @@
 import type { ClockPort } from "../../kernel/clock.ts";
 import {
-  composeGraphWithDrafts,
   publishDraft,
   type ThoughtState,
 } from "../../product/authorship/draft-state.ts";
+import { buildMapGraph, type MapProjectionFacts } from "../../product/map/map-graph.ts";
 import type { AuthoredThoughtPersistencePort } from "./authored-thought-persistence.ts";
 
 export type { AuthoredThoughtPersistencePort } from "./authored-thought-persistence.ts";
@@ -13,7 +13,7 @@ export type { AuthoredThoughtPersistencePort } from "./authored-thought-persiste
  * read-merge-write persistence while leaving projection and rendering outward.
  */
 export function publishAuthoredThought(
-  baseGraph: Parameters<typeof composeGraphWithDrafts>[0],
+  mapFacts: MapProjectionFacts,
   state: ThoughtState,
   id: string,
   validMediaIds: Iterable<string> | ReadonlySet<string>,
@@ -31,7 +31,7 @@ export function publishAuthoredThought(
     ...result,
     state: persisted.state,
     saved: persisted.saved,
-    graph: composeGraphWithDrafts(baseGraph, persisted.state),
+    graph: buildMapGraph(mapFacts, persisted.state),
     message: persisted.saved
       ? result.message
       : "Thought published for this visit. The saved Draft was not changed.",

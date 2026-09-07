@@ -4,7 +4,8 @@ import {
   reloadAuthoredThoughts,
   type AuthoredThoughtReloadPort,
 } from "../../../src/application/authorship/reload-authored-thoughts.ts";
-import { getSeedGraph } from "../../../src/adapters/seed/prototype-seed.ts";
+import { getPrototypeFacts } from "../../../src/adapters/seed/prototype-seed.ts";
+import { getCatalogue } from "../../../src/product/catalogue/catalogue.ts";
 import { projectGraphForMode } from "../../../src/product/map/projection.ts";
 import {
   createDraft,
@@ -13,6 +14,7 @@ import {
 } from "../../../src/product/authorship/draft-state.ts";
 
 const validMediaIds = new Set(["left-hand", "arrival"]);
+const mapFacts = { prototype: getPrototypeFacts(), catalogue: getCatalogue() };
 
 test("reloading authored Thoughts returns a rebuilt graph with the existing update message", () => {
   const state = createDraft(
@@ -29,7 +31,7 @@ test("reloading authored Thoughts returns a rebuilt graph with the existing upda
     load: () => ({ kind: "loaded", state }),
   };
 
-  const result = reloadAuthoredThoughts(getSeedGraph(), authoredThoughts);
+  const result = reloadAuthoredThoughts(mapFacts, authoredThoughts);
 
   assert.equal(result.kind, "reloaded");
   if (result.kind !== "reloaded") return;
@@ -47,7 +49,7 @@ test("unavailable authored storage produces no reload outcome", () => {
     load: () => ({ kind: "storage-unavailable" }),
   };
 
-  assert.deepEqual(reloadAuthoredThoughts(getSeedGraph(), authoredThoughts), {
+  assert.deepEqual(reloadAuthoredThoughts(mapFacts, authoredThoughts), {
     kind: "storage-unavailable",
   });
 });
@@ -70,7 +72,7 @@ test("reloading a published Thought preserves its public projection", () => {
     validMediaIds,
   ).state;
 
-  const result = reloadAuthoredThoughts(getSeedGraph(), {
+  const result = reloadAuthoredThoughts(mapFacts, {
     load: () => ({ kind: "loaded", state }),
   });
 

@@ -1,7 +1,6 @@
 import { getCatalogue } from "../product/catalogue/catalogue.ts";
 import {
   type Thought,
-  type ThoughtGraph,
 } from "../product/authorship/draft-state.ts";
 import {
   createAuthoredThoughtPersistencePort,
@@ -45,7 +44,8 @@ import {
   toggleSelection,
 } from "../application/taste/update-selection.ts";
 import { toggleFeatured } from "../application/taste/update-featured.ts";
-import { getSeedGraph } from "../adapters/seed/prototype-seed.ts";
+import { getPrototypeFacts } from "../adapters/seed/prototype-seed.ts";
+import type { MapGraph } from "../product/map/map-graph.ts";
 import { createMapPresentation } from "./map-presentation.ts";
 import { ThoughtCapture } from "../ui/thought-capture.dom.ts";
 import { WorkChooser } from "../ui/work-chooser.dom.ts";
@@ -60,7 +60,7 @@ import { publishBrowserThoughtMap } from "../adapters/browser/browser-map-global
 type SavedThought = {
   saved: true;
   draft: Thought;
-  graph: ThoughtGraph;
+  graph: MapGraph;
   message: string;
 };
 
@@ -72,12 +72,12 @@ const storageChanges: StorageChangePort = createBrowserStorageChangePort(window)
 const resizeEvents: ResizeEventPort = createBrowserResizeEventPort(window);
 
 try {
-  const baseGraph = getSeedGraph();
+  const prototype = getPrototypeFacts();
   const catalogue = getCatalogue();
+  const mapFacts = { prototype, catalogue };
   const storage: KeyValueStoragePort | null = getBrowserKeyValueStorage(window);
   const session = initializeMapSession({
-    baseGraph,
-    catalogue,
+    mapFacts,
     selection: createSelectionStartupPort(storage),
     featured: createFeaturedStartupPort(storage),
     authoredThoughts: createAuthoredThoughtStartupPort(storage),
@@ -173,7 +173,7 @@ try {
       initialMessage: draft ? "" : initialDraftMessage,
       onSave: ({ draftId: editingId, primaryMediaId, statement }) => {
         const result = saveAuthoredDraft(
-          baseGraph,
+          mapFacts,
           draftState,
           editingId
             ? { kind: "edit", id: editingId, statement }
@@ -233,7 +233,7 @@ try {
       bridgeMode: true,
       onSave: ({ secondaryMediaId, statement }) => {
         const result = saveAuthoredDraft(
-          baseGraph,
+          mapFacts,
           draftState,
           {
             kind: "bridge",
@@ -291,7 +291,7 @@ try {
       onConnectDraft: (id) => openBridge(id),
       onPublishDraft: (id) => {
         const result = publishAuthoredThought(
-          baseGraph,
+          mapFacts,
           draftState,
           id,
           validCatalogueIds,
@@ -306,7 +306,9 @@ try {
         return result;
       },
       onToggleFeatured: (id) => {
-        const media = graph.nodes.find((node) => node.id === id && node.type === "media");
+        const media = graph.nodes.find(
+          (node): node is Extract<typeof node, { type: "media" }> => node.id === id && node.type === "media",
+        );
         const result = toggleFeatured(
           featuredState,
           id,
@@ -346,7 +348,7 @@ try {
     });
     publishBrowserThoughtMap(window, map);
     storageChanges.onChange(THOUGHT_STORAGE_KEY, () => {
-      const synced = reloadAuthoredThoughts(baseGraph, authoredThoughts);
+      const synced = reloadAuthoredThoughts(mapFacts, authoredThoughts);
       if (synced.kind === "storage-unavailable") return;
       draftState = synced.state;
       graph = synced.graph;

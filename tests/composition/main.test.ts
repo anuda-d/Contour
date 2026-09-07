@@ -27,7 +27,7 @@ test("the composition root wires authored capture effects through browser ports"
   assert.match(source, /import \{ saveAuthoredDraft \} from "\.\.\/application\/authorship\/save-authored-draft\.ts"/);
   assert.match(source, /kind: "create",[\s\S]*?clock,[\s\S]*?identifier,/);
   assert.match(source, /map = new ThoughtMap\(root, currentMapReadModel\(\), \{[\s\S]*?clock,/);
-  assert.match(source, /publishAuthoredThought\(\s*\n\s*baseGraph,\s*\n\s*draftState,\s*\n\s*id,\s*\n\s*validCatalogueIds,\s*\n\s*clock,/);
+  assert.match(source, /publishAuthoredThought\(\s*\n\s*mapFacts,\s*\n\s*draftState,\s*\n\s*id,\s*\n\s*validCatalogueIds,\s*\n\s*clock,/);
   assert.doesNotMatch(source, /crypto\.randomUUID\(\)/);
   assert.doesNotMatch(source, /new Date\(\)\.toISOString\(\)/);
 });
@@ -129,7 +129,7 @@ test("the composition root wires authored storage changes through a browser even
   assert.match(source, /createAuthoredThoughtReloadPort\(storage, validCatalogueIds\)/);
   assert.match(source, /const storageChanges: StorageChangePort = createBrowserStorageChangePort\(window\);/);
   assert.match(source, /storageChanges\.onChange\(THOUGHT_STORAGE_KEY, \(\) => \{/);
-  assert.match(source, /const synced = reloadAuthoredThoughts\(baseGraph, authoredThoughts\);/);
+  assert.match(source, /const synced = reloadAuthoredThoughts\(mapFacts, authoredThoughts\);/);
   assert.match(source, /if \(synced\.kind === "storage-unavailable"\) return;/);
   assert.match(source, /activeMap\(\)\.updateReadModel\(currentMapReadModel\(\), \{ message: synced\.message \}\);/);
   assert.doesNotMatch(source, /window\.addEventListener\("storage"/);
@@ -243,7 +243,7 @@ test("the composition root delegates authored publication and persistence to the
   );
   assert.match(
     source,
-    /onPublishDraft: \(id\) => \{\s*const result = publishAuthoredThought\(\s*baseGraph,\s*draftState,\s*id,\s*validCatalogueIds,\s*clock,\s*authoredThoughtPersistence,\s*\);/,
+    /onPublishDraft: \(id\) => \{\s*const result = publishAuthoredThought\(\s*mapFacts,\s*draftState,\s*id,\s*validCatalogueIds,\s*clock,\s*authoredThoughtPersistence,\s*\);/,
   );
   assert.match(source, /activeMap\(\)\.updateReadModel\(currentMapReadModel\(\), \{ selectId: id, message: draftMessage \}\);/);
 

@@ -14,7 +14,8 @@ import {
   loadFeaturedState,
 } from "../../../src/adapters/browser/featured-local-storage.ts";
 import { createBrowserStorageChangePort } from "../../../src/adapters/browser/browser-storage-change.ts";
-import { getSeedGraph } from "../../../src/adapters/seed/prototype-seed.ts";
+import { getPrototypeFacts } from "../../../src/adapters/seed/prototype-seed.ts";
+import { getCatalogue } from "../../../src/product/catalogue/catalogue.ts";
 import { reloadAuthoredThoughts } from "../../../src/application/authorship/reload-authored-thoughts.ts";
 import { recoverAuthoredThoughts } from "../../../src/application/authorship/recover-authored-thoughts.ts";
 import { recoverPinnedPositions } from "../../../src/application/map/recover-pinned-positions.ts";
@@ -288,7 +289,7 @@ test("the authored storage event reloads the V2 representation without syncing o
   });
   storageChanges.onChange(THOUGHT_STORAGE_KEY, () => {
     captured.result = reloadAuthoredThoughts(
-      getSeedGraph(),
+      { prototype: getPrototypeFacts(), catalogue: getCatalogue() },
       createAuthoredThoughtReloadPort(storage, catalogueIds),
     );
   });

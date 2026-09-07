@@ -20,38 +20,16 @@ const catalogue = [
   { id: "film-b", format: "film" as const, title: "Film B", creator: "Director B", year: 2002 },
 ];
 
-const baseGraph = {
-  profile: { featuredMediaIds: ["book-a"] },
-  nodes: [
-    { id: "owner", type: "user" },
-    {
-      id: "book-a",
-      type: "media" as const,
-      format: "book" as const,
-      title: "Book A",
-      creator: "Author A",
-      year: 2001,
+const mapFacts = {
+  catalogue,
+  prototype: {
+    owner: {
+      profile: { id: "owner-profile", displayName: "Owner", handle: "@owner", initials: "O", identityLine: "Owner Map" },
+      mapIdentity: { id: "owner", label: "Owner", note: "Owner Map" },
     },
-    {
-      id: "film-b",
-      type: "media" as const,
-      format: "film" as const,
-      title: "Film B",
-      creator: "Director B",
-      year: 2002,
-    },
-    {
-      id: "published-seed",
-      type: "thought" as const,
-      status: "published" as const,
-      statement: "A published seed thought.",
-      anchors: ["book-a"],
-    },
-  ],
-  edges: [
-    { id: "authored-published-seed", source: "owner", target: "published-seed", kind: "authored" },
-    { id: "anchor-published-seed-book-a", source: "published-seed", target: "book-a", kind: "primary-anchor" },
-  ],
+    seededThoughts: [{ id: "published-seed", status: "published" as const, statement: "A published seed thought.", primaryMediaId: "book-a" }],
+    defaultFeaturedMediaIds: ["book-a"],
+  },
 };
 
 function recoveredDraft(id: string) {
@@ -122,8 +100,7 @@ test("Map session startup coordinates complete recovery in the existing load ord
   };
 
   const session = initializeMapSession({
-    baseGraph,
-    catalogue,
+    mapFacts,
     selection,
     featured,
     authoredThoughts,
@@ -162,8 +139,7 @@ test("Map session startup retains visit-only outcomes when storage is unavailabl
     throw new Error("Storage recovery must not run after unavailable loads.");
   };
   const session = initializeMapSession({
-    baseGraph,
-    catalogue,
+    mapFacts,
     selection: { load: () => ({ state: emptySelection(), persistent: false, recovered: false, storageError: true }) },
     featured: { load: (eligibleIds) => ({ state: createFeaturedState([], eligibleIds), persistent: false, recovered: false, storageError: true }) },
     authoredThoughts: {
@@ -186,8 +162,7 @@ test("Map session startup retains visit-only outcomes when storage is unavailabl
 test("Map session startup preserves persistent outcomes after successful recovery writes", () => {
   const calls: string[] = [];
   const session = initializeMapSession({
-    baseGraph,
-    catalogue,
+    mapFacts,
     selection: {
       load: () => ({ state: emptySelection(), persistent: true, recovered: true, storageError: false }),
     },

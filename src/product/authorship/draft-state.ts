@@ -16,24 +16,19 @@ export type PublishedThought = Omit<DraftThought, "status"> & {
 
 export type Thought = DraftThought | PublishedThought;
 export type ThoughtState = { version: typeof THOUGHT_VERSION; thoughts: Thought[] };
+export type SeededPublishedThought = Readonly<{
+  id: string;
+  status: "published";
+  statement: string;
+  primaryMediaId: string;
+  secondaryMediaId?: string;
+}>;
 export type ThoughtMutation = {
   id: string;
   fields: readonly ("status" | "publishedAt" | "statement" | "secondaryMediaId")[];
 };
 
 type RecordValue = Record<string, unknown>;
-type ThoughtGraphNode = { id: string; type: string; anchors?: string[]; [key: string]: unknown };
-type ThoughtGraphEdge = { id: string; source: string; target: string; kind: string; [key: string]: unknown };
-type ThoughtGraphInput = {
-  profile: { featuredMediaIds?: string[] };
-  nodes: Array<{ id: string; type: string; anchors?: string[] }>;
-  edges: Array<{ id: string; source: string; target: string; kind: string }>;
-};
-export type ThoughtGraph = {
-  profile: { featuredMediaIds?: string[]; [key: string]: unknown };
-  nodes: ThoughtGraphNode[];
-  edges: ThoughtGraphEdge[];
-};
 
 const cleanStatement = (value: unknown) => (typeof value === "string" ? value.trim() : "");
 const isRecord = (value: unknown): value is RecordValue => typeof value === "object" && value !== null;
@@ -268,21 +263,10 @@ export function publishDraft(
   return { state: { ...state, thoughts }, thought, changed: true, message: "Thought published. Visitor preview now shows it." };
 }
 
-export function composeGraphWithDrafts(baseGraph: ThoughtGraphInput, state: ThoughtState): ThoughtGraph {
-  const graph: ThoughtGraph = {
-    profile: { ...baseGraph.profile, ...(baseGraph.profile.featuredMediaIds ? { featuredMediaIds: [...baseGraph.profile.featuredMediaIds] } : {}) },
-    nodes: baseGraph.nodes.map((node) => ({ ...node, ...(node.anchors ? { anchors: [...node.anchors] } : {}) })),
-    edges: baseGraph.edges.map((edge) => ({ ...edge })),
-  };
-  const existingIds = new Set(graph.nodes.map((node) => node.id));
-  const authorId = graph.nodes.find((node) => node.type === "user")?.id;
-  state.thoughts.forEach((thought) => {
-    if (existingIds.has(thought.id)) return;
-    existingIds.add(thought.id);
-    graph.nodes.push({ id: thought.id, type: "thought", status: thought.status, statement: thought.statement, anchors: [thought.primaryMediaId, ...(thought.secondaryMediaId ? [thought.secondaryMediaId] : [])], createdAt: thought.createdAt, ...(thought.status === "published" ? { publishedAt: thought.publishedAt } : {}) });
-    if (authorId) graph.edges.push({ id: `authored-${thought.id}`, source: authorId, target: thought.id, kind: "authored" });
-    graph.edges.push({ id: `anchor-${thought.id}-${thought.primaryMediaId}`, source: thought.id, target: thought.primaryMediaId, kind: "primary-anchor" });
-    if (thought.secondaryMediaId) graph.edges.push({ id: `anchor-${thought.id}-${thought.secondaryMediaId}`, source: thought.id, target: thought.secondaryMediaId, kind: "additional-anchor" });
-  });
-  return graph;
+export function getPublishedMediaIds(
+  seededThoughts: readonly SeededPublishedThought[],
+  state: ThoughtState = emptyDraftState(),
+): Set<string> {
+  const published = [...seededThoughts, ...state.thoughts.filter((thought): thought is PublishedThought => thought.status === "published")];
+  return new Set(published.flatMap((thought) => [thought.primaryMediaId, ...(thought.secondaryMediaId ? [thought.secondaryMediaId] : [])]));
 }

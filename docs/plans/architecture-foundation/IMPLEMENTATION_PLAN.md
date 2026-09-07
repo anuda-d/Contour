@@ -28,7 +28,7 @@ Status: active shared state; standing scheduled owner authorization.
 | --- | --- | --- |
 | AF-1 Enforced architecture contract | accepted | Architecture decision records, six-key compatibility inventory, and the checked import-boundary gate were accepted after 30 focused and 112 repository tests plus clean fresh review. |
 | AF-2 Complete strict TypeScript | accepted | Every maintained application source and automated test is strict TypeScript. Separate browser and Node-test typechecks, the Vite build, and the checked `src/composition/main.ts` native entrypoint are accepted with no maintained application JavaScript mirror. |
-| AF-3 Deep product modules | open | Partial: authored Thought lifecycle, anchors, publication, and immutable merge plus deterministic spatial layout now live in cohesive strict TypeScript product modules; other product facts remain in prototype seams. |
+| AF-3 Deep product modules | accepted | Typed identity, catalogue, and seeded or persisted authored facts now have explicit owners, while one Map builder deterministically derives nodes and relationship edges for projection and layout. Focused fact, projection, application, and walkthrough evidence plus clean fresh review confirm no generic graph remains product authority. |
 | AF-4 Application use cases | accepted | Screen-neutral startup and recovery, create/edit/bridge preparation, selection and featured-Media commands, pin/unpin commands, authored capture/publication/reload state-plus-graph outcomes, and structural Map reads coordinate every current workflow through explicit outcomes and typed ports. Focused application, composition, and form evidence plus clean criterion-wide independent review confirm that only presentation and concrete effect wiring remain outward. |
 | AF-5 Isolated effects and validated boundaries | open | Partial: browser localStorage, DOM-root acquisition, Map resize listening, Map drag-click suppression timing, the existing Map debug-global publication, storage adapters, wall-clock access, UUID generation, authored-Thought cross-tab events, complete selection, featured-Media, authored-Thought, and pinned-position startup loading and recovery, capture, reload, and publication persistence, prototype-seed and Thought Capture form runtime validation, and Publish, Edit, Connect another work, Featured Media, position-action, node-event, Focus-control, edge-state, and selection-state Map validation now cross narrow inward boundaries; other browser events and form-input boundaries remain open. |
 | AF-6 Explicit projections and privacy | accepted | Application-created owner and visitor Map read models now structurally separate rendered graph data. Visitor Map rendering receives no Draft or draft-only Media, generated positions, or pins, while public positions preserve full-graph layout influence and owner-only transient placement remains outside visitor rendering. |
@@ -43,11 +43,10 @@ It is not a task sequence, roadmap, or permission to infer later work units.
 ## Completion audit
 
 - Last audited commit: b3c3f0605380aa434a2dcf4b47d1f31be255926b
-- Accepted implementation units since audit: 2
+- Accepted implementation units since audit: 3
 
 | Open criterion | Present evidence | Exact remaining blocker | Observable acceptance condition |
 | --- | --- | --- | --- |
-| AF-3 Deep product modules | Authorship, taste, catalogue, Map projection, pinned positions, and layout have strict modules. | `prototype-seed.ts`, `draft-state.ts`, and Map projection still make generic graph structures authoritative for owner identity, seeded authorship, and relationship facts. | Typed current product facts and their invariants have one owner, with the graph only a rebuildable Map representation. |
 | AF-5 Isolated effects and validated boundaries | Browser storage, clock, identifier, root, resize, storage event, seed, and current form boundaries have focused typed-port evidence. | Criterion-level proof has not yet been consolidated against every implemented effect boundary. | Evidence demonstrates every current inward effect and untrusted input crosses one validated narrow boundary. |
 | AF-8 Frozen visible behavior | Node suites cover deterministic behavior, static UI contracts, and compatibility scenarios. | No accepted rendered desktop and mobile owner/visitor walkthrough proves interaction, responsive layout, or light/dark preservation. | Documented browser-driven frozen-flow evidence covers the stated behavior and visual baseline. |
 | AF-9 Layered test and quality gates | Strict typechecks, build, architecture enforcement, layered suites, and accepted complete AF-4 workflow evidence include all capture preparation paths. | A consolidated criterion-level inventory has not mapped every current product, application, adapter, and DOM invariant to executable proof; AF-3 product-fact ownership migration and AF-8/AF-10 rendered proof remain open. | Explicit evidence covers the final implemented seams with deterministic product, fake-port application, adapter, DOM, architecture, strict build, and repository checks. |
@@ -55,7 +54,7 @@ It is not a task sequence, roadmap, or permission to infer later work units.
 
 At the recorded audit baseline no criterion was ready for acceptance.
 Touched blocker rows are refreshed at each unit; the baseline and count still govern the next complete audit.
-AF-3 still has generic Map data as the owner of identity, seeded authorship, relationships, and public eligibility.
+AF-3 is accepted: identity, catalogue, and authored facts now own their current semantics, and the Map graph is rebuilt only as a projection and layout input.
 AF-4 is now accepted after complete workflow evidence and fresh criterion-wide independent review.
 Its capture-preparation blocker is eliminated; rendering and focus translation remain correctly outward.
 AF-5 and AF-9 require criterion-level boundary and seam proof after the remaining migrations.
@@ -83,12 +82,12 @@ queue.
 ## Current run
 
 - State: accepted; no current unit.
-- Latest accepted unit: af-4-authored-capture-preparation.
-- Criterion: AF-4 Application use cases accepted, with bounded AF-9 support.
-- Accepted result: a screen-neutral application query prepares all create, edit, existing-bridge edit, and bridge entry paths from current authorship, selection, and catalogue facts.
-  Composition consumes explicit outcomes and retains only modal exclusion, owner presentation, dialog lifecycle, notices, focus restoration, and Map rendering.
-- Evidence: 48 focused checks and all 258 repository tests pass, along with strict browser and test typechecks, architecture enforcement, Vite build, and whitespace validation.
-- Independent review: fresh read-only `gpt-5.6-sol` high-reasoning review found no actionable P0-P3 findings and no remaining AF-4 workflow blocker.
+- Latest accepted unit: af-3-typed-prototype-facts-map-projection.
+- Criteria: AF-3 Deep product modules accepted, with bounded AF-5 and AF-9 support.
+- Accepted result: typed identity, catalogue, and authored facts now rebuild the Map representation through one product-owned builder.
+  The seed boundary validates redundant legacy relationship input without returning graph-shaped product authority.
+- Evidence: 48 focused checks, the full 256-test repository suite, strict browser and test typechecks, architecture enforcement, Vite build, and whitespace validation pass.
+- Independent review: a fresh read-only `gpt-5.6-sol` high-reasoning review found no actionable P0-P3 findings after independently rerunning 69 affected tests.
 - UI checkpoint: unchanged at 0; no valid UI behavior, copy, DOM, CSS, theme, layout, or interaction changed.
 
 ## Owner authorization
@@ -162,8 +161,11 @@ without discarding uncommitted work or inferring missing decisions.
 ## Current unit evidence
 
 - State: accepted; no current unit.
-- Unit id: af-4-authored-capture-preparation.
-- Criterion: AF-4 Application use cases accepted, with bounded AF-9 support.
+- Unit id: af-3-typed-prototype-facts-map-projection.
+- Criterion: AF-3 Deep product modules accepted, with bounded AF-5 and AF-9 support.
+
+### Prior AF-4 acceptance evidence
+
 - Completed responsibility: one application query prepares creation, editing including existing bridges, and bridge creation from current authored state, private selection, and catalogue facts.
 - Eliminated gap: composition no longer owns capture availability, Draft lookup, anchor assembly, or selected-work catalogue joins.
 - Completion condition: all three entry paths return explicit available or unavailable outcomes with unchanged eligible works, order, and Draft opening values; composition consumes those outcomes without reconstructing workflow rules.
@@ -199,6 +201,21 @@ without discarding uncommitted work or inferring missing decisions.
   Bridge secondary eligibility remains the offered current selected works plus the existing form boundary; the save command's current catalogue validation is unchanged.
   Existing partial-catalogue filtering is preserved, including editing when at least one existing anchor resolves.
   No unresolved owner decision is required.
+
+### AF-3 accepted evidence
+
+- Completed responsibility: typed identity and authored facts are now the source of truth, while `product/map/map-graph.ts` alone derives the Map-only nodes and semantic relationship edges.
+- Eliminated acceptance gap: no active product or application path accepts a generic graph as authority for owner identity, seeded authored Thoughts, or authored and anchor relationships.
+- Completion condition evidence: the focused 48-test suite passes across seed validation, graph assembly, authored workflows, startup, privacy projection, deterministic layout, composition contracts, and the private-to-public walkthrough.
+  Strict browser and Node type checks, `./scripts/check.sh`, and owned-diff whitespace validation also pass.
+- Preservation evidence: exact seed profile, Thought content, relationship IDs, kinds, ordering, accepted layout coordinates, Draft privacy, public eligibility, pin eligibility, storage shapes, messages, and native DOM behavior remain covered without a renderer or CSS change.
+- Independent review: the initial reviewer found and the unit corrected lossy third-anchor rejection and a missing draft-only Media privacy proof.
+  A fresh final reviewer found no actionable P0-P3 findings and independently passed 69 affected tests.
+- Remaining blockers: AF-5 still needs a complete effect-boundary inventory, and AF-9 still needs its final cross-layer invariant-to-test inventory and rendered evidence.
+- Completion audit: incremented once from 2 to 3, so the next fresh task must complete a new audit before selection.
+- Risks and assumptions: redundant seed relationship records remain only for input validation, never as product authority.
+  Persisted `draft-*` IDs still win collisions exactly as before.
+  No owner decision is required.
 
 ### AF-4 criterion evidence consolidation
 

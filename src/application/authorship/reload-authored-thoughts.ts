@@ -1,8 +1,7 @@
 import {
-  composeGraphWithDrafts,
-  type ThoughtGraph,
   type ThoughtState,
 } from "../../product/authorship/draft-state.ts";
+import { buildMapGraph, type MapGraph, type MapProjectionFacts } from "../../product/map/map-graph.ts";
 
 export type AuthoredThoughtReloadPort = Readonly<{
   load():
@@ -15,7 +14,7 @@ export type ReloadAuthoredThoughtsResult =
   | Readonly<{
       kind: "reloaded";
       state: ThoughtState;
-      graph: ThoughtGraph;
+      graph: MapGraph;
       message: "Authored Thoughts updated from another tab.";
     }>;
 
@@ -25,7 +24,7 @@ export type ReloadAuthoredThoughtsResult =
  * outward concerns, while this use case owns the resulting product outcome.
  */
 export function reloadAuthoredThoughts(
-  baseGraph: Parameters<typeof composeGraphWithDrafts>[0],
+  mapFacts: MapProjectionFacts,
   authoredThoughts: AuthoredThoughtReloadPort,
 ): ReloadAuthoredThoughtsResult {
   const loaded = authoredThoughts.load();
@@ -34,7 +33,7 @@ export function reloadAuthoredThoughts(
   return {
     kind: "reloaded",
     state: loaded.state,
-    graph: composeGraphWithDrafts(baseGraph, loaded.state),
+    graph: buildMapGraph(mapFacts, loaded.state),
     message: "Authored Thoughts updated from another tab.",
   };
 }

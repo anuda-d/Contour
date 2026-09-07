@@ -5,7 +5,8 @@ import {
   type AuthoredThoughtPersistencePort,
 } from "../../../src/application/authorship/publish-authored-thought.ts";
 import type { ClockPort } from "../../../src/kernel/clock.ts";
-import { getSeedGraph } from "../../../src/adapters/seed/prototype-seed.ts";
+import { getPrototypeFacts } from "../../../src/adapters/seed/prototype-seed.ts";
+import { getCatalogue } from "../../../src/product/catalogue/catalogue.ts";
 import {
   createDraft,
   emptyDraftState,
@@ -14,7 +15,7 @@ import {
 } from "../../../src/product/authorship/draft-state.ts";
 
 const validIds = new Set(["left-hand", "arrival"]);
-const baseGraph = getSeedGraph();
+const mapFacts = { prototype: getPrototypeFacts(), catalogue: getCatalogue() };
 const publishedAt = "2026-09-02T22:45:00.000Z";
 const clock: ClockPort = { now: () => publishedAt, nowMilliseconds: () => 0 };
 const input = {
@@ -41,14 +42,16 @@ test("publication persists the exact lifecycle mutation through the application 
   const state = createDraft(emptyDraftState(), input, validIds).state;
   const port = persistence(true);
 
-  const result = publishAuthoredThought(baseGraph, state, input.id, validIds, clock, port);
+  const result = publishAuthoredThought(mapFacts, state, input.id, validIds, clock, port);
 
   assert.equal(result.changed, true);
   assert.equal(result.saved, true);
   assert.equal(result.message, "Thought published. Visitor preview now shows it.");
   assert.equal(result.state.thoughts[0]!.status, "published");
   assert.equal(
-    result.graph.nodes.find((node) => node.id === input.id)?.status,
+    result.graph.nodes.find(
+      (node): node is Extract<typeof node, { type: "thought" }> => node.id === input.id && node.type === "thought",
+    )?.status,
     "published",
   );
   assert.equal(
@@ -74,9 +77,9 @@ test("rejected publication does not persist and preserves each product error", (
     thoughts: [{ ...state.thoughts[0]!, primaryMediaId: "missing" }],
   };
 
-  const invalidTime = publishAuthoredThought(baseGraph, state, input.id, validIds, invalidClock, port);
-  const unavailable = publishAuthoredThought(baseGraph, state, "missing", validIds, clock, port);
-  const missingAnchor = publishAuthoredThought(baseGraph, invalidAnchor, input.id, validIds, clock, port);
+  const invalidTime = publishAuthoredThought(mapFacts, state, input.id, validIds, invalidClock, port);
+  const unavailable = publishAuthoredThought(mapFacts, state, "missing", validIds, clock, port);
+  const missingAnchor = publishAuthoredThought(mapFacts, invalidAnchor, input.id, validIds, clock, port);
 
   assert.equal(invalidTime.error, "This Thought could not be published. Try again.");
   assert.equal(unavailable.error, "That Draft is no longer available.");
@@ -90,7 +93,7 @@ test("rejected publication does not persist and preserves each product error", (
 test("failed persistence keeps publication for the visit with the exact fallback", () => {
   const state = createDraft(emptyDraftState(), input, validIds).state;
 
-  const result = publishAuthoredThought(baseGraph, state, input.id, validIds, clock, persistence(false));
+  const result = publishAuthoredThought(mapFacts, state, input.id, validIds, clock, persistence(false));
 
   assert.equal(result.changed, true);
   assert.equal(result.saved, false);
@@ -120,7 +123,7 @@ test("the persistence port's merged state is the authoritative application resul
     }),
   };
 
-  const result = publishAuthoredThought(baseGraph, state, input.id, validIds, clock, port);
+  const result = publishAuthoredThought(mapFacts, state, input.id, validIds, clock, port);
 
   assert.deepEqual(result.state.thoughts.map((thought) => thought.id), ["draft-one", "draft-remote"]);
   if (!("graph" in result)) throw new Error("Expected a rebuilt Map graph.");

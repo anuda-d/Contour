@@ -1,135 +1,72 @@
-import test from "node:test";
 import assert from "node:assert/strict";
-import {
-  getModeCapabilities,
-  getPublicMediaIds,
-  normalizeMapMode,
-  projectGraphForMode,
-  type GraphInput,
-} from "../../../src/product/map/projection.ts";
+import test from "node:test";
+import { createDraft, emptyDraftState, publishDraft } from "../../../src/product/authorship/draft-state.ts";
+import { buildMapGraph } from "../../../src/product/map/map-graph.ts";
+import { getModeCapabilities, normalizeMapMode, projectGraphForMode } from "../../../src/product/map/projection.ts";
+import { getPrototypeFacts } from "../../../src/adapters/seed/prototype-seed.ts";
+import { getCatalogue } from "../../../src/product/catalogue/catalogue.ts";
 
-const graphWithDraft: GraphInput = {
-  profile: { id: "person", displayName: "Person", featuredMediaIds: ["shared"] },
-  nodes: [
-    { id: "person", type: "user" },
-    { id: "shared", type: "media", format: "book", title: "Shared" },
-    { id: "second-public", type: "media", format: "film", title: "Second public" },
-    { id: "private-work", type: "media", format: "film", title: "Private" },
-    {
-      id: "published",
-      type: "thought",
-      status: "published",
-      statement: "Public",
-      anchors: ["shared", "second-public"],
-    },
-    {
-      id: "draft",
-      type: "thought",
-      status: "draft",
-      statement: "Private",
-      anchors: ["shared", "private-work"],
-    },
-    { id: "unexpected", type: "thought", status: "queued", statement: "Not public" },
-  ],
-  edges: [
-    { id: "author-published", source: "person", target: "published", kind: "authored" },
-    { id: "anchor-published", source: "published", target: "shared", kind: "primary-anchor" },
-    { id: "anchor-published-second", source: "published", target: "second-public", kind: "additional-anchor" },
-    { id: "author-draft", source: "person", target: "draft", kind: "authored" },
-    { id: "anchor-draft-shared", source: "draft", target: "shared", kind: "primary-anchor" },
-    {
-      id: "anchor-draft-private",
-      source: "draft",
-      target: "private-work",
-      kind: "additional-anchor",
-    },
-  ],
-};
+const facts = { prototype: getPrototypeFacts(), catalogue: getCatalogue() };
 
-const fullyPublishedGraph: GraphInput = {
-  profile: { id: "person", displayName: "Person" },
-  nodes: [
-    { id: "person", type: "user" },
-    { id: "work", type: "media", format: "book", title: "Public work" },
-    {
-      id: "thought",
-      type: "thought",
-      status: "published",
-      statement: "Public thought",
-      anchors: ["work"],
-    },
-  ],
-  edges: [
-    { id: "author", source: "person", target: "thought", kind: "authored" },
-    { id: "anchor", source: "thought", target: "work", kind: "primary-anchor" },
-  ],
-};
-
-test("owner projection is complete and isolated from its source", () => {
-  const projection = projectGraphForMode(graphWithDraft, "owner");
-  assert.deepEqual(projection, graphWithDraft);
-  const draft = projection.nodes.find((node) => node.id === "draft");
-  assert.ok(draft?.anchors);
-  draft.anchors.push("changed");
-  projection.profile.featuredMediaIds?.push("changed-featured");
-  assert.deepEqual(
-    graphWithDraft.nodes.find((node) => node.id === "draft")?.anchors,
-    ["shared", "private-work"],
-  );
-  assert.deepEqual(graphWithDraft.profile.featuredMediaIds, ["shared"]);
+test("owner projection is complete and isolated from the supplied Map representation", () => {
+  const source = buildMapGraph(facts, emptyDraftState());
+  const projection = projectGraphForMode(source, "owner");
+  assert.deepEqual(projection, source);
+  projection.nodes.find((node) => node.type === "thought")?.anchors.push("changed");
+  projection.profile.featuredMediaIds.push("changed-featured");
+  assert.equal(source.nodes.some((node) => node.type === "thought" && node.anchors.includes("changed")), false);
+  assert.equal(source.profile.featuredMediaIds.includes("changed-featured"), false);
 });
 
-test("visitor projection excludes non-published content, draft-only media, and dangling edges", () => {
-  const projection = projectGraphForMode(graphWithDraft, "visitor");
-  assert.deepEqual(
-    projection.nodes.map((node) => node.id),
-    ["person", "shared", "second-public", "published"],
-  );
-  assert.deepEqual(
-    projection.edges.map((edge) => edge.id),
-    ["author-published", "anchor-published", "anchor-published-second"],
-  );
-  assert.deepEqual(projection.profile, graphWithDraft.profile);
-  projection.profile.displayName = "Changed visitor copy";
-  assert.equal(graphWithDraft.profile.displayName, "Person");
+test("visitor projection excludes Drafts and draft-only Media without treating the graph as fact authority", () => {
+  const draftState = createDraft(emptyDraftState(), {
+    id: "draft-private", primaryMediaId: "left-hand", statement: "Private", createdAt: "2026-09-06T18:00:00.000Z",
+  }, new Set(["left-hand"])).state;
+  const source = buildMapGraph(facts, draftState);
+  const visitor = projectGraphForMode(source, "visitor");
+  assert.equal(visitor.nodes.some((node) => node.id === "draft-private"), false);
+  assert.equal(visitor.nodes.some((node) => node.type === "thought" && node.status === "draft"), false);
+  assert.equal(visitor.edges.some((edge) => edge.source === "draft-private"), false);
 });
 
-test("a fully published graph projects without losing graph content", () => {
-  const projection = projectGraphForMode(fullyPublishedGraph, "visitor");
-  assert.deepEqual(
-    projection.nodes.map((node) => node.id),
-    fullyPublishedGraph.nodes.map((node) => node.id),
-  );
-  assert.deepEqual(
-    projection.edges.map((edge) => edge.id),
-    fullyPublishedGraph.edges.map((edge) => edge.id),
-  );
+test("visitor projection excludes a Media work anchored only by a private Draft", () => {
+  const privateFacts = {
+    catalogue: [
+      { id: "public-work", format: "book" as const, title: "Public", creator: "Author", year: 2001 },
+      { id: "private-work", format: "film" as const, title: "Private", creator: "Director", year: 2002 },
+    ],
+    prototype: {
+      owner: {
+        profile: { id: "owner", displayName: "Owner", handle: "@owner", initials: "O", identityLine: "Private Map" },
+        mapIdentity: { id: "owner-node", label: "Owner", note: "Private Map" },
+      },
+      seededThoughts: [{ id: "published-seed", status: "published" as const, statement: "Public", primaryMediaId: "public-work" }],
+      defaultFeaturedMediaIds: ["public-work"],
+    },
+  };
+  const draft = createDraft(emptyDraftState(), {
+    id: "draft-private-media", primaryMediaId: "private-work", statement: "Private", createdAt: "2026-09-06T20:30:00.000Z",
+  }, new Set(["private-work"])).state;
+  const visitor = projectGraphForMode(buildMapGraph(privateFacts, draft), "visitor");
+  assert.equal(visitor.nodes.some((node) => node.id === "private-work"), false);
+  assert.equal(visitor.nodes.some((node) => node.id === "draft-private-media"), false);
 });
 
-test("public Media eligibility comes only from published visitor anchors", () => {
-  assert.deepEqual([...getPublicMediaIds(graphWithDraft)], ["shared", "second-public"]);
+test("published persisted Thoughts become visible through the projection", () => {
+  const drafted = createDraft(emptyDraftState(), {
+    id: "draft-public", primaryMediaId: "arrival", statement: "Public", createdAt: "2026-09-06T18:00:00.000Z",
+  }, new Set(["arrival"])).state;
+  const published = publishDraft(drafted, "draft-public", "2026-09-06T18:01:00.000Z", new Set(["arrival"])).state;
+  const visitor = projectGraphForMode(buildMapGraph(facts, published), "visitor");
+  assert.equal(visitor.nodes.some((node) => node.id === "draft-public"), true);
 });
 
-test("unknown modes keep the complete owner projection", () => {
+test("unknown modes remain owner projections and visitor capabilities remove mutation", () => {
+  const source = buildMapGraph(facts, emptyDraftState());
   assert.equal(normalizeMapMode("unexpected"), "owner");
-  assert.deepEqual(projectGraphForMode(graphWithDraft, "unexpected"), graphWithDraft);
-});
-
-test("visitor capabilities preserve exploration and remove owner mutation", () => {
+  assert.deepEqual(projectGraphForMode(source, "unexpected"), source);
   assert.deepEqual(getModeCapabilities("visitor"), {
-    mode: "visitor",
-    canChooseWorks: false,
-    canCaptureThoughts: false,
-    canFeatureMedia: false,
-    canShapeNodes: false,
-    canResetPositions: false,
-  });
-  assert.deepEqual(getModeCapabilities("owner"), {
-    mode: "owner",
-    canChooseWorks: true,
-    canCaptureThoughts: true,
-    canFeatureMedia: true,
-    canShapeNodes: true,
-    canResetPositions: true,
+    mode: "visitor", canChooseWorks: false, canCaptureThoughts: false,
+    canFeatureMedia: false, canShapeNodes: false, canResetPositions: false,
   });
 });

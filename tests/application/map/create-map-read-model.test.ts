@@ -1,18 +1,18 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { getSeedGraph } from "../../../src/adapters/seed/prototype-seed.ts";
+import { getPrototypeFacts } from "../../../src/adapters/seed/prototype-seed.ts";
+import { getCatalogue } from "../../../src/product/catalogue/catalogue.ts";
 import { createMapReadModel } from "../../../src/application/map/create-map-read-model.ts";
 import {
-  composeGraphWithDrafts,
   createDraft,
   emptyDraftState,
 } from "../../../src/product/authorship/draft-state.ts";
+import { buildMapGraph } from "../../../src/product/map/map-graph.ts";
 import { emptyPinnedState } from "../../../src/product/map/pinned-positions.ts";
 import { createMapPresentation } from "../../../src/composition/map-presentation.ts";
 import { resolveTemporaryMovedNodes } from "../../../src/ui/map.dom.ts";
 
 function graphWithPrivateDraft() {
-  const baseGraph = getSeedGraph();
   const created = createDraft(
     emptyDraftState(),
     {
@@ -24,7 +24,7 @@ function graphWithPrivateDraft() {
     new Set(["left-hand"]),
   );
   assert.equal(created.changed, true);
-  return composeGraphWithDrafts(baseGraph, created.state);
+  return buildMapGraph({ prototype: getPrototypeFacts(), catalogue: getCatalogue() }, created.state);
 }
 
 test("Map read models separate owner and visitor graph data without changing visible layout inputs", () => {
@@ -42,7 +42,7 @@ test("Map read models separate owner and visitor graph data without changing vis
 
   assert.equal(owner.graph.nodes.some((node) => node.id === "draft-read-model-boundary"), true);
   assert.equal(visitor.graph.nodes.some((node) => node.id === "draft-read-model-boundary"), false);
-  assert.equal(visitor.graph.nodes.some((node) => node.status === "draft"), false);
+  assert.equal(visitor.graph.nodes.some((node) => node.type === "thought" && node.status === "draft"), false);
   assert.equal(Object.hasOwn(visitor.generatedPositions, "draft-read-model-boundary"), false);
   assert.equal(Object.hasOwn(visitor.pinnedPositions, "draft-read-model-boundary"), false);
   assert.deepEqual(visitor.generatedPositions["thought-language"], owner.generatedPositions["thought-language"]);
@@ -89,8 +89,10 @@ test("visitor read models remove private temporary positions and owner read mode
 test("Map read models are isolated from later caller mutation", () => {
   const graph = graphWithPrivateDraft();
   const readModel = createMapReadModel(graph, "visitor", emptyPinnedState());
-  const published = readModel.graph.nodes.find((node) => node.type === "thought" && node.status === "published");
-  assert.ok(published?.anchors);
+  const published = readModel.graph.nodes.find(
+    (node): node is Extract<typeof node, { type: "thought" }> => node.type === "thought" && node.status === "published",
+  );
+  assert.ok(published);
   published.anchors.push("changed-in-renderer");
 
   assert.equal(

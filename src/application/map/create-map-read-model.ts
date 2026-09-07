@@ -4,11 +4,11 @@ import {
   getModeCapabilities,
   normalizeMapMode,
   projectGraphForMode,
-  type GraphInput,
   type MapMode,
   type ModeCapabilities,
   type ProjectedGraph,
 } from "../../product/map/projection.ts";
+import type { MapGraph } from "../../product/map/map-graph.ts";
 import type { MapPoint, PinnedState } from "../../product/map/pinned-positions.ts";
 
 export type MapReadModel = Readonly<{
@@ -44,16 +44,11 @@ function projectedPins(
   );
 }
 
-function layoutNodes(graph: GraphInput): LayoutNode[] {
-  return graph.nodes.map((node) => {
-    if (node.type !== "user" && node.type !== "media" && node.type !== "thought") {
-      throw new Error(`Map read model received an unsupported node type for ${node.id}.`);
-    }
-    return { id: node.id, type: node.type };
-  });
+function layoutNodes(graph: MapGraph): LayoutNode[] {
+  return graph.nodes.map((node) => ({ id: node.id, type: node.type }));
 }
 
-function layoutEdges(graph: GraphInput): LayoutEdge[] {
+function layoutEdges(graph: MapGraph): LayoutEdge[] {
   return graph.edges.map((edge) => ({
     source: edge.source,
     target: edge.target,
@@ -62,7 +57,7 @@ function layoutEdges(graph: GraphInput): LayoutEdge[] {
 }
 
 export function createMapReadModel(
-  graph: GraphInput,
+  graph: MapGraph,
   mode: unknown,
   pinnedState: PinnedState,
 ): MapReadModel {

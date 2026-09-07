@@ -1,64 +1,17 @@
+import type {
+  MapGraph,
+  MapGraphEdge,
+  MapGraphNode,
+  MapGraphProfile,
+} from "./map-graph.ts";
+
 export const MAP_MODES = Object.freeze({
   owner: "owner",
   visitor: "visitor",
 } as const);
 
 export type MapMode = (typeof MAP_MODES)[keyof typeof MAP_MODES];
-
-export type GraphProfile = Readonly<{
-  featuredMediaIds?: readonly string[];
-  [key: string]: unknown;
-}>;
-
-export type GraphNode = Readonly<{
-  id: string;
-  type: string;
-  status?: string;
-  anchors?: readonly string[];
-  [key: string]: unknown;
-}>;
-
-export type GraphEdge = Readonly<{
-  id: string;
-  source: string;
-  target: string;
-  [key: string]: unknown;
-}>;
-
-export type GraphInput = Readonly<{
-  profile: GraphProfile;
-  nodes: readonly GraphNode[];
-  edges: readonly GraphEdge[];
-}>;
-
-export type PublicMediaSource = Readonly<{
-  nodes: ReadonlyArray<Readonly<{
-    id: string;
-    type: string;
-    status?: string;
-    anchors?: readonly string[];
-  }>>;
-}>;
-
-export type ProjectedGraph = {
-  profile: {
-    featuredMediaIds?: string[];
-    [key: string]: unknown;
-  };
-  nodes: Array<{
-    id: string;
-    type: string;
-    status?: string;
-    anchors?: string[];
-    [key: string]: unknown;
-  }>;
-  edges: Array<{
-    id: string;
-    source: string;
-    target: string;
-    [key: string]: unknown;
-  }>;
-};
+export type ProjectedGraph = MapGraph;
 
 export type ModeCapabilities = Readonly<{
   mode: MapMode;
@@ -86,20 +39,19 @@ export function getModeCapabilities(mode: unknown): ModeCapabilities {
   });
 }
 
-function copyProfile(profile: GraphProfile): ProjectedGraph["profile"] {
-  const { featuredMediaIds, ...rest } = profile;
-  return featuredMediaIds ? { ...rest, featuredMediaIds: [...featuredMediaIds] } : { ...rest };
+function copyProfile(profile: MapGraphProfile): MapGraphProfile {
+  return { ...profile, featuredMediaIds: [...profile.featuredMediaIds] };
 }
 
-function copyNode(node: GraphNode): ProjectedGraph["nodes"][number] {
-  const { anchors, ...rest } = node;
-  return anchors ? { ...rest, anchors: [...anchors] } : { ...rest };
+function copyNode(node: MapGraphNode): MapGraphNode {
+  if (node.type === "thought") return { ...node, anchors: [...node.anchors] };
+  return { ...node };
 }
 
 function copyGraph(
-  graph: GraphInput,
-  nodes: readonly GraphNode[] = graph.nodes,
-  edges: readonly GraphEdge[] = graph.edges,
+  graph: MapGraph,
+  nodes: readonly MapGraphNode[] = graph.nodes,
+  edges: readonly MapGraphEdge[] = graph.edges,
 ): ProjectedGraph {
   return {
     profile: copyProfile(graph.profile),
@@ -108,43 +60,23 @@ function copyGraph(
   };
 }
 
-export function getPublicMediaIds(graph: PublicMediaSource): Set<string> {
-  const visibleIds = new Set(
-    graph.nodes.filter((node) => node.type === "user").map((node) => node.id),
-  );
-  graph.nodes
-    .filter((node) => node.type === "thought" && node.status === "published")
-    .forEach((thought) => {
-      visibleIds.add(thought.id);
-      thought.anchors?.forEach((id) => visibleIds.add(id));
-    });
-  return new Set(
-    graph.nodes
-      .filter((node) => node.type === "media" && visibleIds.has(node.id))
-      .map((node) => node.id),
-  );
-}
-
-export function projectGraphForMode(graph: GraphInput, mode: unknown): ProjectedGraph {
+/** Produces a display projection from the Map representation, never product facts. */
+export function projectGraphForMode(graph: MapGraph, mode: unknown): ProjectedGraph {
   if (normalizeMapMode(mode) === MAP_MODES.owner) return copyGraph(graph);
 
   const publishedThoughts = graph.nodes.filter(
-    (node) => node.type === "thought" && node.status === "published",
+    (node): node is Extract<MapGraphNode, { type: "thought" }> =>
+      node.type === "thought" && node.status === "published",
   );
   const visibleIds = new Set(
     graph.nodes.filter((node) => node.type === "user").map((node) => node.id),
   );
-
   publishedThoughts.forEach((thought) => {
     visibleIds.add(thought.id);
-    thought.anchors?.forEach((id) => visibleIds.add(id));
+    thought.anchors.forEach((id) => visibleIds.add(id));
   });
-
   const nodes = graph.nodes.filter((node) => visibleIds.has(node.id));
   const nodeIds = new Set(nodes.map((node) => node.id));
-  const edges = graph.edges.filter(
-    (edge) => nodeIds.has(edge.source) && nodeIds.has(edge.target),
-  );
-
+  const edges = graph.edges.filter((edge) => nodeIds.has(edge.source) && nodeIds.has(edge.target));
   return copyGraph(graph, nodes, edges);
 }

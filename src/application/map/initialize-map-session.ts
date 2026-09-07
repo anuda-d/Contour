@@ -1,12 +1,10 @@
-import type { CatalogueWork } from "../../product/catalogue/catalogue.ts";
 import {
-  composeGraphWithDrafts,
-  type ThoughtGraph,
+  getPublishedMediaIds,
   type ThoughtState,
 } from "../../product/authorship/draft-state.ts";
+import { buildMapGraph, type MapGraph, type MapProjectionFacts } from "../../product/map/map-graph.ts";
 import type { FeaturedState } from "../../product/taste/featured.ts";
 import type { SelectionState } from "../../product/taste/selection.ts";
-import { getPublicMediaIds } from "../../product/map/projection.ts";
 import type { PinnedState } from "../../product/map/pinned-positions.ts";
 import {
   recoverAuthoredThoughts,
@@ -36,8 +34,6 @@ export type AuthoredStartupLoadResult = StartupLoadResult<ThoughtState> & Readon
   recoveryNotice?: boolean;
 }>;
 
-type MapFactGraph = Parameters<typeof composeGraphWithDrafts>[0];
-
 export type SelectionStartupPort = Readonly<{
   load(validIds: ReadonlySet<string>): StartupLoadResult<SelectionState>;
 }>;
@@ -62,8 +58,7 @@ export type PinnedPositionStartupPort = Readonly<{
 }>;
 
 export type InitializeMapSessionDependencies = Readonly<{
-  baseGraph: MapFactGraph;
-  catalogue: readonly CatalogueWork[];
+  mapFacts: MapProjectionFacts;
   selection: SelectionStartupPort;
   featured: FeaturedStartupPort;
   authoredThoughts: AuthoredThoughtStartupPort;
@@ -80,7 +75,7 @@ export type MapSession = Readonly<{
   featuredState: FeaturedState;
   draftState: ThoughtState;
   pinnedState: PinnedState;
-  graph: ThoughtGraph;
+  graph: MapGraph;
   persistent: boolean;
   initialChooserMessage: string;
   featuredMessage: string;
@@ -95,19 +90,19 @@ export type MapSession = Readonly<{
 export function initializeMapSession(
   dependencies: InitializeMapSessionDependencies,
 ): MapSession {
-  const validCatalogueIds = new Set(dependencies.catalogue.map((item) => item.id));
-  const publicMediaIds = getPublicMediaIds(dependencies.baseGraph);
+  const validCatalogueIds = new Set(dependencies.mapFacts.catalogue.map((item) => item.id));
+  const publicMediaIds = getPublishedMediaIds(dependencies.mapFacts.prototype.seededThoughts);
   const loadedSelection = dependencies.selection.load(validCatalogueIds);
   const loadedFeatured = dependencies.featured.load(
     publicMediaIds,
-    dependencies.baseGraph.profile.featuredMediaIds ?? [],
+    dependencies.mapFacts.prototype.defaultFeaturedMediaIds,
   );
   const loadedDrafts = dependencies.authoredThoughts.load(validCatalogueIds);
 
   let selectionState = loadedSelection.state;
   let featuredState = loadedFeatured.state;
   let draftState = loadedDrafts.state;
-  let graph = composeGraphWithDrafts(dependencies.baseGraph, draftState);
+  let graph = buildMapGraph(dependencies.mapFacts, draftState);
   const pinnableIds = new Set(
     graph.nodes.filter((node) => node.type !== "user").map((node) => node.id),
   );
@@ -150,7 +145,7 @@ export function initializeMapSession(
       },
     );
     draftState = persistedDrafts.state;
-    graph = composeGraphWithDrafts(dependencies.baseGraph, draftState);
+    graph = buildMapGraph(dependencies.mapFacts, draftState);
     if (!persistedDrafts.saved) {
       initialDraftMessage =
         "Saved authored Thoughts were recovered safely. Changes will last for this visit.";

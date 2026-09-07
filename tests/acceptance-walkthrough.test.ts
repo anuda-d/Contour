@@ -2,7 +2,6 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { getCatalogue } from "../src/product/catalogue/catalogue.ts";
 import {
-  composeGraphWithDrafts,
   connectDraft,
   createDraft,
   emptyDraftState,
@@ -19,9 +18,10 @@ import {
 } from "../src/adapters/browser/featured-local-storage.ts";
 import {
   getModeCapabilities,
-  getPublicMediaIds,
   projectGraphForMode,
 } from "../src/product/map/projection.ts";
+import { getPublishedMediaIds } from "../src/product/authorship/draft-state.ts";
+import { buildMapGraph } from "../src/product/map/map-graph.ts";
 import {
   loadPinnedState,
   savePinnedState,
@@ -40,7 +40,7 @@ import {
   toggleMediaSelection,
 } from "../src/product/taste/selection.ts";
 import { toggleFeaturedMedia } from "../src/product/taste/featured.ts";
-import { getSeedGraph } from "../src/adapters/seed/prototype-seed.ts";
+import { getPrototypeFacts } from "../src/adapters/seed/prototype-seed.ts";
 
 function memoryStorage(): KeyValueStoragePort {
   const values = new Map<string, string>();
@@ -52,8 +52,9 @@ function memoryStorage(): KeyValueStoragePort {
 
 test("the complete three-work walkthrough survives reload as one private-to-public Map", () => {
   const storage = memoryStorage();
-  const baseGraph = getSeedGraph();
-  const catalogueIds = new Set(getCatalogue().map((item) => item.id));
+  const catalogue = getCatalogue();
+  const mapFacts = { prototype: getPrototypeFacts(), catalogue };
+  const catalogueIds = new Set(catalogue.map((item) => item.id));
   const selectedIds = ["left-hand", "arrival", "bluets"];
 
   let selection = emptySelection();
@@ -115,7 +116,7 @@ test("the complete three-work walkthrough survives reload as one private-to-publ
     fields: ["secondaryMediaId", "statement"],
   }).state;
 
-  const privateGraph = composeGraphWithDrafts(baseGraph, authored);
+  const privateGraph = buildMapGraph(mapFacts, authored);
   const privateVisitor = projectGraphForMode(privateGraph, "visitor");
   assert.equal(authored.thoughts.filter((thought) => thought.status === "draft").length, 3);
   assert.equal(
@@ -145,12 +146,12 @@ test("the complete three-work walkthrough survives reload as one private-to-publ
     }).state;
   });
 
-  const publishedGraph = composeGraphWithDrafts(baseGraph, authored);
-  const publicMediaIds = getPublicMediaIds(publishedGraph);
+  const publishedGraph = buildMapGraph(mapFacts, authored);
+  const publicMediaIds = getPublishedMediaIds(mapFacts.prototype.seededThoughts, authored);
   let featured = loadFeaturedState(
     storage,
     publicMediaIds,
-    baseGraph.profile.featuredMediaIds,
+    [...mapFacts.prototype.defaultFeaturedMediaIds],
   ).state;
   featured = toggleFeaturedMedia(
     featured,
@@ -168,10 +169,10 @@ test("the complete three-work walkthrough survives reload as one private-to-publ
 
   selection = loadSelection(storage, catalogueIds).state;
   authored = loadDraftState(storage, catalogueIds).state;
-  const reloadedGraph = composeGraphWithDrafts(baseGraph, authored);
+  const reloadedGraph = buildMapGraph(mapFacts, authored);
   const reloadedNodeIds = new Set(reloadedGraph.nodes.map((node) => node.id));
   pinned = loadPinnedState(storage, reloadedNodeIds).state;
-  featured = loadFeaturedState(storage, getPublicMediaIds(reloadedGraph)).state;
+  featured = loadFeaturedState(storage, getPublishedMediaIds(mapFacts.prototype.seededThoughts, authored)).state;
   const visitor = projectGraphForMode(reloadedGraph, "visitor");
 
   assert.equal(selection.confirmed, true);
@@ -185,7 +186,7 @@ test("the complete three-work walkthrough survives reload as one private-to-publ
     "left-hand",
   ]);
   assert.equal(visitor.nodes.filter((node) => node.type === "thought").length, 7);
-  assert.equal(visitor.nodes.some((node) => node.status === "draft"), false);
+  assert.equal(visitor.nodes.some((node) => node.type === "thought" && node.status === "draft"), false);
   assert.equal(
     visitor.edges.some(
       (edge) =>

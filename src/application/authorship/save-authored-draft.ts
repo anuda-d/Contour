@@ -1,7 +1,6 @@
 import type { ClockPort } from "../../kernel/clock.ts";
 import type { IdentifierPort } from "../../kernel/identifier.ts";
 import {
-  composeGraphWithDrafts,
   connectDraft,
   createDraft,
   editDraft,
@@ -9,10 +8,10 @@ import {
   type ThoughtMutation,
   type ThoughtState,
 } from "../../product/authorship/draft-state.ts";
+import { buildMapGraph, type MapProjectionFacts } from "../../product/map/map-graph.ts";
 import type { AuthoredThoughtPersistencePort } from "./authored-thought-persistence.ts";
 
 type MediaIds = ReadonlySet<string> | Iterable<string>;
-type MapFactGraph = Parameters<typeof composeGraphWithDrafts>[0];
 
 export type SaveAuthoredDraftCommand =
   | Readonly<{
@@ -41,7 +40,7 @@ type SaveAuthoredDraftSuccess = Readonly<{
   persistenceSaved: boolean | null;
   state: ThoughtState;
   thought: Thought;
-  graph: ReturnType<typeof composeGraphWithDrafts>;
+  graph: ReturnType<typeof buildMapGraph>;
   message: string;
 }>;
 
@@ -78,7 +77,7 @@ const changedMutation = (
  * read-model projection, and rendering outwards.
  */
 export function saveAuthoredDraft(
-  baseGraph: MapFactGraph,
+  mapFacts: MapProjectionFacts,
   state: ThoughtState,
   command: SaveAuthoredDraftCommand,
   validMediaIds: MediaIds,
@@ -113,7 +112,7 @@ export function saveAuthoredDraft(
       persistenceSaved: null,
       state: result.state,
       thought: result.draft,
-      graph: composeGraphWithDrafts(baseGraph, result.state),
+      graph: buildMapGraph(mapFacts, result.state),
       message: result.message,
     };
   }
@@ -134,7 +133,7 @@ export function saveAuthoredDraft(
     persistenceSaved: persisted.saved,
     state: persisted.state,
     thought,
-    graph: composeGraphWithDrafts(baseGraph, persisted.state),
+    graph: buildMapGraph(mapFacts, persisted.state),
     message,
   };
 }
