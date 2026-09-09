@@ -110,5 +110,6 @@ Read the implementation state:
 
 Coding agents must begin with the [Current Development Index](docs/plans/CURRENT.md).
 They must confirm that one owner-approved goal has standing authorization and stop when authorization is absent or paused.
-Every implementation unit begins in a fresh task and ends with a temporary handoff that selects no next unit.
-During the daily 18:00-23:00 America/Toronto window, a clean accepted unit may create one fresh successor task without intermediate owner approval.
+One orchestrator generation may manage up to three sequential accepted slices in the same authoritative checkout.
+Each slice uses one fresh sole-writer task, while its explorers and reviewer remain read-only.
+After the third acceptance or an earlier alignment boundary, the orchestrator records a successor-free handoff and the scheduler may dispatch one fresh orchestrator generation during the authorized window.

@@ -10,7 +10,9 @@ for required_file in \
   README.md \
   package.json \
   scripts/development_loop_lock.py \
+  scripts/development_loop_state.py \
   tests/development-loop-lock.test.ts \
+  tests/development-loop-state.test.ts \
   docs/main/DEVELOPMENT_LOOP.md \
   docs/architecture/ARCHITECTURE_CONTRACT.md \
   docs/architecture/COMPATIBILITY_INVENTORY.md \
@@ -55,6 +57,14 @@ for shared_field in \
   'Scheduled window' \
   'Fresh-task relay' \
   'Alignment due' \
+  'Runtime lifecycle source' \
+  'Current generation' \
+  'Generation phase' \
+  'Accepted slices this generation' \
+  'Active slice' \
+  'Slice phase' \
+  'Slice retry status' \
+  'Fresh-orchestrator handoff' \
   'Visual checkpoint' \
   'UI units since visual checkpoint' \
   'Standing implementation authority'
@@ -79,6 +89,14 @@ alignment_due=$(read_field 'Alignment due' "$state_file")
 visual_checkpoint=$(read_field 'Visual checkpoint' "$state_file")
 ui_units=$(read_field 'UI units since visual checkpoint' "$state_file")
 standing_authority=$(read_field 'Standing implementation authority' "$state_file")
+runtime_source=$(read_field 'Runtime lifecycle source' "$state_file")
+current_generation=$(read_field 'Current generation' "$state_file")
+generation_phase=$(read_field 'Generation phase' "$state_file")
+generation_slices=$(read_field 'Accepted slices this generation' "$state_file")
+active_slice=$(read_field 'Active slice' "$state_file")
+slice_phase=$(read_field 'Slice phase' "$state_file")
+slice_retry_status=$(read_field 'Slice retry status' "$state_file")
+generation_handoff=$(read_field 'Fresh-orchestrator handoff' "$state_file")
 audit_baseline=$(read_field 'Last audited commit' "$state_file")
 audit_units=$(read_field 'Accepted implementation units since audit' "$state_file")
 
@@ -95,6 +113,24 @@ test "$frozen_baseline" = approved
 test "$architecture_gate" = open -o "$architecture_gate" = approved
 test "$scheduled_window" = 'daily 18:00-23:00 America/Toronto'
 test "$alignment_due" = yes -o "$alignment_due" = no
+test "$runtime_source" = 'Git common directory state'
+case "$generation_slices" in
+  0|1|2|3) ;;
+  *) echo "Invalid generation slice count: $generation_slices" >&2; exit 1 ;;
+esac
+case "$generation_phase" in
+  idle|selecting|'slice active'|'alignment due'|alignment|'handoff ready'|paused|blocked|complete) ;;
+  *) echo "Invalid generation phase: $generation_phase" >&2; exit 1 ;;
+esac
+if test "$current_generation" = none
+then
+  test "$generation_phase" = idle -o "$generation_phase" = paused -o "$generation_phase" = complete
+  test "$generation_slices" = 0
+  test "$active_slice" = none
+  test "$slice_phase" = none
+  test "$slice_retry_status" = none
+fi
+test "$generation_handoff" = active -o "$generation_handoff" = paused -o "$generation_handoff" = stopped
 case "$ui_units" in
   0|1|2|3|4|5) ;;
   *) echo "Invalid UI checkpoint count: $ui_units" >&2; exit 1 ;;
@@ -109,20 +145,54 @@ test "$(grep -c '^- Active work:' "$current_file")" -eq 1
 active_goal_count=$(find docs/plans -mindepth 2 -maxdepth 2 -name GOAL.md -exec \
   grep -l '^Status: active;' {} + | wc -l | tr -d ' ')
 
-grep -q 'One implementation task owns at most one work unit\.' \
+grep -q 'One orchestrator generation manages up to three sequential accepted slices' \
   docs/main/DEVELOPMENT_LOOP.md
-grep -q 'No next unit selected' docs/main/DEVELOPMENT_LOOP.md
-grep -q 'newly created fresh task' docs/main/DEVELOPMENT_LOOP.md
+grep -q 'No next slice selected' docs/main/DEVELOPMENT_LOOP.md
+grep -q 'Every slice is delegated to a fresh task' docs/main/DEVELOPMENT_LOOP.md
+grep -q 'Create the writer in the saved Contour project with environment' \
+  docs/main/DEVELOPMENT_LOOP.md
+grep -q 'releases checkout ownership before finalization' docs/main/DEVELOPMENT_LOOP.md
+grep -q 'persists a one-use recovery dispatch ticket' docs/main/DEVELOPMENT_LOOP.md
+grep -q 'globally single-use across orchestrator, writer, and reviewer roles' docs/main/DEVELOPMENT_LOOP.md
+grep -q 'record-completion-audit' docs/main/DEVELOPMENT_LOOP.md
+grep -q 'record-ui-checkpoint' docs/main/DEVELOPMENT_LOOP.md
+grep -q 'complete-alignment.*successor-free handoff' docs/main/DEVELOPMENT_LOOP.md
+grep -q 'final accepted slice first updates the canonical goal documents' docs/main/DEVELOPMENT_LOOP.md
+grep -q 'complete criterion-to-`accepted` map' docs/main/DEVELOPMENT_LOOP.md
+grep -q 'record-goal-review' docs/main/DEVELOPMENT_LOOP.md
+grep -q 'record-goal-review --result pass|block' docs/main/DEVELOPMENT_LOOP.md
+grep -q 'schema version 1' docs/main/DEVELOPMENT_LOOP.md
+grep -q 'canonical installed `bproject-autonomous-graph-loop` configuration' docs/main/DEVELOPMENT_LOOP.md
+grep -q 'No repository change or new goal follows the `complete` transition' docs/main/DEVELOPMENT_LOOP.md
+grep -q 'One orchestrator generation may manage up to three sequential accepted slices' README.md
+if grep -q 'Every implementation unit begins in a fresh task' README.md; then
+  echo 'Retired one-task relay remains in README.md' >&2
+  exit 1
+fi
+if grep -Eq 'relays clean units|before commit or relay|release after terminal handoff|version 2 writer locks|active status' \
+  docs/plans/architecture-foundation/IMPLEMENTATION_PLAN.md; then
+  echo 'Retired loop wording remains in the implementation plan' >&2
+  exit 1
+fi
+grep -q 'commit is the clean authoritative checkout `HEAD`' docs/main/DEVELOPMENT_LOOP.md
 grep -q '18:00 until' docs/main/DEVELOPMENT_LOOP.md
-grep -q 'create one fresh successor task' docs/main/DEVELOPMENT_LOOP.md
 grep -q 'development_loop_lock.py acquire' AGENTS.md docs/main/DEVELOPMENT_LOOP.md
+grep -q 'acquires lifecycle-bound checkout ownership' docs/main/DEVELOPMENT_LOOP.md
+grep -q 'Version 3 `assert-owner`' docs/main/DEVELOPMENT_LOOP.md
+grep -q 'TASK_NOT_ACTIVE_WRITER' scripts/development_loop_lock.py tests/development-loop-lock.test.ts
+grep -q 'LEGACY_LOCK_RELEASE_ONLY' scripts/development_loop_lock.py tests/development-loop-lock.test.ts
+grep -q 'GOAL_COMPLETION_AUTOMATION_NOT_PAUSED' scripts/development_loop_state.py tests/development-loop-state.test.ts
+grep -q 'GOAL_COMPLETION_AUTOMATION_ID_MISMATCH' scripts/development_loop_state.py tests/development-loop-state.test.ts
+grep -q 'COMMIT_TRAILER_MISMATCH' scripts/development_loop_state.py tests/development-loop-state.test.ts
 grep -q 'Read-only inspection and read-only explorer subagents do not require checkout ownership' \
   AGENTS.md
 grep -q 'recover-stale' docs/main/DEVELOPMENT_LOOP.md
-grep -q 'Never use an age or timeout alone to recover ownership' \
+grep -q 'Age alone never permits takeover' \
   docs/main/DEVELOPMENT_LOOP.md
-grep -q 'reported a terminal state never resumes repository work under its prior claim' \
-  docs/main/DEVELOPMENT_LOOP.md
+grep -q 'reported a terminal state must never resume' \
+    AGENTS.md
+grep -q 'Every mutation uses an expected revision' docs/main/DEVELOPMENT_LOOP.md
+grep -q 'A fourth selection is illegal' docs/main/DEVELOPMENT_LOOP.md
 grep -q 'No human approval is required between clean' \
   docs/plans/architecture-foundation/IMPLEMENTATION_PLAN.md
 grep -q 'contour-architecture-foundation-handoff.md' \
@@ -158,8 +228,9 @@ case "$owner_authorization" in
     test "$active_goal_id" = architecture-foundation
     test "$authorization_scope" = 'active goal'
     test "$authorization_source" = owner
-    test "$loop_cadence" = 'scheduled autonomous relay'
-    test "$fresh_task_relay" = active
+    test "$loop_cadence" = 'scheduled orchestrator generations'
+    test "$fresh_task_relay" = 'replaced by generation handoff'
+    test "$generation_handoff" = active
     test "$standing_authority" = active
     grep -q '^Status: Architecture Foundation is active under standing scheduled authorization\.$' \
       "$current_file" README.md
@@ -173,7 +244,7 @@ case "$owner_authorization" in
       "$state_file"
     if test "$current_run" = none; then
       test "$incomplete_run" = none
-      test "$run_status" = 'awaiting scheduled fresh task' -o \
+      test "$run_status" = 'awaiting orchestrator generation' -o \
         "$run_status" = selecting -o \
         "$run_status" = 'needs owner decision'
     else
@@ -190,7 +261,7 @@ case "$owner_authorization" in
       test "$run_status" != 'needs owner decision'
     else
       test "$run_status" = 'needs owner decision'
-      test "$fresh_task_relay" = active
+      test "$fresh_task_relay" = 'replaced by generation handoff'
     fi
     ;;
   paused)
@@ -200,6 +271,7 @@ case "$owner_authorization" in
     test "$authorization_source" = owner
     test "$loop_cadence" = paused
     test "$fresh_task_relay" = paused
+    test "$generation_handoff" = paused
     test "$standing_authority" = paused
     test "$run_status" = paused
     ;;
@@ -210,6 +282,7 @@ case "$owner_authorization" in
     test "$authorization_source" = none
     test "$loop_cadence" = stopped
     test "$fresh_task_relay" = stopped
+    test "$generation_handoff" = stopped
     test "$standing_authority" = none
     test "$current_run" = none
     test "$incomplete_run" = none
