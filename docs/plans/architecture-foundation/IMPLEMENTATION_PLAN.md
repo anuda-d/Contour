@@ -41,8 +41,8 @@ Status: active shared state; standing scheduled owner authorization.
 | AF-5 Isolated effects and validated boundaries | accepted | The executable inventory now covers browser storage, root, resize, storage-change, clock, identifiers, debug global, seed, form snapshots and live inputs, every Map data attribute, and every Map wheel, pointer, keyboard, and geometry value. Invalid values remain inert before trusted state, CSS, or application callbacks. |
 | AF-6 Explicit projections and privacy | accepted | Application-created owner and visitor Map read models now structurally separate rendered graph data. Visitor Map rendering receives no Draft or draft-only Media, generated positions, or pins, while public positions preserve full-graph layout influence and owner-only transient placement remains outside visitor rendering. |
 | AF-7 Durable compatibility | accepted | Six current browser-storage key shapes across selection, authored Thought V2/V1/legacy Draft precedence, featured Media, and pinned positions have accepted typed migration, retention, recovery, unavailable-storage, reload, and privacy evidence. |
-| AF-8 Frozen visible behavior | open | None yet. |
-| AF-9 Layered test and quality gates | open | Partial: strict typechecks, Vite build, import boundaries, product, application, adapter, composition, DOM, CSS-regression, end-to-end acceptance, and architecture-boundary suites now include the complete AF-5 executable effect and native-input inventory. The final cross-criterion invariant-to-test inventory and rendered evidence remain open. |
+| AF-8 Frozen visible behavior | accepted | [Rendered walkthrough](AF-8_RENDERED_WALKTHROUGH.md) covers local production desktop and touch-enabled mobile owner and visitor flows in light and dark modes, private/public separation, persistence, interaction, responsive seams, focus behavior, and clean console evidence without a product change. |
+| AF-9 Layered test and quality gates | open | Partial: strict typechecks, Vite build, import boundaries, product, application, adapter, composition, DOM, CSS-regression, end-to-end acceptance, and architecture-boundary suites now include the complete AF-5 executable effect and native-input inventory. AF-8 now supplies rendered evidence. The final cross-criterion invariant-to-test inventory remains open. |
 | AF-10 Durable completion walkthrough | open | None yet. |
 
 This table records accepted evidence only.
@@ -55,8 +55,7 @@ It is not a task sequence, roadmap, or permission to infer later work units.
 
 | Open criterion | Present evidence | Exact remaining blocker | Observable acceptance condition |
 | --- | --- | --- | --- |
-| AF-8 Frozen visible behavior | Node suites cover deterministic behavior, static UI contracts, and compatibility scenarios. | No accepted rendered desktop and mobile owner/visitor walkthrough proves interaction, responsive layout, or light/dark preservation. | Documented browser-driven frozen-flow evidence covers the stated behavior and visual baseline. |
-| AF-9 Layered test and quality gates | Strict typechecks, build, architecture enforcement, and layered product, application, adapter, composition, DOM, CSS, and acceptance suites include the complete AF-5 inventory. | The final cross-criterion invariant-to-test inventory and AF-8 or AF-10 rendered evidence remain open. | Explicit evidence covers the final implemented seams with deterministic product, fake-port application, adapter, DOM, architecture, strict build, and repository checks. |
+| AF-9 Layered test and quality gates | Strict typechecks, build, architecture enforcement, and layered product, application, adapter, composition, DOM, CSS, and acceptance suites include the complete AF-5 inventory. AF-8 supplies desktop and mobile light and dark rendered evidence. | The final cross-criterion invariant-to-test inventory remains open. | Explicit evidence covers the final implemented seams with deterministic product, fake-port application, adapter, DOM, architecture, strict build, and repository checks. |
 | AF-10 Durable completion walkthrough | Prior prototype completion and current Node checks exist. | Final completion depends on all remaining criteria and a clean rendered legacy-state walkthrough. | All criteria are accepted with clean build, desktop/mobile light/dark legacy-state walkthrough, console evidence, and final independent review. |
 
 At the recorded audit baseline no criterion was ready for acceptance.
@@ -65,8 +64,9 @@ AF-3 is accepted: identity, catalogue, and authored facts now own their current 
 AF-4 is now accepted after complete workflow evidence and fresh criterion-wide independent review.
 Its capture-preparation blocker is eliminated; rendering and focus translation remain correctly outward.
 AF-5 is accepted after the complete executable effect and native-input boundary inventory.
-AF-9 remains open for its final cross-criterion invariant inventory and rendered evidence.
-AF-8 and AF-10 require their final rendered walkthroughs.
+AF-8 is accepted with the rendered frozen-behavior walkthrough.
+AF-9 remains open for its final cross-criterion invariant inventory.
+AF-10 still requires its final rendered legacy-state completion walkthrough.
 This audit is present-state evidence, with no future task queue.
 
 ## Architecture entry state
