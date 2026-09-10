@@ -7,15 +7,18 @@ repository. Product direction belongs to the owner.
 
 - Start with `docs/plans/CURRENT.md`; it is the compact operational index.
 - Read-only inspection and read-only explorer subagents do not require checkout ownership.
-- Immediately before the first repository mutation, follow the compact no-overlap gate in `docs/main/DEVELOPMENT_LOOP.md` and run `python3 scripts/development_loop_lock.py acquire`.
+- Orchestrators manage lifecycle state and never modify the checkout.
+- Every slice uses one fresh writer task as its sole repository modifier.
+- Claim the persisted writer ticket under the fresh task identity, then immediately before the first repository mutation follow the compact no-overlap gate in `docs/main/DEVELOPMENT_LOOP.md` and run `python3 scripts/development_loop_lock.py acquire`.
+- Retain the returned claim ID and pass it to every `assert-owner` and `release` operation.
 - After a resumed turn, assert ownership before the next repository mutation.
-  Assert again before commit or relay, and release after the terminal handoff or immediately before relay.
+  Assert again before commit, commit the reviewed tree, and release checkout ownership before lifecycle finalization.
 - A task that has reported a terminal state must never resume repository work under that task's prior claim.
 - Confirm that exactly one owner-approved goal is active.
 - Confirm that the active goal has standing owner authorization and that no
   owner decision, pause, unsafe baseline, or overlapping run blocks work.
-- Confirm that this is a fresh implementation chat for the selected or resumed
-  work unit and that this chat has not completed another unit.
+- Confirm that the orchestrator generation and writer ticket in the persisted
+  loop state match this task's role and claim.
 - Read the latest temporary handoff when one exists, but treat the active goal
   and implementation state as authoritative.
 - Standing authorization permits successive bounded units only inside the
@@ -74,8 +77,11 @@ repository. Product direction belongs to the owner.
   skill. Record its Design Read, design dials, relevant redesign audit, and
   applicable pre-flight results. Apply its product-UI rules contextually rather
   than mechanically importing landing-page patterns.
-- The orchestrator is the sole implementation writer and owns selection,
-  integration, validation, and completion judgment.
+- The orchestrator owns selection, frozen slice contracts, acceptance, and
+  generation alignment, but it never modifies the repository checkout.
+- The fresh writer owns one slice, is its sole repository modifier, and manages
+  its read-only explorer and reviewer subagents.
+- The reviewer records its verdict through the lifecycle tool under its own fresh task identity and never modifies the repository checkout.
 - Complete one bounded end-to-end behavior or architectural responsibility authorized by the active goal.
 - Group related entry paths, validators, adapters, helpers, imports, and tests needed to close that responsibility in the same unit.
   A single handler, wrapper, or file move is a standalone unit only when it closes a concrete acceptance gap or is an indispensable prerequisite justified by dependency or preservation risk.
@@ -110,33 +116,36 @@ repository. Product direction belongs to the owner.
 - Standing authorization exists only when `docs/plans/CURRENT.md` records one
   active owner-approved goal with `Owner authorization: standing`. If no active
   goal is recorded, stop before implementation.
-- Work remains one bounded unit at a time. Do not create a future task queue.
-- One implementation chat owns at most one work unit.
-- After an accepted commit or another terminal unit state, write the compact
-  redacted temporary handoff required by the development loop, record `No next
-  unit selected`, and stop the chat.
-- Select or continue the next unit only in a newly created fresh chat.
+- One orchestrator generation manages at most three sequential accepted slices.
+- Each slice has one immutable completion contract and one fresh writer task.
+- A writer handles at most one slice and stops after returning its compact result.
+- Only a slice with matching focused and full validation, clean fresh review,
+  and an exactly identified commit counts toward the generation limit.
+- An incomplete slice remains the active slice and is recovered without
+  replacement or contract weakening.
+- A pause or block fences all writer and reviewer lifecycle transitions while preserving the exact active slice.
 - Independent review is required. A reviewer reports findings but does not make
   product decisions.
+- Orchestrator, writer, and reviewer task identities are globally single-use across lifecycle roles.
 - Independent review checks that the responsibility's completion condition is met and the remaining acceptance blockers are explicit, as well as implementation correctness.
 - Record candidate evidence before independent review so the reviewer inspects
   the claim as well as the implementation. Focused and repository validation
   plus a clean fresh independent review permit local acceptance and commit;
   full rendered click-through evidence is required only when the visual
   checkpoint is due.
-- After a unit is committed, hand off and stop.
-  A fresh chat may select one coherent responsibility inside the same goal only while standing authorization remains active and any due completion audit has been performed.
-- During an authorized scheduled window, an accepted unit may create exactly one
-  fresh successor task in the same project after its handoff.
-  The current task still stops and never selects the successor's unit.
+- After an accepted slice, its writer stops and the same orchestrator may select
+  the next slice while fewer than three slices have been accepted.
+- At three accepted slices, or an earlier natural goal boundary, the orchestrator
+  performs whole-goal alignment, writes a compact handoff with `No next slice
+  selected`, and hands control to a fresh orchestrator.
 - For Architecture Foundation, new units may start daily from 18:00 until 23:00
   America/Toronto.
-  An accepted task finishing before 23:00 relays immediately; at or after 23:00
-  it does not relay.
-- Hourly scheduled tasks are recovery starts and must no-op when another live
-  project implementation task owns the work.
-  With no live owner, they resume exactly a matching recorded current and
-  incomplete run; conflicting fields stop safely.
+  An orchestrator may dispatch another slice before 23:00 while its generation
+  remains below the three-slice limit.
+- Hourly scheduled tasks are liveness and recovery triggers only.
+  They inspect persisted lifecycle state and may dispatch or recover its exact
+  orchestrator, but they never select a slice, implement, review, or commit.
+- A scheduled recovery persists its exact terminal-owner intent and one-use ticket before creating the recovery task.
 - No human approval is required between clean units inside the active goal.
   Owner-decision, safety, overlap, review, validation, and external-action gates
   remain in force.
@@ -151,10 +160,11 @@ repository. Product direction belongs to the owner.
 
 ## Model routing
 
-- The sole-writer orchestrator uses `gpt-5.6-terra` with high reasoning.
-- Explorer subagents use `gpt-5.6-terra` with high reasoning and are read-only.
+- The lifecycle orchestrator uses `gpt-5.6-terra` with high reasoning.
+- Fresh slice writers use `gpt-5.6-terra` with high reasoning.
+- Explorer subagents are delegated by the writer, use `gpt-5.6-terra` with high reasoning, and are read-only.
 - Fresh independent review uses `gpt-5.6-sol` with high reasoning.
-- Review agents are read-only and must return findings to the orchestrator.
+- Review agents are read-only and must return findings to the slice writer.
 
 ## Communicating results
 

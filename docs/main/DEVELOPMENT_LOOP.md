@@ -1,471 +1,302 @@
 # Goal-bounded autonomous development loop
 
-Status: current operating contract for scheduled development against one
-owner-approved goal.
+Status: current operating contract for scheduled development against one owner-approved goal.
 
-This loop advances one approved goal through complete, bounded responsibilities that are independently validated in successive fresh tasks.
-It operates only when `docs/plans/CURRENT.md` records exactly one active goal
-with standing owner authorization.
-Routine implementation, acceptance, local commit, handoff, and relay inside the
-approved goal do not wait for owner review.
-
-The owner remains the authority for a new goal and for unresolved material
-product, visual, scope, privacy, or lasting architecture decisions.
-Standing authorization never broadens or reinterprets the active goal.
-
-## Scheduled operating window
-
-The Architecture Foundation loop may start new units daily from 18:00 until
-23:00 in America/Toronto.
-The recurring scheduler starts a fresh recovery task once per hour at 18:00,
-19:00, 20:00, 21:00, and 22:00.
-
-An accepted unit that finishes before 23:00 creates one fresh successor task in
-the same local project after writing its handoff.
-That relay provides back-to-back progress without letting one task own two
-units.
-At or after 23:00, the active task finishes its current unit safely, writes the
-handoff, and does not create a successor.
-
-The hourly starts are recovery opportunities, not permission for overlap.
-Every scheduled or relayed task first inspects the recorded run state without claiming ownership.
-It claims the durable checkout-ownership record immediately before its first repository mutation.
-If another durable owner is active, the new task exits without changing the repository.
-If no live task owns a matching recorded `Current run` and `Incomplete run`, the
-fresh task resumes exactly that orphaned unit instead of selecting a new one.
-If the two run fields conflict, the ownership record is unreadable, or the recorded owner's state cannot be verified, stop safely without changes.
-
-Outside the scheduled window, a task may finish an already-recorded unit safely
-but may not select a new unit or relay a successor.
-An explicit owner instruction may perform administrative work outside the
-window but does not silently start an implementation unit.
-
-## Goal and work-unit boundary
-
-The active goal defines the outcome, invariants, authorized scope, validation
-standard, and completion condition.
-A work unit completes one coherent behavior or architectural responsibility and eliminates a concrete acceptance gap for one or more criteria.
-Its boundary is the responsibility's owner, inputs, outputs, invariants, and known active entry paths.
-Group the related validators, helpers, adapters, imports, and tests required to close that boundary in the same unit.
-Do not split sibling paths into successive units solely because each can be changed and tested separately.
-Do not combine unrelated responsibilities to increase commit size.
-A narrow handler change, wrapper extraction, or file relocation is a standalone unit only when it closes a concrete acceptance gap or is an indispensable prerequisite.
-For a prerequisite, record the dependency or preservation risk that prevents completing the surrounding responsibility safely in the same unit, plus the prerequisite's own completion condition.
-One implementation task owns at most one work unit.
-
-Standing authorization permits successive bounded units only inside the active
-goal.
-The loop selects each unit from current repository evidence after the prior unit
-is accepted and committed.
-It never records a future task queue.
-
-Each work unit:
-
-1. completes any due completion audit and selects one bounded responsibility that eliminates an acceptance gap;
-2. obtains one to three independent read-only explorations;
-3. states the affected criteria, responsibility, gap to eliminate, completion condition, and evidence claim;
-4. implements one coherent change through the sole-writer orchestrator;
-5. runs focused checks and the full repository check;
-6. records candidate evidence;
-7. receives a fresh independent read-only review;
-8. resolves every blocking finding and repeats validation and fresh review after
-   a material correction;
-9. records the eliminated gap, refreshes remaining criterion blockers and the audit count, and creates one local commit;
-10. writes the compact temporary handoff with `No next unit selected`;
-11. creates one fresh successor before 23:00 when relay remains authorized; and
-12. stops without selecting another unit.
-
-## Completion audit
-
-Completion audits are part of normal task orientation and review.
-They require no separate task, extra review stage, or routine owner approval.
-The implementation state contains one `Completion audit` section with `Last audited commit` and `Accepted implementation units since audit` fields.
-An audit is due before new selection when the baseline is `none` or the count is `3`.
-Complete an already-recorded matching incomplete unit before performing a due audit; never replace that unit to satisfy the cadence.
-
-When due, compare every open criterion with current source, tests, and accepted evidence.
-Record a compact table of criterion, evidence or owning source, exact remaining implementation or verification blocker, and observable acceptance condition.
-Distinguish missing implementation from missing proof and check whether existing evidence is sufficient for acceptance before proposing more code.
-Replace vague residual descriptions such as "other boundaries remain open" with concrete, evidence-backed gaps.
-This is an inventory of present acceptance blockers, with no future unit IDs, task sequence, speculative scope, or selected successor.
-If no criterion became accepted during the interval, assess whether unit fragmentation is preventing completion and use that assessment when grouping the next responsibility.
-An unchanged criterion count alone does not block work or require owner approval when the remaining gaps are concrete and authorized.
-
-Perform the audit read-only during orientation and persist it with the selected unit only after acquiring ownership and rechecking state.
-Set `Last audited commit` to the inspected HEAD and reset `Accepted implementation units since audit` to `0` when recording that selection.
-If no unit can be selected, persist the audit only when an authorized terminal handoff requires a repository update, under ownership.
-The audit itself never marks a criterion accepted; acceptance still requires the normal validation and fresh independent review.
-An evidence-only verification unit is appropriate when the implementation already satisfies a criterion.
-
-At each accepted implementation unit, refresh the touched criteria's concrete remaining blockers and increment the count once, capped at `3`.
-Administrative commits, recovery no-ops, corrections within a unit, and blocked or paused units do not increment it.
-The third accepted unit leaves the audit due for the next fresh task; it does not start an audit or a second unit after committing.
-Use the accepted run log to reconcile the count if a handoff was interrupted.
-Keep this audit record in the implementation state only and refer to it from the compact index and handoff.
-
-## Architecture Foundation exception
-
-The owner explicitly authorized architecture-only work for the active
-Architecture Foundation goal.
-During this goal, enforceable architecture, compatibility, migration, and test
-evidence are valid progress even when a unit intentionally changes no visible
-product behavior.
-
-This exception is narrow.
-The accepted Identity Map Prototype remains the frozen behavior and visual
-baseline.
-No Discovery, Library, Themes, Search, personalization, framework migration,
-visual redesign, or speculative future module is authorized.
-
-While the architecture entry gate is open, only the contract unit defined by
-the active goal may be selected.
-Broad source migration starts only after that gate is accepted.
-
-## Fresh-task handoff contract
-
-Every implementation unit begins in a newly created fresh task.
-The first unit reads the active goal and implementation state without requiring
-a prior handoff.
-Every later unit reads the latest temporary handoff before selecting or
-continuing work.
-
-A task may orient, select or continue one unit, explore, implement, validate,
-review, correct, accept, commit, hand off, and relay.
-It may not select or implement a second unit.
-
-At every accepted, paused, blocked, or owner-decision terminal state, write a
-compact redacted handoff in the operating system temporary directory.
-Use `contour-<active-goal-id>-handoff.md` and capture the goal id before a
-completion transition clears it.
-
-The handoff contains only:
-
-- active goal id and exact terminal state;
-- accepted commit or exact incomplete working-tree state;
-- criterion, eliminated acceptance gap, and evidence status;
-- completion-audit baseline and count, with a link to the authoritative implementation state;
-- focused, full, rendered, and independent-review results as applicable;
-- UI checkpoint count;
-- risks and unresolved owner decisions;
-- `No next unit selected`; and
-- suggested skills for the next task.
-
-The handoff is context, not authority, accepted evidence, or a future task
-queue.
-If it is unavailable, the fresh task reconstructs factual state from the
-repository and does not infer missing decisions or discard work.
-
-## Fresh-task relay
-
-After an accepted local commit and handoff, read the current local time in
-America/Toronto.
-If it is before 23:00 and standing authorization remains active:
-
-1. use the Codex project tools to identify the exact current local project;
-2. assert and release checkout ownership, then enter handoff-only state and perform no more repository work;
-3. create one fresh local task in that project with `gpt-5.6-terra` and high reasoning;
-4. give it the active automation prompt and tell it to begin with the authoritative read order;
-5. wait once, briefly, only to confirm dispatch; and
-6. stop the current task.
-
-Do not relay after a blocked, paused, owner-decision, unsafe-baseline,
-overlapping-run, or goal-complete terminal state.
-Do not relay at or after 23:00.
-Do not interpret failure to create a successor as permission to keep working in
-the current task.
-The next hourly recovery start may resume from the handoff.
-
-## No-overlap gate
-
-Read-only orientation, inspection, and explorer agents do not require checkout ownership.
-Treat unlocked observations as advisory until the relevant state is rechecked after acquisition.
-Immediately before the first repository mutation, run `python3 scripts/development_loop_lock.py acquire`.
-The command obtains the current task ID from `CODEX_THREAD_ID` and creates the single-writer record atomically.
-If acquisition reports `HELD_BY <owner-id>`, inspect only that exact task.
-A non-terminal owner keeps the lock and this task stops at **ACTIVE RUN EXISTS**.
-A clearly documented terminal owner may be atomically replaced with `recover-stale` only when the task ID and unique claim ID from `status --json` still match and the caller passes `--verified-terminal`.
-Legacy tokenless records require owner release, while unreadable records or uncertain owner state stop at **ACTIVE RUN STATUS UNKNOWN**.
-Never use an age or timeout alone to recover ownership or scan the unscoped task list.
-After a resumed turn, run `assert-owner` before the next repository mutation.
-A task that has reported a terminal state never resumes repository work under its prior claim.
-Run it again immediately before commit or relay.
-A mismatch stops all further repository work.
-Release ownership after every terminal handoff.
-For a relay, assert and release immediately before creating the successor, then perform no more repository work.
-The successor acquires ownership for itself before its first repository mutation.
-
-The recorded `Current run` and `Incomplete run` must also agree.
-A fresh task continues a recorded incomplete unit instead of selecting a
-replacement.
-
-## Owner decision boundary
-
-Routine work-unit evidence is accepted under standing authorization after
-focused and full validation plus clean fresh independent review.
-The owner is not a routine unit reviewer.
-
-Stop at **NEEDS OWNER DECISION** before acting when continuation requires:
-
-- selecting, replacing, broadening, or reinterpreting a goal;
-- a material product, visual, scope, privacy, or lasting architecture choice not
-  already settled by authoritative documents;
-- changing the frozen behavior or design outside an allowed correctness fix;
-- resolving an open question that materially affects behavior;
-- destructive cleanup, disposal of user work, deployment, publication, push,
-  merge, or another external side effect;
-- authority to absorb overlapping unrelated changes; or
-- direction after the owner pauses or stops the loop.
-
-When a decision is required, record the smallest concrete question, set `Run
-status` to `needs owner decision`, write the handoff, and do not relay.
-
-## Frontend design contract
-
-For work affecting Map presentation, interaction, visibility, responsive
-layout, design tokens, or reusable frontend foundations, use the
-`design-taste-frontend` skill.
-Record its Design Read, design dials, relevant redesign audit, and applicable
-pre-flight results before acceptance.
-
-The Architecture Foundation freezes the accepted visual design.
-A UI-affecting unit must explain why an accessibility or correctness fix is
-required and demonstrate preservation of unrelated behavior.
-
-## Visual checkpoint cadence
-
-Count only accepted units that change a visible UI surface or interaction.
-Run the complete rendered checkpoint on every fifth such unit and before goal
-completion.
-
-The checkpoint exercises accumulated affected flows at representative desktop
-and mobile sizes, supported color modes, keyboard and touch behavior,
-responsive seams, local persistence, and console output.
-Reset the counter only after checkpoint evidence is accepted.
-Independent code review remains required for every unit.
-
-## Model routing
-
-- The sole-writer orchestrator uses `gpt-5.6-terra` with high reasoning.
-- Read-only explorer agents use `gpt-5.6-terra` with high reasoning.
-- Every independent implementation and alignment review uses a fresh
-  `gpt-5.6-sol` agent with high reasoning.
-- Reviewers are read-only and may not edit, commit, choose product direction,
-  or determine a new goal.
+The loop advances one approved goal through bounded, independently validated slices.
+One orchestrator generation manages up to three sequential accepted slices before whole-goal alignment and a compact handoff to a fresh orchestrator.
+Each slice has one fresh writer that is the only task allowed to modify the repository checkout for that slice.
 
 ## Sources of authority
 
-Read these in order before repository work:
+Read these in order:
 
 1. `AGENTS.md`;
 2. `docs/plans/CURRENT.md`;
 3. the active goal linked from `CURRENT.md`;
 4. the linked implementation state;
-5. the latest temporary handoff when available;
-6. relevant implementation and tests located at selection time; and
-7. only the product specification relevant to the selected unit.
+5. `python3 scripts/development_loop_state.py status --json`;
+6. the latest temporary generation handoff when present;
+7. relevant implementation and tests; and
+8. only the product specification relevant to the selected slice.
 
-If sources conflict in a way that affects product direction, visual language,
-scope, privacy, or lasting architecture, stop at **NEEDS OWNER DECISION**.
+Repository commits and the versioned lifecycle record are authoritative for recovery.
+Markdown run fields and the temporary handoff are human-readable summaries and must never override conflicting structured state.
+The lifecycle record is stored under the repository's Git common directory so all local worktrees observe the same generation.
 
-## Standing authority
+## Roles and ownership
 
-While the active goal has `Owner authorization: standing`, the loop may:
+### Scheduler
 
-- select successive bounded units during the scheduled window;
-- implement one coherent change per unit;
-- add or update focused tests and quality gates;
-- update implementation-state evidence;
-- simplify or remove loop-owned code when it is the safest bounded solution;
-- use read-only explorers and reviewers;
-- accept clean reviewed evidence;
-- create local commits;
-- create the required temporary handoff; and
-- create one fresh successor task before 23:00.
+The scheduler is only a liveness and recovery trigger.
+It inspects authorization, the durable lifecycle record, and the exact recorded task when ownership may be stale.
+It may reserve one generation dispatch from `idle` or `handoff_ready`, or recover an exactly verified terminal owner.
+Before creating a recovery task, it persists a one-use recovery dispatch ticket against the exact terminal task and claim.
+It never chooses a slice, modifies source, validates, reviews, commits, aligns, or creates a speculative task queue.
 
-Standing authority does not permit the loop to:
+### Orchestrator generation
 
-- select or invent a new goal;
-- broaden or reinterpret the active goal;
-- decide an unresolved owner question;
-- weaken tests, validation, product boundaries, authorship, or privacy rules;
-- absorb, overwrite, discard, or commit unrelated user work;
-- push, merge, deploy, publish, or create unrelated external side effects;
-- use destructive cleanup to make a unit pass; or
-- treat a reviewer as a product decision-maker.
+One orchestrator owns lifecycle decisions for no more than three accepted slices.
+It selects one present acceptance gap, freezes its contract, dispatches one fresh writer, evaluates the returned evidence, and either continues with another slice or aligns.
+It may manage fewer than three slices when the goal completes, a natural alignment boundary is reached, or work becomes blocked.
+The orchestrator never modifies the repository checkout.
 
-## Preconditions
+### Slice writer
 
-Before selecting or continuing a unit, confirm that:
+Every slice is delegated to a fresh task through a one-use dispatch ticket.
+That writer acquires exact checkout ownership, handles one immutable slice contract, and is the only repository modifier for the slice.
+It may delegate one to three read-only explorers and a fresh read-only reviewer.
+After acceptance, an explicit incomplete state, or another terminal result, the writer releases checkout ownership, returns a compact result to the orchestrator, and stops.
 
-- the task has not completed another unit;
-- current time permits new selection, or an incomplete unit is being finished;
-- exactly one active owner-approved goal is linked;
-- owner authorization is standing;
-- no owner decision or alignment blocker is pending;
-- no overlapping task or recorded run exists;
-- before any repository mutation, the durable checkout-ownership record names the current task;
-- a current unit, if any, matches the incomplete unit;
-- the work is authorized by the active goal;
-- no future task queue is recorded;
-- a due completion audit is performed before new selection, without replacing a matching incomplete unit;
-- the architecture entry gate is respected;
-- the checkout contains no unsafe overlapping user changes; and
-- the repository check passes, or a pre-existing unrelated failure is recorded.
+### Read-only subagents
 
-If unrelated changes overlap the unit, stop at **BASELINE BLOCKED**.
-Never reset or discard them without direction.
+Explorers inspect current evidence and return findings to the writer.
+The independent reviewer checks the exact frozen contract, content identity, validation evidence, and proposed acceptance.
+It records its verdict under its own authenticated fresh task identity, then returns the result to the writer.
+Read-only subagents never edit, commit, select product direction, or own lifecycle state.
 
-## One work-unit run
+## Persisted state machine
 
-### 1. Orient
+`scripts/development_loop_state.py` is the only writer for lifecycle state.
+Every mutation uses an expected revision, role claim, allowed prior state, and unique operation ID.
+An identical operation replay returns its prior result.
+Reusing an operation ID with different input, using a stale revision, or using an old claim fails closed.
+Task identities are globally single-use across orchestrator, writer, and reviewer roles.
+Writes use an atomic replacement with file and directory synchronization.
 
-Read the sources of authority, latest handoff, run fields, accepted evidence,
-and repository state.
-Confirm this is a fresh task and perform only read-only orientation.
+The generation lifecycle is:
 
-### 2. Select one task
+```text
+idle or handoff_ready
+  -> selecting
+  -> slice_active
+  -> selecting              after accepted slice 1 or 2
+  -> alignment_due          automatically after accepted slice 3
+  -> alignment
+  -> handoff_ready
+  -> selecting              only through a fresh orchestrator generation
+```
 
-Complete any due completion audit, then choose one coherent responsibility with a concrete acceptance gap and observable completion condition.
-Prefer a unit that completes a criterion or removes an indispensable blocker to its acceptance.
-Include the known related paths needed to close the responsibility; explain any dependency or preservation risk that requires a narrower prerequisite.
-While the architecture entry gate is open, select only its contract unit.
+An earlier natural goal boundary may move `selecting` to `alignment_due` after at least one accepted slice.
+`paused`, `blocked`, and `complete` are explicit non-progress states.
+Writer and reviewer transitions require both `slice_active` and standing authorization, so pause or block immediately fences an active slice without discarding it.
 
-Immediately before recording the selection, acquire durable checkout ownership and recheck the relevant repository and run state.
+The slice lifecycle is:
 
-Record only that task under `Current run` and `Incomplete run`.
-State:
+```text
+selected
+  -> implementing
+  -> validating
+  -> reviewing
+  -> commit_pending         after clean review
+  -> accepted               through verified commit finalization
 
-> This work unit advances criteria X by completing responsibility Y and eliminating acceptance gap Z, verified by evidence E.
+reviewing
+  -> repairing
+  -> validating             with prior validation and review invalidated
 
-Record the owning layer, included paths, preservation boundary, and completion condition with that claim.
+reviewing or recovery
+  -> incomplete             when its persistent retry budget is exhausted
+```
 
-Do not record later tasks.
-If no honest gap advances the goal, stop at **NO JUSTIFIED CHANGE**.
+An incomplete slice remains active.
+It is never counted, replaced, or silently weakened.
 
-### 3. Explore
+## Frozen slice contract
 
-Use one to three read-only explorer agents for concrete independent questions.
-Wait for all explorers before editing.
-The orchestrator remains the sole writer.
+Before dispatch, the orchestrator records a contract containing:
 
-### 4. Implement
+- slice ID;
+- affected criterion;
+- owning responsibility;
+- exact acceptance gap;
+- observable completion condition;
+- included paths;
+- preservation boundaries; and
+- focused and full validation commands; and
+- an explicit UI-change boolean used for checkpoint accounting.
 
-Complete the recorded responsibility with the simplest coherent change that satisfies its completion condition.
-Preserve the visible behavior freeze, public and private boundaries, authored
-meaning, spatial separation, storage compatibility, and unrelated work.
+The state tool validates the contract, embeds its canonical value, and records its hash.
+No transition edits a selected contract.
+A material contract change requires explicit abandonment or owner direction, never an in-place rewrite.
 
-Do not add speculative infrastructure or future-feature seams.
+## Evidence and acceptance
 
-### 5. Validate
+Validation records must identify the exact contract hash and content identity reviewed.
+A material correction invalidates prior validation and review evidence.
+A reviewer task may review a slice only once, so every post-correction review is fresh.
 
-Run focused checks first and then `./scripts/check.sh`.
-Inspect the owned diff and verify the intended architecture or compatibility
-claim directly.
-Run rendered evidence only for a concrete risk, a due visual checkpoint, or
-AF-10.
+Before validation, the writer stages exactly the slice-owned content.
+The state tool derives its content identity from the Git tree and rejects unstaged or untracked content.
+Generation and slice baselines are derived from a clean, unlocked authoritative checkout `HEAD` and must continue from the last accepted or handed-off commit.
+After clean review, the state tool emits two required commit trailers:
 
-### 6. Record and review
+```text
+Contour-Slice: <slice-id>
+Contour-Contract: <contract-hash>
+```
 
-Before review, record the criteria, responsibility, eliminated gap, completion condition, exact diff, observed evidence, validation, UI counter, risks, and proposed accepted evidence.
-Refresh the touched criteria's remaining implementation and verification blockers and show the proposed audit-count update.
+The writer commits the reviewed tree in the authoritative saved-project checkout and releases checkout ownership before finalization.
+Finalization verifies that the commit is the clean authoritative checkout `HEAD`, descends from the recorded slice base, contains both trailers, changes only contract-included paths, matches the validated and reviewed Git tree, and has no remaining checkout owner.
+Only finalization appends the unique accepted slice to the generation.
+The third unique acceptance atomically makes alignment due.
+A fourth selection is illegal.
 
-Use a fresh read-only `gpt-5.6-sol` high-reasoning reviewer.
-Provide the goal, relevant rules, actual diff, evidence claim, validation, and
-known risks.
-The reviewer checks responsibility completion and whether the evidence closes the named gap, including any justification for a narrow prerequisite.
-Passing tests or a larger accepted-evidence inventory alone does not establish completion.
-Resolve every blocker.
-A material correction repeats focused and full validation and uses a new fresh
-reviewer.
+## Retry and recovery policy
 
-### 7. Accept, commit, hand off, relay, and stop
+Age alone never permits takeover.
+Recovery requires the exact recorded task ID and claim ID, explicit verification that the owner is terminal, a matching generation, and the latest revision.
+That terminal snapshot is reserved in lifecycle state before task creation, and only the fresh task holding the persisted one-use recovery ticket may claim it.
+An unknown, queued, active, interrupted, or input-blocked owner remains protected.
 
-After validation passes and review is clean:
+Writer repair and owner recovery budgets persist in lifecycle state and survive task or process restart.
+The current limits are three repair cycles, three writer recoveries, and three orchestrator recoveries.
+Exhaustion records `incomplete` or `blocked` and never resets itself by starting a new task or generation.
 
-1. record the factual review result;
-2. mark only supported criteria accepted;
-3. approve the architecture entry gate only when its exact claim is satisfied;
-4. append the accepted run record with the eliminated gap and remaining blockers, and increment the completion-audit count once;
-5. update the UI checkpoint fields when applicable;
-6. clear `Current run` and `Incomplete run`;
-7. set `Run status` to `awaiting scheduled fresh task` unless the goal is
-   complete;
-8. synchronize `CURRENT.md`;
-9. stage only the coherent unit;
-10. create one local commit;
-11. write the temporary handoff with `No next unit selected`;
-12. before 23:00, create one fresh successor when every relay precondition
-    remains true; and
-13. stop at **UNIT COMMITTED - HANDOFF READY**.
+Generation, slice, and recovery dispatch intent is persisted before task creation.
+Only one task can claim each persisted one-use ticket.
+If task creation has an uncertain result, the pending ticket remains durable and automatic dispatch stops rather than creating a duplicate.
+Commit recovery is safe because acceptance requires the recorded slice and contract trailers and unique finalization.
 
-The current task never selects the successor's unit.
+## Checkout no-overlap gate
 
-## Blocked units
+Read-only work does not require checkout ownership.
+Immediately before its first repository mutation, a writer runs:
 
-Do not silently replace a non-viable selected unit.
+```text
+python3 scripts/development_loop_lock.py acquire
+```
 
-- Resolve a technical blocker safely inside the same claim when possible.
-- For a required owner decision, record it, hand off, and stop without relay.
-- For an unsafe baseline or overlap, preserve exact state, hand off when
-  appropriate, and stop without relay.
-- Never remove work merely because a unit is blocked.
+The writer must first claim its persisted lifecycle ticket, because checkout acquisition reads that state and admits only the current fresh writer in `slice_active` under standing authorization.
+The writer retains the returned checkout claim ID.
+Version 3 `assert-owner` and `release` operations require both the current task ID and that exact claim ID, and assertion revalidates the lifecycle generation and writer claim.
+A stale claim from the same task fails.
+Unversioned, version 1, and version 2 records remain readable and exact-owner releasable for migration, but cannot assert mutation authority or be recovered.
 
-## Owner pause or stop
+After a resumed turn, the writer asserts ownership before the next mutation.
+It asserts again before commit, releases ownership after the reviewed commit is clean authoritative `HEAD`, finalizes that commit in lifecycle state, then returns the terminal slice result.
+After lifecycle recovery installs the fresh writer and claim, an exact verified terminal checkout claim may be atomically transferred with `recover-stale`.
+Unreadable, conflicting, or unverifiable ownership stops all repository mutation.
 
-The owner may pause or stop the loop at any time.
-On pause, set owner authorization, cadence, relay, and run status to paused in
-both operational files, preserve any active unit, write a handoff, and stop.
-The scheduler must no-op while authorization is paused.
+## Scheduled operating window
 
-Administrative state changes explicitly requested by the owner remain allowed.
-Resuming requires an explicit owner instruction and synchronized standing state.
+The Architecture Foundation loop may dispatch new slices daily from 18:00 until 23:00 in America/Toronto.
+Outside the window, a recorded incomplete slice may finish safely, and an active orchestrator may align and hand off, but no new slice is selected or dispatched.
+An explicit owner instruction may perform administrative work outside the window without silently starting a product slice.
 
-## Goal completion
+Hourly scheduler invocations at 18:00 through 22:00 are recovery opportunities.
+They no-op when authorization is paused, a valid orchestrator is active, a writer owns an active slice, an owner decision is pending, or lifecycle state is uncertain.
 
-The active goal is complete only when every criterion has accepted evidence,
-the final full repository check and complete rendered walkthrough pass, legacy
-storage compatibility is exercised, and a final fresh independent review is
-clean.
+## Generation run
 
-At completion:
+### 1. Orient and recover
 
-1. record final evidence and review;
-2. mark every criterion accepted;
-3. set the goal and implementation state to their canonical completed status;
-4. clear current and incomplete runs and pending decisions;
-5. set `Active goal id` to `none`, owner authorization to `pending`, cadence to
-   `stopped`, relay to `stopped`, and standing authority to `none`;
-6. synchronize `CURRENT.md` and `README.md`;
-7. run the final repository check;
-8. create the final local commit;
-9. write the final handoff using the captured completing goal id;
-10. pause the `bproject-autonomous-graph-loop` automation so it does not create
-    later no-op recovery tasks;
-11. do not relay; and
-12. stop at **GOAL COMPLETE** without selecting another goal.
+Read the authoritative sources, validate lifecycle state, inspect the exact recorded owner when needed, and recover only by unchanged claims.
+Migrate legacy Markdown state only once.
+Matching `none` run fields become `idle` without inventing historical generation counts.
+A matching legacy incomplete run requires its exact frozen contract and orchestrator identity.
+Migration preserves that slice as recoverable and allows exactly one fresh writer to claim its pending dispatch ticket without replacing the contract.
+Conflicting legacy fields fail closed.
+
+### 2. Select and freeze one slice
+
+When the generation is `selecting`, complete any due goal-level audit and identify one coherent responsibility that eliminates a concrete current gap.
+Prefer criterion completion or an indispensable blocker to it.
+Do not record a future slice queue.
+Freeze the contract before creating the writer task.
+
+### 3. Dispatch one fresh writer
+
+Persist the one-use dispatch ticket before task creation.
+Create the writer in the saved Contour project with environment `{ type: "local" }`, never the default isolated Git worktree.
+The writer claims that ticket with its fresh task ID, acquires lifecycle-bound checkout ownership, and rechecks the authoritative repository base and frozen contract.
+Any task identity previously used as an orchestrator, writer, or reviewer is rejected as a slice writer.
+
+### 4. Explore and implement
+
+The writer obtains one to three independent read-only explorations, states the evidence claim, and implements the smallest coherent change satisfying the entire contract.
+It preserves the visible behavior freeze, privacy, authorship meaning, spatial separation, storage compatibility, and unrelated user work.
+
+### 5. Validate and review
+
+The writer stages only contract-owned files and runs focused checks and `./scripts/check.sh` against the derived Git tree identity.
+It records factual evidence, then delegates a fresh independent read-only review.
+The reviewer records the verdict through the lifecycle tool under its own task identity without modifying the repository.
+Blocking findings return the same slice to repair without weakening its contract.
+Every material correction repeats focused and full validation and uses a new reviewer.
+
+### 6. Commit and finalize exactly once
+
+After clean review, the writer records commit intent, includes the required trailers, commits only the reviewed tree, and confirms it is clean `HEAD` in the saved-project checkout.
+It updates the repository's goal evidence and Markdown summary in the same slice commit when required by the active goal.
+It then releases checkout ownership and finalizes that exact commit in lifecycle state.
+Finalization exposes `selecting` only after the checkout is free.
+The writer returns the contract hash, commit, evidence, remaining blockers, and risks to the orchestrator, then stops.
+
+### 7. Continue or align
+
+After accepted slice 1 or 2, the same orchestrator may select another slice while authorization and the operating window allow it.
+After slice 3, the state machine forces whole-goal alignment.
+An incomplete slice remains active and does not count.
+
+The alignment compares every open goal criterion with current source, tests, accepted evidence, and all slice results from this generation.
+It records accepted slice IDs and commits, remaining concrete gaps, audit and UI checkpoint counters, unresolved decisions, validation status, and recovery state.
+The handoff says `No next slice selected`.
+It does not preselect work for the fresh orchestrator.
+
+After the handoff is durably recorded, a fresh orchestrator may start the next generation from `handoff_ready`.
+
+## Completion audit and visual checkpoints
+
+Goal-level completion audits remain due before selection when the recorded baseline is `none` or three accepted implementation slices have accumulated since the audit.
+The orchestrator performs the audit during selection or generation alignment, not as a separate implementation slice.
+Each accepted slice increments the durable audit counter, and `record-completion-audit` verifies clean authoritative `HEAD`, stores its evidence, and resets the counter.
+An interrupted active slice is completed or explicitly blocked before a due audit changes selection.
+
+Visible UI slices increment the existing UI checkpoint count.
+Run the complete rendered checkpoint on every fifth accepted UI slice and before goal completion.
+For a due fifth UI slice, `record-ui-checkpoint` binds rendered evidence to its exact validated Git tree before acceptance, stores the evidence, and resets the durable UI counter.
+Outside an active slice, the same command verifies clean authoritative `HEAD` before resetting the counter.
+The checkpoint covers representative desktop and mobile sizes, supported color modes, keyboard and touch behavior, responsive seams, persistence, and console output.
+
+## Owner decision and product boundaries
+
+Standing authorization applies only to the active owner-approved goal.
+Stop at **NEEDS OWNER DECISION** before changing goal, product, visual, scope, privacy, or lasting architecture direction not already settled by authoritative documents.
+Never push, merge, deploy, publish, destructively clean, or absorb unrelated user work without explicit authorization.
+
+The Architecture Foundation exception authorizes enforceable architecture, compatibility, migration, and test evidence while the accepted Identity Map Prototype remains visually and behaviorally frozen.
+It does not authorize Discovery, Library, Themes, Search, personalization, framework migration, redesign, or speculative modules.
+
+## Pause, block, and completion
+
+Owner pause sets authorization and lifecycle state to paused without discarding an active slice.
+A technical blocker preserves the exact slice, contract, content evidence, and retry counters.
+Both states fence the writer immediately, and only an explicitly owner-authorized resume can restore a paused phase.
+Temporary handoff loss is reconstructed from Git history and lifecycle state.
+
+The goal completes only when all criteria have accepted evidence, the full repository check and final rendered walkthrough pass, legacy storage compatibility is exercised, final independent review is clean, and `complete-alignment` has persisted a clean successor-free handoff.
+The final accepted slice first updates the canonical goal documents and commits the structured terminal evidence with the exact reviewed tree.
+That versioned JSON evidence contains schema version 1, the exact goal ID, a complete criterion-to-`accepted` map, passing full-validation, rendered-walkthrough, and legacy-compatibility records with evidence, and the tracked terminal-document paths.
+It deliberately excludes its own final-review claim so review can happen after the evidence commit without a circular amend-and-rereview sequence.
+The orchestrator then aligns and records the handoff, records current completion-audit and UI-checkpoint evidence, and delegates one fresh reviewer to call `record-goal-review --result pass|block` under its own identity.
+Only after that reviewer passes does the orchestrator pause the scheduler and persist `complete` against the same clean, unlocked handoff commit and committed terminal-evidence file.
+Completion resolves the canonical installed `bproject-autonomous-graph-loop` configuration, parses its TOML, and requires both the exact automation ID and `PAUSED` status.
+No repository change or new goal follows the `complete` transition.
+
+## Model routing
+
+- The lifecycle orchestrator uses `gpt-5.6-terra` with high reasoning.
+- Fresh slice writers use `gpt-5.6-terra` with high reasoning.
+- Writer-managed explorers use `gpt-5.6-terra` with high reasoning and are read-only.
+- Fresh independent slice and alignment reviewers use `gpt-5.6-sol` with high reasoning and are read-only.
 
 ## Terminal states
 
-- **UNIT COMMITTED - HANDOFF READY**
-- **ALIGNMENT COMMITTED - HANDOFF READY**
-- **NEEDS OWNER DECISION - HANDOFF READY**
-- **OWNER AUTHORIZATION REQUIRED OR PAUSED**
-- **ACTIVE RUN EXISTS**
-- **ACTIVE RUN STATUS UNKNOWN**
-- **NO JUSTIFIED CHANGE**
-- **WORK UNIT BLOCKED - HANDOFF READY**
-- **BASELINE BLOCKED - HANDOFF READY**
+- **SLICE ACCEPTED - WRITER STOPPED**
+- **SLICE INCOMPLETE - RECOVERY REQUIRED**
+- **ALIGNMENT COMPLETE - HANDOFF READY**
+- **NEEDS OWNER DECISION**
+- **ACTIVE OWNER EXISTS**
+- **ACTIVE OWNER STATUS UNKNOWN**
+- **BASELINE BLOCKED**
 - **GOAL COMPLETE**
-
-## Accepted run record
-
-For every committed unit retain:
-
-1. criteria, completed responsibility, eliminated acceptance gap, and remaining implementation or verification blockers;
-2. observed evidence and interpretation separately;
-3. exact files and local commit;
-4. focused and full validation plus applicable rendered evidence;
-5. explorer partition and fresh review result;
-6. risks and unresolved assumptions;
-7. acceptance basis under standing owner authorization; and
-8. confirmation that the handoff records `No next unit selected`.

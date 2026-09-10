@@ -8,16 +8,24 @@ Status: active shared state; standing scheduled owner authorization.
 - Owner authorization: standing
 - Authorization scope: active goal
 - Authorization source: owner
-- Loop cadence: scheduled autonomous relay
+- Loop cadence: scheduled orchestrator generations
 - Frozen behavior baseline: approved
 - Architecture entry gate: approved
 - Current run: none
 - Incomplete run: none
-- Run status: awaiting scheduled fresh task
+- Run status: awaiting orchestrator generation
 - Pending owner decision: none
 - Scheduled window: daily 18:00-23:00 America/Toronto
-- Fresh-task relay: active
+- Fresh-task relay: replaced by generation handoff
 - Alignment due: no
+- Runtime lifecycle source: Git common directory state
+- Current generation: none
+- Generation phase: idle
+- Accepted slices this generation: 0
+- Active slice: none
+- Slice phase: none
+- Slice retry status: none
+- Fresh-orchestrator handoff: active
 - Visual checkpoint: Identity Map Prototype goal completion, 2026-08-26
 - UI units since visual checkpoint: 0
 - Standing implementation authority: active
@@ -97,15 +105,10 @@ queue.
 - Current state: standing authorization during the scheduled daily window
 - Authority state: active
 - Window basis: daily 18:00-23:00 America/Toronto
-- Unit authority: routine selection, implementation, validation, independent
-  review, local acceptance, local commit, handoff, and fresh-task relay inside
-  this goal require no intermediate owner approval
-- Unit boundary: one implementation task may own exactly one work unit from
-  selection or continuation through validation, review, acceptance, commit, and
-  handoff
-- Relay boundary: an accepted task before 23:00 creates one fresh successor in
-  the same project; at or after 23:00 it does not relay
-- Recovery starts: scheduled hourly tasks inspect read-only state without ownership, acquire immediately before the first repository mutation, recover only an exact unchanged claim after its owner clearly completes a documented terminal state, and stop on live ownership, conflicting fields, or uncertain state
+- Slice authority: routine selection, implementation, validation, independent review, local acceptance, and local commit inside this goal require no intermediate owner approval.
+- Writer boundary: one fresh writer task may own exactly one slice and is its sole repository modifier.
+- Generation boundary: one orchestrator manages at most three sequential accepted slices, performs whole-goal alignment, and then hands off to a fresh orchestrator.
+- Recovery starts: scheduled hourly tasks perform only liveness and exact-claim recovery against structured lifecycle state.
 - Owner boundary: new goals and unresolved material product, visual, scope, or
   architecture decisions still require the owner
 - External actions: push, merge, deploy, publish, destructive cleanup, and
@@ -125,21 +128,19 @@ queue.
   Discovery, Library, Themes, Search, or personalization modules
 - Architecture gate: contract, decision records, compatibility inventory, and
   automated dependency enforcement precede broad source migration
-- Autonomous operation: daily 18:00-23:00 America/Toronto, one fresh task per
-  unit, no routine human approval between clean units
+- Autonomous operation: daily 18:00-23:00 America/Toronto, one fresh writer per slice and one orchestrator per three accepted slices, with no routine human approval between clean slices
 - Scheduler lifecycle: pause automation `bproject-autonomous-graph-loop` when
   the goal reaches its accepted completion state
 - Decision date: 2026-08-28
 
-## Fresh-task handoff state
+## Generation handoff state
 
 - Latest accepted unit: af-4-authored-capture-preparation.
 - Latest implementation commit: recorded in this accepted unit's post-commit handoff.
 - Latest temporary handoff: `contour-architecture-foundation-handoff.md` in temporary storage; context only, with this repository state authoritative.
-- Next unit selected: no.
+- Next slice selected: no.
 
-Every unit task writes a compact redacted handoff document in the operating
-system temporary directory and then stops.
+Every orchestrator generation writes a compact redacted handoff document in the operating system temporary directory and then stops.
 The stable filename is `contour-architecture-foundation-handoff.md`.
 
 The handoff includes:
@@ -150,11 +151,11 @@ The handoff includes:
 - focused, full, rendered, and review results as applicable;
 - UI checkpoint count;
 - risks and unresolved owner decisions;
-- `No next unit selected`; and
+- `No next slice selected`; and
 - suggested skills for the next task.
 
 The handoff is context only, never authority or a future task queue.
-A fresh successor selects one coherent responsibility only after reading authoritative repository state, confirming no overlap, and completing any due completion audit.
+A fresh orchestrator selects one coherent responsibility only after reading authoritative repository and lifecycle state, confirming no overlap, and completing any due completion audit.
 If the temporary file is unavailable, it reconstructs facts from the repository
 without discarding uncommitted work or inferring missing decisions.
 
@@ -261,7 +262,8 @@ without discarding uncommitted work or inferring missing decisions.
   The full check validates governance and JavaScript syntax, passes all
   eighty-two existing tests with zero failures, and prints
   `Repository check passed.`
-- Automation evidence: existing automation `bproject-autonomous-graph-loop` was updated rather than duplicated, is active against the saved local bproject, starts hourly from 18:00 through 22:00, relays clean units before 23:00, resumes matching orphaned units, uses an atomic durable checkout lock without calling the unreliable unscoped task listing, stops on real overlap or conflicting state, and pauses itself when the goal completes.
+- Earlier automation evidence: the existing `bproject-autonomous-graph-loop` was updated rather than duplicated and kept its saved local project, 18:00 through 22:00 schedule, model, reasoning effort, and local execution environment.
+  Its retired per-unit relay behavior is superseded by the generation-based control plane documented below.
 - Independent activation review: the first fresh read-only reviewer found that
   completion could not pass unconditional active-goal checks.
   The check now branches between active, paused, and canonical completed states
@@ -278,31 +280,27 @@ without discarding uncommitted work or inferring missing decisions.
 
 ## Acceptance rules
 
-- A unit completes one coherent responsibility and eliminates its named acceptance gap, or completes an indispensable prerequisite justified by dependency or preservation risk.
-- Related entry paths and their validators, adapters, imports, and focused tests belong in the same unit when they serve that responsibility.
-- Candidate evidence and independent review address the completion condition and concrete remaining criterion blockers.
-- Refresh touched criterion blockers and increment the completion-audit count once per accepted implementation unit.
-  At three, the next fresh task audits every open criterion before selecting its unit.
-- Routine unit acceptance requires focused and full validation plus clean fresh
-  independent review.
-- Candidate evidence is recorded before review.
-- A material correction repeats focused and full validation and uses a new
-  independent reviewer.
+- A slice completes one coherent responsibility and eliminates its named acceptance gap, or completes an indispensable prerequisite justified by dependency or preservation risk.
+- Related entry paths and their validators, adapters, imports, and focused tests belong in the same frozen slice contract when they serve that responsibility.
+- Candidate evidence and independent review identify the same contract hash and content identity.
+- Routine slice acceptance requires focused and full validation, clean fresh independent review, and exact commit finalization through the lifecycle state machine.
+- A material correction invalidates prior validation and review, repeats both validation layers, and uses a new independent reviewer.
 - The architecture entry gate must be accepted before broad migration.
 - Every migrated seam preserves or improves its behavioral tests.
-- A UI-changing correctness unit follows the visual checkpoint cadence.
+- A UI-changing correctness slice follows the visual checkpoint cadence.
 - AF-10 requires the complete rendered frozen-behavior walkthrough and legacy
   storage migration evidence.
-- A unit is committed only after all blocking findings are resolved.
-- After the commit, the unit task writes the handoff, may create one fresh
-  successor before 23:00, and stops.
-- No human approval is required between clean in-goal units.
+- A slice is committed only after all blocking findings are resolved.
+- After the reviewed commit is clean authoritative `HEAD`, the writer releases ownership, finalizes exact acceptance, returns a compact result, and stops.
+- The same orchestrator may select slice two or three, but the state machine forces alignment after three acceptances.
+- No human approval is required between clean in-goal slices.
 - The goal cannot be marked complete until AF-1 through AF-10 are accepted and
   final review is clean.
 
 ## Alignment
 
-Alignment is not due.
+Owner alignment is not due.
+Generation alignment is controlled separately by the lifecycle state machine and is mandatory after three accepted slices.
 
 Request owner alignment only when evidence reveals a required change to the
 approved architecture, visible behavior, visual design, scope, privacy
@@ -313,7 +311,7 @@ Routine work-unit completion does not require owner review.
 
 - Criterion: preserve atomic single-writer ownership without locking read-only work or allowing an abandoned terminal claim to strand the checkout.
 - Observed overhead: the prior policy acquired ownership before read-only explorers, repeated assertions before every mutation phase, and required the recorded owner to release every stale claim.
-- Owner-directed result: read-only work is lock-free; writers acquire immediately before their first repository mutation, assert only after resumption and before commit or relay, and release after terminal handoff or immediately before relay.
+- Owner-directed result: read-only work is lock-free; writers acquire immediately before their first repository mutation, assert after resumption and before the final commit, then release before exact lifecycle finalization.
 - Recovery safety: a documented terminal owner's exact task ID and unique claim ID may be atomically transferred with explicit terminal verification; age alone never permits recovery, an outdated snapshot cannot replace a newer claim, and a legacy tokenless record remains owner-release only.
 - Exact change: the ownership utility and focused TypeScript tests, compact rules in `AGENTS.md` and `docs/main/DEVELOPMENT_LOOP.md`, synchronized summaries in `docs/plans/CURRENT.md` and this implementation state, repository-check enforcement in `scripts/check.sh`, and the installed `bproject-autonomous-graph-loop` prompt.
 - Candidate evidence: two independent read-only audits agree that the lock primitive is cheap and the surrounding gate was overbroad; Python compilation, ten focused ownership tests, JSON status inspection, owned-diff whitespace validation, strict typechecks, the Vite build, and the full 224-test repository check pass.
@@ -334,13 +332,28 @@ Routine work-unit completion does not require owner review.
 - Intended result: related paths are completed together, touched criterion blockers stay explicit, and a completion audit is due before the next new selection and every three accepted implementation units afterward.
 - Explorer evidence: two independent read-only audits identified repeated single-boundary units, vague residual criterion descriptions, and stale latest-unit handoff metadata.
 - Exact repository diff: `AGENTS.md`, `docs/main/DEVELOPMENT_LOOP.md`, `docs/plans/CURRENT.md`, this implementation state, and `scripts/check.sh` synchronize selection, review, audit cadence, and compact audit-state validation.
-- Automation verification: the existing `bproject-autonomous-graph-loop` prompt is installed and reads back exactly as reviewed; identity, project, active status, schedule, model, reasoning effort, and local execution environment are preserved.
+- Automation verification: the existing `bproject-autonomous-graph-loop` identity, project, schedule, model, reasoning effort, and local execution environment are preserved.
+  It remains paused through control-plane commit and state migration, then is activated only after the authoritative checkout is clean and unlocked.
 - Focused validation: shell syntax and whitespace checks pass; eight isolated policy-check fixtures accept initial, due, and recovery audit states and reject malformed, missing, duplicate, or out-of-range fields.
 - Full validation: `./scripts/check.sh` passes architecture enforcement, strict browser and test typechecks, the Vite production build, and all 239 tests with zero failures.
 - Independent review: a fresh read-only `gpt-5.6-sol` high-reasoning reviewer found no actionable P0-P3 finding and independently reran the full repository check successfully.
 - Scope: this administrative update selects no implementation unit, advances no Architecture Foundation criterion, and leaves the UI checkpoint count at zero.
   Goal scope, standing authorization, ownership, safety gates, full validation, independent review, rendered checkpoints, and the scheduled window are preserved.
 - Completion audit: intentionally due; the next eligible fresh task establishes current criterion blockers before selecting its unit.
+
+## Administrative orchestrator-generation migration
+
+- Authority: the owner replaced the one-task-per-slice outer loop with orchestrator generations on 2026-09-08: the scheduler should be purely liveness and recovery, one orchestrator should manage up to three accepted slices, and every slice should use one fresh sole-writer task with read-only subagents.
+- Product impact: this is loop control-plane administration and selects no Architecture Foundation implementation slice.
+- Structured state: `scripts/development_loop_state.py` persists one versioned lifecycle record under the Git common directory with atomic synchronized writes, compare-and-swap revisions, exact role claims, bounded retry counters, and idempotent operation IDs.
+- Frozen contracts: each slice embeds and hashes its criterion, responsibility, acceptance gap, completion condition, included paths, preservation boundaries, and validation commands before dispatch.
+- Acceptance: focused and full validation plus independent review bind to one content identity, and finalization verifies a descendant commit with exact slice and contract trailers before incrementing the generation count.
+- Generation boundary: accepted slices one and two return the same orchestrator to selection; accepted slice three atomically requires whole-goal alignment and a successor-free durable handoff.
+- Recovery: one-use dispatch tickets prevent duplicate writers, incomplete slices remain active, exact terminal task and claim IDs are required for takeover, and retry exhaustion persists as incomplete or blocked.
+- Migration: matching legacy `none` fields initialize idle state without inventing history; a matching incomplete legacy run requires its exact contract and orchestrator identity; conflicting fields fail closed.
+- Checkout ownership: version 3 writer locks bind the exact lifecycle generation, writer task, and writer claim for acquisition and assertion, while unversioned, version 1, and version 2 records are release-only and remain exact-owner releasable for migration.
+- Scheduler: the installed automation remains paused and its prompt is restricted to lifecycle inspection, exact recovery, and orchestrator dispatch.
+- Goal and authorization: the active Architecture Foundation goal, standing owner authorization, frozen product behavior, audit baseline and count, UI checkpoint, criterion states, and external-action boundaries are unchanged.
 
 ## Accepted run log
 

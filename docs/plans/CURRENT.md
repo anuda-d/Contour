@@ -16,16 +16,24 @@ Status: Architecture Foundation is active under standing scheduled authorization
 - Owner authorization: standing
 - Authorization scope: active goal
 - Authorization source: owner
-- Loop cadence: scheduled autonomous relay
+- Loop cadence: scheduled orchestrator generations
 - Frozen behavior baseline: approved
 - Architecture entry gate: approved
 - Current run: none
 - Incomplete run: none
-- Run status: awaiting scheduled fresh task
+- Run status: awaiting orchestrator generation
 - Pending owner decision: none
 - Scheduled window: daily 18:00-23:00 America/Toronto
-- Fresh-task relay: active
+- Fresh-task relay: replaced by generation handoff
 - Alignment due: no
+- Runtime lifecycle source: Git common directory state
+- Current generation: none
+- Generation phase: idle
+- Accepted slices this generation: 0
+- Active slice: none
+- Slice phase: none
+- Slice retry status: none
+- Fresh-orchestrator handoff: active
 - Visual checkpoint: Identity Map Prototype goal completion, 2026-08-26
 - UI units since visual checkpoint: 0
 - Standing implementation authority: active
@@ -55,24 +63,17 @@ the foundation-first strategy explicitly.
 ## Scheduled autonomy
 
 The authorized window is daily from 18:00 through 23:00 in America/Toronto.
-Each implementation task owns at most one bounded unit.
-Each unit completes a coherent responsibility and eliminates a concrete acceptance gap, grouping related validation and migration work within that boundary.
-The implementation state's `Completion audit` record is authoritative for the audit due before the next new selection and after every three accepted implementation units.
-Audits identify exact remaining criterion blockers during normal task preparation and require no additional owner approval.
-After a clean accepted commit before 23:00, that task writes the required
-temporary handoff and creates one fresh successor task in the same project.
-At or after 23:00, it finishes the active unit safely, writes the handoff, and
-does not create a successor.
+One orchestrator generation manages no more than three sequential accepted slices.
+Every slice completes a coherent responsibility through one fresh sole-writer task and an immutable completion contract.
+Only a slice with matching focused and full validation, clean fresh review, and a verified commit counts toward the generation limit.
+After the third accepted slice, or an earlier natural goal boundary, the orchestrator performs whole-goal alignment and hands compact durable state to a fresh orchestrator.
 
-Hourly scheduled starts during the window are recovery opportunities.
-They must exit without repository changes when another live project
-implementation task owns the work.
+Hourly scheduled starts are liveness and recovery opportunities only.
+They never select slices, implement, validate, review, commit, or perform alignment.
 Read-only orientation and exploration do not require the checkout lock.
-Each task acquires the durable single-writer record immediately before its first repository mutation.
-An exact documented terminal owner may be recovered only through the record's unique claim ID; age alone never permits recovery.
-When no live owner exists, they resume exactly a matching recorded current and
-incomplete run instead of selecting a replacement.
-Conflicting run fields, an unreadable lock, or uncertain owner state stop safely.
+Each slice writer acquires the durable single-writer record immediately before its first repository mutation and retains its exact claim ID.
+An exact documented terminal owner may be recovered only through an unchanged task and claim ID; age alone never permits recovery.
+Conflicting structured state, an unreadable lock, or uncertain owner status stops safely.
 No human approval is required between clean units that remain inside this goal.
 The loop still stops for an unresolved owner decision, unsafe or overlapping
 state, failed validation or review that cannot be resolved in scope, or an
@@ -87,20 +88,19 @@ effects are not authorized by standing implementation authority.
 2. this file
 3. the active goal linked above
 4. the shared implementation state linked above
-5. the latest temporary handoff when one exists
-6. confirm the current time is inside the scheduled window for new selection
-7. confirm no task or recorded run overlaps
-8. continue the matching incomplete unit, or complete any due completion audit and select one coherent responsibility that eliminates an acceptance gap
-9. read only the code, tests, and specification needed for that unit
+5. the persisted lifecycle state from `scripts/development_loop_state.py`
+6. the latest temporary handoff when one exists
+7. confirm the current time is inside the scheduled window for new selection
+8. confirm the recorded orchestrator and writer claims do not overlap
+9. continue the exact active slice or select one coherent responsibility when the generation is selecting
+10. read only the code, tests, and specification needed for that slice
 
-## Fresh-task boundary
+## Generation boundary
 
-One implementation task owns at most one work unit.
-Every terminal unit state writes
-`contour-architecture-foundation-handoff.md` in the operating system temporary
-directory and records `No next unit selected`.
-The current task never selects a second unit.
-When relay is allowed, it creates a fresh task that uses authoritative repository state to complete any due audit and select one coherent responsibility.
+One writer task owns at most one slice.
+One orchestrator owns no more than three accepted slices and never modifies the checkout.
+Every generation handoff writes `contour-architecture-foundation-handoff.md` in the operating system temporary directory and records `No next slice selected`.
+The next slice is selected only by the current orchestrator or, after alignment, by a fresh orchestrator.
 
 ## Commands
 
@@ -110,5 +110,5 @@ When relay is allowed, it creates a fresh task that uses authoritative repositor
 
 ## Stop condition
 
-The repository is at **GOAL ACTIVE - AWAITING SCHEDULED FRESH TASK**.
-The automation may start or relay one fresh task at a time during the authorized window without intermediate owner approval.
+The repository is at **GOAL ACTIVE - AWAITING ORCHESTRATOR GENERATION**.
+The scheduler may start or recover only the exact persisted orchestrator generation during the authorized window.
