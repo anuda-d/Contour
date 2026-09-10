@@ -23,6 +23,8 @@ type KnownChoosableWorkIds = {
   has(value: string): boolean;
 };
 
+type ModalKeyboardCommand = { key: "Escape" | "Tab"; shiftKey: boolean };
+
 type WorkChooserOptions = {
   persistent: boolean;
   initialMessage?: string;
@@ -56,6 +58,16 @@ export const submitWorkChooserToggle = (
   const id = parseWorkChooserToggleId(value, workIds);
   if (!id) return null;
   return { id, result: onToggle(id) };
+};
+
+export const parseWorkChooserSearchQuery = (value: unknown): string | null =>
+  typeof value === "string" ? value : null;
+
+export const parseWorkChooserModalKeyboard = (value: unknown): ModalKeyboardCommand | null => {
+  if (typeof value !== "object" || value === null) return null;
+  const event = value as { key?: unknown; shiftKey?: unknown };
+  if ((event.key !== "Escape" && event.key !== "Tab") || typeof event.shiftKey !== "boolean") return null;
+  return { key: event.key, shiftKey: event.shiftKey };
 };
 
 export class WorkChooser {
@@ -221,24 +233,28 @@ export class WorkChooser {
     });
     const search = this.requiredOverlayElement<HTMLInputElement>("#catalogue-search");
     search.addEventListener("input", () => {
-      this.query = search.value;
+      const query = parseWorkChooserSearchQuery(search.value);
+      if (query === null) return;
+      this.query = query;
       this.render({ focusSearch: true });
     });
     this.requiredOverlayElement<HTMLElement>(".work-chooser").addEventListener("keydown", (event) => {
-      if (event.key === "Escape") {
+      const command = parseWorkChooserModalKeyboard(event);
+      if (!command) return;
+      if (command.key === "Escape") {
         event.preventDefault();
         this.close();
         return;
       }
-      if (event.key !== "Tab") return;
+      if (command.key !== "Tab") return;
       const focusable = [...this.overlay.querySelectorAll<HTMLElement>("button:not([disabled]), input")];
       const first = focusable[0];
       const last = focusable.at(-1);
       if (!first || !last) return;
-      if (event.shiftKey && document.activeElement === first) {
+      if (command.shiftKey && document.activeElement === first) {
         event.preventDefault();
         last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
+      } else if (!command.shiftKey && document.activeElement === last) {
         event.preventDefault();
         first.focus();
       }

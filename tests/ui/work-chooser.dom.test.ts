@@ -3,6 +3,8 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import {
   parseWorkChooserToggleId,
+  parseWorkChooserModalKeyboard,
+  parseWorkChooserSearchQuery,
   submitWorkChooserToggle,
 } from "../../src/ui/work-chooser.dom.ts";
 
@@ -64,12 +66,21 @@ test("chooser toggle boundary forwards valid identifiers once and rejects malfor
   assert.deepEqual(toggledIds, ["book-a"]);
 });
 
+test("chooser validates live search and modal keyboard values before presentation state changes", () => {
+  assert.equal(parseWorkChooserSearchQuery("arrival"), "arrival");
+  assert.equal(parseWorkChooserSearchQuery({ value: "arrival" }), null);
+  assert.deepEqual(parseWorkChooserModalKeyboard({ key: "Escape", shiftKey: false }), { key: "Escape", shiftKey: false });
+  assert.equal(parseWorkChooserModalKeyboard({ key: "Enter", shiftKey: false }), null);
+  assert.equal(parseWorkChooserModalKeyboard({ key: "Tab", shiftKey: "false" }), null);
+});
+
 test("chooser source contract preserves modal inertness, keyboard trapping, and restored focus", () => {
   assert.match(chooserSource, /requiredShellElement\("\.topbar"\)\.inert = true/);
   assert.match(chooserSource, /requiredShellElement\("\.map-page"\)\.inert = true/);
   assert.match(chooserSource, /input\.setSelectionRange\(input\.value\.length, input\.value\.length\)/);
-  assert.match(chooserSource, /event\.key === "Escape"/);
-  assert.match(chooserSource, /event\.key !== "Tab"/);
+  assert.match(chooserSource, /parseWorkChooserModalKeyboard\(event\)/);
+  assert.match(chooserSource, /command\.key === "Escape"/);
+  assert.match(chooserSource, /command\.key !== "Tab"/);
   assert.match(chooserSource, /button:not\(\[disabled\]\), input/);
   assert.match(chooserSource, /this\.options\.restoreFocus\(\)/);
   assert.match(chooserSource, /requiredShellElement\("\.topbar"\)\.inert = false/);

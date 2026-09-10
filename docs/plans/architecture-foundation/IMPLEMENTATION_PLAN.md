@@ -38,11 +38,11 @@ Status: active shared state; standing scheduled owner authorization.
 | AF-2 Complete strict TypeScript | accepted | Every maintained application source and automated test is strict TypeScript. Separate browser and Node-test typechecks, the Vite build, and the checked `src/composition/main.ts` native entrypoint are accepted with no maintained application JavaScript mirror. |
 | AF-3 Deep product modules | accepted | Typed identity, catalogue, and seeded or persisted authored facts now have explicit owners, while one Map builder deterministically derives nodes and relationship edges for projection and layout. Focused fact, projection, application, and walkthrough evidence plus clean fresh review confirm no generic graph remains product authority. |
 | AF-4 Application use cases | accepted | Screen-neutral startup and recovery, create/edit/bridge preparation, selection and featured-Media commands, pin/unpin commands, authored capture/publication/reload state-plus-graph outcomes, and structural Map reads coordinate every current workflow through explicit outcomes and typed ports. Focused application, composition, and form evidence plus clean criterion-wide independent review confirm that only presentation and concrete effect wiring remain outward. |
-| AF-5 Isolated effects and validated boundaries | open | Partial: browser localStorage, DOM-root acquisition, Map resize listening, Map drag-click suppression timing, the existing Map debug-global publication, storage adapters, wall-clock access, UUID generation, authored-Thought cross-tab events, complete selection, featured-Media, authored-Thought, and pinned-position startup loading and recovery, capture, reload, and publication persistence, prototype-seed and Thought Capture form runtime validation, and Publish, Edit, Connect another work, Featured Media, position-action, node-event, Focus-control, edge-state, and selection-state Map validation now cross narrow inward boundaries; other browser events and form-input boundaries remain open. |
+| AF-5 Isolated effects and validated boundaries | accepted | The executable inventory now covers browser storage, root, resize, storage-change, clock, identifiers, debug global, seed, form snapshots and live inputs, every Map data attribute, and every Map wheel, pointer, keyboard, and geometry value. Invalid values remain inert before trusted state, CSS, or application callbacks. |
 | AF-6 Explicit projections and privacy | accepted | Application-created owner and visitor Map read models now structurally separate rendered graph data. Visitor Map rendering receives no Draft or draft-only Media, generated positions, or pins, while public positions preserve full-graph layout influence and owner-only transient placement remains outside visitor rendering. |
 | AF-7 Durable compatibility | accepted | Six current browser-storage key shapes across selection, authored Thought V2/V1/legacy Draft precedence, featured Media, and pinned positions have accepted typed migration, retention, recovery, unavailable-storage, reload, and privacy evidence. |
 | AF-8 Frozen visible behavior | open | None yet. |
-| AF-9 Layered test and quality gates | open | Partial: the repository check now enforces separate strict typechecks, the Vite build, import boundaries including retired flat Map-projection and layout-path rejection, shared effect-port source coverage, browser-root, browser-resize, browser-clock, browser-Map-global, prototype-seed, Thought Capture form, and Publish, Edit, Connect another work, Featured Media, position-action, node-event, Focus-control, edge-state, and selection-state Map runtime validation, complete Map-session application coverage, authored capture preparation, capture mutation, publication, and graph transitions, selection, featured-Media, pinned-position, Map read-model, composition, DOM-source-contract, product, CSS-regression, end-to-end acceptance, and architecture-boundary coverage; its status parsers read only the authoritative Goal progress table; later migrated seams and final coverage remain open. |
+| AF-9 Layered test and quality gates | open | Partial: strict typechecks, Vite build, import boundaries, product, application, adapter, composition, DOM, CSS-regression, end-to-end acceptance, and architecture-boundary suites now include the complete AF-5 executable effect and native-input inventory. The final cross-criterion invariant-to-test inventory and rendered evidence remain open. |
 | AF-10 Durable completion walkthrough | open | None yet. |
 
 This table records accepted evidence only.
@@ -55,9 +55,8 @@ It is not a task sequence, roadmap, or permission to infer later work units.
 
 | Open criterion | Present evidence | Exact remaining blocker | Observable acceptance condition |
 | --- | --- | --- | --- |
-| AF-5 Isolated effects and validated boundaries | Browser storage, clock, identifier, root, resize, storage event, seed, and current form boundaries have focused typed-port evidence. | Criterion-level proof has not yet been consolidated against every implemented effect boundary. | Evidence demonstrates every current inward effect and untrusted input crosses one validated narrow boundary. |
 | AF-8 Frozen visible behavior | Node suites cover deterministic behavior, static UI contracts, and compatibility scenarios. | No accepted rendered desktop and mobile owner/visitor walkthrough proves interaction, responsive layout, or light/dark preservation. | Documented browser-driven frozen-flow evidence covers the stated behavior and visual baseline. |
-| AF-9 Layered test and quality gates | Strict typechecks, build, architecture enforcement, layered suites, and accepted complete AF-4 workflow evidence include all capture preparation paths. | A consolidated criterion-level inventory has not mapped every current product, application, adapter, and DOM invariant to executable proof; AF-3 product-fact ownership migration and AF-8/AF-10 rendered proof remain open. | Explicit evidence covers the final implemented seams with deterministic product, fake-port application, adapter, DOM, architecture, strict build, and repository checks. |
+| AF-9 Layered test and quality gates | Strict typechecks, build, architecture enforcement, and layered product, application, adapter, composition, DOM, CSS, and acceptance suites include the complete AF-5 inventory. | The final cross-criterion invariant-to-test inventory and AF-8 or AF-10 rendered evidence remain open. | Explicit evidence covers the final implemented seams with deterministic product, fake-port application, adapter, DOM, architecture, strict build, and repository checks. |
 | AF-10 Durable completion walkthrough | Prior prototype completion and current Node checks exist. | Final completion depends on all remaining criteria and a clean rendered legacy-state walkthrough. | All criteria are accepted with clean build, desktop/mobile light/dark legacy-state walkthrough, console evidence, and final independent review. |
 
 At the recorded audit baseline no criterion was ready for acceptance.
@@ -65,7 +64,8 @@ Touched blocker rows are refreshed at each unit; the baseline and count still go
 AF-3 is accepted: identity, catalogue, and authored facts now own their current semantics, and the Map graph is rebuilt only as a projection and layout input.
 AF-4 is now accepted after complete workflow evidence and fresh criterion-wide independent review.
 Its capture-preparation blocker is eliminated; rendering and focus translation remain correctly outward.
-AF-5 and AF-9 require criterion-level boundary and seam proof after the remaining migrations.
+AF-5 is accepted after the complete executable effect and native-input boundary inventory.
+AF-9 remains open for its final cross-criterion invariant inventory and rendered evidence.
 AF-8 and AF-10 require their final rendered walkthroughs.
 This audit is present-state evidence, with no future task queue.
 
@@ -619,6 +619,19 @@ Routine work-unit completion does not require owner review.
   No owner decision or unresolved assumption was introduced; save-time bridge policy, form validation, persistence, and valid visible behavior remain frozen.
   Acceptance is under standing owner authorization after focused and full validation plus clean independent review.
   The handoff records `No next unit selected`.
+
+- AF-5 with bounded AF-9 support unit `af-5-native-dom-event-boundaries` accepts the final native-DOM boundary inventory.
+  Map wheel, pointer, keyboard, and browser geometry values are finite, identity, and literal-command validated before camera, gesture, placement, CSS, or callback work.
+  Thought Capture validates live radio, text, and modal keyboard input before dialog state changes.
+  Work Chooser validates live search and modal keyboard input before presentation state changes.
+  Existing Map IDs and form submit snapshots remain the application-callback boundaries.
+  Invalid input is inert and valid mouse, touch, keyboard, selection, capture, focus, zoom, pan, drag, pin, publish, feature, owner, and visitor behavior remains covered by the focused suite.
+  Design Read: preservation of the native-DOM Editorial Constellation for private Thought capture and public or owner Map interaction.
+  Design dials remain unchanged from the accepted baseline.
+  The preservation audit found no renderer, CSS, token, copy, focus-trap, modal-inertness, responsive, theme, or interaction-design change.
+  Pre-flight is preservation mode with native DOM and CSS retained; landing-page layout, hero, asset, and motion redesign checks are inapplicable.
+  AF-5 is accepted by this executable inventory plus the prior accepted effect-port evidence.
+  AF-9 receives the matching DOM proof but remains open for its final cross-criterion invariant inventory and rendered AF-8 or AF-10 evidence.
 
 ## Administratively closed run log
 

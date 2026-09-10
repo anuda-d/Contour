@@ -48,6 +48,23 @@ The browser interface remains native DOM and CSS.
 Vite and TypeScript will provide the reproducible browser build during AF-2.
 No UI framework, router migration, or CSS-system replacement is part of this goal.
 
+## Runtime-boundary inventory
+
+The boundary tests named below are executable proof for the current prototype, not a generic event abstraction.
+Every accepted browser value is validated once before it enters trusted state or a callback.
+Value-free clicks only invoke fixed intents or zero-argument callbacks and never carry native event data inward.
+
+| Boundary | Adapter and validation | Executable proof |
+| --- | --- | --- |
+| Storage, clock, identifiers, root, resize, storage event, and debug global | Narrow browser adapters validate availability, payloads, and event keys before typed ports or composition. | Adapter, application, and composition suites. |
+| Prototype seed | `adapters/seed/prototype-seed.ts` validates every prototype fact before product use. | Seed adapter tests. |
+| Thought Capture submit snapshot | `parseThoughtCaptureFormSnapshot` accepts known anchors, the required bridge shape, and string text before `onSave`. | `tests/ui/thought-capture.dom.test.ts`. |
+| Thought Capture live inputs and modal keys | Known radio IDs, string text, and only `Escape` or `Tab` plus boolean Shift update private dialog state. | `tests/ui/thought-capture.dom.test.ts`. |
+| Work Chooser | Known catalogue IDs cross `onToggle`; string search and only `Escape` or `Tab` plus boolean Shift update dialog state. | `tests/ui/work-chooser.dom.test.ts`. |
+| Map data attributes | Active-projection validators accept only eligible Draft, Media, Focus, node, and position IDs before state changes or callbacks. | `tests/ui/map.dom.test.ts`. |
+| Map wheel, pointer, keyboard, and native geometry | Finite wheel and coordinate values, non-negative integer pointer identities, supported pointer types, primary mouse buttons, literal keyboard commands, and finite geometry are required before camera, gesture, placement, or CSS state changes. | `tests/ui/map.dom.test.ts`. |
+| Map chrome clicks and event target routing | Fixed controls and zero-argument callbacks contain no inward event value; `event.target` only chooses local DOM routing and never becomes trusted state or a callback value. | Map DOM source-contract and interaction tests. |
+
 ## Intended source layout
 
 ```text
