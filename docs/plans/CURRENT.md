@@ -8,7 +8,9 @@ Status: Architecture Foundation is active under standing scheduled authorization
 - Shared implementation state: [Implementation Plan](architecture-foundation/IMPLEMENTATION_PLAN.md)
 - Prior completed goal: [Identity Map Prototype](identity-map-prototype/GOAL.md)
 - Preserved design foundation: [Editorial Constellation](identity-map-prototype/MAP_DESIGN_FOUNDATION.md)
-- Active work: Architecture Foundation units may run during the authorized daily window
+- Latest rendered evidence: [AF-10 terminal completion walkthrough](architecture-foundation/AF-10_COMPLETION_WALKTHROUGH.md) records the final desktop and touch-enabled mobile owner and visitor evidence in light and dark modes, including rendered legacy-storage migration.
+- Latest quality evidence: [AF-9 quality-gate inventory](../architecture/QUALITY_GATE_INVENTORY.md) maps accepted architecture criteria and protected invariants to checked executable proof.
+- Active work: AF-10 terminal evidence is committed only after its fresh independent slice review; whole-goal alignment and final goal review remain separate lifecycle work.
 
 ## Run state snapshot
 

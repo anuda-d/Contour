@@ -29,6 +29,8 @@ type KnownWorkIds = {
   has(value: string): boolean;
 };
 
+type ModalKeyboardCommand = { key: "Escape" | "Tab"; shiftKey: boolean };
+
 type SaveFailure = {
   saved: false;
   message: string;
@@ -55,6 +57,19 @@ const escapeHtml = (value: unknown) =>
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+
+export const parseThoughtCaptureWorkId = (value: unknown, workIds: KnownWorkIds): string | null =>
+  typeof value === "string" && workIds.has(value) ? value : null;
+
+export const parseThoughtCaptureStatement = (value: unknown): string | null =>
+  typeof value === "string" ? value : null;
+
+export const parseThoughtCaptureModalKeyboard = (value: unknown): ModalKeyboardCommand | null => {
+  if (typeof value !== "object" || value === null) return null;
+  const event = value as { key?: unknown; shiftKey?: unknown };
+  if ((event.key !== "Escape" && event.key !== "Tab") || typeof event.shiftKey !== "boolean") return null;
+  return { key: event.key, shiftKey: event.shiftKey };
+};
 
 export const parseThoughtCaptureFormSnapshot = (
   snapshot: ThoughtCaptureFormSnapshot,
@@ -234,7 +249,9 @@ export class ThoughtCapture<Success extends SaveSuccess = SaveSuccess> {
     });
     this.overlay.querySelectorAll<HTMLInputElement>('input[name="media"]').forEach((input) => {
       input.addEventListener("change", () => {
-        this.selectedMediaId = input.value;
+        const id = parseThoughtCaptureWorkId(input.value, this.catalogueById);
+        if (!id) return;
+        this.selectedMediaId = id;
         this.overlay.querySelectorAll<HTMLElement>(".capture-work").forEach((label) => {
           label.classList.toggle("is-selected", label.contains(input));
         });
@@ -242,7 +259,9 @@ export class ThoughtCapture<Success extends SaveSuccess = SaveSuccess> {
     });
     this.overlay.querySelectorAll<HTMLInputElement>('input[name="secondary-media"]').forEach((input) => {
       input.addEventListener("change", () => {
-        this.selectedSecondaryMediaId = input.value;
+        const id = parseThoughtCaptureWorkId(input.value, this.catalogueById);
+        if (!id || id === this.selectedMediaId) return;
+        this.selectedSecondaryMediaId = id;
         this.overlay.querySelectorAll<HTMLElement>(".bridge-works .capture-work").forEach((label) => {
           label.classList.toggle("is-selected", label.contains(input));
         });
@@ -250,7 +269,9 @@ export class ThoughtCapture<Success extends SaveSuccess = SaveSuccess> {
     });
     const statement = this.requiredOverlayElement<HTMLTextAreaElement>("#thought-statement");
     statement.addEventListener("input", () => {
-      this.statement = statement.value;
+      const value = parseThoughtCaptureStatement(statement.value);
+      if (value === null) return;
+      this.statement = value;
       if (this.message) {
         this.message = "";
         this.requiredOverlayElement<HTMLElement>(".capture-status").textContent = "";
@@ -282,22 +303,24 @@ export class ThoughtCapture<Success extends SaveSuccess = SaveSuccess> {
       }
     });
     this.requiredOverlayElement<HTMLElement>(".thought-capture").addEventListener("keydown", (event) => {
-      if (event.key === "Escape") {
+      const command = parseThoughtCaptureModalKeyboard(event);
+      if (!command) return;
+      if (command.key === "Escape") {
         event.preventDefault();
         this.close();
         return;
       }
-      if (event.key !== "Tab") return;
+      if (command.key !== "Tab") return;
       const focusable = [
         ...this.overlay.querySelectorAll<HTMLElement>("button:not([disabled]), input:not([disabled]), textarea"),
       ];
       const first = focusable[0];
       const last = focusable.at(-1);
       if (!first || !last) return;
-      if (event.shiftKey && document.activeElement === first) {
+      if (command.shiftKey && document.activeElement === first) {
         event.preventDefault();
         last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
+      } else if (!command.shiftKey && document.activeElement === last) {
         event.preventDefault();
         first.focus();
       }

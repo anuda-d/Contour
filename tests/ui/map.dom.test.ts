@@ -4,6 +4,11 @@ import { readFile } from "node:fs/promises";
 import {
   DRAG_THRESHOLD,
   ThoughtMap,
+  parseMapKeyboardInput,
+  parseMapPointerEnd,
+  parseMapPointerStart,
+  parseMapPointerUpdate,
+  parseMapWheelEvent,
   parseConnectDraftId,
   getZoomBand,
   hasExceededDragThreshold,
@@ -112,6 +117,88 @@ test("Map validates mutable node-event IDs against active projected non-user nod
   );
 });
 
+test("Map validates finite wheel, pointer, and keyboard event values before camera or placement state", () => {
+  assert.deepEqual(parseMapWheelEvent({ clientX: 1, clientY: 2, deltaY: 0 }), { x: 1, y: 2, multiplier: 1.1 });
+  assert.equal(parseMapWheelEvent({ clientX: Infinity, clientY: 2, deltaY: 1 }), null);
+  assert.equal(parseMapWheelEvent({ clientX: Number.MAX_VALUE, clientY: 2, deltaY: 1 }), null);
+  assert.equal(parseMapWheelEvent({ clientX: 1, clientY: 2, deltaY: NaN }), null);
+  assert.deepEqual(parseMapPointerStart({ pointerId: 1, pointerType: "touch", button: 0, clientX: 4, clientY: 5 }), { pointerId: 1, pointerType: "touch", button: 0, x: 4, y: 5 });
+  assert.equal(parseMapPointerStart({ pointerId: -1, pointerType: "mouse", button: 0, clientX: 4, clientY: 5 }), null);
+  assert.equal(parseMapPointerStart({ pointerId: 1.5, pointerType: "mouse", button: 0, clientX: 4, clientY: 5 }), null);
+  assert.equal(parseMapPointerStart({ pointerId: 1, pointerType: "mouse", button: 0, clientX: Number.MAX_VALUE, clientY: 5 }), null);
+  assert.equal(parseMapPointerStart({ pointerId: Number.MAX_VALUE, pointerType: "mouse", button: 0, clientX: 4, clientY: 5 }), null);
+  assert.equal(parseMapPointerStart({ pointerId: 1, pointerType: "mouse", button: 2, clientX: 4, clientY: 5 }), null);
+  assert.equal(parseMapPointerUpdate({ pointerId: 1, clientX: NaN, clientY: 5 }), null);
+  assert.equal(parseMapPointerEnd({ pointerId: "1" }), null);
+  assert.deepEqual(parseMapKeyboardInput({ key: "ArrowRight", shiftKey: true }), { key: "ArrowRight", shiftKey: true });
+  assert.equal(parseMapKeyboardInput({ key: "toString", shiftKey: false }), null);
+  assert.equal(parseMapKeyboardInput({ key: "ArrowRight", shiftKey: "true" }), null);
+});
+
+test("malformed browser geometry stays inert during pinch start and pinch move", () => {
+  const invalidCanvas = {
+    getBoundingClientRect: () => ({ left: NaN, top: 0, width: 100, height: 100 }),
+    classList: { add: () => assert.fail("invalid geometry must not begin panning") },
+  } as unknown as HTMLElement;
+  const pinchContext = {
+    activePointers: new Map([[1, { x: 0, y: 0 }], [2, { x: 20, y: 0 }]]),
+    canvas: invalidCanvas,
+    view: { x: 0, y: 0, scale: 1 },
+    pinchGesture: null,
+    panGesture: { pointerId: 1 },
+  };
+  ThoughtMap.prototype.beginPinch.call(pinchContext);
+  assert.equal(pinchContext.pinchGesture, null);
+  assert.deepEqual(pinchContext.view, { x: 0, y: 0, scale: 1 });
+
+  let transforms = 0;
+  const moveContext = {
+    activePointers: new Map([[1, { x: 0, y: 0 }], [2, { x: 20, y: 0 }]]),
+    pinchGesture: { distance: 20, scale: 1, world: { x: 0, y: 0 } },
+    canvas: invalidCanvas,
+    view: { x: 0, y: 0, scale: 1 },
+    applyTransform: () => { transforms += 1; },
+  };
+  ThoughtMap.prototype.moveCanvasGesture.call(
+    moveContext,
+    { pointerId: 1, clientX: 4, clientY: 0 } as PointerEvent,
+  );
+  assert.equal(transforms, 0);
+  assert.deepEqual(moveContext.view, { x: 0, y: 0, scale: 1 });
+});
+
+test("extreme finite wheel, pan, and pinch values stay inert before camera state can overflow", () => {
+  let captures = 0;
+  const canvas = {
+    setPointerCapture: () => { captures += 1; },
+    getBoundingClientRect: () => ({ left: 0, top: 0, width: 100, height: 100 }),
+  } as unknown as HTMLElement;
+  const context = {
+    canvas,
+    activePointers: new Map(),
+    view: { x: 0, y: 0, scale: 1 },
+    panGesture: null,
+    pinchGesture: null,
+  };
+  ThoughtMap.prototype.startCanvasGesture.call(
+    context,
+    { pointerId: 1, pointerType: "mouse", button: 0, clientX: Number.MAX_VALUE, clientY: 0, target: null } as PointerEvent,
+  );
+  assert.equal(captures, 0);
+  assert.deepEqual(context.view, { x: 0, y: 0, scale: 1 });
+
+  const pinchContext = {
+    activePointers: new Map([[1, { x: -Number.MAX_VALUE, y: 0 }], [2, { x: Number.MAX_VALUE, y: 0 }]]),
+    canvas,
+    view: { x: 0, y: 0, scale: 1 },
+    pinchGesture: null,
+    panGesture: null,
+  };
+  ThoughtMap.prototype.beginPinch.call(pinchContext);
+  assert.equal(pinchContext.pinchGesture, null);
+  assert.deepEqual(pinchContext.view, { x: 0, y: 0, scale: 1 });
+});
+
 test("invalid Map node-event targets stay inert before selection or position access", () => {
   let selections = 0;
   let pointerCaptures = 0;
@@ -148,12 +235,13 @@ test("invalid Map node-event targets stay inert before selection or position acc
     );
     ThoughtMap.prototype.startNodeDrag.call(
       context,
-      { pointerType: "mouse", button: 0 } as PointerEvent,
+      { pointerType: "mouse", button: 0, pointerId: 1, clientX: 0, clientY: 0 } as PointerEvent,
       invalidElement,
     );
     let propagationStopped = false;
     const keyboardEvent = {
       key: "ArrowRight",
+      shiftKey: false,
       preventDefault: () => {
         preventedKeys += 1;
       },

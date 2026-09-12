@@ -16,9 +16,11 @@ for required_file in \
   docs/main/DEVELOPMENT_LOOP.md \
   docs/architecture/ARCHITECTURE_CONTRACT.md \
   docs/architecture/COMPATIBILITY_INVENTORY.md \
+  docs/architecture/QUALITY_GATE_INVENTORY.md \
   "$current_file" \
   "$goal_file" \
   "$state_file" \
+  tests/quality-gate-inventory.test.ts \
   docs/plans/identity-map-prototype/GOAL.md
 do
   test -s "$required_file"
@@ -346,6 +348,7 @@ then
 fi
 
 npm run check:architecture
+npx tsx --test tests/quality-gate-inventory.test.ts
 
 if find . \
   -path './.git' -prune -o \

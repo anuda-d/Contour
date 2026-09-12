@@ -213,6 +213,8 @@ handoff.
   dark modes, persisted legacy state is exercised, the console is clean, all
   criteria have accepted evidence, and final fresh independent review has no
   unresolved blocker.
+  The committed terminal evidence is [AF-10 completion walkthrough](AF-10_COMPLETION_WALKTHROUGH.md)
+  and [schema-version-1 terminal evidence](AF-10_TERMINAL_EVIDENCE.json).
 
 ## Explicit exclusions
 
@@ -270,3 +272,6 @@ evidence, the architecture and TypeScript checks enforce the final source tree,
 the storage migration contract passes, the final frozen-behavior walkthrough
 passes, and a fresh independent review finds no unresolved blocker.
 Completion ends standing authorization and does not select a later goal.
+The AF-10 terminal documents record criterion evidence only.
+They do not replace the required fresh independent review, whole-goal alignment,
+or explicit lifecycle completion transition.

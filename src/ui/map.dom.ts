@@ -7,6 +7,9 @@ type MapMode = "owner" | "visitor";
 type Point = { x: number; y: number };
 type Positions = Record<string, Point>;
 type World = { width: number; height: number };
+type MapPointerInput = { pointerId: number; pointerType: "mouse" | "pen" | "touch"; button: number; x: number; y: number };
+type MapPointerUpdate = Pick<MapPointerInput, "pointerId" | "x" | "y">;
+type MapKeyboardInput = { key: "ArrowLeft" | "ArrowRight" | "ArrowUp" | "ArrowDown" | "+" | "=" | "-" | "_" | "0"; shiftKey: boolean };
 
 export type MapProfile = {
   displayName: string;
@@ -57,6 +60,60 @@ function requiredElement<T extends Element>(root: ParentNode, selector: string):
 function isPoint(point: Point | undefined): point is Point {
   return point !== undefined;
 }
+
+const isFiniteNumber = (value: unknown): value is number => typeof value === "number" && Number.isFinite(value);
+const isInteger = (value: unknown): value is number => typeof value === "number" && Number.isInteger(value);
+const MAX_BROWSER_COORDINATE = 1_000_000;
+const MAX_POINTER_ID = 2_147_483_647;
+const isBrowserCoordinate = (value: unknown): value is number => isFiniteNumber(value) && Math.abs(value) <= MAX_BROWSER_COORDINATE;
+const isBrowserPointerId = (value: unknown): value is number => isInteger(value) && value >= 0 && value <= MAX_POINTER_ID;
+const asRecord = (value: unknown): Record<string, unknown> | null => typeof value === "object" && value !== null ? value as Record<string, unknown> : null;
+const finiteCanvasRect = (canvas: HTMLElement): { left: number; top: number; width: number; height: number } | null => {
+  const rect = canvas.getBoundingClientRect();
+  return isBrowserCoordinate(rect.left) && isBrowserCoordinate(rect.top) && isBrowserCoordinate(rect.width) && isBrowserCoordinate(rect.height)
+    ? rect
+    : null;
+};
+
+export const parseMapWheelEvent = (value: unknown): { x: number; y: number; multiplier: number } | null => {
+  const event = asRecord(value);
+  if (!event || !isBrowserCoordinate(event.clientX) || !isBrowserCoordinate(event.clientY) || !isFiniteNumber(event.deltaY)) return null;
+  return { x: event.clientX, y: event.clientY, multiplier: event.deltaY > 0 ? 0.9 : 1.1 };
+};
+
+export const parseMapPointerStart = (value: unknown): MapPointerInput | null => {
+  const event = asRecord(value);
+  const pointerId = event?.pointerId;
+  const clientX = event?.clientX;
+  const clientY = event?.clientY;
+  const button = event?.button;
+  if (!event || !isBrowserPointerId(pointerId) || !isBrowserCoordinate(clientX) || !isBrowserCoordinate(clientY) || !isInteger(button)) return null;
+  if (event.pointerType !== "mouse" && event.pointerType !== "pen" && event.pointerType !== "touch") return null;
+  if (event.pointerType === "mouse" && button !== 0) return null;
+  return { pointerId, pointerType: event.pointerType, button, x: clientX, y: clientY };
+};
+
+export const parseMapPointerUpdate = (value: unknown): MapPointerUpdate | null => {
+  const event = asRecord(value);
+  const pointerId = event?.pointerId;
+  const clientX = event?.clientX;
+  const clientY = event?.clientY;
+  if (!event || !isBrowserPointerId(pointerId) || !isBrowserCoordinate(clientX) || !isBrowserCoordinate(clientY)) return null;
+  return { pointerId, x: clientX, y: clientY };
+};
+
+export const parseMapPointerEnd = (value: unknown): number | null => {
+  const event = asRecord(value);
+  const pointerId = event?.pointerId;
+  return event && isBrowserPointerId(pointerId) ? pointerId : null;
+};
+
+const mapKeyboardKeys = new Set<MapKeyboardInput["key"]>(["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "+", "=", "-", "_", "0"]);
+export const parseMapKeyboardInput = (value: unknown): MapKeyboardInput | null => {
+  const event = asRecord(value);
+  if (!event || typeof event.key !== "string" || typeof event.shiftKey !== "boolean" || !mapKeyboardKeys.has(event.key as MapKeyboardInput["key"])) return null;
+  return { key: event.key as MapKeyboardInput["key"], shiftKey: event.shiftKey };
+};
 
 export const parsePublishDraftId = (
   value: unknown,
@@ -902,8 +959,10 @@ export class ThoughtMap {
     this.canvas.addEventListener(
       "wheel",
       (event) => {
+        const input = parseMapWheelEvent(event);
+        if (!input) return;
         event.preventDefault();
-        this.zoomAt(event.clientX, event.clientY, event.deltaY > 0 ? 0.9 : 1.1);
+        this.zoomAt(input.x, input.y, input.multiplier);
       },
       { passive: false },
     );
@@ -1115,7 +1174,7 @@ export class ThoughtMap {
     );
     center.x /= Math.max(points.length, 1);
     center.y /= Math.max(points.length, 1);
-    const mobile = this.canvas.clientWidth < 720;
+    const mobile = isFiniteNumber(this.canvas.clientWidth) && this.canvas.clientWidth < 720;
     this.view.scale = mobile ? 0.7 : 1.18;
     this.view.x = -center.x * this.view.scale + (mobile ? 0 : -60);
     this.view.y = -center.y * this.view.scale + (mobile ? -76 : 0);
@@ -1123,8 +1182,9 @@ export class ThoughtMap {
   }
 
   resetView() {
-    const mobile = this.canvas.clientWidth < 720;
-    const overviewScale = clamp((this.canvas.clientWidth - 28) / WORLD.width, MIN_SCALE, 0.48);
+    const canvasWidth = isFiniteNumber(this.canvas.clientWidth) ? this.canvas.clientWidth : WORLD.width;
+    const mobile = canvasWidth < 720;
+    const overviewScale = clamp((canvasWidth - 28) / WORLD.width, MIN_SCALE, 0.48);
     this.view = { x: 0, y: mobile ? -10 : 0, scale: mobile ? overviewScale : 0.82 };
     this.applyTransform();
   }
@@ -1141,29 +1201,34 @@ export class ThoughtMap {
   }
 
   zoomAt(clientX: number, clientY: number, multiplier: number): void {
-    const rect = this.canvas.getBoundingClientRect();
+    const rect = finiteCanvasRect(this.canvas);
+    if (!rect || !isBrowserCoordinate(clientX) || !isBrowserCoordinate(clientY) || !isFiniteNumber(multiplier) || multiplier <= 0) return;
     const offsetX = clientX - rect.left - rect.width / 2;
     const offsetY = clientY - rect.top - rect.height / 2;
     const worldX = (offsetX - this.view.x) / this.view.scale;
     const worldY = (offsetY - this.view.y) / this.view.scale;
     const nextScale = clamp(this.view.scale * multiplier, MIN_SCALE, MAX_SCALE);
-    this.view.x = offsetX - worldX * nextScale;
-    this.view.y = offsetY - worldY * nextScale;
+    const nextX = offsetX - worldX * nextScale;
+    const nextY = offsetY - worldY * nextScale;
+    if (!isFiniteNumber(nextX) || !isFiniteNumber(nextY)) return;
+    this.view.x = nextX;
+    this.view.y = nextY;
     this.view.scale = nextScale;
     this.applyTransform();
   }
 
   startCanvasGesture(event: PointerEvent): void {
+    const input = parseMapPointerStart(event);
+    if (!input) return;
     const target = event.target instanceof Element ? event.target : null;
     if (target?.closest(".map-node") || target?.closest(".map-controls") || target?.closest(".detail-panel")) return;
-    if (event.pointerType === "mouse" && event.button !== 0) return;
 
-    this.canvas.setPointerCapture(event.pointerId);
-    this.activePointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    this.canvas.setPointerCapture(input.pointerId);
+    this.activePointers.set(input.pointerId, { x: input.x, y: input.y });
     if (this.activePointers.size === 1) {
       this.panGesture = {
-        pointerId: event.pointerId,
-        start: { x: event.clientX, y: event.clientY },
+        pointerId: input.pointerId,
+        start: { x: input.x, y: input.y },
         view: { x: this.view.x, y: this.view.y },
         crossed: false,
       };
@@ -1176,37 +1241,43 @@ export class ThoughtMap {
     const points = [...this.activePointers.values()];
     const a = points[0];
     const b = points[1];
-    if (!a || !b) return;
+    if (!a || !b || !isBrowserCoordinate(a.x) || !isBrowserCoordinate(a.y) || !isBrowserCoordinate(b.x) || !isBrowserCoordinate(b.y)) return;
     const midpoint = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
-    const rect = this.canvas.getBoundingClientRect();
+    const rect = finiteCanvasRect(this.canvas);
+    if (!rect) return;
     const offset = {
       x: midpoint.x - rect.left - rect.width / 2,
       y: midpoint.y - rect.top - rect.height / 2,
     };
+    const distance = Math.max(Math.hypot(a.x - b.x, a.y - b.y), 1);
+    const world = {
+      x: (offset.x - this.view.x) / this.view.scale,
+      y: (offset.y - this.view.y) / this.view.scale,
+    };
+    if (!isFiniteNumber(distance) || !isFiniteNumber(world.x) || !isFiniteNumber(world.y)) return;
     this.pinchGesture = {
-      distance: Math.max(Math.hypot(a.x - b.x, a.y - b.y), 1),
+      distance,
       scale: this.view.scale,
-      world: {
-        x: (offset.x - this.view.x) / this.view.scale,
-        y: (offset.y - this.view.y) / this.view.scale,
-      },
+      world,
     };
     this.panGesture = null;
     this.canvas.classList.add("is-panning");
   }
 
   moveCanvasGesture(event: PointerEvent): void {
-    if (!this.activePointers.has(event.pointerId)) return;
-    this.activePointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    const input = parseMapPointerUpdate(event);
+    if (!input || !this.activePointers.has(input.pointerId)) return;
+    this.activePointers.set(input.pointerId, { x: input.x, y: input.y });
 
     if (this.activePointers.size === 2 && this.pinchGesture) {
       const points = [...this.activePointers.values()];
       const a = points[0];
       const b = points[1];
-      if (!a || !b) return;
+      if (!a || !b || !isBrowserCoordinate(a.x) || !isBrowserCoordinate(a.y) || !isBrowserCoordinate(b.x) || !isBrowserCoordinate(b.y)) return;
       const distance = Math.max(Math.hypot(a.x - b.x, a.y - b.y), 1);
       const midpoint = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
-      const rect = this.canvas.getBoundingClientRect();
+      const rect = finiteCanvasRect(this.canvas);
+      if (!rect) return;
       const offset = {
         x: midpoint.x - rect.left - rect.width / 2,
         y: midpoint.y - rect.top - rect.height / 2,
@@ -1216,27 +1287,35 @@ export class ThoughtMap {
         MIN_SCALE,
         MAX_SCALE,
       );
+      const nextX = offset.x - this.pinchGesture.world.x * nextScale;
+      const nextY = offset.y - this.pinchGesture.world.y * nextScale;
+      if (!isFiniteNumber(distance) || !isFiniteNumber(nextScale) || !isFiniteNumber(nextX) || !isFiniteNumber(nextY)) return;
       this.view.scale = nextScale;
-      this.view.x = offset.x - this.pinchGesture.world.x * nextScale;
-      this.view.y = offset.y - this.pinchGesture.world.y * nextScale;
+      this.view.x = nextX;
+      this.view.y = nextY;
       this.applyTransform();
       return;
     }
 
-    if (this.panGesture?.pointerId !== event.pointerId) return;
-    const current = { x: event.clientX, y: event.clientY };
+    if (this.panGesture?.pointerId !== input.pointerId) return;
+    const current = { x: input.x, y: input.y };
     if (!this.panGesture.crossed) {
       if (!hasExceededDragThreshold(this.panGesture.start, current)) return;
       this.panGesture.crossed = true;
       this.canvas.classList.add("is-panning");
     }
-    this.view.x = this.panGesture.view.x + current.x - this.panGesture.start.x;
-    this.view.y = this.panGesture.view.y + current.y - this.panGesture.start.y;
+    const nextX = this.panGesture.view.x + current.x - this.panGesture.start.x;
+    const nextY = this.panGesture.view.y + current.y - this.panGesture.start.y;
+    if (!isFiniteNumber(nextX) || !isFiniteNumber(nextY)) return;
+    this.view.x = nextX;
+    this.view.y = nextY;
     this.applyTransform();
   }
 
   endCanvasGesture(event: PointerEvent): void {
-    this.activePointers.delete(event.pointerId);
+    const pointerId = parseMapPointerEnd(event);
+    if (pointerId === null) return;
+    this.activePointers.delete(pointerId);
     if (this.activePointers.size === 1 && this.pinchGesture) {
       const entry = [...this.activePointers.entries()][0];
       if (!entry) return;
@@ -1259,18 +1338,21 @@ export class ThoughtMap {
   }
 
   startNodeDrag(event: PointerEvent, element: HTMLElement): void {
+    const input = parseMapPointerStart(event);
+    if (!input) return;
     const id = parseNodeEventTargetId(element.dataset.nodeId, this.graph.nodes);
     if (!id) return;
     if (!this.capabilities.canShapeNodes || this.isPinned(id)) return;
-    if (event.pointerType === "mouse" && event.button !== 0) return;
     event.stopPropagation();
-    const pointerStart = { x: event.clientX, y: event.clientY };
+    const pointerStart = { x: input.x, y: input.y };
     const positionStart = { ...this.positions[id]! };
     let crossed = false;
-    element.setPointerCapture(event.pointerId);
+    element.setPointerCapture(input.pointerId);
 
     const onMove = (moveEvent: PointerEvent) => {
-      const current = { x: moveEvent.clientX, y: moveEvent.clientY };
+      const move = parseMapPointerUpdate(moveEvent);
+      if (!move || move.pointerId !== input.pointerId) return;
+      const current = { x: move.x, y: move.y };
       if (!crossed) {
         if (!hasExceededDragThreshold(pointerStart, current)) return;
         crossed = true;
@@ -1290,7 +1372,8 @@ export class ThoughtMap {
       this.renderEdges();
     };
 
-    const onEnd = () => {
+    const onEnd = (endEvent: PointerEvent) => {
+      if (parseMapPointerEnd(endEvent) !== input.pointerId) return;
       element.classList.remove("is-dragging");
       element.removeEventListener("pointermove", onMove);
       element.removeEventListener("pointerup", onEnd);
@@ -1309,24 +1392,25 @@ export class ThoughtMap {
   }
 
   moveNodeByKeyboard(event: KeyboardEvent, element: HTMLElement): void {
+    const input = parseMapKeyboardInput(event);
+    if (!input || !input.key.startsWith("Arrow")) return;
     const id = parseNodeEventTargetId(element.dataset.nodeId, this.graph.nodes);
     if (!id) {
       event.stopPropagation();
       return;
     }
     if (!this.capabilities.canShapeNodes || this.isPinned(id)) return;
-    const directions: Record<string, readonly [number, number]> = {
+    const directions: Record<Extract<MapKeyboardInput["key"], `Arrow${string}`>, readonly [number, number]> = {
       ArrowLeft: [-1, 0],
       ArrowRight: [1, 0],
       ArrowUp: [0, -1],
       ArrowDown: [0, 1],
     };
-    const direction = directions[event.key];
-    if (!direction) return;
+    const direction = directions[input.key as Extract<MapKeyboardInput["key"], `Arrow${string}`>];
 
     event.preventDefault();
     event.stopPropagation();
-    const distance = event.shiftKey ? 24 : 12;
+    const distance = input.shiftKey ? 24 : 12;
     this.clearPinnedMessage(id);
     this.positions[id] = positionFromDrag(
       this.positions[id]!,
@@ -1342,15 +1426,16 @@ export class ThoughtMap {
   }
 
   handleKeyboard(event: KeyboardEvent): void {
+    const input = parseMapKeyboardInput(event);
+    if (!input) return;
     const distance = 38;
-    if (event.key === "ArrowLeft") this.view.x += distance;
-    else if (event.key === "ArrowRight") this.view.x -= distance;
-    else if (event.key === "ArrowUp") this.view.y += distance;
-    else if (event.key === "ArrowDown") this.view.y -= distance;
-    else if (event.key === "+" || event.key === "=") this.zoomBy(1.12);
-    else if (event.key === "-" || event.key === "_") this.zoomBy(0.88);
-    else if (event.key === "0") this.resetView();
-    else return;
+    if (input.key === "ArrowLeft") this.view.x += distance;
+    else if (input.key === "ArrowRight") this.view.x -= distance;
+    else if (input.key === "ArrowUp") this.view.y += distance;
+    else if (input.key === "ArrowDown") this.view.y -= distance;
+    else if (input.key === "+" || input.key === "=") this.zoomBy(1.12);
+    else if (input.key === "-" || input.key === "_") this.zoomBy(0.88);
+    else this.resetView();
     event.preventDefault();
     this.applyTransform();
   }

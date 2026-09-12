@@ -3,6 +3,9 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import {
   parseThoughtCaptureFormSnapshot,
+  parseThoughtCaptureModalKeyboard,
+  parseThoughtCaptureStatement,
+  parseThoughtCaptureWorkId,
   submitThoughtCaptureFormSnapshot,
 } from "../../src/ui/thought-capture.dom.ts";
 
@@ -91,6 +94,17 @@ test("malformed form snapshots cannot cross the Thought Capture adapter boundary
   );
 });
 
+test("Thought Capture validates live radio, text, and modal keyboard values", () => {
+  assert.equal(parseThoughtCaptureWorkId("book-a", workIds), "book-a");
+  assert.equal(parseThoughtCaptureWorkId("unknown", workIds), null);
+  assert.equal(parseThoughtCaptureWorkId({ value: "book-a" }, workIds), null);
+  assert.equal(parseThoughtCaptureStatement("A private thought."), "A private thought.");
+  assert.equal(parseThoughtCaptureStatement(null), null);
+  assert.deepEqual(parseThoughtCaptureModalKeyboard({ key: "Tab", shiftKey: true }), { key: "Tab", shiftKey: true });
+  assert.equal(parseThoughtCaptureModalKeyboard({ key: "toString", shiftKey: false }), null);
+  assert.equal(parseThoughtCaptureModalKeyboard({ key: "Escape", shiftKey: 1 }), null);
+});
+
 test("the submit boundary forwards valid input exactly once and rejects malformed input before onSave", () => {
   const savedInputs: unknown[] = [];
   const onSave = (input: {
@@ -159,7 +173,8 @@ test("later private text editing keeps both bridge works visible and the shared-
 });
 
 test("the existing dialog focus trap and cancel restoration remain shared", () => {
-  assert.match(captureSource, /event\.key === "Escape"/);
-  assert.match(captureSource, /event\.key !== "Tab"/);
+  assert.match(captureSource, /parseThoughtCaptureModalKeyboard\(event\)/);
+  assert.match(captureSource, /command\.key === "Escape"/);
+  assert.match(captureSource, /command\.key !== "Tab"/);
   assert.match(captureSource, /this\.options\.restoreFocus\(\)/);
 });
