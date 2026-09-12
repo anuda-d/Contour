@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "goal_id": "architecture-foundation",
+  "criteria": {
+    "AF-1": "accepted",
+    "AF-2": "accepted",
+    "AF-3": "accepted",
+    "AF-4": "accepted",
+    "AF-5": "accepted",
+    "AF-6": "accepted",
+    "AF-7": "accepted",
+    "AF-8": "accepted",
+    "AF-9": "accepted",
+    "AF-10": "accepted"
+  },
+  "full_validation": {
+    "status": "pass",
+    "evidence": "Focused lifecycle and evidence-schema tests passed 25 tests, the Vite production build passed, and the exact terminal-document tree passed the repository check and whitespace validation."
+  },
+  "rendered_walkthrough": {
+    "status": "pass",
+    "evidence": "AF-10 terminal completion walkthrough records production desktop and touch-enabled mobile Chromium owner and visitor evidence in light and dark modes, focus and dialog inertness, responsive seams, persistence, and zero console errors or warnings."
+  },
+  "legacy_compatibility": {
+    "status": "pass",
+    "evidence": "Rendered legacy Draft migration created canonical V2 while retaining the original key, and rendered V1-over-legacy and V2-over-V1-and-legacy precedence sessions retained their source keys."
+  },
+  "terminal_documents": [
+    "docs/plans/CURRENT.md",
+    "docs/plans/architecture-foundation/GOAL.md",
+    "docs/plans/architecture-foundation/IMPLEMENTATION_PLAN.md",
+    "docs/plans/architecture-foundation/AF-10_COMPLETION_WALKTHROUGH.md",
+    "docs/plans/architecture-foundation/AF-10_TERMINAL_EVIDENCE.json"
+  ]
+}

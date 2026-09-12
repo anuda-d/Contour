@@ -43,7 +43,7 @@ Status: active shared state; standing scheduled owner authorization.
 | AF-7 Durable compatibility | accepted | Six current browser-storage key shapes across selection, authored Thought V2/V1/legacy Draft precedence, featured Media, and pinned positions have accepted typed migration, retention, recovery, unavailable-storage, reload, and privacy evidence. |
 | AF-8 Frozen visible behavior | accepted | [Rendered walkthrough](AF-8_RENDERED_WALKTHROUGH.md) covers local production desktop and touch-enabled mobile owner and visitor flows in light and dark modes, private/public separation, persistence, interaction, responsive seams, focus behavior, and clean console evidence without a product change. |
 | AF-9 Layered test and quality gates | accepted | [Quality-gate inventory](../../architecture/QUALITY_GATE_INVENTORY.md) maps AF-1 through AF-8 and every protected invariant to tracked product, fake-port application, adapter, DOM, architecture, strict build, rendered, and repository proof. Its focused test rejects missing, malformed, duplicate, or unresolvable evidence, and the repository check executes it explicitly. |
-| AF-10 Durable completion walkthrough | open | None yet. |
+| AF-10 Durable completion walkthrough | accepted | [Terminal completion walkthrough](AF-10_COMPLETION_WALKTHROUGH.md) records production-build desktop and touch-enabled mobile Chromium owner and visitor evidence in light and dark modes, rendered legacy Draft migration, V1 and V2 precedence, preserved legacy keys, focus, responsive seams, persistence, and clean console observations. [Schema-version-1 terminal evidence](AF-10_TERMINAL_EVIDENCE.json) records all accepted criteria and canonical terminal documents. |
 
 This table records accepted evidence only.
 It is not a task sequence, roadmap, or permission to infer later work units.
@@ -55,7 +55,7 @@ It is not a task sequence, roadmap, or permission to infer later work units.
 
 | Open criterion | Present evidence | Exact remaining blocker | Observable acceptance condition |
 | --- | --- | --- | --- |
-| AF-10 Durable completion walkthrough | Prior prototype completion and current Node checks exist. | Final completion depends on all remaining criteria and a clean rendered legacy-state walkthrough. | All criteria are accepted with clean build, desktop/mobile light/dark legacy-state walkthrough, console evidence, and final independent review. |
+| None | AF-1 through AF-10 have recorded criterion evidence. | Fresh independent slice review, then whole-goal alignment, final goal review, and explicit lifecycle completion remain outside this writer slice. | The orchestrator completes the separately required lifecycle transitions without changing the reviewed terminal evidence tree. |
 
 At the recorded audit baseline no criterion was ready for acceptance.
 Touched blocker rows are refreshed at each unit; the baseline and count still govern the next complete audit.
@@ -65,7 +65,8 @@ Its capture-preparation blocker is eliminated; rendering and focus translation r
 AF-5 is accepted after the complete executable effect and native-input boundary inventory.
 AF-8 is accepted with the rendered frozen-behavior walkthrough.
 AF-9 is accepted with its checked cross-criterion invariant inventory.
-AF-10 still requires its final rendered legacy-state completion walkthrough.
+AF-10 has final rendered legacy-state completion evidence in `AF-10_COMPLETION_WALKTHROUGH.md`.
+The committed terminal evidence deliberately excludes its later final-review claim to avoid a circular amend-and-rereview sequence.
 This audit is present-state evidence, with no future task queue.
 
 ## Architecture entry state
@@ -299,7 +300,8 @@ without discarding uncommitted work or inferring missing decisions.
 ## Alignment
 
 Owner alignment is not due.
-Generation alignment is controlled separately by the lifecycle state machine and is mandatory after three accepted slices.
+Once the AF-10 slice is independently reviewed and finalized, whole-goal alignment is controlled separately by the lifecycle state machine.
+It is mandatory before the final goal review and completion transition.
 
 Request owner alignment only when evidence reveals a required change to the
 approved architecture, visible behavior, visual design, scope, privacy
