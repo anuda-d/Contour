@@ -9,6 +9,7 @@ Status: Architecture Foundation is active under standing scheduled authorization
 - Prior completed goal: [Identity Map Prototype](identity-map-prototype/GOAL.md)
 - Preserved design foundation: [Editorial Constellation](identity-map-prototype/MAP_DESIGN_FOUNDATION.md)
 - Latest rendered evidence: [AF-8 frozen-behavior walkthrough](architecture-foundation/AF-8_RENDERED_WALKTHROUGH.md) accepts the current desktop and touch-enabled mobile owner and visitor behavior in light and dark modes.
+- Latest quality evidence: [AF-9 quality-gate inventory](../architecture/QUALITY_GATE_INVENTORY.md) maps accepted architecture criteria and protected invariants to checked executable proof.
 - Active work: Architecture Foundation units may run during the authorized daily window
 
 ## Run state snapshot
